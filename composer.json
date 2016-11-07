@@ -1,0 +1,25 @@
+{
+    "name": "cakedc/cakephp-api",
+    "description": "Api plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "3.*"
+    },
+    "require-dev": {
+        "cakedc/users": "*" ,
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "CakeDC\\Api\\": "src",
+            "CakeDC\\Api\\Test\\Fixture\\": "tests\\Fixture"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CakeDC\\Api\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
