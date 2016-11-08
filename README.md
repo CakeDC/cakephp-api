@@ -1,4 +1,4 @@
-Api plugin for CakePHP
+API Plugin for CakePHP
 ======================
 
 [![Bake Status](https://secure.travis-ci.org/CakeDC/cakephp-api.png?branch=master)](http://travis-ci.org/CakeDC/cakephp-api)
@@ -7,6 +7,7 @@ Api plugin for CakePHP
 [![License](https://poser.pugx.org/CakeDC/cakephp-api/license.svg)](https://packagist.org/packages/CakeDC/cakephp-api)
 
 The **CakePHP-API** Plugin allows to easily expose a versioned API in a few lines of code.
+IMPORTANT: This plugin is BETA, use it at your own risk.
 
 Requirements
 ------------
@@ -22,7 +23,7 @@ For documentation, as well as tutorials, see the [Docs](docs/home.md) directory 
 Support
 -------
 
-For bugs and feature requests, please use the [issues](https://github.com/CakeDC/api/issues) section of this repository.
+For bugs and feature requests, please use the [issues](https://github.com/CakeDC/cakephp-api/issues) section of this repository.
 
 Commercial support is also available, [contact us](http://cakedc.com/contact) for more information.
 
