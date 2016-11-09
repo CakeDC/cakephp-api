@@ -7,7 +7,8 @@ API Plugin for CakePHP
 [![License](https://poser.pugx.org/CakeDC/cakephp-api/license.svg)](https://packagist.org/packages/CakeDC/cakephp-api)
 
 The **CakePHP-API** Plugin allows to easily expose a versioned API in a few lines of code.
-IMPORTANT: This plugin is BETA, use it at your own risk.
+
+IMPORTANT: This plugin is **BETA**, use it at your own risk.
 
 Requirements
 ------------
