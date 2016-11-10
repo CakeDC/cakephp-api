@@ -45,3 +45,4 @@ composer require cakedc/users
 Configure::write('Users.config', ['users']);
 Plugin::load('CakeDC/Users', ['bootstrap' => false, 'routes' => true]);
 ``` 
+Check more details about how CakeDC/Users plugin could be configured here: https://github.com/CakeDC/users/blob/master/Docs/Documentation/Configuration.md
