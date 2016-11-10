@@ -44,9 +44,18 @@ class ListAction extends Action
         $path = APP . 'Model' . DS . 'Table';
         $folder = new Folder($path);
         $tables = $folder->find('.*\.php');
-        $services = collection($tables)->map(function ($item) {
-            return Inflector::underscore(str_replace('Table', '', str_replace('.php', '', $item)));
-        })->toArray();
+        $services = collection($tables)
+            ->map(function ($item) {
+                preg_match('/^(.*)Table\.php/', $item, $replacedMatch);
+                if (empty($replacedMatch[1])) {
+                    return null;
+                }
+                return Inflector::underscore($replacedMatch[1]);
+            })
+            ->filter(function ($item) {
+                return !empty($item);
+            })
+            ->toArray();
 
         return $services;
     }

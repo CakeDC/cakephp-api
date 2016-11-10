@@ -31,7 +31,9 @@ class ApiController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['process', 'describe', 'listing']);
+        if ($this->components()->has('Auth')) {
+            $this->Auth->allow(['process', 'describe', 'listing']);
+        }
         if ($this->components()->has('RememberMe')) {
             $this->components()->unload('RememberMe');
         }
