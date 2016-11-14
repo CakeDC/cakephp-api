@@ -69,7 +69,7 @@ class LoginActionTest extends IntegrationTestCase
 		$data = Hash::get($result, 'data');
 		unset($data['activation_date']);
 		unset($data['tos_date']);
-        $this->assertEquals($expected, Hash::get($result, 'data'));
+        $this->assertEquals($expected, $data);
     }
 
     public function testLoginFail()
