@@ -6,7 +6,7 @@ API Plugin for CakePHP
 [![Latest Version](https://poser.pugx.org/CakeDC/cakephp-api/v/stable.png)](https://packagist.org/packages/CakeDC/cakephp-api)
 [![License](https://poser.pugx.org/CakeDC/cakephp-api/license.svg)](https://packagist.org/packages/CakeDC/cakephp-api)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/CakeDC/cakephp-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/CakeDC/cakephp-api/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/burzum/cakephp-middleware-auth/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/burzum/cakephp-middleware-auth/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/burzum/cakephp-middleware-auth/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/CakeDC/cakephp-api/?branch=master)
 
 The **CakePHP-API** Plugin allows to easily expose a versioned API in a few lines of code.
 
