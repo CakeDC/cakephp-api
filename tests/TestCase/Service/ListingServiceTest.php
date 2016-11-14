@@ -78,6 +78,8 @@ class ListingServiceTest extends TestCase
             'authors',
             'tags',
         ];
+		sort($expected);
+		sort($result);
         $this->assertEquals($expected, $result);
     }
 }

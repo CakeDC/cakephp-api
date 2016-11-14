@@ -63,11 +63,12 @@ class LoginActionTest extends IntegrationTestCase
             'email' => 'user-1@test.com',
             'first_name' => 'first1',
             'last_name' => 'last1',
-            'activation_date' => '2015-06-24T17:33:54+03:00',
-            'tos_date' => '2015-06-24T17:33:54+03:00',
             'active' => true,
             'api_token' => 'yyy'
         ];
+		$data = Hash::get($result, 'data');
+		unset($data['activation_date']);
+		unset($data['tos_date']);
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }
 
