@@ -134,6 +134,10 @@ abstract class Service
      * @var Result
      */
     protected $_result;
+    
+	protected $_baseUrl;
+    protected $_request;
+    protected $_response;
 
     protected $_corsSuffix = '_cors';
 
@@ -148,6 +152,15 @@ abstract class Service
     {
         if (isset($config['controller'])) {
             $this->controller($config['controller']);
+        }
+        if (isset($config['request'])) {
+            $this->request($config['request']);
+        }
+        if (isset($config['response'])) {
+            $this->response($config['response']);
+        }
+        if (isset($config['baseUrl'])) {
+            $this->_baseUrl = $config['baseUrl'];
         }
         if (isset($config['service'])) {
             $this->name($config['service']);
@@ -202,6 +215,8 @@ abstract class Service
             return $this->_controller;
         }
         $this->_controller = $controller;
+		$this->_request = $controller->request;
+		$this->_response = $controller->response;
 
         return $this->_controller;
     }
@@ -270,14 +285,15 @@ abstract class Service
     /**
      * @return \Cake\Network\Request
      */
-    public function request()
+    public function request($request = null)
     {
-        $controller = $this->controller();
-        if ($controller === null) {
-            return null;
+        if ($request === null) {
+            return $this->_request;
         }
 
-        return $controller->request;
+        $this->_request = $request;
+
+        return $this->_request;
     }
 
     /**
@@ -451,7 +467,8 @@ abstract class Service
         if (in_array($serviceName, $this->_innerServices)) {
             $options = [
                 'version' => $this->version(),
-                'controller' => $this->controller(),
+                'request' => $this->request(),
+                'response' => $this->response(),
             ];
             $service = ServiceRegistry::get($serviceName, $options);
             $service->parent($this);
@@ -492,11 +509,15 @@ abstract class Service
      */
     public function baseUrl()
     {
-        $passed = $this->controller()->request->params['pass'];
+		if (!empty($this->_baseUrl)) {
+			return $this->_baseUrl;
+		}
+		
+        // $passed = $this->controller()->request->params['pass'];
         $result = '/' . $this->name();
-        if (!empty($passed)) {
-            $result .= '/' . join('/', $passed);
-        }
+        // if (!empty($passed)) {
+            // $result .= '/' . join('/', $passed);
+        // }
 
         return $result;
     }
@@ -593,14 +614,15 @@ abstract class Service
     /**
      * @return \Cake\Network\Response
      */
-    public function response()
+    public function response($response = null)
     {
-        $controller = $this->controller();
-        if ($controller === null) {
-            return null;
+        if ($response === null) {
+            return $this->_response;
         }
 
-        return $controller->response;
+        $this->_response = $response;
+
+        return $this->_response;
     }
 
     /**

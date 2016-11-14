@@ -50,6 +50,7 @@ class ListAction extends Action
                 if (empty($replacedMatch[1])) {
                     return null;
                 }
+
                 return Inflector::underscore($replacedMatch[1]);
             })
             ->filter(function ($item) {

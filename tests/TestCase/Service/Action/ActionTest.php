@@ -72,7 +72,10 @@ class ActionTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->Controller->request,
+            'response' => $this->Controller->response,
+            'baseUrl' => '/articles/tag/1'
         ];
         $Service = ServiceRegistry::get($service, $options);
         $action = $Service->buildAction();
