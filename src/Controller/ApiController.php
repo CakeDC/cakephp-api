@@ -93,9 +93,17 @@ class ApiController extends AppController
                 if (!empty($this->request['version'])) {
                     $version = $this->request['version'];
                 }
+
+                $url = '/' . $service;
+                if (!empty($this->request->params['pass'])) {
+                    $url .= '/' . join('/', $this->request->params['pass']);
+                }
                 $options += [
                     'version' => $version,
-                    'controller' => $this,
+                    // 'controller' => $this,
+                    'request' => $this->request,
+                    'response' => $this->response,
+                    'baseUrl' => $url,
                 ];
                 $options += (new ConfigReader())->serviceOptions($service, $version);
                 $Service = ServiceRegistry::get($service, $options);

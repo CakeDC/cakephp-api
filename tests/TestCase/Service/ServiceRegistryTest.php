@@ -84,10 +84,13 @@ class ServiceRegistryTest extends TestCase
                 ]
             ]
         ]);
-        $service = $this->request['service'];
+        $service = 'authors';
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+			'service' => $service,
+            'request' => $this->Controller->request,
+            'response' => $this->Controller->response,
+            'baseUrl' => '/authors/1/articles',
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);

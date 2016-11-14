@@ -151,7 +151,10 @@ class ServiceTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+			'service' => $service,
+            'request' => $this->Controller->request,
+            'response' => $this->Controller->response,
+            'baseUrl' => '/authors/1/articles',
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
@@ -186,7 +189,10 @@ class ServiceTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+			'service' => $service,
+            'request' => $this->Controller->request,
+            'response' => $this->Controller->response,
+            'baseUrl' => '/articles/tag/1',
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
