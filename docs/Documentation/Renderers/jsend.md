@@ -1,4 +1,4 @@
-Jsend
+JSend
 =====
 
 How to use?

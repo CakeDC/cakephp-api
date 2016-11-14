@@ -18,7 +18,7 @@ $config = Configure::read('Test.Api.Config');
 if (empty($config)) {
     $config = [
         'Api' => [
-            'renderer' => 'CakeDC/Api.Jsend',
+            'renderer' => 'CakeDC/Api.JSend',
             'parser' => 'CakeDC/Api.Form',
             'ServiceFallback' => '\\CakeDC\\Api\\Service\\FallbackService',
 
