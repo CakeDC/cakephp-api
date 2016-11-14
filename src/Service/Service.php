@@ -24,7 +24,6 @@ use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Client\Response;
-use Cake\Network\Exception\UnauthorizedException;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;

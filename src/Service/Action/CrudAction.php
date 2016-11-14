@@ -114,7 +114,7 @@ abstract class CrudAction extends Action
     /**
      * Builds new entity instance.
      *
-     * @return \Cake\Collection\Collection
+     * @return EntityInterface
      */
     protected function _newEntity()
     {
@@ -197,7 +197,7 @@ abstract class CrudAction extends Action
      * Save entity.
      *
      * @param EntityInterface $entity An Entity instance.
-     * @return mixed
+     * @return EntityInterface
      */
     protected function _save($entity)
     {
@@ -221,7 +221,7 @@ abstract class CrudAction extends Action
     /**
      * Model id field name getter.
      *
-     * @return mixed|string
+     * @return string
      */
     public function idName()
     {

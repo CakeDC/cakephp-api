@@ -19,8 +19,6 @@ use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use Cake\Controller\Controller;
-use Cake\Network\Request;
-use Cake\Network\Response;
 use CakeDC\Api\TestSuite\TestCase;
 
 class ServiceTest extends TestCase

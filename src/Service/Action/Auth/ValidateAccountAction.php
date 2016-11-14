@@ -13,7 +13,6 @@ namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Controller\Component\UsersAuthComponent;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 use CakeDC\Users\Exception\TokenExpiredException;
 use CakeDC\Users\Exception\UserAlreadyActiveException;
