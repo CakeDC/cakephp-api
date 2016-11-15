@@ -226,5 +226,4 @@ trait AuthenticateTrait
     {
         return $this->_authenticationProvider;
     }
-
 }

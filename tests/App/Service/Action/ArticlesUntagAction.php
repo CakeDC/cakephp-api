@@ -11,9 +11,9 @@
 
 namespace CakeDC\Api\Test\App\Service\Action;
 
-use Cake\Validation\Validator;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
+use Cake\Validation\Validator;
 
 class ArticlesUntagAction extends Action
 {

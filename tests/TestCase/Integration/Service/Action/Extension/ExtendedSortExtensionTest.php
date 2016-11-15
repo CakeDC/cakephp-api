@@ -100,6 +100,4 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
         $this->assertSuccess($result);
         $this->assertEquals([4, 9, 14, 10], Hash::extract($result, 'data.{n}.id'));
     }
-
-
 }

@@ -25,9 +25,9 @@ class ServiceException extends Exception
     /**
      * ServiceException constructor.
      *
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
+     * @param string $message the string of the error message
+     * @param int $code The code of the error
+     * @param \Exception|null $previous the previous exception.
      */
     public function __construct($message = null, $code = 500, $previous = null)
     {
@@ -40,7 +40,7 @@ class ServiceException extends Exception
     /**
      * File setter
      *
-     * @param string $file
+     * @param string $file set the file
      * @return void
      */
     public function setFile($file = '')
@@ -51,7 +51,7 @@ class ServiceException extends Exception
     /**
      * Line setter
      *
-     * @param int $line
+     * @param int $line set the line
      * @return void
      */
     public function setLine($line = 0)

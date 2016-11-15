@@ -17,25 +17,25 @@ $config = [
             ],
             'CakeDC/Users.ApiKey' => [
                 'require_ssl' => false,
-			],
+            ],
             'CakeDC/Users.RememberMe',
             'Form',
         ],
         'authorize' => [
             'CakeDC/Users.Superuser',
             'CakeDC/Users.SimpleRbac' => [
-			  'permissions' => [
-					[
-						'role' => '*',
-						'plugin' => 'CakeDC/Api',
-						'controller' => ['Api'],
-						'action' => ['process'],
-					],			
-				]
-			],
+              'permissions' => [
+                    [
+                        'role' => '*',
+                        'plugin' => 'CakeDC/Api',
+                        'controller' => ['Api'],
+                        'action' => ['process'],
+                    ],
+                ]
+            ],
         ],
     ],
-	'OAuth' => ['path' => null],
+    'OAuth' => ['path' => null],
 ];
 
 return $config;

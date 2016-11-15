@@ -54,7 +54,7 @@ class ArticlesTagAction extends CrudAction
      *
      * @return mixed
      */
-    public function action($tag_id)
+    public function action($tagId)
     {
         return true;
     }
