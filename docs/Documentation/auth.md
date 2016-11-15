@@ -2,6 +2,8 @@
 
 Auth system was inspired from cakephp framework auth component, and follow ideas that put into this system.
 
+IMPORTANT: Auth is configured to ALLOW all API endpoints by default, if you need to enable Auth, please remove
+the `allow => '*'` rule from `Auth` configuration key and configure Auth as explained below:
 
 ## Auth Configuration
 
