@@ -36,7 +36,7 @@
         "phpunit/phpunit": "*"
     },
     "suggest": {
-        "cakedc/users": "Users Plugin for CakePHP",
+        "cakedc/users": "Users Plugin for CakePHP"
     },
     "autoload": {
         "psr-4": {
