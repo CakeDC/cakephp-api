@@ -19,27 +19,23 @@ Ensure the API Plugin is loaded in your config/bootstrap.php file
 Plugin::load('CakeDC/Api', ['bootstrap' => true, 'routes' => true]);
 ```
 
-## Customization
-You can custom the api overwriting the api.php, how?
-we need to create an **api.php** file in the *config* folder. It need to be write in the same standard of the original. You can take a look in CakeDC/Api/config/api.php to know how to write it.
-In this case API plugin initialization would be a bit diferent.
+## Configuration
+You can configure the api overwriting the api.php, how?
+we need to create an **api.php** file in the *config* folder. You can copy the existing configuration file 
+under `vendor/cakedc/cakephp-api/config/api.php` and customize it for your application.
+Remember to load the new configuration file in `bootstrap.php`
 
-```
+```php
 Plugin::load('CakeDC/Api', ['bootstrap' => false, 'routes' => true]);
 Configure::load('api');
-
 ``` 
 
-## User Plugin
-We need to have *CakeDC/Users* plugin installed, because we use it for auth. Below you can see what you need to do with users plugin.
+## OPTIONAL: User Plugin
 
-## Composer
+We rely on CakeDC/Users plugin for Auth, in case you need to define Auth for your API, 
+ensure *CakeDC/Users* plugin is installed and loaded from your `bootstrap.php`.
 
-```
-composer require cakedc/users
-```
-
-## Configuration and Loading
+### Configuration and Loading
 
 ```
 Configure::write('Users.config', ['users']);
