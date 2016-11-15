@@ -110,7 +110,7 @@ class ResetPasswordAction extends Action
             } else {
                 $user = $this->getUsersTable()->changePassword($user);
                 if ($user) {
-                    return __d('CakeDC/Users', 'Password has been changed successfully');
+                    return __d('CakeDC/Api', 'Password has been changed successfully');
                 } else {
                     throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500);
                 }
