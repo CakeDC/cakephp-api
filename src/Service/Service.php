@@ -19,7 +19,6 @@ use CakeDC\Api\Service\Exception\MissingParserException;
 use CakeDC\Api\Service\Exception\MissingRendererException;
 use CakeDC\Api\Service\Renderer\BaseRenderer;
 use CakeDC\Api\Service\RequestParser\BaseParser;
-use Cake\Controller\Controller;
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -69,13 +68,6 @@ abstract class Service
      * @var string
      */
     protected $_name = null;
-
-    /**
-     * Controller instance.
-     *
-     * @var Controller
-     */
-    protected $_controller = null;
 
     /**
      * Service version.
@@ -133,14 +125,32 @@ abstract class Service
      * @var Result
      */
     protected $_result;
-    
-	protected $_baseUrl;
+
+    /**
+     * Base url for service.
+     *
+     * @var string
+     */
+    protected $_baseUrl;
+
+    /**
+     * Request
+     *
+     * @var \Cake\Network\Request
+     */
     protected $_request;
+
+    /**
+     * Request
+     *
+     * @var \Cake\Network\Response
+     */
     protected $_response;
 
+    /**
+     * @var string
+     */
     protected $_corsSuffix = '_cors';
-
-//    protected $_identified = false;
 
     /**
      * Service constructor.
@@ -149,9 +159,6 @@ abstract class Service
      */
     public function __construct(array $config = [])
     {
-        if (isset($config['controller'])) {
-            $this->controller($config['controller']);
-        }
         if (isset($config['request'])) {
             $this->request($config['request']);
         }
@@ -167,57 +174,12 @@ abstract class Service
         if (isset($config['version'])) {
             $this->version($config['version']);
         }
-        if (isset($config['parserClass'])) {
-            $this->_parserClass = $config['parserClass'];
-        }
-        $parserClass = Configure::read('Api.parser');
-        if (empty($this->_parserClass) && !empty($parserClass)) {
-            $this->_parserClass = $parserClass;
-        }
-
-        if (isset($config['rendererClass'])) {
-            $this->_rendererClass = $config['rendererClass'];
-        }
-        $rendererClass = Configure::read('Api.renderer');
-        if (empty($this->_rendererClass) && !empty($rendererClass)) {
-            $this->_rendererClass = $rendererClass;
-        }
-
         if (isset($config['classMap'])) {
             $this->_actionsClassMap = Hash::merge($this->_actionsClassMap, $config['classMap']);
         }
-
         $this->initialize();
-
-        $class = App::className($this->_parserClass, 'Service/RequestParser', 'Parser');
-        if (!class_exists($class)) {
-            throw new MissingParserException(['class' => $this->_parserClass]);
-        }
-        $this->_parser = new $class($this);
-
-        $class = App::className($this->_rendererClass, 'Service/Renderer', 'Renderer');
-        if (!class_exists($class)) {
-            throw new MissingRendererException(['class' => $this->_rendererClass]);
-        }
-        $this->_renderer = new $class($this);
-    }
-
-    /**
-     * Get and set controller associated with service,
-     *
-     * @param \Cake\Controller\Controller $controller Controller.
-     * @return \Cake\Controller\Controller
-     */
-    public function controller(Controller $controller = null)
-    {
-        if ($controller === null) {
-            return $this->_controller;
-        }
-        $this->_controller = $controller;
-		$this->_request = $controller->request;
-		$this->_response = $controller->response;
-
-        return $this->_controller;
+        $this->_initializeParser($config);
+        $this->_initializeRenderer($config);
     }
 
     /**
@@ -282,6 +244,9 @@ abstract class Service
     }
 
     /**
+     * Get and set request.
+     *
+     * @param \Cake\Network\Request $request A request object.
      * @return \Cake\Network\Request
      */
     public function request($request = null)
@@ -508,15 +473,11 @@ abstract class Service
      */
     public function baseUrl()
     {
-		if (!empty($this->_baseUrl)) {
-			return $this->_baseUrl;
-		}
-		
-        // $passed = $this->controller()->request->params['pass'];
+        if (!empty($this->_baseUrl)) {
+            return $this->_baseUrl;
+        }
+
         $result = '/' . $this->name();
-        // if (!empty($passed)) {
-            // $result .= '/' . join('/', $passed);
-        // }
 
         return $result;
     }
@@ -611,6 +572,9 @@ abstract class Service
     }
 
     /**
+     * Get and set response.
+     *
+     * @param \Cake\Network\Response $response  A Response object.
      * @return \Cake\Network\Response
      */
     public function response($response = null)
@@ -627,7 +591,7 @@ abstract class Service
     /**
      * Service renderer configuration method.
      *
-     * @param BaseRenderer $renderer A Renderer instance
+     * @param BaseRenderer $renderer A Renderer instance.
      * @return BaseRenderer
      */
     public function renderer(BaseRenderer $renderer = null)
@@ -659,5 +623,51 @@ abstract class Service
             $route['path'] = $actionName;
         }
         $this->_actions[$actionName] = $route;
+    }
+
+    /**
+     * Initialize parser.
+     *
+     * @param array $config Service options
+     * @return void
+     */
+    protected function _initializeParser(array $config)
+    {
+        if (empty($this->_parserClass) && isset($config['parserClass'])) {
+            $this->_parserClass = $config['parserClass'];
+        }
+        $parserClass = Configure::read('Api.parser');
+        if (empty($this->_parserClass) && !empty($parserClass)) {
+            $this->_parserClass = $parserClass;
+        }
+
+        $class = App::className($this->_parserClass, 'Service/RequestParser', 'Parser');
+        if (!class_exists($class)) {
+            throw new MissingParserException(['class' => $this->_parserClass]);
+        }
+        $this->_parser = new $class($this);
+    }
+
+    /**
+     * Initialize renderer.
+     *
+     * @param array $config Service options.
+     * @return void
+     */
+    protected function _initializeRenderer(array $config)
+    {
+        if (empty($this->_rendererClass) && isset($config['rendererClass'])) {
+            $this->_rendererClass = $config['rendererClass'];
+        }
+        $rendererClass = Configure::read('Api.renderer');
+        if (empty($this->_rendererClass) && !empty($rendererClass)) {
+            $this->_rendererClass = $rendererClass;
+        }
+
+        $class = App::className($this->_rendererClass, 'Service/Renderer', 'Renderer');
+        if (!class_exists($class)) {
+            throw new MissingRendererException(['class' => $this->_rendererClass]);
+        }
+        $this->_renderer = new $class($this);
     }
 }

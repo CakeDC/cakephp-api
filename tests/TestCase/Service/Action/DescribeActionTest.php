@@ -42,7 +42,7 @@ class DescribeActionTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'describe',
                 'pass' => []
@@ -54,7 +54,10 @@ class DescribeActionTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+			'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/describe',
         ];
         $this->Service = ServiceRegistry::get($service, $options);
     }

@@ -37,7 +37,7 @@ class CrudViewActionTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -48,7 +48,10 @@ class CrudViewActionTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/articles/1'
         ];
         $this->Service = ServiceRegistry::get($service, $options);
     }

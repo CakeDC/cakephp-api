@@ -13,9 +13,9 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\ListAction;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use CakeDC\Api\TestSuite\TestCase;
 
 /**
  * Class ListActionTest
@@ -42,7 +42,7 @@ class ListActionTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'listing',
                 'pass' => []
@@ -51,7 +51,10 @@ class ListActionTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/listing'
         ];
         $this->Service = ServiceRegistry::get($service, $options);
     }
@@ -85,8 +88,8 @@ class ListActionTest extends TestCase
             'authors',
             'tags',
         ];
-		sort($expected);
-		sort($result);
+        sort($expected);
+        sort($result);
         $this->assertEquals($expected, $result);
     }
 }

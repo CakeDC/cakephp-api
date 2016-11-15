@@ -46,7 +46,7 @@ class ActionTest extends TestCase
     public function tearDown()
     {
         ServiceRegistry::clear();
-        unset($this->Controller, $this->Service, $this->Action, $this->request);
+        unset($this->Service, $this->Action, $this->request);
         parent::tearDown();
     }
 
@@ -57,7 +57,7 @@ class ActionTest extends TestCase
      */
     public function testActionCallOnProcess()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -73,8 +73,8 @@ class ActionTest extends TestCase
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->Controller->request,
-            'response' => $this->Controller->response,
+            'request' => $this->request,
+            'response' => $this->response,
             'baseUrl' => '/articles/tag/1'
         ];
         $Service = ServiceRegistry::get($service, $options);

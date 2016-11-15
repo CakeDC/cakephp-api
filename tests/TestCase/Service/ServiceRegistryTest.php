@@ -53,7 +53,7 @@ class ServiceRegistryTest extends TestCase
      */
     public function testLoad()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
             ]
@@ -61,7 +61,10 @@ class ServiceRegistryTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/authors'
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
@@ -75,7 +78,7 @@ class ServiceRegistryTest extends TestCase
      */
     public function testLoadNested()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [
@@ -87,9 +90,9 @@ class ServiceRegistryTest extends TestCase
         $service = 'authors';
         $options = [
             'version' => null,
-			'service' => $service,
-            'request' => $this->Controller->request,
-            'response' => $this->Controller->response,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
             'baseUrl' => '/authors/1/articles',
         ];
         $Service = ServiceRegistry::get($service, $options);

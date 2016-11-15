@@ -64,7 +64,8 @@ class DescribeAction extends Action
                 '_matchedRoute' => '/' . $serviceName,
             ];
             $action = $service->buildActionClass('\CakeDC\Api\Service\Action\CrudDescribeAction', $route);
-            $service->controller($this->service()->controller());
+            $service->request($this->service()->request());
+            $service->response($this->service()->response());
 
             return $action->execute();
         }

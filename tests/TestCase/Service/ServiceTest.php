@@ -56,9 +56,12 @@ class ServiceTest extends TestCase
      */
     public function testConstructWithoutAdapter()
     {
-        $this->_initializeController();
+        $this->_initializeRequest();
         $this->Service = new FallbackService([
-            'contoller' => $this->Controller
+            'service' => 'authors',
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/authors'
         ]);
     }
 
@@ -69,9 +72,12 @@ class ServiceTest extends TestCase
      */
     public function testConstructWithRendererAsParameter()
     {
-        $this->_initializeController();
+        $this->_initializeRequest();
         $this->Service = new FallbackService([
-            'contoller' => $this->Controller,
+            'service' => 'authors',
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/authors',
             'rendererClass' => 'CakeDC/Api.Raw'
         ]);
     }
@@ -85,7 +91,7 @@ class ServiceTest extends TestCase
      */
     public function testActionNotFound()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
             ]
@@ -93,7 +99,10 @@ class ServiceTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/authors'
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
@@ -110,7 +119,7 @@ class ServiceTest extends TestCase
      */
     public function testActionInitialize()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
             ]
@@ -118,7 +127,10 @@ class ServiceTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/authors'
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
@@ -137,7 +149,7 @@ class ServiceTest extends TestCase
      */
     public function testNestedActionInitialize()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [
@@ -149,9 +161,9 @@ class ServiceTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-			'service' => $service,
-            'request' => $this->Controller->request,
-            'response' => $this->Controller->response,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
             'baseUrl' => '/authors/1/articles',
         ];
         $Service = ServiceRegistry::get($service, $options);
@@ -172,7 +184,7 @@ class ServiceTest extends TestCase
      */
     public function testInitializeActionStoredAsExistsClass()
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -187,9 +199,9 @@ class ServiceTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-			'service' => $service,
-            'request' => $this->Controller->request,
-            'response' => $this->Controller->response,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
             'baseUrl' => '/articles/tag/1',
         ];
         $Service = ServiceRegistry::get($service, $options);
@@ -214,7 +226,7 @@ class ServiceTest extends TestCase
         ]);
         $config = require(CONFIG . 'api.php');
         Configure::write($config);
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [],
@@ -224,7 +236,10 @@ class ServiceTest extends TestCase
         $version = null;
         $options = [
             'version' => $version,
-            'controller' => $this->Controller,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/authors'
         ];
         $options += (new ConfigReader())->serviceOptions($service, $version);
         $Service = ServiceRegistry::get($service, $options);

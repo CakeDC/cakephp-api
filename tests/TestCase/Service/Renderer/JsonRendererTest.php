@@ -41,7 +41,7 @@ class JsonRendererTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeController();
+        $this->_initializeRequest();
     }
 
     /**
@@ -67,10 +67,11 @@ class JsonRendererTest extends TestCase
             ->setMethods(['statusCode', 'type', 'body'])
             ->getMock();
 
-        $this->_initializeController([], 'GET', ['response' => $response]);
+        $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'controller' => $this->Controller,
+            'request' => $this->request,
+            'response' => $response,
             'rendererClass' => 'CakeDC/Api.Json'
         ];
         $this->Service = new FallbackService($serviceOptions);
@@ -91,10 +92,11 @@ class JsonRendererTest extends TestCase
             ->setMethods(['statusCode', 'type', 'body'])
             ->getMock();
 
-        $this->_initializeController([], 'GET', ['response' => $response]);
+        $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'controller' => $this->Controller,
+            'request' => $this->request,
+            'response' => $response,
             'rendererClass' => 'CakeDC/Api.Json'
         ];
         $this->Service = new FallbackService($serviceOptions);
@@ -131,10 +133,11 @@ class JsonRendererTest extends TestCase
             ->setMethods(['statusCode', 'type', 'body'])
             ->getMock();
 
-        $this->_initializeController([], 'GET', ['response' => $response]);
+        $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'controller' => $this->Controller,
+            'request' => $this->request,
+            'response' => $response,
             'rendererClass' => 'CakeDC/Api.Json'
         ];
         $this->Service = new FallbackService($serviceOptions);

@@ -128,7 +128,7 @@ trait ConfigTrait
      * @param array $options Options.
      * @return void
      */
-    protected function _initializeController($requestOptions = [], $method = 'GET', $options = [])
+    protected function _initializeRequest($requestOptions = [], $method = 'GET', $options = [])
     {
         $_SERVER['REQUEST_METHOD'] = $method;
         if (empty($requestOptions['params'])) {

@@ -46,7 +46,7 @@ class CrudEditActionTest extends TestCase
     public function tearDown()
     {
         ServiceRegistry::clear();
-        unset($this->Controller, $this->Service, $this->Action, $this->request);
+        unset($this->Service, $this->Action, $this->request);
         parent::tearDown();
     }
 
@@ -103,7 +103,7 @@ class CrudEditActionTest extends TestCase
 
     protected function _initializeAction($id, $post = [])
     {
-        $this->_initializeController([
+        $this->_initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -114,7 +114,10 @@ class CrudEditActionTest extends TestCase
         ], 'PUT');
         $options = [
             'version' => null,
-            'controller' => $this->Controller,
+			'service' => $this->request['service'],
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/articles/' . $id,
         ];
         $this->Service = ServiceRegistry::get($this->request['service'], $options);
 

@@ -41,7 +41,7 @@ class RawRendererTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeController();
+        $this->_initializeRequest();
     }
 
     /**
@@ -67,10 +67,11 @@ class RawRendererTest extends TestCase
             ->setMethods(['statusCode', 'type', 'body'])
             ->getMock();
 
-        $this->_initializeController([], 'GET', ['response' => $response]);
+        $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'controller' => $this->Controller,
+            'request' => $this->request,
+            'response' => $response,
             'rendererClass' => 'CakeDC/Api.Raw'
         ];
         $this->Service = new FallbackService($serviceOptions);
@@ -90,10 +91,11 @@ class RawRendererTest extends TestCase
             ->setMethods(['statusCode', 'type', 'body'])
             ->getMock();
 
-        $this->_initializeController([], 'GET', ['response' => $response]);
+        $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'controller' => $this->Controller,
+            'request' => $this->request,
+            'response' => $response,
             'rendererClass' => 'CakeDC/Api.Raw'
         ];
         $this->Service = new FallbackService($serviceOptions);
@@ -130,10 +132,11 @@ class RawRendererTest extends TestCase
             ->setMethods(['statusCode', 'type', 'body'])
             ->getMock();
 
-        $this->_initializeController([], 'GET', ['response' => $response]);
+        $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'controller' => $this->Controller,
+            'request' => $this->request,
+            'response' => $response,
             'rendererClass' => 'CakeDC/Api.Raw'
         ];
         $this->Service = new FallbackService($serviceOptions);
