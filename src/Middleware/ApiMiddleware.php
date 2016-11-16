@@ -38,17 +38,14 @@ class ApiMiddleware
 			$expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
 		}
 		$path = $request->getUri()->getPath();
-		// print_r($expr);
-		// print_r($path);
-		// exit;
+
 		if(preg_match($expr, $path, $matches)) {
 			
 			$cakeRequest = RequestTransformer::toCake($request);
 			$cakeResponse = ResponseTransformer::toCake($response); 			
-			// debug($matches);
+
 			$version = isset($matches['version']) ? $matches['version'] : null;
 			$service = $matches['service'];
-			// $base = $matches['base'];
 			$url = '/' . $service;
 			if (!empty($matches['base'])) {
 				$url .= $matches['base'];
@@ -60,7 +57,7 @@ class ApiMiddleware
 				'response' => $cakeResponse,
 				'baseUrl' => $url,
 			];
-			// print_r($u);
+
 			try {
 				$options += (new ConfigReader())->serviceOptions($service, $version);
 				$Service = ServiceRegistry::get($service, $options);
@@ -72,27 +69,7 @@ class ApiMiddleware
 				$cakeResponse->body($e->getMessage());
 			}
 			return ResponseTransformer::toPsr($cakeResponse); 
-			// return $response;
 		}
-        // try {
-            // Router::setRequestContext($request);
-            // $params = (array)$request->getAttribute('params', []);
-            // if (empty($params['controller'])) {
-                // $path = $request->getUri()->getPath();
-                // $request = $request->withAttribute('params', Router::parse($path, $request->getMethod()));
-            // }
-        // } catch (RedirectException $e) {
-            // return new RedirectResponse(
-                // $e->getMessage(),
-                // $e->getCode(),
-                // $response->getHeaders()
-            // );
-        // }
-		
-		// $path = $request->getUri()->getPath();
-		// debug(Configure::read('Api'));
-		// debug($path);
-
         return $next($request, $response);
     }
 }
