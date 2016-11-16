@@ -11,12 +11,12 @@
 
 namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Extension;
 
-use Cake\Core\Configure;
-use Cake\Utility\Hash;
+use CakeDC\Api\TestSuite\IntegrationTestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\Test\Settings;
-use CakeDC\Api\TestSuite\IntegrationTestCase;
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
 class CrudAuthorizeExtensionTest extends IntegrationTestCase
 {
@@ -33,11 +33,11 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-		$this->_tokenAccess();
-		$this->_loadDefaultExtensions([]);
+        $this->_tokenAccess();
+        $this->_loadDefaultExtensions([]);
         // setup permissions in test actions
         $this->defaultUser(Settings::USER1);
-	}
+    }
 
 
     /**
@@ -58,5 +58,4 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
         $this->assertSuccess($result);
         // $this->assertEquals($expected, $result);
     }
-
 }

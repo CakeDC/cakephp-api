@@ -14,10 +14,24 @@ namespace CakeDC\Api\Model\Entity;
 interface EntityDescriptionInterface
 {
 
+    /**
+     * Will describe the fields
+     *
+     * @return array
+     */
     public function describeFields();
 
+    /**
+     * Will describe the actions
+     *
+     * @return array
+     */
     public function describeAction();
 
+    /**
+     * Will describe the params
+     *
+     * @return array
+     */
     public function describeParams();
-
 }

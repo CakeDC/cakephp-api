@@ -25,9 +25,9 @@ class MethodNotAllowedException extends Exception
     /**
      * MethodNotAllowedException constructor.
      *
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
+     * @param string $message the string of the error message
+     * @param int $code The code of the error
+     * @param \Exception|null $previous the previous exception.
      */
     public function __construct($message = null, $code = 405, $previous = null)
     {
@@ -40,7 +40,7 @@ class MethodNotAllowedException extends Exception
     /**
      * File setter
      *
-     * @param string $file
+     * @param string $file file name
      * @return void
      */
     public function setFile($file = '')
@@ -51,7 +51,7 @@ class MethodNotAllowedException extends Exception
     /**
      * Line setter
      *
-     * @param int $line
+     * @param int $line set the line of the code
      * @return void
      */
     public function setLine($line = 0)

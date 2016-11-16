@@ -13,6 +13,7 @@ namespace CakeDC\Api\Test\Base;
 
 use Cake\ORM\TableRegistry;
 
+// @codingStandardsIgnoreStart
 trait BaseTraitTest
 {
 

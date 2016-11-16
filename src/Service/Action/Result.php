@@ -52,8 +52,8 @@ class Result
     /**
      * Result constructor.
      *
-     * @param array $data
-     * @param int $code
+     * @param array $data data to be delivered for the api
+     * @param int $code code of the api request
      */
     public function __construct($data = null, $code = null)
     {
@@ -68,7 +68,7 @@ class Result
     /**
      * Data api method.
      *
-     * @param array $value
+     * @param array $value data to be delivered for the api
      * @return array
      */
     public function data($value = null)
@@ -84,7 +84,7 @@ class Result
     /**
      * Code api method.
      *
-     * @param int $value
+     * @param int $value code of the api request
      * @return int
      */
     public function code($value = null)
@@ -100,7 +100,7 @@ class Result
     /**
      * Exception api.
      *
-     * @param Exception $value
+     * @param Exception $value set the excepltion value
      * @return Exception
      */
     public function exception($value = null)
@@ -116,8 +116,8 @@ class Result
     /**
      * Payload setter.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param string $key the key to be setted in the payload
+     * @param mixed $value value to be setted as payload
      * @return void
      */
     public function setPayload($key, $value)
@@ -128,7 +128,7 @@ class Result
     /**
      * Payload api method
      *
-     * @param string $key
+     * @param string $key the key to get the payload
      * @return mixed
      */
     public function payload($key = null)

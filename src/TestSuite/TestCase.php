@@ -11,10 +11,10 @@
 
 namespace CakeDC\Api\TestSuite;
 
-use Cake\Utility\Hash;
 use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase as BaseTestCase;
+use Cake\Utility\Hash;
 
 /**
  * Class TestCase
@@ -24,7 +24,6 @@ use Cake\TestSuite\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 
-    /**
     /**
      * setUp
      *

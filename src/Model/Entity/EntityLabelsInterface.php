@@ -14,6 +14,10 @@ namespace CakeDC\Api\Model\Entity;
 interface EntityLabelsInterface
 {
 
-	public function labels();
-
+    /**
+     * Will show all labels
+     *
+     * @return array
+     */
+    public function labels();
 }

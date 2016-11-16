@@ -248,6 +248,11 @@ class Auth
             in_array('*', $this->allowedActions);
     }
 
+    /**
+     * __get method this method will return an attribute of this class
+     *
+     * @return mixed
+     */
     public function __get($name)
     {
         if (isset($this->{$name})) {
@@ -255,6 +260,13 @@ class Auth
         }
     }
 
+    /**
+     * __set method this method will allow you set the value for an attribute of this class
+     *
+     * @param string $name name of the attribute
+     * @param string $value value of the attribute
+     * @return mixed
+     */
     public function __set($name, $value)
     {
         $this->{$name} = $value;

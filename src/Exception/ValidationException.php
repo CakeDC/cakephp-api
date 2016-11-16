@@ -31,10 +31,10 @@ class ValidationException extends ServiceException
     /**
      * Construct method, for fast instantiation
      *
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
-     * @param array $validationErrors
+     * @param string $message the string of the error message
+     * @param int $code The code of the error
+     * @param \Exception|null $previous the previous exception.
+     * @param array $validationErrors the array with the validations
      */
     public function __construct(
         $message = 'Validation errors',
@@ -52,7 +52,7 @@ class ValidationException extends ServiceException
     /**
      * Sets validation errors
      *
-     * @param array $validationErrors
+     * @param array $validationErrors the array with the validations
      * @return void
      */
     public function setValidationErrors($validationErrors = [])

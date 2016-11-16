@@ -65,7 +65,6 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      */
     public function afterAction(Event $event)
     {
-        /** @var Action $action */
         $action = $event->subject();
         $result = $action->service()->result();
         $actionName = $action->name();

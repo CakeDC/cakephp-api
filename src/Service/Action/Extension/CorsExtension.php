@@ -43,7 +43,6 @@ class CorsExtension extends Extension implements EventListenerInterface
      */
     public function onAction(Event $Event)
     {
-        /** @var Action $action */
         $action = $Event->subject();
         $request = $action->service()->request();
         $response = $action->service()->response();

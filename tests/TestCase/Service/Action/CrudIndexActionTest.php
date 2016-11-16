@@ -13,11 +13,11 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\FallbackService;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use CakeDC\Api\TestSuite\TestCase;
 
 class CrudIndexActionTest extends TestCase
 {

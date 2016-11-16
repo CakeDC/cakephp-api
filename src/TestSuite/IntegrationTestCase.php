@@ -11,12 +11,12 @@
 
 namespace CakeDC\Api\TestSuite;
 
-use Cake\Utility\Hash;
 use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase as BaseTestCase;
+use Cake\Utility\Hash;
 
 /**
  * Class IntegrationTestCase
