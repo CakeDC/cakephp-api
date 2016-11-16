@@ -52,10 +52,10 @@ class ArticlesTagAction extends CrudAction
     /**
      * Execute action.
      *
-     * @param int $tagIg the tag id
+     * @param int $tag_id the tag id
      * @return mixed
      */
-    public function action($tagId)
+    public function action($tag_id)
     {
         return true;
     }

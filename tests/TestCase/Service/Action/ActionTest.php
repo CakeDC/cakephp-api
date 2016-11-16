@@ -66,7 +66,7 @@ class ActionTest extends TestCase
                 ],
             ],
             'post' => [
-                'tagId' => 1
+                'tag_id' => 1
             ],
         ], 'PUT');
         $service = $this->request['service'];
