@@ -74,7 +74,6 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     public function findEntities(Event $event)
     {
-        /** @var Action $action */
         $action = $event->subject();
         $query = $event->data['query'];
         if ($event->result) {
@@ -159,7 +158,6 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     public function afterFind(Event $event)
     {
-        /** @var Action $action */
         $action = $event->subject();
         $records = $event->data['records'];
         $result = $action->service()->result();

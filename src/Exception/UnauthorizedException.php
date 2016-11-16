@@ -24,9 +24,9 @@ class UnauthorizedException extends Exception
     /**
      * UnauthorizedException constructor.
      *
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
+     * @param string $message the string of the error message
+     * @param int $code The code of the error
+     * @param \Exception|null $previous the previous exception.
      */
     public function __construct($message = null, $code = 401, $previous = null)
     {
@@ -39,7 +39,7 @@ class UnauthorizedException extends Exception
     /**
      * File setter
      *
-     * @param string $file
+     * @param string $file file name
      * @return void
      */
     public function setFile($file = '')
@@ -50,7 +50,7 @@ class UnauthorizedException extends Exception
     /**
      * Line setter
      *
-     * @param int $line
+     * @param int $line line of the code
      * @return void
      */
     public function setLine($line = 0)

@@ -49,7 +49,6 @@ class ExtendedSortExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        /** @var Action $action */
         $action = $event->subject();
         $query = $event->data['query'];
         if ($event->result) {

@@ -16,11 +16,11 @@ use CakeDC\Api\Service\Action\ExtensionRegistry;
 use CakeDC\Api\Service\Action\Extension\PaginateExtension;
 use CakeDC\Api\Service\Action\Extension\SortExtension;
 use CakeDC\Api\Service\FallbackService;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use CakeDC\Api\TestSuite\TestCase;
 
 class ExtensionRegistryTest extends TestCase
 {

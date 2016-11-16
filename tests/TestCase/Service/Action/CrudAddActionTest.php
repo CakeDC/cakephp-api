@@ -13,9 +13,9 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\CrudAddAction;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use CakeDC\Api\TestSuite\TestCase;
 
 class CrudAddActionTest extends TestCase
 {
@@ -94,7 +94,7 @@ class CrudAddActionTest extends TestCase
         ], 'POST');
         $options = [
             'version' => null,
-			'service' => $this->request['service'],
+            'service' => $this->request['service'],
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/articles',

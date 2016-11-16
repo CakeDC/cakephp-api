@@ -2,17 +2,16 @@
 
 namespace CakeDC\Api\Middleware;
 
+use CakeDC\Api\Service\ConfigReader;
+use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
+use Cake\Http\RequestTransformer;
+use Cake\Http\ResponseTransformer;
 use Cake\Routing\Exception\RedirectException;
 use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\RedirectResponse;
-use Cake\Http\RequestTransformer;
-use Cake\Http\ResponseTransformer;
-
-use CakeDC\Api\Service\ConfigReader;
-use CakeDC\Api\Service\ServiceRegistry;
 
 /**
  * Applies routing rules to the request and creates the controller
@@ -29,47 +28,49 @@ class ApiMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-		$prefix = 'api';
-		$useVersioning = Configure::read('Api.useVersioning');
-		if ($useVersioning) {
-			$versionPrefix = Configure::read('Api.versionPrefix');
-			$expr = '#/' . $prefix . '/(?<version>' . $versionPrefix . '\d+)' . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
-		} else {
-			$expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
-		}
-		$path = $request->getUri()->getPath();
+        $prefix = 'api';
+        $useVersioning = Configure::read('Api.useVersioning');
+        if ($useVersioning) {
+            $versionPrefix = Configure::read('Api.versionPrefix');
+            $expr = '#/' . $prefix . '/(?<version>' . $versionPrefix . '\d+)' . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
+        } else {
+            $expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
+        }
 
-		if(preg_match($expr, $path, $matches)) {
-			
-			$cakeRequest = RequestTransformer::toCake($request);
-			$cakeResponse = ResponseTransformer::toCake($response); 			
+        $path = $request->getUri()->getPath();
+        if (preg_match($expr, $path, $matches)) {
+            $cakeRequest = RequestTransformer::toCake($request);
+            $cakeResponse = ResponseTransformer::toCake($response);
 
-			$version = isset($matches['version']) ? $matches['version'] : null;
-			$service = $matches['service'];
-			$url = '/' . $service;
-			if (!empty($matches['base'])) {
-				$url .= $matches['base'];
-			}
-			$options = [
-				'service' => $service,
-				'version' => $version,
-				'request' => $cakeRequest,
-				'response' => $cakeResponse,
-				'baseUrl' => $url,
-			];
+            $version = isset($matches['version']) ? $matches['version'] : null;
+            $service = $matches['service'];
 
-			try {
-				$options += (new ConfigReader())->serviceOptions($service, $version);
-				$Service = ServiceRegistry::get($service, $options);
-				$result = $Service->dispatch();
+            $url = '/' . $service;
+            if (!empty($matches['base'])) {
+                $url .= $matches['base'];
+            }
+            $options = [
+                'service' => $service,
+                'version' => $version,
+                'request' => $cakeRequest,
+                'response' => $cakeResponse,
+                'baseUrl' => $url,
+            ];
 
-				$cakeResponse = $Service->respond($result);
-			} catch (Exception $e) {
-				$cakeResponse->statusCode(400);
-				$cakeResponse->body($e->getMessage());
-			}
-			return ResponseTransformer::toPsr($cakeResponse); 
-		}
+            try {
+                $options += (new ConfigReader())->serviceOptions($service, $version);
+                $Service = ServiceRegistry::get($service, $options);
+                $result = $Service->dispatch();
+
+                $cakeResponse = $Service->respond($result);
+            } catch (Exception $e) {
+                $cakeResponse->statusCode(400);
+                $cakeResponse->body($e->getMessage());
+            }
+
+            return ResponseTransformer::toPsr($cakeResponse);
+        }
+
         return $next($request, $response);
     }
 }

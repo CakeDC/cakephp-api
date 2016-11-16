@@ -52,7 +52,6 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        /** @var Action $action */
         $action = $event->subject();
         $query = $event->data['query'];
         if ($event->result) {
@@ -112,7 +111,6 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function afterFind(Event $event)
     {
-        /** @var Action $action */
         $action = $event->subject();
         $query = $event->data['query'];
         $result = $action->service()->result();

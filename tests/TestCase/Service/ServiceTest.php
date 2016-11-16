@@ -11,15 +11,15 @@
 
 namespace CakeDC\Api\Test\App\Service;
 
-use Cake\Core\Configure;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use Cake\Controller\Controller;
-use CakeDC\Api\TestSuite\TestCase;
+use Cake\Core\Configure;
 
 class ServiceTest extends TestCase
 {

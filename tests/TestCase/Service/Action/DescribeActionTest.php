@@ -13,9 +13,9 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\DescribeAction;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use CakeDC\Api\TestSuite\TestCase;
 
 /**
  * Class DescribeActionTest
@@ -54,7 +54,7 @@ class DescribeActionTest extends TestCase
         $service = $this->request['service'];
         $options = [
             'version' => null,
-			'service' => $service,
+            'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/describe',

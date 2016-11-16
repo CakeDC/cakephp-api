@@ -100,5 +100,4 @@ class PaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals($expected, $result['pagination']);
         $this->assertEquals(range(5, 8), Hash::extract($result, 'data.{n}.id'));
     }
-
 }

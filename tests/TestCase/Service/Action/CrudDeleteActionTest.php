@@ -13,9 +13,9 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\CrudDeleteAction;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use CakeDC\Api\TestSuite\TestCase;
 
 class CrudDeleteActionTest extends TestCase
 {
@@ -98,7 +98,7 @@ class CrudDeleteActionTest extends TestCase
         ], 'DELETE');
         $options = [
             'version' => null,
-			'service' => $this->request['service'],
+            'service' => $this->request['service'],
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/articles/' . $id,

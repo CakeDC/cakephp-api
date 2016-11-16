@@ -16,10 +16,10 @@ use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
+use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Users\Auth\Rules\Rule;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use CakeDC\Api\TestSuite\TestCase;
 use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase
