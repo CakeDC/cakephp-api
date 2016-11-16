@@ -55,6 +55,7 @@ class ArticlesTagAction extends CrudAction
      * @param int $tag_id the tag id
      * @return mixed
      */
+    // @codingStandardsIgnoreStart
     public function action($tag_id)
     {
         return true;
