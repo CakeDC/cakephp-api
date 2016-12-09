@@ -83,6 +83,7 @@ class JSendRenderer extends BaseRenderer
         if (is_array($payload)) {
             $return = Hash::merge($return, $payload);
         }
+        $this->_mapStatus($result);
         $response->body($this->_format($this->status, $return));
 
         return true;
@@ -171,5 +172,21 @@ class JSendRenderer extends BaseRenderer
         }
 
         return $this->_format(self::STATUS_ERROR, $response);
+    }
+
+    /**
+     * Update status based on result code
+     *
+     * @param Result $result
+     * @return void
+     */
+    protected function _mapStatus(Result $result)
+    {
+        $code = (int)$result->code();
+        if ($code == 0 || $code >= 200 && $code <= 399) {
+            $this->status = self::STATUS_SUCCESS;
+        } else {
+            $this->status = self::STATUS_ERROR;
+        }
     }
 }

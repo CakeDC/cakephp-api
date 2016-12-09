@@ -395,8 +395,13 @@ abstract class Service
         try {
             $action = $this->buildAction();
             $result = $action->process();
-            $this->result()->data($result);
-            $this->result()->code(200);
+
+            if ($result instanceof Result) {
+                $this->result($result);
+            }  else {
+                $this->result()->data($result);
+                $this->result()->code(200);
+            }
         } catch (RecordNotFoundException $e) {
             $this->result()->code(404);
             $this->result()->exception($e);
@@ -535,10 +540,13 @@ abstract class Service
     /**
      * @return \CakeDC\Api\Service\Action\Result
      */
-    public function result()
+    public function result($value = null)
     {
         if ($this->_parentService !== null) {
-            return $this->_parentService->result();
+            return $this->_parentService->result($value);
+        }
+        if ($value instanceof Result) {
+            $this->_result = $value;
         }
         if ($this->_result === null) {
             $this->_result = new Result();
