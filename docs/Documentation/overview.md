@@ -142,8 +142,8 @@ Each **Service** class defines it's **renderer** in the ```rendererClass``` opti
 
 Suported next renderers:
 
-* Json - json object.
-* JSend json object in JSend format.
+* Json - JSON object.
+* JSend JSON object in JSend format.
 * Raw - returns data as it is provided.
 * Xml - format result data as xml.
 
@@ -152,10 +152,7 @@ Suported next renderers:
 Each JSend object on top level has result and data items.
 Additionally all metadata appended here too.
 
-
 ### Exceptions
-
-
 
 #### Links 
 
@@ -168,7 +165,6 @@ If we will talk about crud actions there defined next links:
 * view - have links to edit, delete and index actions. Have links to index action of all nested services.
 
 #### Pagination/
-
 
 ### Status Codes
 
