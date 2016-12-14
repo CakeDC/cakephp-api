@@ -435,9 +435,12 @@ abstract class Service
         }
         if (in_array($serviceName, $this->_innerServices)) {
             $options = [
+//                'service' => $this->name(),
                 'version' => $this->version(),
                 'request' => $this->request(),
                 'response' => $this->response(),
+//                'baseUrl' => $this->baseUrl(),
+                'refresh' => true,
             ];
             $service = ServiceRegistry::get($serviceName, $options);
             $service->parent($this);
