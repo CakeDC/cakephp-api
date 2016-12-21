@@ -32,7 +32,7 @@ class DescribeService extends Service
     public function loadRoutes()
     {
         ApiRouter::scope('/', function (RouteBuilder $routes) {
-            $routes->extensions($this->_extensions);
+            $routes->extensions($this->_routeExtensions);
             $routes->connect('/describe/', ['controller' => 'describe', 'action' => 'describe']);
         });
     }

@@ -37,7 +37,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     use ValidatorAwareTrait;
 
     /**
-     * Extensions to load  and attach to listener
+     * Extensions to load and attach to listener
      *
      * @var array
      */
@@ -201,7 +201,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function process()
     {
-        $event = $this->dispatchEvent('Action.beforeProcess');
+        $event = $this->dispatchEvent('Action.beforeProcess', ['action' => $this]);
 
         if ($event->isStopped()) {
             return $event->result;
@@ -213,16 +213,19 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         $event = $this->dispatchEvent('Action.beforeValidate', compact('data'));
 
         if ($event->isStopped()) {
+            $this->dispatchEvent('Action.beforeValidateStopped', []);
             return $event->result;
         }
 
         if (!$this->validates()) {
+            $this->dispatchEvent('Action.validationFailed', []);
             throw new ValidationException(__('Validation failed'), 0, null, []);
         }
 
         $event = $this->dispatchEvent('Action.beforeExecute', compact('data'));
 
         if ($event->isStopped()) {
+            $this->dispatchEvent('Action.beforeExecuteStopped', []);
             return $event->result;
         }
 
@@ -306,7 +309,6 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     {
         return $this->service()->parser()->params();
     }
-
 
     /**
      * Get the extension registry for this action.

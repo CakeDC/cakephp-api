@@ -11,6 +11,10 @@
 
 namespace CakeDC\Api\Service;
 
+use Cake\Event\EventDispatcherInterface;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
@@ -31,8 +35,16 @@ use Exception;
 /**
  * Class Service
  */
-abstract class Service
+abstract class Service implements EventListenerInterface, EventDispatcherInterface
 {
+    use EventDispatcherTrait;
+
+    /**
+     * Extensions to load and attach to listener
+     *
+     * @var array
+     */
+    public $extensions = [];
 
     /**
      * Actions routes description map, indexed by action name.
@@ -53,7 +65,7 @@ abstract class Service
      *
      * @var array
      */
-    protected $_extensions = ['json'];
+    protected $_routeExtensions = ['json'];
 
     /**
      *
@@ -75,7 +87,6 @@ abstract class Service
      * @var int
      */
     protected $_version;
-
 
     /**
      * Parser class to process the HTTP request.
@@ -153,6 +164,13 @@ abstract class Service
     protected $_corsSuffix = '_cors';
 
     /**
+     * Extension registry.
+     *
+     * @var \CakeDC\Api\Service\ExtensionRegistry
+     */
+    protected $_extensions;
+
+    /**
      * Service constructor.
      *
      * @param array $config Service configuration.
@@ -177,9 +195,23 @@ abstract class Service
         if (isset($config['classMap'])) {
             $this->_actionsClassMap = Hash::merge($this->_actionsClassMap, $config['classMap']);
         }
+		
+        if (!empty($config['Extension'])) {
+            $this->extensions = (Hash::merge($this->extensions, $config['Extension']));
+        }
+        $extensionRegistry = $eventManager = null;
+        if (!empty($config['eventManager'])) {
+            $eventManager = $config['eventManager'];
+        }
+        $this->_eventManager = $eventManager ?: new EventManager();
+
         $this->initialize();
         $this->_initializeParser($config);
         $this->_initializeRenderer($config);
+        $this->_eventManager->on($this);
+        $this->extensions($extensionRegistry);
+        $this->_loadExtensions();
+		
     }
 
     /**
@@ -306,8 +338,8 @@ abstract class Service
     {
         $defaultOptions = $this->routerDefaultOptions();
         ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions) {
-            if (is_array($this->_extensions)) {
-                $routes->extensions($this->_extensions);
+            if (is_array($this->_routeExtensions)) {
+                $routes->extensions($this->_routeExtensions);
             }
             if (!empty($defaultOptions['map'])) {
                 $routes->resources($this->name(), $defaultOptions);
@@ -393,7 +425,9 @@ abstract class Service
     public function dispatch()
     {
         try {
+			$this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
             $action = $this->buildAction();
+			$this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
             $result = $action->process();
 
             if ($result instanceof Result) {
@@ -412,6 +446,7 @@ abstract class Service
             }
             $this->result()->exception($e);
         }
+		$this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
 
         return $this->result();
     }
@@ -435,11 +470,9 @@ abstract class Service
         }
         if (in_array($serviceName, $this->_innerServices)) {
             $options = [
-//                'service' => $this->name(),
                 'version' => $this->version(),
                 'request' => $this->request(),
                 'response' => $this->response(),
-//                'baseUrl' => $this->baseUrl(),
                 'refresh' => true,
             ];
             $service = ServiceRegistry::get($serviceName, $options);
@@ -635,6 +668,67 @@ abstract class Service
         }
         $this->_actions[$actionName] = $route;
     }
+	
+    /**
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        $eventMap = [
+            'Service.beforeDispatch' => 'beforeDispatch',
+            'Service.beforeProcess' => 'beforeProcess',
+            'Service.afterDispatch' => 'afterDispatch',
+        ];
+        $events = [];
+
+        foreach ($eventMap as $event => $method) {
+            if (!method_exists($this, $method)) {
+                continue;
+            }
+            $events[$event] = $method;
+        }
+
+        return $events;
+    }
+
+    /**
+     * Get the extension registry for this service.
+     *
+     * If called with the first parameter, it will be set as the action $this->_extensions property
+     *
+     * @param \CakeDC\Api\Service\ExtensionRegistry|null $extensions Extension registry.
+     *
+     * @return \CakeDC\Api\Service\ExtensionRegistry
+     */
+    public function extensions($extensions = null)
+    {
+        if ($extensions === null && $this->_extensions === null) {
+            $this->_extensions = new ExtensionRegistry($this);
+        }
+        if ($extensions !== null) {
+            $this->_extensions = $extensions;
+        }
+
+        return $this->_extensions;
+    }
+
+    /**
+     * Loads the defined extensions using the Extension factory.
+     *
+     * @return void
+     */
+    protected function _loadExtensions()
+    {
+        if (empty($this->extensions)) {
+            return;
+        }
+        $registry = $this->extensions();
+        $extensions = $registry->normalizeArray($this->extensions);
+        foreach ($extensions as $properties) {
+            $instance = $registry->load($properties['class'], $properties['config']);
+            $this->_eventManager->on($instance);
+        }
+    }	
 
     /**
      * Initialize parser.

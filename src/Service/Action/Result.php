@@ -142,4 +142,29 @@ class Result
 
         return null;
     }
+
+    public function toArray()
+    {
+        $info = [
+            'code' => $this->_code,
+            'data' => $this->_data,
+            'payload' => $this->_payload,
+        ];
+        if ($this->_exception !== null) {
+            $info['exception'] = $this->_exception->getMessage();
+        }
+        return $info;
+    }
+
+    /**
+     * Returns an array that can be used to describe the internal state of this
+     * object.
+     *
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->toArray();
+    }
+
 }

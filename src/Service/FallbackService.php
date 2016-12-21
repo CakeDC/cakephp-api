@@ -55,21 +55,20 @@ class FallbackService extends NestedCrudService
 
         $defaultOptions = $this->routerDefaultOptions();
         ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions) {
-            $routes->extensions($this->_extensions);
+            $routes->extensions($this->_routeExtensions);
             $options = $defaultOptions;
             $options['map'] = array_merge($options['map'], [
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ':id'],
             ]);
             $routes->resources($this->name(), $options, function ($routes) use ($table) {
-                if (is_array($this->_extensions)) {
-                    $routes->extensions($this->_extensions);
+                if (is_array($this->_routeExtensions)) {
+                    $routes->extensions($this->_routeExtensions);
 
                     $keys = ['HasMany'/*, 'HasOne'*/];
 
                     foreach ($keys as $type) {
-                        foreach ($table->associations()
-                                       ->type($type) as $assoc) {
+                        foreach ($table->associations()->type($type) as $assoc) {
                             $target = $assoc->target();
                             $alias = $target->alias();
 
