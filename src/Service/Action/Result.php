@@ -152,6 +152,7 @@ class Result
         ];
         if ($this->_exception !== null) {
             $info['exception'] = $this->_exception->getMessage();
+            $info['exceptionStack'] = $this->_exception->getTraceAsString();
         }
         return $info;
     }
