@@ -33,7 +33,7 @@
     },
     "require-dev": {
         "cakedc/users": "*" ,
-        "phpunit/phpunit": "^5.0"
+        "phpunit/phpunit": "<6.0"
     },
     "suggest": {
         "cakedc/users": "Users Plugin for CakePHP"
