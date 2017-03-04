@@ -2,19 +2,13 @@
 
 namespace CakeDC\Api\Middleware;
 
-use Cake\Utility\Exception\XmlException;
-use Cake\Utility\Xml;
-use CakeDC\Api\Service\ConfigReader;
-use CakeDC\Api\Service\ServiceRegistry;
-use Cake\Core\Configure;
 use Cake\Http\RequestTransformer;
 use Cake\Http\ResponseTransformer;
-use Cake\Routing\Exception\RedirectException;
-use Cake\Routing\Router;
+use Cake\Utility\Exception\XmlException;
+use Cake\Utility\Xml;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use Zend\Diactoros\Response\RedirectResponse;
 
 /**
  * Applies routing rules to the request and creates the controller
@@ -52,6 +46,7 @@ class RequestHandlerMiddleware
             }
             if (empty($parsedBody) && $this->requestedWith($type)) {
                 $input = call_user_func_array([$this->request, 'input'], $handler);
+
                 return $next($request->withParsedBody($input), $response);
             }
         }

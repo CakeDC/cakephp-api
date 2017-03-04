@@ -424,7 +424,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function dispatch()
     {
         try {
-			$this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
+            $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
             $action = $this->buildAction();
             $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
             $result = $action->process();
