@@ -143,7 +143,7 @@ Each **Service** class defines it's **renderer** in the ```rendererClass``` opti
 Suported next renderers:
 
 * Json - JSON object.
-* JSend JSON object in JSend format.
+* JSend JSON object in JSend format. This is default renderer that configured in config/api.php configuration file.
 * Raw - returns data as it is provided.
 * Xml - format result data as xml.
 
