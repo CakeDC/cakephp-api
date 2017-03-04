@@ -11,10 +11,6 @@
 
 namespace CakeDC\Api\Service;
 
-use Cake\Event\EventDispatcherInterface;
-use Cake\Event\EventDispatcherTrait;
-use Cake\Event\EventListenerInterface;
-use Cake\Event\EventManager;
 use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
@@ -26,6 +22,10 @@ use CakeDC\Api\Service\RequestParser\BaseParser;
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherInterface;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 use Cake\Http\Client\Response;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Hash;
@@ -195,7 +195,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if (isset($config['classMap'])) {
             $this->_actionsClassMap = Hash::merge($this->_actionsClassMap, $config['classMap']);
         }
-		
+
         if (!empty($config['Extension'])) {
             $this->extensions = (Hash::merge($this->extensions, $config['Extension']));
         }
@@ -211,7 +211,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $this->_eventManager->on($this);
         $this->extensions($extensionRegistry);
         $this->_loadExtensions();
-		
     }
 
     /**
@@ -427,12 +426,12 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         try {
 			$this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
             $action = $this->buildAction();
-			$this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
+            $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
             $result = $action->process();
 
             if ($result instanceof Result) {
                 $this->result($result);
-            }  else {
+            } else {
                 $this->result()->data($result);
                 $this->result()->code(200);
             }
@@ -446,7 +445,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             }
             $this->result()->exception($e);
         }
-		$this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
+        $this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
 
         return $this->result();
     }
@@ -668,8 +667,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
         $this->_actions[$actionName] = $route;
     }
-	
+
     /**
+     * Lists supported events.
+     *
      * @return array
      */
     public function implementedEvents()
@@ -728,7 +729,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $instance = $registry->load($properties['class'], $properties['config']);
             $this->_eventManager->on($instance);
         }
-    }	
+    }
 
     /**
      * Initialize parser.

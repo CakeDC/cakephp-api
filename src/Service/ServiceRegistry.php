@@ -19,7 +19,6 @@ class ServiceRegistry implements EventDispatcherInterface
 
     use EventDispatcherTrait;
 
-
     /**
      * LocatorInterface implementation instance.
      *

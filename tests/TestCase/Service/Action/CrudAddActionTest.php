@@ -66,7 +66,6 @@ class CrudAddActionTest extends TestCase
         $this->assertNotEmpty($result['id']);
     }
 
-
     /**
      * Test load value method
      *

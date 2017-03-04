@@ -2,6 +2,8 @@
 
 namespace CakeDC\Api\Middleware;
 
+use Cake\Utility\Exception\XmlException;
+use Cake\Utility\Xml;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
@@ -11,6 +13,7 @@ use Cake\Routing\Exception\RedirectException;
 use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 use Zend\Diactoros\Response\RedirectResponse;
 
 /**
@@ -19,7 +22,6 @@ use Zend\Diactoros\Response\RedirectResponse;
  */
 class RequestHandlerMiddleware
 {
-
 
     /**
      * Request object
@@ -40,23 +42,22 @@ class RequestHandlerMiddleware
             'json' => ['json_decode', true],
             'xml' => [[$this, 'convertXml']],
         ];
-		$this->request = RequestTransformer::toCake($request);
-		$this->response = ResponseTransformer::toCake($response);
-		$parsedBody = $request->getParsedBody();
+        $this->request = RequestTransformer::toCake($request);
+        $this->response = ResponseTransformer::toCake($response);
+        $parsedBody = $request->getParsedBody();
 
-         foreach ($inputTypeMap as $type => $handler) {
-             if (!is_callable($handler[0])) {
-                 throw new RuntimeException(sprintf("Invalid callable for '%s' type.", $type));
-             }
-             if (empty($parsedBody) && $this->requestedWith($type)) {
-                 $input = call_user_func_array([$this->request, 'input'], $handler);
-                 return $next($request->withParsedBody($input), $response);
-             }
-         }
-		
+        foreach ($inputTypeMap as $type => $handler) {
+            if (!is_callable($handler[0])) {
+                throw new RuntimeException(sprintf("Invalid callable for '%s' type.", $type));
+            }
+            if (empty($parsedBody) && $this->requestedWith($type)) {
+                $input = call_user_func_array([$this->request, 'input'], $handler);
+                return $next($request->withParsedBody($input), $response);
+            }
+        }
+
         return $next($request, $response);
     }
-	
 
     /**
      * Determines the content type of the data the client has sent (i.e. in a POST request)
@@ -69,11 +70,7 @@ class RequestHandlerMiddleware
     public function requestedWith($type = null)
     {
         $request = $this->request;
-        if (!$request->is('post') &&
-            !$request->is('put') &&
-            !$request->is('patch') &&
-            !$request->is('delete')
-        ) {
+        if (!$request->is('post') && !$request->is('put') && !$request->is('patch') && !$request->is('delete')) {
             return null;
         }
         if (is_array($type)) {
@@ -116,6 +113,4 @@ class RequestHandlerMiddleware
             return [];
         }
     }
-
-	
 }

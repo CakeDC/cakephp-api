@@ -143,6 +143,11 @@ class Result
         return null;
     }
 
+    /**
+     * To array transformation.
+     *
+     * @return array
+     */
     public function toArray()
     {
         $info = [
@@ -154,6 +159,7 @@ class Result
             $info['exception'] = $this->_exception->getMessage();
             $info['exceptionStack'] = $this->_exception->getTraceAsString();
         }
+
         return $info;
     }
 
@@ -167,5 +173,4 @@ class Result
     {
         return $this->toArray();
     }
-
 }
