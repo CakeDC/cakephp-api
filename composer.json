@@ -29,10 +29,9 @@
     "require": {
         "php": ">=5.4.16",
         "cakephp/cakephp": "^3.4",
-        "cakedc/users": "^4.0"
+        "cakedc/users": "dev-feature/core34"
     },
     "require-dev": {
-        "cakedc/users": "*" ,
         "phpunit/phpunit": "^5.0"
     },
     "suggest": {
