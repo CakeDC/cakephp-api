@@ -79,15 +79,14 @@ class TokenAuthenticate extends BaseAuthenticate
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 
-        $this->_config['fields']['username'] = $this->config('field');
-        $this->_config['userModel'] = $this->config('table');
+        $this->_config['fields']['username'] = $this->getConfig('field');
+        $this->_config['userModel'] = $this->getConfig('table');
         $this->_config['finder'] = 'all';
         $result = $this->_query($apiKey)->first();
 
         if (empty($result)) {
             return false;
         }
-
         return $result->toArray();
         //idea: add array with checks to be passed to $request->is(...)
     }
@@ -100,9 +99,9 @@ class TokenAuthenticate extends BaseAuthenticate
      */
     public function querystring(Request $request)
     {
-        $name = $this->config('name');
+        $name = $this->getConfig('name');
 
-        return $request->query($name);
+        return $request->getQuery($name);
     }
 
     /**
@@ -113,8 +112,8 @@ class TokenAuthenticate extends BaseAuthenticate
      */
     public function header(Request $request)
     {
-        $name = $this->config('name');
+        $name = $this->getConfig('name');
 
-        return $request->header($name);
+        return $request->getHeader($name);
     }
 }
