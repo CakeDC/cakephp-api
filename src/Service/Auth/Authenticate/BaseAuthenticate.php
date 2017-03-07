@@ -102,7 +102,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
     public function __construct(Action $action, array $config = [])
     {
         $this->_action = $action;
-        $this->config($config);
+        $this->setConfig($config);
     }
 
     /**
@@ -150,7 +150,9 @@ abstract class BaseAuthenticate implements EventListenerInterface
         $table = TableRegistry::get($config['userModel']);
 
         $options = [
-            'conditions' => [$table->aliasField($config['fields']['username']) => $username]
+            'conditions' => [
+                $table->aliasField($config['fields']['username']) => $username
+            ]
         ];
 
         if (!empty($config['scope'])) {
@@ -167,7 +169,6 @@ abstract class BaseAuthenticate implements EventListenerInterface
         }
 
         $query = $table->find($finder, $options);
-
         return $query;
     }
 
