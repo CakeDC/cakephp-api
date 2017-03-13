@@ -74,7 +74,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
+        $action = $event->getSubject();
         $query = $event->data['query'];
         if ($event->result) {
             $query = $event->result;
@@ -83,7 +83,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $sinceId = $this->_sinceId($action);
         $maxId = $this->_maxId($action);
         $orderDirection = 'desc';
-        $cursorField = $this->config('cursorField');
+        $cursorField = $this->getConfig('cursorField');
         if ($maxId) {
             $orderDirection = 'desc';
             $query->where([$cursorField . ' <' => $maxId]);
@@ -105,7 +105,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     protected function _sinceId(Action $action)
     {
         $data = $action->data();
-        $sinceIdField = $this->config('sinceIdField');
+        $sinceIdField = $this->getConfig('sinceIdField');
         if (!empty($sinceIdField) && !empty($data[$sinceIdField]) && is_numeric($data[$sinceIdField])) {
             return (int)$data[$sinceIdField];
         } else {
@@ -122,7 +122,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     protected function _maxId(Action $action)
     {
         $data = $action->data();
-        $maxIdField = $this->config('maxIdField');
+        $maxIdField = $this->getConfig('maxIdField');
         if (!empty($maxIdField) && !empty($data[$maxIdField]) && is_numeric($data[$maxIdField])) {
             return (int)$data[$maxIdField];
         } else {
@@ -139,8 +139,8 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     protected function _count(Action $action)
     {
         $data = $action->data();
-        $countField = $this->config('countField');
-        $maxCount = $this->config('defaultCount');
+        $countField = $this->getConfig('countField');
+        $maxCount = $this->getConfig('defaultCount');
         if (!empty($countField) && !empty($data[$countField]) && is_numeric($data[$countField])) {
             $count = min((int)$data[$countField], $maxCount);
 
@@ -158,13 +158,13 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     public function afterFind(Event $event)
     {
-        $action = $event->subject();
+        $action = $event->getSubject();
         $records = $event->data['records'];
         $result = $action->service()->result();
 
         $newMaxId = null;
         $newSinceId = null;
-        $cursorField = $this->config('cursorField');
+        $cursorField = $this->getConfig('cursorField');
         foreach ($records as $item) {
             $value = $item[$cursorField];
             if ($value !== null) {

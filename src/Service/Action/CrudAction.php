@@ -168,8 +168,8 @@ abstract class CrudAction extends Action
     protected function _getEntity($primaryKey)
     {
         $table = $this->table();
-        $key = (array)$table->primaryKey();
-        $alias = $table->alias();
+        $key = (array)$table->getPrimaryKey();
+        $alias = $table->getAlias();
         foreach ($key as $index => $keyname) {
             $key[$index] = $alias . '.' . $keyname;
         }
@@ -180,7 +180,7 @@ abstract class CrudAction extends Action
                 return var_export($key, true);
             }, $primaryKey);
 
-            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->table(), implode($primaryKey, ', ')));
+            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->getTable(), implode($primaryKey, ', ')));
         }
         $conditions = array_combine($key, $primaryKey);
         $query = $table->find('all')->where($conditions);
@@ -204,7 +204,7 @@ abstract class CrudAction extends Action
         if ($this->table()->save($entity)) {
             return $entity;
         } else {
-            throw new ValidationException(__('Validation on {0} failed', $this->table()->alias()), 0, null, $entity->errors());
+            throw new ValidationException(__('Validation on {0} failed', $this->table()->getAlias()), 0, null, $entity->errors());
         }
     }
 
@@ -256,7 +256,7 @@ abstract class CrudAction extends Action
     protected function _describe()
     {
         $table = $this->table();
-        $schema = $table->schema();
+        $schema = $table->getSchema();
 
         $entity = $this->_newEntity();
 //		$q=$entity->visibleProperties();

@@ -106,7 +106,7 @@ class Auth
         if (array_key_exists('response', $config)) {
             $this->response = $config['response'];
         }
-        $this->config($config);
+        $this->setConfig($config);
         $this->initialize($config);
     }
 
@@ -140,13 +140,13 @@ class Auth
             'authError' => __d('CakeDC/Api', 'You are not authorized to access that location.')
         ];
 
-        $config = $this->config();
+        $config = $this->getConfig();
         foreach ($config as $key => $value) {
             if ($value !== null) {
                 unset($defaults[$key]);
             }
         }
-        $this->config($defaults);
+        $this->setConfig($defaults);
     }
 
     /**
@@ -251,6 +251,7 @@ class Auth
     /**
      * __get method this method will return an attribute of this class
      *
+     * @param $name
      * @return mixed
      */
     public function __get($name)
@@ -258,6 +259,7 @@ class Auth
         if (isset($this->{$name})) {
             return $this->{$name};
         }
+        return null;
     }
 
     /**
@@ -265,7 +267,7 @@ class Auth
      *
      * @param string $name name of the attribute
      * @param string $value value of the attribute
-     * @return mixed
+     * @return void
      */
     public function __set($name, $value)
     {

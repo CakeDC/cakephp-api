@@ -11,6 +11,7 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use Cake\Datasource\EntityInterface;
 use CakeDC\Api\Service\Action\CrudAddAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
@@ -62,7 +63,7 @@ class CrudAddActionTest extends TestCase
         ]);
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\Datasource\EntityInterface);
+        $this->assertTrue($result instanceof EntityInterface);
         $this->assertNotEmpty($result['id']);
     }
 
@@ -80,7 +81,7 @@ class CrudAddActionTest extends TestCase
         ]);
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\Datasource\EntityInterface);
+        $this->assertTrue($result instanceof EntityInterface);
     }
 
     protected function _initializeAction($post = [])

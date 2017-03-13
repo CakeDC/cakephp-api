@@ -88,7 +88,7 @@ class SocialAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->config('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 

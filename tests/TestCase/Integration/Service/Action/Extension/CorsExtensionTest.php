@@ -60,7 +60,7 @@ class CorsExtensionTest extends IntegrationTestCase
         $this->_request['headers']['Origin'] = 'http://foobar.com';
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id']);
         $result = $this->responseJson();
-        $headers = $this->_response->header();
+        $headers = $this->_response->getHeaders();
         $this->assertSuccess($result);
         $this->assertTrue(!empty($headers));
         $this->assertEquals('*', $headers['Access-Control-Allow-Origin']);

@@ -147,7 +147,7 @@ trait ConfigTrait
         } else {
             $this->response = $options['response'];
         }
-        $this->Controller = $this->createMock('Cake\Controller\Controller', ['redirect']);
+        $this->Controller = $this->createMock('Cake\Controller\Controller');
         $this->Controller->request = $this->request;
         $this->Controller->response = $this->response;
     }

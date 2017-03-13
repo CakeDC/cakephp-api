@@ -15,6 +15,7 @@ use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
+use Cake\Http\ServerRequest;
 use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
@@ -503,7 +504,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function parseRoute($url)
     {
         return $this->_routesWrapper(function () use ($url) {
-            return ApiRouter::parse($url);
+            return ApiRouter::parseRequest(new ServerRequest($url));
         });
     }
 
@@ -574,7 +575,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * @return \CakeDC\Api\Service\Action\Result
+     * @param null $value
+     * @return Result
      */
     public function result($value = null)
     {
@@ -603,7 +605,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $result = $this->result();
         }
         $this->response()
-             ->statusCode($result->code());
+             ->withStatus($result->code());
         if ($result->exception() !== null) {
             $this->renderer()
                  ->error($result->exception());

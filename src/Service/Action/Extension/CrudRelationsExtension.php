@@ -51,7 +51,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      */
     public function findEntity(Event $event)
     {
-        return $this->_attachAssociations($event->subject(), $event->data['query']);
+        return $this->_attachAssociations($event->getSubject(), $event->data['query']);
     }
 
     /**
@@ -62,7 +62,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        return $this->_attachAssociations($event->subject(), $event->data['query']);
+        return $this->_attachAssociations($event->getSubject(), $event->data['query']);
     }
 
     /**

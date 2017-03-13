@@ -11,7 +11,9 @@
 
 namespace CakeDC\Api\Test\App\Model\Table;
 
-class AuthorsTable extends \Cake\ORM\Table
+use Cake\ORM\Table;
+
+class AuthorsTable extends Table
 {
     /**
      * Initialize method
@@ -21,9 +23,9 @@ class AuthorsTable extends \Cake\ORM\Table
      */
     public function initialize(array $config)
     {
-        $this->table('authors');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('authors');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
 
         $this->hasMany('Articles', [

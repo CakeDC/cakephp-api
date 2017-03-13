@@ -63,7 +63,7 @@ curl -i https://myapi.com/api/blogs?limit=1
             "name": "mark",
             "description": "",
             "created": null
-        },
+        }
     ],
     "pagination": {
         "page": 1,
@@ -155,7 +155,7 @@ curl --data "description=Jorge best blog" https://myapi.com/api/blogs/25
 {
     "status": "error",
     "message": "A route matching \"\/blogs\/26\" could not be found.",
-    "code": 404,
+    "code": 404
 }
 ```
 

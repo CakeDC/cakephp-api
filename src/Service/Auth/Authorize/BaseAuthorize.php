@@ -60,7 +60,7 @@ abstract class BaseAuthorize
     public function __construct(Action $action, array $config = [])
     {
         $this->setAction($action);
-        $this->config($config);
+        $this->setConfig($config);
     }
 
     /**

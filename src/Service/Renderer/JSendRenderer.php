@@ -73,7 +73,7 @@ class JSendRenderer extends BaseRenderer
     public function response(Result $result = null)
     {
         $response = $this->_service->response();
-        $response->statusCode($result->code());
+        $response->withStatus($result->code());
         $response->type('application/json');
         $data = $result->data();
         $payload = $result->payload();
@@ -84,7 +84,10 @@ class JSendRenderer extends BaseRenderer
             $return = Hash::merge($return, $payload);
         }
         $this->_mapStatus($result);
-        $response->body($this->_format($this->status, $return));
+        $body = $response->getBody();
+        $body->rewind();
+        $body->write($this->_format($this->status, $return));
+        $response->withBody($body);
 
         return true;
     }
@@ -106,8 +109,11 @@ class JSendRenderer extends BaseRenderer
         }
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
-        $response->statusCode((int)$this->errorCode);
-        $response->body($this->_error($message, $exception->getCode(), $data, $trace));
+        $response->withStatus((int)$this->errorCode);
+        $body = $response->getBody();
+        $body->rewind();
+        $body->write($this->_error($message, $exception->getCode(), $data, $trace));
+        $response->withBody($body);
     }
 
     /**

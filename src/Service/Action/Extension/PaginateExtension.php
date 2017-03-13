@@ -52,7 +52,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
+        $action = $event->getSubject();
         $query = $event->data['query'];
         if ($event->result) {
             $query = $event->result;
@@ -72,7 +72,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     protected function _page(Action $action)
     {
         $data = $action->data();
-        $pageField = $this->config('pageField');
+        $pageField = $this->getConfig('pageField');
         if (!empty($data[$pageField]) && is_numeric($data[$pageField])) {
             return (int)$data[$pageField];
         } else {
@@ -89,10 +89,10 @@ class PaginateExtension extends Extension implements EventListenerInterface
     protected function _limit(Action $action)
     {
         $data = $action->data();
-        $limitField = $this->config('limitField');
-        $maxLimit = $action->config($limitField);
+        $limitField = $this->getConfig('limitField');
+        $maxLimit = $action->getConfig($limitField);
         if (empty($maxLimit)) {
-            $maxLimit = $this->config('defaultLimit');
+            $maxLimit = $this->getConfig('defaultLimit');
         }
         if (!empty($limitField) && !empty($data[$limitField]) && is_numeric($data[$limitField])) {
             $limit = min((int)$data[$limitField], $maxLimit);
@@ -111,7 +111,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function afterFind(Event $event)
     {
-        $action = $event->subject();
+        $action = $event->getSubject();
         $query = $event->data['query'];
         $result = $action->service()->result();
         $count = $query->count();

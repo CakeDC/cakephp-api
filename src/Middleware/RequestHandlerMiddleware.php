@@ -2,16 +2,11 @@
 
 namespace CakeDC\Api\Middleware;
 
-use CakeDC\Api\Service\ConfigReader;
-use CakeDC\Api\Service\ServiceRegistry;
-use Cake\Core\Configure;
-use Cake\Http\RequestTransformer;
-use Cake\Http\ResponseTransformer;
-use Cake\Routing\Exception\RedirectException;
-use Cake\Routing\Router;
+use Cake\Utility\Exception\XmlException;
+use Cake\Utility\Xml;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\RedirectResponse;
+use RuntimeException;
 
 /**
  * Applies routing rules to the request and creates the controller
@@ -40,8 +35,8 @@ class RequestHandlerMiddleware
             'json' => ['json_decode', true],
             'xml' => [[$this, 'convertXml']],
         ];
-		$this->request = RequestTransformer::toCake($request);
-		$this->response = ResponseTransformer::toCake($response);
+		$this->request = $request;
+		$this->response = $response;
 		$parsedBody = $request->getParsedBody();
 
          foreach ($inputTypeMap as $type => $handler) {

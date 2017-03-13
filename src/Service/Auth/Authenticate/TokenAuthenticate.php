@@ -61,7 +61,7 @@ class TokenAuthenticate extends BaseAuthenticate
      */
     public function getUser(Request $request)
     {
-        $type = $this->config('type');
+        $type = $this->getConfig('type');
         if (!in_array($type, $this->types)) {
             throw new OutOfBoundsException(__d('CakeDC/Api', 'Type {0} is not valid', $type));
         }
@@ -75,7 +75,7 @@ class TokenAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->config('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 

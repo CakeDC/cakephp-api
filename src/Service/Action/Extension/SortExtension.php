@@ -53,7 +53,7 @@ class SortExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
+        $action = $event->getSubject();
         $query = $event->data['query'];
         if ($event->result) {
             $query = $event->result;
@@ -62,8 +62,8 @@ class SortExtension extends Extension implements EventListenerInterface
         $direction = 'asc';
         $sort = null;
 
-        $directionField = $this->config('directionField');
-        $sortField = $this->config('sortField');
+        $directionField = $this->getConfig('directionField');
+        $sortField = $this->getConfig('sortField');
         if (!empty($data[$directionField])) {
             $direction = $data[$directionField];
         }

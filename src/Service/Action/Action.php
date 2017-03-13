@@ -109,7 +109,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             $eventManager = $config['eventManager'];
         }
         $this->_eventManager = $eventManager ?: new EventManager();
-        $this->config($config);
+        $this->setConfig($config);
         $this->initialize($config);
         $this->_eventManager->on($this);
         $this->extensions($extensionRegistry);
@@ -374,7 +374,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     protected function _authConfig()
     {
-        $defaultConfig = (array)$this->config('Auth');
+        $defaultConfig = (array)$this->getConfig('Auth');
 
         return Hash::merge($defaultConfig, [
             'service' => $this->_service,

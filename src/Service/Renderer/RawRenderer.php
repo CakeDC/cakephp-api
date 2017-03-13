@@ -33,9 +33,12 @@ class RawRenderer extends BaseRenderer
     public function response(Result $result = null)
     {
         $response = $this->_service->response();
-        $response->statusCode($result->code());
+        $response->withStatus($result->code());
         $response->type('text/plain');
-        $response->body((string)$result->data());
+        $body = $response->getBody();
+        $body->rewind();
+        $body->write((string)$result->data());
+        $response->withBody($body);
 
         return true;
     }
@@ -53,6 +56,9 @@ class RawRenderer extends BaseRenderer
         $message = (Configure::read('debug') > 0) ? $exception->getMessage() . ' on line ' . $exception->getLine() . ' in ' . $exception->getFile() : $exception->getMessage();
         $trace = $exception->getTrace();
         $debug = (Configure::read('debug') > 0) ? "\n" . print_r($trace, true) : '';
-        $response->body($message . $debug);
+        $body = $response->getBody();
+        $body->rewind();
+        $body->write($message . $debug);
+        $response->withBody($body);
     }
 }

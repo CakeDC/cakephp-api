@@ -39,10 +39,13 @@ class XmlRenderer extends BaseRenderer
     public function response(Result $result = null)
     {
         $response = $this->_service->response();
-        $response->statusCode($result->code());
+        $response->withStatus($result->code());
         $response->type('application/xml');
         $xml = $this->_format($result->data());
-        $response->body($this->_encode($xml));
+        $body = $response->getBody();
+        $body->rewind();
+        $body->write($this->_encode($xml));
+        $response->withBody($body);
 
         return true;
     }
@@ -69,7 +72,10 @@ class XmlRenderer extends BaseRenderer
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $response->body($this->_encode($data));
+        $body = $response->getBody();
+        $body->rewind();
+        $body->write($this->_encode($data));
+        $response->withBody($body);
     }
 
     /**

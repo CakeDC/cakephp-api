@@ -11,6 +11,7 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use Cake\ORM\ResultSet;
 use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
@@ -81,7 +82,7 @@ class CrudIndexActionTest extends TestCase
         });
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\ORM\ResultSet);
+        $this->assertTrue($result instanceof ResultSet);
         $this->assertTrue($onFindEntities);
         $this->assertTrue($afterFindEntities);
     }

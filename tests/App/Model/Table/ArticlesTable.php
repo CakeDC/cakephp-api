@@ -11,9 +11,10 @@
 
 namespace CakeDC\Api\Test\App\Model\Table;
 
+use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-class ArticlesTable extends \Cake\ORM\Table
+class ArticlesTable extends Table
 {
     /**
      * Initialize method
@@ -23,9 +24,9 @@ class ArticlesTable extends \Cake\ORM\Table
      */
     public function initialize(array $config)
     {
-        $this->table('articles');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('articles');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Authors', [
