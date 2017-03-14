@@ -12,6 +12,7 @@
 namespace CakeDC\Api\Test\TestCase\Auth\Authenticate;
 
 use CakeDC\Api\Service\Action\CrudIndexAction;
+use CakeDC\Api\Service\Auth\Authenticate\SocialAuthenticate;
 use CakeDC\Api\Service\Auth\Authenticate\TokenAuthenticate;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
@@ -20,16 +21,16 @@ use CakeDC\Api\Test\FixturesTrait;
 use Cake\Network\Request;
 use Cake\Network\Response;
 
-class TokenAuthenticateTest extends TestCase
+class SocialAuthenticateTest extends TestCase
 {
 
     use ConfigTrait;
     use FixturesTrait;
 
     /**
-     * @var TokenAuthenticate
+     * @var SocialAuthenticate
      */
-    public $token;
+    public $social;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -48,7 +49,7 @@ class TokenAuthenticateTest extends TestCase
             'request' => $request,
             'response' => $response
         ]);
-        $this->token = new TokenAuthenticate($action, ['require_ssl' => false]);
+        $this->social = new SocialAuthenticate($action, ['require_ssl' => false]);
     }
 
     /**
@@ -57,7 +58,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->token, $this->controller);
+        unset($this->social, $this->controller);
     }
 
     /**
@@ -67,8 +68,8 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHappy()
     {
-        $request = new Request('/?token=yyy');
-        $result = $this->token->authenticate($request, new Response());
+        $request = new Request('/?provider=Facebook&token=token-1234&token_secret=token-secret');
+        $result = $this->social->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
     }
 
@@ -80,15 +81,15 @@ class TokenAuthenticateTest extends TestCase
     public function testAuthenticateFail()
     {
         $request = new Request('/');
-        $result = $this->token->authenticate($request, new Response());
+        $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new Request('/?token=none');
-        $result = $this->token->authenticate($request, new Response());
+        $request = new Request('/?provider=Facebook&token=none');
+        $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new Request('/?token=');
-        $result = $this->token->authenticate($request, new Response());
+        $request = new Request('/?provider=Facebook&token=');
+        $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
     }
 
@@ -101,9 +102,9 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateWrongType()
     {
-        $this->token->config('type', 'wrong');
+        $this->social->setConfig('type', 'wrong');
         $request = new Request('/');
-        $this->token->authenticate($request, new Response());
+        $this->social->authenticate($request, new Response());
     }
 
     /**
@@ -115,9 +116,9 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateRequireSSL()
     {
-        $this->token->config('require_ssl', true);
-        $request = new Request('/?token=test');
-        $this->token->authenticate($request, new Response());
+        $this->social->setConfig('require_ssl', true);
+        $request = new Request('/?token=token-1234&token_secret=token-secret&provider=Facebook');
+        $this->social->authenticate($request, new Response());
     }
 
     /**
@@ -126,10 +127,11 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateRequireSSLNoKey()
     {
-        $this->token->config('require_ssl', true);
+        $this->social->setConfig('require_ssl', true);
         $request = new Request('/');
-        $this->assertFalse($this->token->authenticate($request, new Response()));
+        $this->assertFalse($this->social->authenticate($request, new Response()));
     }
+
 
     /**
      * test
@@ -141,12 +143,23 @@ class TokenAuthenticateTest extends TestCase
         $request = $this->getMockBuilder('\Cake\Network\Request')
             ->setMethods(['getHeader'])
             ->getMock();
-        $request->expects($this->once())
+
+        $request->expects($this->at(0))
+            ->method('getHeader')
+            ->with('provider')
+            ->will($this->returnValue('Facebook'));
+
+        $request->expects($this->at(1))
             ->method('getHeader')
             ->with('token')
-            ->will($this->returnValue('yyy'));
-        $this->token->setConfig('type', 'header');
-        $result = $this->token->authenticate($request, new Response());
+            ->will($this->returnValue('token-1234'));
+
+        $request->expects($this->at(2))
+            ->method('getHeader')
+            ->with('token_secret')
+            ->will($this->returnValue('token-secret'));
+        $this->social->setConfig('type', 'header');
+        $result = $this->social->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
     }
 
@@ -160,12 +173,22 @@ class TokenAuthenticateTest extends TestCase
         $request = $this->getMockBuilder('\Cake\Network\Request')
             ->setMethods(['getHeader'])
             ->getMock();
-        $request->expects($this->once())
+        $request->expects($this->at(0))
+            ->method('getHeader')
+            ->with('provider')
+            ->will($this->returnValue('wrong'));
+
+        $request->expects($this->at(1))
             ->method('getHeader')
             ->with('token')
             ->will($this->returnValue('wrong'));
-        $this->token->setConfig('type', 'header');
-        $result = $this->token->authenticate($request, new Response());
+
+        $request->expects($this->at(2))
+            ->method('getHeader')
+            ->with('token_secret')
+            ->will($this->returnValue('wrong'));
+        $this->social->setConfig('type', 'header');
+        $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
     }
 }
