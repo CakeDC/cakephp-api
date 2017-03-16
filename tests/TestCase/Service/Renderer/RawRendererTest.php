@@ -64,7 +64,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -88,7 +88,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -108,10 +108,10 @@ class RawRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
+                 ->method('withStatus')
                  ->with($statusCode);
         $response->expects($this->once())
-                 ->method('body')
+                 ->method('withStringBody')
                 ->with($data);
         $response->expects($this->once())
                  ->method('type')
@@ -129,7 +129,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -146,7 +146,7 @@ class RawRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-            ->method('body')
+            ->method('withStringBody')
             ->with('Unauthorized');
         $response->expects($this->once())
             ->method('type')

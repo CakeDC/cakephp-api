@@ -42,10 +42,7 @@ class XmlRenderer extends BaseRenderer
         $response->withStatus($result->code());
         $response->type('application/xml');
         $xml = $this->_format($result->data());
-        $body = $response->getBody();
-        $body->rewind();
-        $body->write($this->_encode($xml));
-        $response->withBody($body);
+        $this->_service->response($response->withStringBody($this->_encode($xml)));
 
         return true;
     }
@@ -72,10 +69,7 @@ class XmlRenderer extends BaseRenderer
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $body = $response->getBody();
-        $body->rewind();
-        $body->write($this->_encode($data));
-        $response->withBody($body);
+        $this->_service->response($response->withStringBody($this->_encode($data)));
     }
 
     /**

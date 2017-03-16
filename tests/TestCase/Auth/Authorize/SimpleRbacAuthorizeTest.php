@@ -156,7 +156,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                 ->setMethods(['_loadPermissions'])
                 ->disableOriginalConstructor()
                 ->getMock();
-        $simpleRbacAuthorize->getConfig('permissions', $permissions);
+        $simpleRbacAuthorize->setConfig('permissions', $permissions);
 
         return $simpleRbacAuthorize;
     }

@@ -62,10 +62,7 @@ class ApiMiddleware
                 $response = $Service->respond($result);
             } catch (Exception $e) {
                 $response->withStatus(400);
-                $body = $response->getBody();
-                $body->rewind();
-                $body->write($e->getMessage());
-                $response->withBody($body);
+                $response = $response->withStringBody($e->getMessage());
             }
 
             return $response;

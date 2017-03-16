@@ -63,12 +63,12 @@ class CorsExtensionTest extends IntegrationTestCase
         $headers = $this->_response->getHeaders();
         $this->assertSuccess($result);
         $this->assertTrue(!empty($headers));
-        $this->assertEquals('*', $headers['Access-Control-Allow-Origin']);
-        $expectedMethods = 'GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH';
+        $this->assertEquals(['*'], $headers['Access-Control-Allow-Origin']);
+        $expectedMethods = ['GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH'];
         $this->assertEquals($expectedMethods, $headers['Access-Control-Allow-Methods']);
-        $expectedHeaders = 'X-CSRF-Token, Content-Type, Access-Control-Allow-Headers, Access-Control-Allow-Origin, Authorization, X-Requested-With';
+        $expectedHeaders = ['X-CSRF-Token, Content-Type, Access-Control-Allow-Headers, Access-Control-Allow-Origin, Authorization, X-Requested-With'];
         $this->assertEquals($expectedHeaders, $headers['Access-Control-Allow-Headers']);
-        $this->assertEquals('true', $headers['Access-Control-Allow-Credentials']);
-        $this->assertEquals(300, $headers['Access-Control-Max-Age']);
+        $this->assertEquals(['true'], $headers['Access-Control-Allow-Credentials']);
+        $this->assertEquals([300], $headers['Access-Control-Max-Age']);
     }
 }

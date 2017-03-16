@@ -95,8 +95,8 @@ class ApiController extends AppController
                 }
 
                 $url = '/' . $service;
-                if (!empty($this->request->getParams('pass'))) {
-                    $url .= '/' . join('/', $this->request->getParams('pass'));
+                if (!empty($this->request->getParam('pass'))) {
+                    $url .= '/' . join('/', $this->request->getParam('pass'));
                 }
                 $options += [
                     'version' => $version,
@@ -112,16 +112,10 @@ class ApiController extends AppController
                 return $Service->respond($result);
             }
             $this->response->withStatus(404);
-            $body = $this->response->getBody();
-            $body->rewind();
-            $body->write(__('Service not found'));
-            $this->response->withBody($body);
+            $this->response = $this->response->withStringBody(__('Service not found'));
         } catch (Exception $e) {
             $this->response->withStatus(400);
-            $body = $this->response->getBody();
-            $body->rewind();
-            $body->write($e->getMessage());
-            $this->response->withBody($body);
+            $this->response = $this->response->withStringBody($e->getMessage());
         }
 
         return $this->response;

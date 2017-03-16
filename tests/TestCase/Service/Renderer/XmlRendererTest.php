@@ -64,7 +64,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -88,7 +88,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -108,10 +108,10 @@ class XmlRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
+                 ->method('withStatus')
                  ->with($statusCode);
         $response->expects($this->once())
-                 ->method('body')
+                 ->method('withStringBody')
                 ->with($this->_xmlMessage('<data><value>Updated!</value></data>'));
         $response->expects($this->once())
                  ->method('type')
@@ -129,7 +129,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -146,7 +146,7 @@ class XmlRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('body')
+                 ->method('withStringBody')
                 ->with($this->_xmlMessage('<error><code>401</code><message>Unauthorized</message></error>'));
         $response->expects($this->once())
                  ->method('type')

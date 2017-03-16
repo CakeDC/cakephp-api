@@ -84,11 +84,8 @@ class JSendRenderer extends BaseRenderer
             $return = Hash::merge($return, $payload);
         }
         $this->_mapStatus($result);
-        $body = $response->getBody();
-        $body->rewind();
-        $body->write($this->_format($this->status, $return));
-        $response->withBody($body);
 
+        $this->_service->response($response->withStringBody($this->_format($this->status, $return)));
         return true;
     }
 
@@ -110,10 +107,7 @@ class JSendRenderer extends BaseRenderer
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
         $response->withStatus((int)$this->errorCode);
-        $body = $response->getBody();
-        $body->rewind();
-        $body->write($this->_error($message, $exception->getCode(), $data, $trace));
-        $response->withBody($body);
+        $this->_service->response($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace)));
     }
 
     /**

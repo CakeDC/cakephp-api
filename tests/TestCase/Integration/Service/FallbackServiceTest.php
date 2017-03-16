@@ -44,6 +44,6 @@ class FallbackServiceTest extends IntegrationTestCase
     public function testArticlesIndex()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 5]);
-        $json = json_decode($this->_response->getBody()->getContents(), true);
+        $json = json_decode((string)$this->_response->getBody(), true);
     }
 }

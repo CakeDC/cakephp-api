@@ -165,7 +165,7 @@ class IntegrationTestCase extends BaseTestCase
      */
     public function responseJson()
     {
-        return json_decode($this->_response->getBody()->getContents(), true);
+        return json_decode((string)$this->_response->getBody(), true);
     }
 
     /**

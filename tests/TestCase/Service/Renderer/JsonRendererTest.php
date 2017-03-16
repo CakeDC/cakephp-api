@@ -64,7 +64,7 @@ class JsonRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -89,7 +89,7 @@ class JsonRendererTest extends TestCase
         Configure::write('debug', 0);
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -109,10 +109,10 @@ class JsonRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
+                 ->method('withStatus')
                  ->with($statusCode);
         $response->expects($this->once())
-                 ->method('body')
+                 ->method('withStringBody')
                 ->with('{"id":1,"name":"alex"}');
         $response->expects($this->once())
                  ->method('type')
@@ -130,7 +130,7 @@ class JsonRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'type', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -147,7 +147,7 @@ class JsonRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-            ->method('body')
+            ->method('withStringBody')
             ->with('{"error":{"code":401,"message":"Unauthorized"}}');
         $response->expects($this->once())
             ->method('type')

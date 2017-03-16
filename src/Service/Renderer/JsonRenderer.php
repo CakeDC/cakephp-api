@@ -42,10 +42,7 @@ class JsonRenderer extends BaseRenderer
         if (is_array($data) && is_array($payload)) {
             $data = Hash::merge($data, $payload);
         }
-        $body = $response->getBody();
-        $body->rewind();
-        $body->write($this->_encode($data));
-        $response->withBody($body);
+        $this->_service->response($response->withStringBody($this->_encode($data)));
         return true;
     }
 
@@ -71,10 +68,7 @@ class JsonRenderer extends BaseRenderer
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $body = $response->getBody();
-        $body->rewind();
-        $body->write($this->_encode($data));
-        $response->withBody($body);
+        $this->_service->response($response->withStringBody($this->_encode($data)));
     }
 
     /**
