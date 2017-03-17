@@ -110,7 +110,6 @@ class Auth
         $this->initialize($config);
     }
 
-
     /**
      * Initialize properties.
      *

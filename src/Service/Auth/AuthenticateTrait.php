@@ -88,7 +88,6 @@ trait AuthenticateTrait
         $this->storage()->write($user);
     }
 
-
     /**
      * connected authentication objects will have their
      * getUser() methods called.
@@ -125,7 +124,6 @@ trait AuthenticateTrait
 
         return false;
     }
-
 
     /**
      * Use the configured authentication adapters, and attempt to identify the user

@@ -198,7 +198,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if (isset($config['classMap'])) {
             $this->_actionsClassMap = Hash::merge($this->_actionsClassMap, $config['classMap']);
         }
-		
+
         if (!empty($config['Extension'])) {
             $this->extensions = (Hash::merge($this->extensions, $config['Extension']));
         }
@@ -214,7 +214,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $this->_eventManager->on($this);
         $this->extensions($extensionRegistry);
         $this->_loadExtensions();
-		
     }
 
     /**
@@ -428,14 +427,14 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function dispatch()
     {
         try {
-			$this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
+            $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
             $action = $this->buildAction();
-			$this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
+            $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
             $result = $action->process();
 
             if ($result instanceof Result) {
                 $this->result($result);
-            }  else {
+            } else {
                 $this->result()->data($result);
                 $this->result()->code(200);
             }
@@ -449,7 +448,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             }
             $this->result()->exception($e);
         }
-		$this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
+        $this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
 
         return $this->result();
     }
@@ -671,7 +670,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
         $this->_actions[$actionName] = $route;
     }
-	
+
     /**
      * @return array
      */
@@ -731,7 +730,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $instance = $registry->load($properties['class'], $properties['config']);
             $this->_eventManager->on($instance);
         }
-    }	
+    }
 
     /**
      * Initialize parser.
