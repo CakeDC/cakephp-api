@@ -111,11 +111,9 @@ class ApiController extends AppController
 
                 return $Service->respond($result);
             }
-            $this->response->withStatus(404);
-            $this->response = $this->response->withStringBody(__('Service not found'));
+            $this->response = $this->response->withStringBody(__('Service not found'))->withStatus(404);
         } catch (Exception $e) {
-            $this->response->withStatus(400);
-            $this->response = $this->response->withStringBody($e->getMessage());
+            $this->response = $this->response->withStringBody($e->getMessage())->withStatus(400);
         }
 
         return $this->response;

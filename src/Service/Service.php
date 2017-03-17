@@ -604,8 +604,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if ($result === null) {
             $result = $this->result();
         }
-        $this->response()
-             ->withStatus($result->code());
+        $this->response($this->response()->withStatus($result->code()));
         if ($result->exception() !== null) {
             $this->renderer()
                  ->error($result->exception());

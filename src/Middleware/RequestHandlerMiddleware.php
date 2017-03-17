@@ -24,6 +24,13 @@ class RequestHandlerMiddleware
     public $request;
 
     /**
+     * Response object
+     *
+     * @var \Cake\Network\Response
+     */
+    public $response;
+
+    /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Message\ResponseInterface $response The response.
      * @param callable $next The next middleware to call.

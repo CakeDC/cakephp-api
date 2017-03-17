@@ -48,7 +48,7 @@ class NestedExtension extends Extension implements EventListenerInterface
     public function findEntities(Event $event)
     {
         $action = $event->getSubject();
-        $query = $event->data['query'];
+        $query = $event->getData('query');
         $foreignKey = $action->parentId();
         $field = $action->parentIdName();
         if ($field !== null) {
@@ -70,7 +70,7 @@ class NestedExtension extends Extension implements EventListenerInterface
     public function findEntity(Event $event)
     {
         $action = $event->getSubject();
-        $query = $event->data['query'];
+        $query = $event->getData('query');
         $foreignKey = $action->parentId();
         $field = $action->parentIdName();
         if ($field !== null) {
@@ -92,7 +92,7 @@ class NestedExtension extends Extension implements EventListenerInterface
     public function patchEntity(Event $event)
     {
         $action = $event->getSubject();
-        $entity = $event->data['entity'];
+        $entity = $event->getData('entity');
         if ($event->result) {
             $entity = $event->result;
         }

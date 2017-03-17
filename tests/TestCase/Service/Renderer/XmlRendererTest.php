@@ -64,7 +64,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -88,7 +88,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -109,13 +109,16 @@ class XmlRendererTest extends TestCase
 
         $response->expects($this->once())
                  ->method('withStatus')
-                 ->with($statusCode);
+                 ->with($statusCode)
+                 ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('withStringBody')
-                ->with($this->_xmlMessage('<data><value>Updated!</value></data>'));
+                ->method('withStringBody')
+                ->with($this->_xmlMessage('<data><value>Updated!</value></data>'))
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/xml');
+                 ->method('withType')
+                 ->with('application/xml')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -129,7 +132,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -146,11 +149,13 @@ class XmlRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('withStringBody')
-                ->with($this->_xmlMessage('<error><code>401</code><message>Unauthorized</message></error>'));
+                ->method('withStringBody')
+                ->with($this->_xmlMessage('<error><code>401</code><message>Unauthorized</message></error>'))
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/xml');
+                 ->method('withType')
+                 ->with('application/xml')
+                ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

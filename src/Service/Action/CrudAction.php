@@ -259,7 +259,6 @@ abstract class CrudAction extends Action
         $schema = $table->getSchema();
 
         $entity = $this->_newEntity();
-//		$q=$entity->visibleProperties();
         $reverseRouter = new ReverseRouting();
         $path = $reverseRouter->indexPath($this);
         $actions = [

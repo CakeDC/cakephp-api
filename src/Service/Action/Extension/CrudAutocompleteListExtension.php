@@ -45,7 +45,7 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
      */
     public function findEntities(Event $Event)
     {
-        return $this->_autocompleteList($Event->getSubject(), $Event->data['query']);
+        return $this->_autocompleteList($Event->getSubject(), $Event->getData('query'));
     }
 
     /**

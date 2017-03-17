@@ -64,7 +64,7 @@ class JSendRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -89,7 +89,7 @@ class JSendRendererTest extends TestCase
         Configure::write('debug', 0);
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
         $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
@@ -109,13 +109,16 @@ class JSendRendererTest extends TestCase
 
         $response->expects($this->once())
             ->method('withStatus')
-            ->with($statusCode);
+            ->with($statusCode)
+            ->will($this->returnValue($response));
         $response->expects($this->once())
             ->method('withStringBody')
-            ->with('{"status":"success","data":{"id":1,"name":"alex"}}');
+            ->with('{"status":"success","data":{"id":1,"name":"alex"}}')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('application/json');
+            ->method('withType')
+            ->with('application/json')
+            ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -129,7 +132,7 @@ class JSendRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -147,10 +150,15 @@ class JSendRendererTest extends TestCase
 
         $response->expects($this->once())
             ->method('withStringBody')
-            ->with('{"status":"error","message":"Unauthorized","code":401,"data":null}');
+            ->with('{"status":"error","message":"Unauthorized","code":401,"data":null}')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('application/json');
+            ->method('withStatus')
+            ->will($this->returnValue($response));
+        $response->expects($this->once())
+            ->method('withType')
+            ->with('application/json')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

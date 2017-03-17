@@ -53,7 +53,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     public function findEntities(Event $event)
     {
         $action = $event->getSubject();
-        $query = $event->data['query'];
+        $query = $event->getData('query');
         if ($event->result) {
             $query = $event->result;
         }
@@ -112,7 +112,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     public function afterFind(Event $event)
     {
         $action = $event->getSubject();
-        $query = $event->data['query'];
+        $query = $event->getData('query');
         $result = $action->service()->result();
         $count = $query->count();
         $limit = $this->_limit($action);

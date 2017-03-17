@@ -58,7 +58,7 @@ class LogExtension extends Extension implements EventListenerInterface
      */
     public function beforeProcess(Event $event)
     {
-        $this->_service = $event->data['service'];
+        $this->_service = $event->getData('service');
         $this->_timer = microtime(true);
     }
 

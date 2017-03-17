@@ -64,7 +64,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -88,7 +88,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -109,13 +109,16 @@ class RawRendererTest extends TestCase
 
         $response->expects($this->once())
                  ->method('withStatus')
-                 ->with($statusCode);
+                 ->with($statusCode)
+                ->will($this->returnValue($response));
         $response->expects($this->once())
                  ->method('withStringBody')
-                ->with($data);
+                ->with($data)
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('text/plain');
+                 ->method('withType')
+                 ->with('text/plain')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -129,7 +132,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -147,10 +150,12 @@ class RawRendererTest extends TestCase
 
         $response->expects($this->once())
             ->method('withStringBody')
-            ->with('Unauthorized');
+            ->with('Unauthorized')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('text/plain');
+            ->method('withType')
+            ->with('text/plain')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

@@ -73,8 +73,7 @@ class JSendRenderer extends BaseRenderer
     public function response(Result $result = null)
     {
         $response = $this->_service->response();
-        $response->withStatus($result->code());
-        $response->type('application/json');
+
         $data = $result->data();
         $payload = $result->payload();
         $return = [
@@ -85,7 +84,7 @@ class JSendRenderer extends BaseRenderer
         }
         $this->_mapStatus($result);
 
-        $this->_service->response($response->withStringBody($this->_format($this->status, $return)));
+        $this->_service->response($response->withStringBody($this->_format($this->status, $return))->withStatus($result->code())->withType('application/json'));
         return true;
     }
 
@@ -98,7 +97,6 @@ class JSendRenderer extends BaseRenderer
     public function error(Exception $exception)
     {
         $response = $this->_service->response();
-        $response->type('application/json');
         if ($exception instanceof ValidationException) {
             $data = $exception->getValidationErrors();
         } else {
@@ -106,8 +104,7 @@ class JSendRenderer extends BaseRenderer
         }
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
-        $response->withStatus((int)$this->errorCode);
-        $this->_service->response($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace)));
+        $this->_service->response($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
     }
 
     /**

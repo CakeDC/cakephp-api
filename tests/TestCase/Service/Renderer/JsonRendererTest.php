@@ -64,7 +64,7 @@ class JsonRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -89,7 +89,7 @@ class JsonRendererTest extends TestCase
         Configure::write('debug', 0);
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -110,13 +110,16 @@ class JsonRendererTest extends TestCase
 
         $response->expects($this->once())
                  ->method('withStatus')
-                 ->with($statusCode);
+                 ->with($statusCode)
+                 ->will($this->returnValue($response));
         $response->expects($this->once())
                  ->method('withStringBody')
-                ->with('{"id":1,"name":"alex"}');
+                ->with('{"id":1,"name":"alex"}')
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/json');
+                 ->method('withType')
+                 ->with('application/json')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -130,7 +133,7 @@ class JsonRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['withStatus', 'type', 'withStringBody'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -148,10 +151,12 @@ class JsonRendererTest extends TestCase
 
         $response->expects($this->once())
             ->method('withStringBody')
-            ->with('{"error":{"code":401,"message":"Unauthorized"}}');
+            ->with('{"error":{"code":401,"message":"Unauthorized"}}')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('application/json');
+            ->method('withType')
+            ->with('application/json')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }
