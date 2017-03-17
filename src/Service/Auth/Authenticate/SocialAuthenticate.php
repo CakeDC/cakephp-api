@@ -113,8 +113,8 @@ class SocialAuthenticate extends BaseAuthenticate
      * Get query object for fetching user from database.
      *
      * @param string $provider
-     * @param $token
-     * @param $tokenSecret
+     * @param string $token token
+     * @param string $tokenSecret secret
      * @return \Cake\ORM\Query
      */
     protected function _socialQuery($provider, $token, $tokenSecret)

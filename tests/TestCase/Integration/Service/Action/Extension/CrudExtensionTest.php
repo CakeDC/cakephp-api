@@ -92,9 +92,7 @@ class CrudExtensionTest extends IntegrationTestCase
         $res = array_intersect_key($article, $result['data']);
         $this->assertEquals($article, $res);
     }
-
-    // @todo add add and edit validation failed tests
-
+    
     public function testEdit()
     {
         $article = [

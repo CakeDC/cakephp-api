@@ -143,6 +143,9 @@ class Result
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $info = [

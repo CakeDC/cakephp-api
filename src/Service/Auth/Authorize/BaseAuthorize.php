@@ -76,6 +76,7 @@ abstract class BaseAuthorize
      * Action setter.
      *
      * @param Action $action An Action instance.
+     * @return void
      */
     public function setAction(Action $action)
     {

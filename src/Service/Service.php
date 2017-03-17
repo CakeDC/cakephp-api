@@ -11,11 +11,6 @@
 
 namespace CakeDC\Api\Service;
 
-use Cake\Event\EventDispatcherInterface;
-use Cake\Event\EventDispatcherTrait;
-use Cake\Event\EventListenerInterface;
-use Cake\Event\EventManager;
-use Cake\Http\ServerRequest;
 use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
@@ -24,9 +19,16 @@ use CakeDC\Api\Service\Exception\MissingParserException;
 use CakeDC\Api\Service\Exception\MissingRendererException;
 use CakeDC\Api\Service\Renderer\BaseRenderer;
 use CakeDC\Api\Service\RequestParser\BaseParser;
+
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Cake\Event\EventDispatcherInterface;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
+use Cake\Http\ServerRequest;
 use Cake\Http\Client\Response;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Hash;
@@ -575,7 +577,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * @param null $value
+     * @param null $value value
      * @return Result
      */
     public function result($value = null)

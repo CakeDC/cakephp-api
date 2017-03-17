@@ -251,7 +251,7 @@ class Auth
     /**
      * __get method this method will return an attribute of this class
      *
-     * @param $name
+     * @param string $name Name
      * @return mixed
      */
     public function __get($name)
