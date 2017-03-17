@@ -85,6 +85,7 @@ class JSendRenderer extends BaseRenderer
         $this->_mapStatus($result);
 
         $this->_service->response($response->withStringBody($this->_format($this->status, $return))->withStatus($result->code())->withType('application/json'));
+
         return true;
     }
 

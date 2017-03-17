@@ -29,6 +29,7 @@ $findRoot = function () {
     if (is_dir($root . '/vendor/cakephp/cakephp')) {
         return $root;
     }
+
     return null;
 };
 

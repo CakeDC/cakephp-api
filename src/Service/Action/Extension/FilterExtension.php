@@ -11,11 +11,10 @@
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use Cake\ORM\Table;
-use CakeDC\Api\Service\Action\Action;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
 
 /**
  * Class FilterExtension

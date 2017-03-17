@@ -38,7 +38,6 @@ class ApiMiddleware
 
         $path = $request->getUri()->getPath();
         if (preg_match($expr, $path, $matches)) {
-
             $version = isset($matches['version']) ? $matches['version'] : null;
             $service = $matches['service'];
 

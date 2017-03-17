@@ -41,6 +41,7 @@ class JsonRenderer extends BaseRenderer
             $data = Hash::merge($data, $payload);
         }
         $this->_service->response($response->withStringBody($this->_encode($data))->withStatus($result->code())->withType('application/json'));
+
         return true;
     }
 

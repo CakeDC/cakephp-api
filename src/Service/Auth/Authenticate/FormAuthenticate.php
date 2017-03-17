@@ -25,8 +25,8 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
-use Cake\Http\ServerRequest;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 
 /**
  * Class FormAuthenticate.

@@ -11,12 +11,12 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
-use Cake\Datasource\EntityInterface;
 use CakeDC\Api\Service\Action\CrudViewAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use Cake\Datasource\EntityInterface;
 
 class CrudViewActionTest extends TestCase
 {

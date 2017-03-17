@@ -108,6 +108,7 @@ class IntegrationTestCase extends BaseTestCase
 
         if (!is_string($url)) {
             $this->_sendRequest($url, $method, $data);
+
             return;
         }
         $url = '/api' . $url;

@@ -45,7 +45,7 @@ class RequestHandlerMiddleware
         $this->request = $request;
         $this->response = $response;
         $parsedBody = $request->getParsedBody();
-      
+
         foreach ($inputTypeMap as $type => $handler) {
             if (!is_callable($handler[0])) {
                 throw new RuntimeException(sprintf("Invalid callable for '%s' type.", $type));
