@@ -161,7 +161,6 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=16', Hash::get($result, 'pagination.links.next'));
     }
 
-
     /**
      * @param $count
      */

@@ -169,6 +169,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
         }
 
         $query = $table->find($finder, $options);
+
         return $query;
     }
 

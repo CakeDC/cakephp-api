@@ -82,7 +82,6 @@ class ServiceTest extends TestCase
         ]);
     }
 
-
     /**
      * Test load value method
      *

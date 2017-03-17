@@ -87,6 +87,7 @@ class TokenAuthenticate extends BaseAuthenticate
         if (empty($result)) {
             return false;
         }
+
         return $result->toArray();
         //idea: add array with checks to be passed to $request->is(...)
     }

@@ -15,7 +15,6 @@ use RuntimeException;
 class RequestHandlerMiddleware
 {
 
-
     /**
      * Request object
      *
@@ -42,23 +41,24 @@ class RequestHandlerMiddleware
             'json' => ['json_decode', true],
             'xml' => [[$this, 'convertXml']],
         ];
-		$this->request = $request;
-		$this->response = $response;
-		$parsedBody = $request->getParsedBody();
 
-         foreach ($inputTypeMap as $type => $handler) {
-             if (!is_callable($handler[0])) {
-                 throw new RuntimeException(sprintf("Invalid callable for '%s' type.", $type));
-             }
-             if (empty($parsedBody) && $this->requestedWith($type)) {
-                 $input = call_user_func_array([$this->request, 'input'], $handler);
-                 return $next($request->withParsedBody($input), $response);
-             }
-         }
+        $this->request = $request;
+        $this->response = $response;
+        $parsedBody = $request->getParsedBody();
+      
+        foreach ($inputTypeMap as $type => $handler) {
+            if (!is_callable($handler[0])) {
+                throw new RuntimeException(sprintf("Invalid callable for '%s' type.", $type));
+            }
+            if (empty($parsedBody) && $this->requestedWith($type)) {
+                $input = call_user_func_array([$this->request, 'input'], $handler);
+
+                return $next($request->withParsedBody($input), $response);
+            }
+        }
 
         return $next($request, $response);
     }
-	
 
     /**
      * Determines the content type of the data the client has sent (i.e. in a POST request)
@@ -118,6 +118,4 @@ class RequestHandlerMiddleware
             return [];
         }
     }
-
-	
 }

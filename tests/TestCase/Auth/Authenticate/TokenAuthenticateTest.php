@@ -131,7 +131,6 @@ class TokenAuthenticateTest extends TestCase
         $this->assertFalse($this->token->authenticate($request, new Response()));
     }
 
-
     /**
      * test
      *

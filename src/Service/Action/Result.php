@@ -157,6 +157,7 @@ class Result
             $info['exception'] = $this->_exception->getMessage();
             $info['exceptionStack'] = $this->_exception->getTraceAsString();
         }
+
         return $info;
     }
 
@@ -170,5 +171,4 @@ class Result
     {
         return $this->toArray();
     }
-
 }
