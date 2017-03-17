@@ -132,7 +132,6 @@ class SocialAuthenticateTest extends TestCase
         $this->assertFalse($this->social->authenticate($request, new Response()));
     }
 
-
     /**
      * test
      *

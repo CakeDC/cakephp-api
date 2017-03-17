@@ -44,7 +44,6 @@ class ResetPasswordAction extends Action
         $this->Auth->allow($this->name());
     }
 
-
     /**
      * Apply validation process.
      *

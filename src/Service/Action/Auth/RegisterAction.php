@@ -95,7 +95,6 @@ class RegisterAction extends Action
         return $this->_afterRegister($userSaved);
     }
 
-
     /**
      * Prepare flash messages after registration, and dispatch afterRegister event
      *

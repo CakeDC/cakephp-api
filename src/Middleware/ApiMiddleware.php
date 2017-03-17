@@ -28,8 +28,8 @@ class ApiMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        $prefix =Configure::read('Api.prefix');
-        if (empty($prefix)) {			
+        $prefix = Configure::read('Api.prefix');
+        if (empty($prefix)) {
             $prefix = 'api';
         }
         $useVersioning = Configure::read('Api.useVersioning');

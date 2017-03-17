@@ -39,7 +39,6 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
         $this->defaultUser(Settings::USER1);
     }
 
-
     /**
      * tearDown
      *

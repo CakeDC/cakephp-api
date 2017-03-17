@@ -116,7 +116,6 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         $this->_loadExtensions();
     }
 
-
     /**
      * Initialize an action instance
      *
@@ -127,7 +126,6 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     {
         $this->Auth = $this->_initializeAuth();
     }
-
 
     /**
      * Api method for action name.
@@ -214,6 +212,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
         if ($event->isStopped()) {
             $this->dispatchEvent('Action.beforeValidateStopped', []);
+
             return $event->result;
         }
 
@@ -226,6 +225,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
         if ($event->isStopped()) {
             $this->dispatchEvent('Action.beforeExecuteStopped', []);
+
             return $event->result;
         }
 
