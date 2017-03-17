@@ -11,10 +11,10 @@
 
 namespace CakeDC\Api\Service\Auth\Authorize;
 
+use Cake\Http\ServerRequest;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Service;
 use Cake\Core\Configure;
-use Cake\Network\Request;
 
 /**
  * Class CrudAuthorize
@@ -44,10 +44,10 @@ class CrudAuthorize extends BaseAuthorize
      * Checks user authorization.
      *
      * @param array $user Active user data.
-     * @param \Cake\Network\Request $request Request instance.
+     * @param \Cake\Http\ServerRequest $request Request instance.
      * @return bool
      */
-    public function authorize($user, Request $request)
+    public function authorize($user, ServerRequest $request)
     {
         return $this->_actionAuth($this->_action);
     }

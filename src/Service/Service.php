@@ -150,14 +150,14 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Request
      *
-     * @var \Cake\Network\Request
+     * @var \Cake\Http\ServerRequest
      */
     protected $_request;
 
     /**
      * Request
      *
-     * @var \Cake\Network\Response
+     * @var \Cake\Http\Response
      */
     protected $_response;
 
@@ -281,8 +281,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Get and set request.
      *
-     * @param \Cake\Network\Request $request A request object.
-     * @return \Cake\Network\Request
+     * @param \Cake\Http\ServerRequest $request A request object.
+     * @return \Cake\Http\ServerRequest
      */
     public function request($request = null)
     {
@@ -405,8 +405,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Reverses a parsed parameter array into a string.
      *
-     * @param \Cake\Network\Request|array $params The params array or
-     *     Cake\Network\Request object that needs to be reversed.
+     * @param \Cake\Http\ServerRequest|array $params The params array or
+     *     Cake\Http\ServerRequest object that needs to be reversed.
      * @return string The string that is the reversed result of the array
      */
     public function routeReverse($params)
@@ -621,8 +621,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Get and set response.
      *
-     * @param \Cake\Network\Response $response  A Response object.
-     * @return \Cake\Network\Response
+     * @param \Cake\Http\Response $response  A Response object.
+     * @return \Cake\Http\Response
      */
     public function response($response = null)
     {

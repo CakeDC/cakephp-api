@@ -139,7 +139,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testHeaderHappy()
     {
-        $request = $this->getMockBuilder('\Cake\Network\Request')
+        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())
@@ -158,7 +158,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHeaderFail()
     {
-        $request = $this->getMockBuilder('\Cake\Network\Request')
+        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())

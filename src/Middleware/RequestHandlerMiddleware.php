@@ -19,14 +19,14 @@ class RequestHandlerMiddleware
     /**
      * Request object
      *
-     * @var \Cake\Network\Request
+     * @var \Cake\Http\ServerRequest
      */
     public $request;
 
     /**
      * Response object
      *
-     * @var \Cake\Network\Response
+     * @var \Cake\Http\Response
      */
     public $response;
 
@@ -55,7 +55,7 @@ class RequestHandlerMiddleware
                  return $next($request->withParsedBody($input), $response);
              }
          }
-		
+
         return $next($request, $response);
     }
 	

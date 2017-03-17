@@ -42,7 +42,7 @@ class ApiController extends AppController
     /**
      * Process api request
      *
-     * @return \Cake\Http\Client\Response|\Cake\Network\Response|null
+     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
      */
     public function process()
     {
