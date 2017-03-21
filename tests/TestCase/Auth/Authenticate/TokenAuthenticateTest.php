@@ -144,7 +144,7 @@ class TokenAuthenticateTest extends TestCase
         $request->expects($this->once())
             ->method('getHeader')
             ->with('token')
-            ->will($this->returnValue('yyy'));
+            ->will($this->returnValue(['yyy']));
         $this->token->setConfig('type', 'header');
         $result = $this->token->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
@@ -163,7 +163,7 @@ class TokenAuthenticateTest extends TestCase
         $request->expects($this->once())
             ->method('getHeader')
             ->with('token')
-            ->will($this->returnValue('wrong'));
+            ->will($this->returnValue(['wrong']));
         $this->token->setConfig('type', 'header');
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
