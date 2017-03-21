@@ -11,9 +11,9 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Request;
-use Cake\Network\Response;
 use Cake\ORM\TableRegistry;
 use \OutOfBoundsException;
 
@@ -57,11 +57,11 @@ class SocialAuthenticate extends BaseAuthenticate
      * Authenticate callback
      * Reads the Api Key based on configuration and login the user
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @param Response $response Cake response object.
      * @return mixed
      */
-    public function authenticate(Request $request, Response $response)
+    public function authenticate(ServerRequest $request, Response $response)
     {
         return $this->getUser($request);
     }
