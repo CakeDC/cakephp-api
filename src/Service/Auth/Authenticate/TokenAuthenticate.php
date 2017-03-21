@@ -57,10 +57,10 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @return mixed
      */
-    public function getUser(Request $request)
+    public function getUser(ServerRequest $request)
     {
         $type = $this->getConfig('type');
         if (!in_array($type, $this->types)) {
@@ -96,10 +96,10 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function querystring(Request $request)
+    public function querystring(ServerRequest $request)
     {
         $name = $this->getConfig('name');
 
@@ -109,10 +109,10 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the header
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function header(Request $request)
+    public function header(ServerRequest $request)
     {
         $name = $this->getConfig('name');
 

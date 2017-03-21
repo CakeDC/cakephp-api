@@ -15,6 +15,7 @@ use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use \OutOfBoundsException;
 
 /**
@@ -69,10 +70,10 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @return mixed
      */
-    public function getUser(Request $request)
+    public function getUser(ServerRequest $request)
     {
         $type = $this->getConfig('type');
         if (!in_array($type, $this->types)) {
@@ -134,10 +135,10 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function querystring(Request $request)
+    public function querystring(ServerRequest $request)
     {
         $providerName = $this->getConfig('provider_name');
         $tokenName = $this->getConfig('token_name');
@@ -149,15 +150,15 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the header
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function header(Request $request)
+    public function header(ServerRequest $request)
     {
         $providerName = $this->getConfig('provider_name');
         $tokenName = $this->getConfig('token_name');
         $tokenSecret = $this->getConfig('token_secret_name');
 
-        return [$request->getHeader($providerName), $request->getHeader($tokenName), $request->getHeader($tokenSecret)];
+        return[Hash::get($request->getHeader($providerName), 0), Hash::get($request->getHeader($tokenName), 0), Hash::get($request->getHeader($tokenSecret), 0)];
     }
 }
