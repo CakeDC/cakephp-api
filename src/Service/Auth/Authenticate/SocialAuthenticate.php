@@ -15,7 +15,6 @@ use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use \OutOfBoundsException;
 
 /**
@@ -159,6 +158,6 @@ class SocialAuthenticate extends BaseAuthenticate
         $tokenName = $this->getConfig('token_name');
         $tokenSecret = $this->getConfig('token_secret_name');
 
-        return[Hash::get($request->getHeader($providerName), 0), Hash::get($request->getHeader($tokenName), 0), Hash::get($request->getHeader($tokenSecret), 0)];
+        return [$request->getHeader($providerName), $request->getHeader($tokenName), $request->getHeader($tokenSecret)];
     }
 }
