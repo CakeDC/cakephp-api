@@ -11,10 +11,11 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Request;
-use Cake\Network\Response;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use \OutOfBoundsException;
 
 /**
@@ -57,11 +58,11 @@ class SocialAuthenticate extends BaseAuthenticate
      * Authenticate callback
      * Reads the Api Key based on configuration and login the user
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @param Response $response Cake response object.
      * @return mixed
      */
-    public function authenticate(Request $request, Response $response)
+    public function authenticate(ServerRequest $request, Response $response)
     {
         return $this->getUser($request);
     }
@@ -69,10 +70,10 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @return mixed
      */
-    public function getUser(Request $request)
+    public function getUser(ServerRequest $request)
     {
         $type = $this->getConfig('type');
         if (!in_array($type, $this->types)) {
@@ -88,7 +89,7 @@ class SocialAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->config('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 
@@ -112,9 +113,9 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get query object for fetching user from database.
      *
-     * @param string $provider
-     * @param $token
-     * @param $tokenSecret
+     * @param string $provider provider
+     * @param string $token token
+     * @param string $tokenSecret secret
      * @return \Cake\ORM\Query
      */
     protected function _socialQuery($provider, $token, $tokenSecret)
@@ -134,10 +135,10 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function querystring(Request $request)
+    public function querystring(ServerRequest $request)
     {
         $providerName = $this->getConfig('provider_name');
         $tokenName = $this->getConfig('token_name');
@@ -149,15 +150,15 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the header
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function header(Request $request)
+    public function header(ServerRequest $request)
     {
         $providerName = $this->getConfig('provider_name');
         $tokenName = $this->getConfig('token_name');
         $tokenSecret = $this->getConfig('token_secret_name');
 
-        return [$request->getHeader($providerName), $request->getHeader($tokenName), $request->getHeader($tokenSecret)];
+        return [Hash::get($request->getHeader($providerName), 0), Hash::get($request->getHeader($tokenName), 0), Hash::get($request->getHeader($tokenSecret), 0)];
     }
 }

@@ -11,9 +11,10 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Utility\Hash;
 use \OutOfBoundsException;
 
 /**
@@ -44,11 +45,11 @@ class TokenAuthenticate extends BaseAuthenticate
      * Authenticate callback
      * Reads the Api Key based on configuration and login the user
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @param Response $response Cake response object.
      * @return mixed
      */
-    public function authenticate(Request $request, Response $response)
+    public function authenticate(ServerRequest $request, Response $response)
     {
         return $this->getUser($request);
     }
@@ -56,12 +57,12 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @return mixed
      */
-    public function getUser(Request $request)
+    public function getUser(ServerRequest $request)
     {
-        $type = $this->config('type');
+        $type = $this->getConfig('type');
         if (!in_array($type, $this->types)) {
             throw new OutOfBoundsException(__d('CakeDC/Api', 'Type {0} is not valid', $type));
         }
@@ -75,7 +76,7 @@ class TokenAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->config('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 
@@ -95,10 +96,10 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function querystring(Request $request)
+    public function querystring(ServerRequest $request)
     {
         $name = $this->getConfig('name');
 
@@ -108,13 +109,13 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the header
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function header(Request $request)
+    public function header(ServerRequest $request)
     {
         $name = $this->getConfig('name');
 
-        return $request->getHeader($name);
+        return Hash::get($request->getHeader($name), 0);
     }
 }

@@ -27,7 +27,7 @@ class IntegrationTestCase extends BaseTestCase
 {
 
     /**
-     * @var Current logged in user
+     * @var string|int Current logged in user
      */
     protected $_defaultUserId;
 
@@ -97,7 +97,7 @@ class IntegrationTestCase extends BaseTestCase
      * @param string $method HTTP method.
      * @param array $data Api parameters.
      * @param string $userId Current user id.
-     * @return mixed
+     * @return void
      */
     public function sendRequest($url, $method, $data = [], $userId = null)
     {
@@ -107,7 +107,9 @@ class IntegrationTestCase extends BaseTestCase
         Configure::load('api');
 
         if (!is_string($url)) {
-            return $this->_sendRequest($url, $method, $data);
+            $this->_sendRequest($url, $method, $data);
+
+            return;
         }
         $url = '/api' . $url;
         if (is_string($url)) {
@@ -156,7 +158,7 @@ class IntegrationTestCase extends BaseTestCase
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals($result['status'], 'success');
-        $this->assertEquals(200, $this->_response->statusCode());
+        $this->assertEquals(200, $this->_response->getStatusCode());
     }
 
     /**
@@ -164,7 +166,7 @@ class IntegrationTestCase extends BaseTestCase
      */
     public function responseJson()
     {
-        return json_decode($this->_response->body(), true);
+        return json_decode((string)$this->_response->getBody(), true);
     }
 
     /**
@@ -178,7 +180,7 @@ class IntegrationTestCase extends BaseTestCase
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals($result['status'], 'error');
-        $this->assertEquals(200, $this->_response->statusCode());
+        $this->assertEquals(200, $this->_response->getStatusCode());
         if (!empty($code)) {
             $this->assertEquals($code, $result['code']);
         }

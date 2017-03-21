@@ -49,15 +49,15 @@ class ExtendedSortExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
+        $action = $event->getSubject();
+        $query = $event->getData('query');
         if ($event->result) {
             $query = $event->result;
         }
         $data = $action->data();
         $sort = null;
 
-        $sortField = $this->config('sortField');
+        $sortField = $this->getConfig('sortField');
         if (!empty($data[$sortField])) {
             $sort = json_decode($data[$sortField], true);
         }

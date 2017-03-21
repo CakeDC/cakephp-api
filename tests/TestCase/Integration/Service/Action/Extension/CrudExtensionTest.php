@@ -93,8 +93,6 @@ class CrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $res);
     }
 
-    // @todo add add and edit validation failed tests
-
     public function testEdit()
     {
         $article = [

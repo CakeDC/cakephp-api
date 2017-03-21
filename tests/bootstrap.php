@@ -29,6 +29,8 @@ $findRoot = function () {
     if (is_dir($root . '/vendor/cakephp/cakephp')) {
         return $root;
     }
+
+    return null;
 };
 
 function def($name, $value)
@@ -85,7 +87,7 @@ $cache = [
     ],
 ];
 
-Cake\Cache\Cache::config($cache);
+Cake\Cache\Cache::setConfig($cache);
 Cake\Core\Configure::write('EmailTransport', [
     'default' => [
         'className' => 'Debug',
@@ -113,8 +115,8 @@ Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5
 
 mb_internal_encoding(Configure::read('App.encoding'));
 Security::salt(Configure::read('Security.salt'));
-Email::configTransport(Configure::consume('EmailTransport'));
-Email::config(Configure::consume('Email'));
+Email::setConfigTransport(Configure::consume('EmailTransport'));
+Email::setConfig(Configure::consume('Email'));
 
 Cake\Core\Plugin::load('CakeDC/Api', [
     'path' => ROOT . DS,
@@ -130,7 +132,7 @@ if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
 
-Cake\Datasource\ConnectionManager::config('test', [
+Cake\Datasource\ConnectionManager::setConfig('test', [
     'url' => getenv('db_dsn'),
     'timezone' => 'UTC'
 ]);

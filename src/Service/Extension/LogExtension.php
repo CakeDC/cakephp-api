@@ -11,11 +11,11 @@
 
 namespace CakeDC\Api\Service\Extension;
 
-use Cake\Log\LogTrait;
+use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Service;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use CakeDC\Api\Service\Service;
-use CakeDC\Api\Service\Action\Action;
+use Cake\Log\LogTrait;
 
 class LogExtension extends Extension implements EventListenerInterface
 {
@@ -58,7 +58,7 @@ class LogExtension extends Extension implements EventListenerInterface
      */
     public function beforeProcess(Event $event)
     {
-        $this->_service = $event->data['service'];
+        $this->_service = $event->getData('service');
         $this->_timer = microtime(true);
     }
 

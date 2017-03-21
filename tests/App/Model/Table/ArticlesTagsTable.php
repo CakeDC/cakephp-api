@@ -11,7 +11,9 @@
 
 namespace CakeDC\Api\Test\App\Model\Table;
 
-class ArticlesTagsTable extends \Cake\ORM\Table
+use Cake\ORM\Table;
+
+class ArticlesTagsTable extends Table
 {
     /**
      * Initialize method
@@ -21,9 +23,9 @@ class ArticlesTagsTable extends \Cake\ORM\Table
      */
     public function initialize(array $config)
     {
-        $this->table('articles_tags');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('articles_tags');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id'

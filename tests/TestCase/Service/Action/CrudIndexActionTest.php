@@ -16,8 +16,10 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+
 use Cake\Network\Request;
 use Cake\Network\Response;
+use Cake\ORM\ResultSet;
 
 class CrudIndexActionTest extends TestCase
 {
@@ -81,7 +83,7 @@ class CrudIndexActionTest extends TestCase
         });
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\ORM\ResultSet);
+        $this->assertTrue($result instanceof ResultSet);
         $this->assertTrue($onFindEntities);
         $this->assertTrue($afterFindEntities);
     }
