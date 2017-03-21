@@ -51,7 +51,7 @@ class ReverseRouting
      *
      * @param Action $action An Action instance.
      * @param callable $beforeReverse Callback.
-     * @return array
+     * @return array|string
      */
     public function indexPath(Action $action, $beforeReverse = null)
     {

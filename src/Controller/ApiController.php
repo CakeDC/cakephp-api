@@ -42,7 +42,7 @@ class ApiController extends AppController
     /**
      * Process api request
      *
-     * @return \Cake\Http\Client\Response|\Cake\Network\Response|null
+     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
      */
     public function process()
     {
@@ -81,7 +81,7 @@ class ApiController extends AppController
      * Process api request
      *
      * @param array $options Options
-     * @return \Cake\Http\Client\Response|\Cake\Network\Response|null
+     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
      */
     protected function _process($options = [])
     {
@@ -95,8 +95,8 @@ class ApiController extends AppController
                 }
 
                 $url = '/' . $service;
-                if (!empty($this->request->params['pass'])) {
-                    $url .= '/' . join('/', $this->request->params['pass']);
+                if (!empty($this->request->getParam('pass'))) {
+                    $url .= '/' . join('/', $this->request->getParam('pass'));
                 }
                 $options += [
                     'version' => $version,
@@ -111,11 +111,9 @@ class ApiController extends AppController
 
                 return $Service->respond($result);
             }
-            $this->response->statusCode(404);
-            $this->response->body(__('Service not found'));
+            $this->response = $this->response->withStringBody(__('Service not found'))->withStatus(404);
         } catch (Exception $e) {
-            $this->response->statusCode(400);
-            $this->response->body($e->getMessage());
+            $this->response = $this->response->withStringBody($e->getMessage())->withStatus(400);
         }
 
         return $this->response;

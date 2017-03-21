@@ -49,7 +49,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      */
     public function onLoginFormat(Event $event)
     {
-        return $this->_userCleanup($event->data['user']);
+        return $this->_userCleanup($event->getData('user'));
     }
 
     /**
@@ -60,7 +60,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      */
     public function onRegisterFormat(Event $event)
     {
-        return $this->_userCleanup($event->data['user']);
+        return $this->_userCleanup($event->getData('user'));
     }
 
     /**

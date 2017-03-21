@@ -64,7 +64,7 @@ class JsonRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -89,7 +89,7 @@ class JsonRendererTest extends TestCase
         Configure::write('debug', 0);
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -109,14 +109,17 @@ class JsonRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
-                 ->with($statusCode);
+                 ->method('withStatus')
+                 ->with($statusCode)
+                 ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('body')
-                ->with('{"id":1,"name":"alex"}');
+                 ->method('withStringBody')
+                ->with('{"id":1,"name":"alex"}')
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/json');
+                 ->method('withType')
+                 ->with('application/json')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -130,7 +133,7 @@ class JsonRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -147,11 +150,13 @@ class JsonRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-            ->method('body')
-            ->with('{"error":{"code":401,"message":"Unauthorized"}}');
+            ->method('withStringBody')
+            ->with('{"error":{"code":401,"message":"Unauthorized"}}')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('application/json');
+            ->method('withType')
+            ->with('application/json')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

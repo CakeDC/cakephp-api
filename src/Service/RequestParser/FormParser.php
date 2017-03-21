@@ -29,10 +29,10 @@ class FormParser extends BaseParser
             stackTrace();
         }
         if ($request->is(['post', 'put'])) {
-            return $request->data;
+            return $request->getData();
         }
 
-        return $request->query;
+        return $request->getQuery();
     }
 
     /**

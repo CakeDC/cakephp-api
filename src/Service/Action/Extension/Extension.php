@@ -33,6 +33,6 @@ abstract class Extension
      */
     public function __construct(ExtensionRegistry $registry, array $config = [])
     {
-        $this->config($config);
+        $this->setConfig($config);
     }
 }

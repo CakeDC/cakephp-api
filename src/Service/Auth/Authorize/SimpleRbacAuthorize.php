@@ -103,10 +103,10 @@ class SimpleRbacAuthorize extends BaseAuthorize
     public function __construct(Action $action, array $config = [])
     {
         parent::__construct($action, $config);
-        $autoload = $this->config('autoload_config');
+        $autoload = $this->getConfig('autoload_config');
         if ($autoload) {
             $loadedPermissions = $this->_loadPermissions($autoload);
-            $this->config('permissions', $loadedPermissions);
+            $this->setConfig('permissions', $loadedPermissions);
         }
     }
 
@@ -145,8 +145,8 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     public function authorize($user, Request $request)
     {
-        $roleField = $this->config('role_field');
-        $role = $this->config('default_role');
+        $roleField = $this->getConfig('role_field');
+        $role = $this->getConfig('default_role');
         if (Hash::check($user, $roleField)) {
             $role = Hash::get($user, $roleField);
         }
@@ -167,7 +167,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     protected function _checkRules(array $user, $role, Request $request)
     {
-        $permissions = $this->config('permissions');
+        $permissions = $this->getConfig('permissions');
         foreach ($permissions as $permission) {
             $allowed = $this->_matchRule($permission, $user, $role, $request);
             if ($allowed !== null) {

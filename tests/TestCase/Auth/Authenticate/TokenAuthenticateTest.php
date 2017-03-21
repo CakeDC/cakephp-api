@@ -101,7 +101,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateWrongType()
     {
-        $this->token->config('type', 'wrong');
+        $this->token->setConfig('type', 'wrong');
         $request = new Request('/');
         $this->token->authenticate($request, new Response());
     }
@@ -115,7 +115,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateRequireSSL()
     {
-        $this->token->config('require_ssl', true);
+        $this->token->setConfig('require_ssl', true);
         $request = new Request('/?token=test');
         $this->token->authenticate($request, new Response());
     }
@@ -126,7 +126,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateRequireSSLNoKey()
     {
-        $this->token->config('require_ssl', true);
+        $this->token->setConfig('require_ssl', true);
         $request = new Request('/');
         $this->assertFalse($this->token->authenticate($request, new Response()));
     }
@@ -138,7 +138,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testHeaderHappy()
     {
-        $request = $this->getMockBuilder('\Cake\Network\Request')
+        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())
@@ -157,7 +157,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHeaderFail()
     {
-        $request = $this->getMockBuilder('\Cake\Network\Request')
+        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())

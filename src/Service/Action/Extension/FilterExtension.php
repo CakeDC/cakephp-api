@@ -11,10 +11,10 @@
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use CakeDC\Api\Service\Action\Action;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
 
 /**
  * Class FilterExtension
@@ -45,13 +45,15 @@ class FilterExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
+        $action = $event->getSubject();
+        $query = $event->getData('query');
         if ($event->result) {
             $query = $event->result;
         }
+
+        /* @var Table $table */
         $table = $query->repository();
-        $schema = $table->schema();
+        $schema = $table->getSchema();
         $fields = $schema->columns();
         $fields = array_flip($fields);
         $data = $action->data();

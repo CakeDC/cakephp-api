@@ -59,7 +59,7 @@ class ValidateAccountRequestActionTest extends IntegrationTestCase
         $this->assertTextEquals('Token has been reset successfully. Please check your email.', $result['data']);
 
         $Users = TableRegistry::get('CakeDC/Users.Users');
-        $user = $Users->find()->where(['id' => Settings::USER6])->hydrate(false)->first();
+        $user = $Users->find()->where(['id' => Settings::USER6])->enableHydration(false)->first();
         $this->assertNotEmpty($user['token']);
     }
 }

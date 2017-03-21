@@ -16,6 +16,7 @@ use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use Cake\Datasource\EntityInterface;
 
 class CrudViewActionTest extends TestCase
 {
@@ -85,7 +86,7 @@ class CrudViewActionTest extends TestCase
         });
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\Datasource\EntityInterface);
+        $this->assertTrue($result instanceof EntityInterface);
         $this->assertTrue($onFindEntity);
     }
 
@@ -103,6 +104,6 @@ class CrudViewActionTest extends TestCase
         ]);
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\Datasource\EntityInterface);
+        $this->assertTrue($result instanceof EntityInterface);
     }
 }

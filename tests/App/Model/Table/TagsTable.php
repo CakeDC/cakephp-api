@@ -11,7 +11,9 @@
 
 namespace CakeDC\Api\Test\App\Model\Table;
 
-class TagsTable extends \Cake\ORM\Table
+use Cake\ORM\Table;
+
+class TagsTable extends Table
 {
     /**
      * Initialize method
@@ -21,8 +23,8 @@ class TagsTable extends \Cake\ORM\Table
      */
     public function initialize(array $config)
     {
-        $this->table('tags');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('tags');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
     }
 }

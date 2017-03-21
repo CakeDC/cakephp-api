@@ -11,10 +11,6 @@
 
 namespace CakeDC\Api\Service;
 
-use Cake\Event\EventDispatcherInterface;
-use Cake\Event\EventDispatcherTrait;
-use Cake\Event\EventListenerInterface;
-use Cake\Event\EventManager;
 use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
@@ -23,10 +19,17 @@ use CakeDC\Api\Service\Exception\MissingParserException;
 use CakeDC\Api\Service\Exception\MissingRendererException;
 use CakeDC\Api\Service\Renderer\BaseRenderer;
 use CakeDC\Api\Service\RequestParser\BaseParser;
+
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Cake\Event\EventDispatcherInterface;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 use Cake\Http\Client\Response;
+use Cake\Http\ServerRequest;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -147,14 +150,14 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Request
      *
-     * @var \Cake\Network\Request
+     * @var \Cake\Http\ServerRequest
      */
     protected $_request;
 
     /**
      * Request
      *
-     * @var \Cake\Network\Response
+     * @var \Cake\Http\Response
      */
     protected $_response;
 
@@ -277,8 +280,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Get and set request.
      *
-     * @param \Cake\Network\Request $request A request object.
-     * @return \Cake\Network\Request
+     * @param \Cake\Http\ServerRequest $request A request object.
+     * @return \Cake\Http\ServerRequest
      */
     public function request($request = null)
     {
@@ -401,8 +404,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Reverses a parsed parameter array into a string.
      *
-     * @param \Cake\Network\Request|array $params The params array or
-     *     Cake\Network\Request object that needs to be reversed.
+     * @param \Cake\Http\ServerRequest|array $params The params array or
+     *     Cake\Http\ServerRequest object that needs to be reversed.
      * @return string The string that is the reversed result of the array
      */
     public function routeReverse($params)
@@ -502,7 +505,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function parseRoute($url)
     {
         return $this->_routesWrapper(function () use ($url) {
-            return ApiRouter::parse($url);
+            return ApiRouter::parseRequest(new ServerRequest($url));
         });
     }
 
@@ -573,7 +576,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * @return \CakeDC\Api\Service\Action\Result
+     * @param null $value value
+     * @return Result
      */
     public function result($value = null)
     {
@@ -601,8 +605,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if ($result === null) {
             $result = $this->result();
         }
-        $this->response()
-             ->statusCode($result->code());
+        $this->response($this->response()->withStatus($result->code()));
         if ($result->exception() !== null) {
             $this->renderer()
                  ->error($result->exception());
@@ -617,8 +620,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Get and set response.
      *
-     * @param \Cake\Network\Response $response  A Response object.
-     * @return \Cake\Network\Response
+     * @param \Cake\Http\Response $response  A Response object.
+     * @return \Cake\Http\Response
      */
     public function response($response = null)
     {

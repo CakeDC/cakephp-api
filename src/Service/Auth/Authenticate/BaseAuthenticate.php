@@ -25,12 +25,14 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
 use CakeDC\Api\Service\Action\Action;
+
 use Cake\Auth\PasswordHasherFactory;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\EventListenerInterface;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
+
 use Cake\ORM\TableRegistry;
 
 /**
@@ -215,7 +217,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
      * Get a user based on information in the request. Primarily used by stateless authentication
      * systems like basic and digest auth.
      *
-     * @param \Cake\Network\Request $request Request object.
+     * @param \Cake\Http\ServerRequest $request Request object.
      * @return mixed Either false or an array of user information
      */
     public function getUser(ServerRequest $request)

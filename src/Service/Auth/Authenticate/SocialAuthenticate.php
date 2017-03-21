@@ -88,7 +88,7 @@ class SocialAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->config('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 
@@ -112,9 +112,9 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get query object for fetching user from database.
      *
-     * @param string $provider
-     * @param $token
-     * @param $tokenSecret
+     * @param string $provider provider
+     * @param string $token token
+     * @param string $tokenSecret secret
      * @return \Cake\ORM\Query
      */
     protected function _socialQuery($provider, $token, $tokenSecret)

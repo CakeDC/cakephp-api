@@ -64,7 +64,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -88,7 +88,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -108,14 +108,17 @@ class RawRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
-                 ->with($statusCode);
+                 ->method('withStatus')
+                 ->with($statusCode)
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('body')
-                ->with($data);
+                 ->method('withStringBody')
+                ->with($data)
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('text/plain');
+                 ->method('withType')
+                 ->with('text/plain')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -129,7 +132,7 @@ class RawRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -146,11 +149,13 @@ class RawRendererTest extends TestCase
         $renderer = $this->Service->renderer();
 
         $response->expects($this->once())
-            ->method('body')
-            ->with('Unauthorized');
+            ->method('withStringBody')
+            ->with('Unauthorized')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('text/plain');
+            ->method('withType')
+            ->with('text/plain')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }
