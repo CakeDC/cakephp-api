@@ -75,7 +75,7 @@ class JSendRendererTest extends TestCase
             'rendererClass' => 'CakeDC/Api.JSend'
         ];
         $this->Service = new FallbackService($serviceOptions);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
         $this->assertTrue($renderer instanceof JSendRenderer);
     }
 
@@ -105,7 +105,7 @@ class JSendRendererTest extends TestCase
         $result->code($statusCode);
         $data = ['id' => 1, 'name' => 'alex'];
         $result->data($data);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
             ->method('withStatus')
@@ -146,7 +146,7 @@ class JSendRendererTest extends TestCase
 
         Configure::write('debug', 0);
         $error = new UnauthorizedException();
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
             ->method('withStringBody')

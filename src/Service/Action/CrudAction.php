@@ -70,13 +70,13 @@ abstract class CrudAction extends Action
         if (!empty($config['table'])) {
             $tableName = $config['table'];
         } else {
-            $tableName = $this->service()->table();
+            $tableName = $this->getService()->getTable();
         }
         if ($tableName instanceof Table) {
-            $this->table($tableName);
+            $this->setTable($tableName);
         } else {
             $table = TableRegistry::get($tableName);
-            $this->table($table);
+            $this->setTable($table);
         }
         if (!empty($config['id'])) {
             $this->_id = $config['id'];
@@ -91,24 +91,47 @@ abstract class CrudAction extends Action
             $this->_parentIdName = $config['parentIdName'];
         }
         if (!empty($config['table'])) {
-            $this->table($config['table']);
+            $this->setTable($config['table']);
         }
+    }
+
+    /**
+     * Gets a Table instance.
+     *
+     * @return Table
+     */
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
+    /**
+     * Sets the table instance.
+     *
+     * @param Table $table A Table instance.
+     * @return $this
+     */
+    public function setTable(Table $table)
+    {
+        $this->_table = $table;
+
+        return $this;
     }
 
     /**
      * Api method for table.
      *
      * @param Table $table A Table instance.
+     * @deprecated 3.4.0 Use setTable()/getTable() instead.
      * @return Table
      */
     public function table($table = null)
     {
-        if ($table === null) {
-            return $this->_table;
+        if ($table !== null) {
+            return $this->setTable($table);
         }
-        $this->_table = $table;
 
-        return $this->_table;
+        return $this->getTable();
     }
 
     /**
@@ -118,7 +141,7 @@ abstract class CrudAction extends Action
      */
     protected function _newEntity()
     {
-        $entity = $this->table()->newEntity();
+        $entity = $this->getTable()->newEntity();
 
         return $entity;
     }
@@ -132,7 +155,7 @@ abstract class CrudAction extends Action
      */
     protected function _patchEntity($entity, $data)
     {
-        $entity = $this->table()->patchEntity($entity, $data);
+        $entity = $this->getTable()->patchEntity($entity, $data);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));
         if ($event->result) {
             $entity = $event->result;
@@ -148,7 +171,7 @@ abstract class CrudAction extends Action
      */
     protected function _getEntities()
     {
-        $query = $this->table()->find();
+        $query = $this->getTable()->find();
         $event = $this->dispatchEvent('Action.Crud.onFindEntities', compact('query'));
         if ($event->result) {
             $query = $event->result;
@@ -167,7 +190,7 @@ abstract class CrudAction extends Action
      */
     protected function _getEntity($primaryKey)
     {
-        $table = $this->table();
+        $table = $this->getTable();
         $key = (array)$table->getPrimaryKey();
         $alias = $table->getAlias();
         foreach ($key as $index => $keyname) {
@@ -201,19 +224,28 @@ abstract class CrudAction extends Action
      */
     protected function _save($entity)
     {
-        if ($this->table()->save($entity)) {
+        if ($this->getTable()->save($entity)) {
             return $entity;
         } else {
-            throw new ValidationException(__('Validation on {0} failed', $this->table()->getAlias()), 0, null, $entity->errors());
+            throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $entity->errors());
         }
     }
+
+    /**
+     * @return CrudService
+     */
+    public function getService()
+    {
+        return $this->_service;
+    }
+
 
     /**
      * Model id getter.
      *
      * @return mixed|string
      */
-    public function id()
+    public function getId()
     {
         return $this->_id;
     }
@@ -223,7 +255,7 @@ abstract class CrudAction extends Action
      *
      * @return string
      */
-    public function idName()
+    public function getIdName()
     {
         return $this->_idName;
     }
@@ -233,7 +265,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function parentId()
+    public function getParentId()
     {
         return $this->_parentId;
     }
@@ -243,7 +275,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function parentIdName()
+    public function getParentIdName()
     {
         return $this->_parentIdName;
     }
@@ -255,7 +287,7 @@ abstract class CrudAction extends Action
      */
     protected function _describe()
     {
-        $table = $this->table();
+        $table = $this->getTable();
         $schema = $table->getSchema();
 
         $entity = $this->_newEntity();

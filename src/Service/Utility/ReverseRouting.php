@@ -55,8 +55,8 @@ class ReverseRouting
      */
     public function indexPath(Action $action, $beforeReverse = null)
     {
-        $indexRoute = $action->route();
-        $parent = $action->service()->parent();
+        $indexRoute = $action->getRoute();
+        $parent = $action->getService()->getParentService();
         $path = null;
         if ($parent !== null) {
             $parentRoutes = $parent->routes();
@@ -75,7 +75,7 @@ class ReverseRouting
                 $indexRoute = $beforeReverse($indexRoute);
             }
 
-            return $action->service()->routeReverse($indexRoute);
+            return $action->getService()->routeReverse($indexRoute);
         }
     }
 
@@ -89,9 +89,9 @@ class ReverseRouting
      */
     public function parentViewPath($parentName, $action, $type)
     {
-        $baseRoute = $action->route();
-        $parent = $action->service()->parent();
-        $parentId = Inflector::singularize(Inflector::underscore($parent->name())) . '_id';
+        $baseRoute = $action->getRoute();
+        $parent = $action->getService()->getParentService();
+        $parentId = Inflector::singularize(Inflector::underscore($parent->getName())) . '_id';
         $route = collection($parent->routes())
             ->filter(function ($item) use ($parentName) {
                 return $item->getName() == $parentName;

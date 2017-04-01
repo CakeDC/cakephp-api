@@ -27,7 +27,7 @@ class CrudDeleteAction extends CrudAction
     public function execute()
     {
         $record = $this->_getEntity($this->_id);
-        $result = $this->table()->delete($record);
+        $result = $this->getTable()->delete($record);
 
         return $result;
     }

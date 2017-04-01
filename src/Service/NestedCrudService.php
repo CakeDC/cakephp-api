@@ -48,9 +48,9 @@ abstract class NestedCrudService extends CrudService
      */
     protected function _actionOptions($route)
     {
-        $parent = $this->parent();
+        $parent = $this->getParentService();
         if ($this->_parentIdName === null && $parent instanceof Service) {
-            $parentName = $parent->name();
+            $parentName = $parent->getName();
             $parentIdName = Inflector::singularize($parentName) . '_id';
             if (array_key_exists($parentIdName, $route)) {
                 $this->_parentIdName = $parentIdName;

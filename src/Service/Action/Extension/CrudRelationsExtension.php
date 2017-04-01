@@ -107,11 +107,11 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param Query $query A Query instance.
      * @return mixed
      */
-    protected function _attachAssociations(Action $action, Query $query)
+    protected function _attachAssociations(CrudAction $action, Query $query)
     {
         $associations = $this->_includeAssociations($action);
         if (empty($associations) && $this->_includeDirectAssociations($action)) {
-            $relations = $action->table()
+            $relations = $action->getTable()
                 ->associations()
                 ->type(['HasOne', 'BelongsTo']);
             $associations = collection($relations)
@@ -131,12 +131,12 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
             ->toArray();
 
         collection($tables)->each(function ($name) use ($query, $action) {
-            $assoc = $action->table()->association($name);
+            $assoc = $action->getTable()->association($name);
             if ($assoc !== null) {
                 $query->select($assoc);
             }
         });
-        $query->select($action->table());
+        $query->select($action->getTable());
         $query->contain($tables);
 
         return $query;

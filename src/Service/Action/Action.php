@@ -93,13 +93,13 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     public function __construct(array $config = [])
     {
         if (!empty($config['name'])) {
-            $this->name($config['name']);
+            $this->setName($config['name']);
         }
         if (!empty($config['service'])) {
-            $this->service($config['service']);
+            $this->setService($config['service']);
         }
         if (!empty($config['route'])) {
-            $this->_route = $config['route'];
+            $this->setRoute($config['route']);
         }
         if (!empty($config['Extension'])) {
             $this->extensions = (Hash::merge($this->extensions, $config['Extension']));
@@ -128,19 +128,65 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     }
 
     /**
-     * Api method for action name.
+     * Gets an action name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * Sets an action name.
+     *
+     * @param string $name An action name.
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->_name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get and set service name.
      *
      * @param string $name Action name.
+     * @deprecated 3.4.0 Use setName()/getName() instead.
      * @return string
      */
     public function name($name = null)
     {
-        if ($name === null) {
-            return $this->_name;
+        if ($name !== null) {
+            return $this->setName($name);
         }
-        $this->_name = $name;
 
-        return $this->_name;
+        return $this->getName();
+    }
+
+    /**
+     * Returns activated route.
+     *
+     * @return array
+     */
+    public function getRoute()
+    {
+        return $this->_route;
+    }
+
+    /**
+     * Sets activated route.
+     *
+     * @param array $route Route config.
+     * @return $this
+     */
+    public function setRoute(array $route)
+    {
+        $this->_route = $route;
+
+        return $this;
     }
 
     /**
@@ -151,12 +197,27 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function route($route = null)
     {
-        if ($route === null) {
-            return $this->_route;
+        if ($route !== null) {
+            return $this->setRoute($route);
         }
-        $this->_route = $route;
 
-        return $this->_route;
+        return $this->getRoute();
+    }
+
+    /**
+     * @return Service
+     */
+    public function getService()
+    {
+        return $this->_service;
+    }
+
+    /**
+     * @param Service $service
+     */
+    public function setService(Service $service)
+    {
+        $this->_service = $service;
     }
 
     /**
@@ -167,12 +228,11 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function service($service = null)
     {
-        if ($service === null) {
-            return $this->_service;
+        if ($service !== null) {
+            return $this->setService($service);
         }
-        $this->_service = $service;
 
-        return $this->_service;
+        return $this->getService();
     }
 
     /**
@@ -251,7 +311,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     protected function _executeAction($methodName = 'action')
     {
-        $parser = $this->service()->parser();
+        $parser = $this->getService()->getParser();
         $params = $parser->params();
         $arguments = [];
         $reflection = new ReflectionMethod($this, $methodName);
@@ -307,7 +367,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function data()
     {
-        return $this->service()->parser()->params();
+        return $this->getService()->getParser()->params();
     }
 
     /**
@@ -378,8 +438,8 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
         return Hash::merge($defaultConfig, [
             'service' => $this->_service,
-            'request' => $this->_service->request(),
-            'response' => $this->_service->response(),
+            'request' => $this->_service->getRequest(),
+            'response' => $this->_service->getResponse(),
             'action' => $this,
         ]);
     }

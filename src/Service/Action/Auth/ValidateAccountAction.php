@@ -40,7 +40,7 @@ class ValidateAccountAction extends Action
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->Auth->allow($this->name());
+        $this->Auth->allow($this->getName());
     }
 
     /**

@@ -68,7 +68,7 @@ class ServiceRegistryTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertEquals('authors', $Service->name());
+        $this->assertEquals('authors', $Service->getName());
     }
 
     /**
@@ -97,6 +97,6 @@ class ServiceRegistryTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertTextEquals('/authors/1/articles', $Service->baseUrl());
+        $this->assertTextEquals('/authors/1/articles', $Service->getBaseUrl());
     }
 }

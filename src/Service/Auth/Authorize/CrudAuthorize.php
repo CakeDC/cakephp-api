@@ -61,9 +61,9 @@ class CrudAuthorize extends BaseAuthorize
      */
     protected function _actionAuth(Action $action)
     {
-        $actionName = $action->name();
-        $serviceName = $action->service()->name();
-        $service = $action->service();
+        $actionName = $action->getName();
+        $serviceName = $action->getService()->getName();
+        $service = $action->getService();
 
         $serviceActionAuth = $this->_permission($service, $serviceName . '.' . $actionName);
         if ($serviceActionAuth !== null) {
@@ -82,7 +82,7 @@ class CrudAuthorize extends BaseAuthorize
             return $allow || $authenticated;
         }
 
-        return $this->_serviceAuth($action->service(), $action);
+        return $this->_serviceAuth($action->getService(), $action);
     }
 
     /**
@@ -94,7 +94,7 @@ class CrudAuthorize extends BaseAuthorize
      */
     protected function _serviceAuth(Service $service, Action $action)
     {
-        $serviceName = $service->name();
+        $serviceName = $service->getName();
         $serviceAuth = $this->_permission($service, 'Service.' . $serviceName);
         if ($serviceAuth === null) {
             $serviceAuth = $this->_permission($service, 'default');
@@ -120,7 +120,7 @@ class CrudAuthorize extends BaseAuthorize
         $prefix = 'Api.Auth.Crud.';
         $useVersioning = Configure::read('Api.useVersioning');
         $versionPrefix = Configure::read('Api.versionPrefix');
-        $version = $service->version();
+        $version = $service->getVersion();
         if ($useVersioning) {
             $permission = Configure::read($prefix . $versionPrefix . $version . '.' . $key);
             if (!empty($permission)) {

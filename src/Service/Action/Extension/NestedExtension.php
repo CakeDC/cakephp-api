@@ -49,8 +49,8 @@ class NestedExtension extends Extension implements EventListenerInterface
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
-        $foreignKey = $action->parentId();
-        $field = $action->parentIdName();
+        $foreignKey = $action->getParentId();
+        $field = $action->getParentIdName();
         if ($field !== null) {
             $query->where([$field => $foreignKey]);
         }
@@ -71,8 +71,8 @@ class NestedExtension extends Extension implements EventListenerInterface
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
-        $foreignKey = $action->parentId();
-        $field = $action->parentIdName();
+        $foreignKey = $action->getParentId();
+        $field = $action->getParentIdName();
         if ($field !== null) {
             $query->where([$field => $foreignKey]);
         }
@@ -96,8 +96,8 @@ class NestedExtension extends Extension implements EventListenerInterface
         if ($event->result) {
             $entity = $event->result;
         }
-        $foreignKey = $action->parentId();
-        $field = $action->parentIdName();
+        $foreignKey = $action->getParentId();
+        $field = $action->getParentIdName();
         if ($field !== null) {
             $entity->set($field, $foreignKey);
         }

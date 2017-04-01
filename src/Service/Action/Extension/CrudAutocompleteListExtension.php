@@ -60,8 +60,8 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
             return $query;
         }
         $query = $query->select([
-            $action->table()->getPrimaryKey(),
-            $action->table()->getDisplayField()
+            $action->getTable()->getPrimaryKey(),
+            $action->getTable()->getDisplayField()
         ]);
 
         return $query;

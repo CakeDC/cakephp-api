@@ -40,7 +40,7 @@ class FallbackService extends NestedCrudService
     {
         parent::initialize();
         if (empty($this->_table)) {
-            $this->_table = Inflector::pluralize(Inflector::camelize($this->name()));
+            $this->_table = Inflector::pluralize(Inflector::camelize($this->getName()));
         }
     }
 
@@ -61,7 +61,7 @@ class FallbackService extends NestedCrudService
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ':id'],
             ]);
-            $routes->resources($this->name(), $options, function ($routes) use ($table) {
+            $routes->resources($this->getName(), $options, function ($routes) use ($table) {
                 if (is_array($this->_routeExtensions)) {
                     $routes->extensions($this->_routeExtensions);
 

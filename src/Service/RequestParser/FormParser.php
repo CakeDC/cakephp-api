@@ -24,7 +24,7 @@ class FormParser extends BaseParser
      */
     public function params()
     {
-        $request = $this->_service->request();
+        $request = $this->_service->getRequest();
         if ($request == null) {
             stackTrace();
         }

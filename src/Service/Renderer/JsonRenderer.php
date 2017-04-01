@@ -34,13 +34,14 @@ class JsonRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->response();
+        $response = $this->_service->getResponse();
         $data = $result->data();
         $payload = $result->payload();
         if (is_array($data) && is_array($payload)) {
             $data = Hash::merge($data, $payload);
         }
-        $this->_service->response($response->withStringBody($this->_encode($data))->withStatus($result->code())->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withStatus($result->code())
+            ->withType('application/json'));
 
         return true;
     }
@@ -53,7 +54,7 @@ class JsonRenderer extends BaseRenderer
      */
     public function error(Exception $exception)
     {
-        $response = $this->_service->response();
+        $response = $this->_service->getResponse();
         $data = [
             'error' => [
                 'code' => $exception->getCode(),
@@ -66,7 +67,7 @@ class JsonRenderer extends BaseRenderer
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $this->_service->response($response->withStringBody($this->_encode($data))->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withType('application/json'));
     }
 
     /**

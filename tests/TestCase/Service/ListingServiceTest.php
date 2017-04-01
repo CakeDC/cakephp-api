@@ -71,7 +71,7 @@ class ListingServiceTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof ListingService);
-        $this->assertEquals('listing', $Service->name());
+        $this->assertEquals('listing', $Service->getName());
 
         $action = $Service->buildAction();
         $result = $action->process();

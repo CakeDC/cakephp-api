@@ -59,7 +59,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function accept()
     {
-        $request = $this->_service->request();
+        $request = $this->_service->getRequest();
 
         return ($request->accepts('application/json') || $request->accepts('text/json') || $request->accepts('text/javascript'));
     }
@@ -72,7 +72,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->response();
+        $response = $this->_service->getResponse();
 
         $data = $result->data();
         $payload = $result->payload();
@@ -84,7 +84,8 @@ class JSendRenderer extends BaseRenderer
         }
         $this->_mapStatus($result);
 
-        $this->_service->response($response->withStringBody($this->_format($this->status, $return))->withStatus($result->code())->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus
+        ($result->code())->withType('application/json'));
 
         return true;
     }
@@ -97,7 +98,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function error(Exception $exception)
     {
-        $response = $this->_service->response();
+        $response = $this->_service->getResponse();
         if ($exception instanceof ValidationException) {
             $data = $exception->getValidationErrors();
         } else {
@@ -105,7 +106,8 @@ class JSendRenderer extends BaseRenderer
         }
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
-        $this->_service->response($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_error($message, $exception->getCode(), $data,
+            $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
     }
 
     /**

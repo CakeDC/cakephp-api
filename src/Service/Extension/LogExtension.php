@@ -71,9 +71,9 @@ class LogExtension extends Extension implements EventListenerInterface
     public function afterProcess(Event $event)
     {
         $duration = round((microtime(true) - $this->_timer) * 1000, 0);
-        $url = $this->_service->baseUrl();
-        $data = $this->_service->parser()->params();
-        $result = $this->_service->result()->toArray();
+        $url = $this->_service->getBaseUrl();
+        $data = $this->_service->getParser()->params();
+        $result = $this->_service->getResult()->toArray();
         $log = [
             'url' => $url,
             'method' => env('REQUEST_METHOD'),

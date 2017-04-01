@@ -75,7 +75,7 @@ class XmlRendererTest extends TestCase
             'rendererClass' => 'CakeDC/Api.Xml'
         ];
         $this->Service = new FallbackService($serviceOptions);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
         $this->assertTrue($renderer instanceof XmlRenderer);
     }
 
@@ -105,7 +105,7 @@ class XmlRendererTest extends TestCase
         $result->code($statusCode);
         $data = 'Updated!';
         $result->data($data);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
                  ->method('withStatus')
@@ -146,7 +146,7 @@ class XmlRendererTest extends TestCase
 
         Configure::write('debug', 0);
         $error = new UnauthorizedException();
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
                 ->method('withStringBody')

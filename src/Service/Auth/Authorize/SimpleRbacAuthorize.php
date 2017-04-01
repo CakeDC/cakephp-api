@@ -189,9 +189,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     protected function _matchRule($permission, $user, $role, $request)
     {
-        $action = $this->_action->name();
-        $service = $this->_action->service()->name();
-        $version = $this->_action->service()->version();
+        $action = $this->_action->getName();
+        $service = $this->_action->getService()->getName();
+        $version = $this->_action->getService()->getVersion();
 
         if ($this->_matchOrAsterisk($permission, 'role', $role) &&
                 $this->_matchOrAsterisk($permission, 'version', $version, true) &&

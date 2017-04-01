@@ -241,7 +241,7 @@ class Auth
      */
     protected function _isAllowed(Action $action)
     {
-        $action = strtolower($action->name());
+        $action = strtolower($action->getName());
 
         return in_array($action, array_map('strtolower', $this->allowedActions)) ||
             in_array('*', $this->allowedActions);
