@@ -70,9 +70,9 @@ class ConfigReader
             $options = $this->_mergeWithDefaults($byServiceOptions, $byServiceDefault);
         }
 
-        $options = $this->_mergeWithDefaults($options, $defaultByName);
+        $options = $this->_mergeWithDefaults($defaultByName, $options);
 
-        return $this->_mergeWithDefaults($options, $defaults);
+        return $this->_mergeWithDefaults($defaults, $options);
     }
 
     /**

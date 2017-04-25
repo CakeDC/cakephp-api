@@ -801,7 +801,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @return BaseRenderer
      */
-    public function getRenderer(): BaseRenderer
+    public function getRenderer()
     {
         return $this->_renderer;
     }
