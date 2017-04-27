@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -74,6 +74,9 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     protected function _includeAssociations(CrudAction $action)
     {
         $data = $action->data();
+        if (!empty($data['include_associations']) && empty($data['include_relations'])) {
+            $data['include_relations'] = $data['include_associations'];
+        }
         $exists = (is_array($data) && !empty($data['include_relations']));
         if (!$exists) {
             return false;
