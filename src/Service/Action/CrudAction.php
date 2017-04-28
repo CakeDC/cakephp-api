@@ -60,6 +60,13 @@ abstract class CrudAction extends Action
     protected $_parentIdName = null;
 
     /**
+     * Api table finder method
+     *
+     * @var string
+     */
+    protected $_finder = null;
+
+    /**
      * Action constructor.
      *
      * @param array $config Configuration options passed to the constructor
@@ -83,6 +90,9 @@ abstract class CrudAction extends Action
         }
         if (!empty($config['idName'])) {
             $this->_idName = $config['idName'];
+        }
+        if (!empty($config['finder'])) {
+            $this->_finder = $config['finder'];
         }
         if (!empty($config['parentId'])) {
             $this->_parentId = $config['parentId'];
@@ -172,6 +182,10 @@ abstract class CrudAction extends Action
     protected function _getEntities()
     {
         $query = $this->getTable()->find();
+        if ($this->_finder !== null) {
+            $query = $query->find($this->_finder);
+        }
+
         $event = $this->dispatchEvent('Action.Crud.onFindEntities', compact('query'));
         if ($event->result) {
             $query = $event->result;
@@ -207,6 +221,9 @@ abstract class CrudAction extends Action
         }
         $conditions = array_combine($key, $primaryKey);
         $query = $table->find('all')->where($conditions);
+        if ($this->_finder !== null) {
+            $query = $query->find($this->_finder);
+        }
         $event = $this->dispatchEvent('Action.Crud.onFindEntity', compact('query'));
         if ($event->result) {
             $query = $event->result;
