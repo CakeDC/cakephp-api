@@ -73,7 +73,9 @@ abstract class CrudAction extends Action
      */
     public function __construct(array $config = [])
     {
-        parent::__construct($config);
+        if (!empty($config['service'])) {
+            $this->setService($config['service']);
+        }
         if (!empty($config['table'])) {
             $tableName = $config['table'];
         } else {
@@ -103,6 +105,7 @@ abstract class CrudAction extends Action
         if (!empty($config['table'])) {
             $this->setTable($config['table']);
         }
+        parent::__construct($config);
     }
 
     /**
@@ -142,6 +145,55 @@ abstract class CrudAction extends Action
         }
 
         return $this->getTable();
+    }
+
+    /**
+     * @return CrudService
+     */
+    public function getService()
+    {
+        return $this->_service;
+    }
+
+
+    /**
+     * Model id getter.
+     *
+     * @return mixed|string
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * Model id field name getter.
+     *
+     * @return string
+     */
+    public function getIdName()
+    {
+        return $this->_idName;
+    }
+
+    /**
+     * Parent id getter.
+     *
+     * @return mixed|string
+     */
+    public function getParentId()
+    {
+        return $this->_parentId;
+    }
+
+    /**
+     * Parent model id field name getter.
+     *
+     * @return mixed|string
+     */
+    public function getParentIdName()
+    {
+        return $this->_parentIdName;
     }
 
     /**
@@ -204,6 +256,28 @@ abstract class CrudAction extends Action
      */
     protected function _getEntity($primaryKey)
     {
+        $query = $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
+        if ($this->_finder !== null) {
+            $query = $query->find($this->_finder);
+        }
+        $event = $this->dispatchEvent('Action.Crud.onFindEntity', compact('query'));
+        if ($event->result) {
+            $query = $event->result;
+        }
+        $entity = $query->firstOrFail();
+
+        return $entity;
+    }
+
+
+    /**
+     * Build condition for get entity method.
+     *
+     * @param string $primaryKey
+     * @return array
+     */
+    protected function _buildViewCondition($primaryKey)
+    {
         $table = $this->getTable();
         $key = (array)$table->getPrimaryKey();
         $alias = $table->getAlias();
@@ -217,20 +291,12 @@ abstract class CrudAction extends Action
                 return var_export($key, true);
             }, $primaryKey);
 
-            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->getTable(), implode($primaryKey, ', ')));
+            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]',
+                $table->getTable(), implode($primaryKey, ', ')));
         }
         $conditions = array_combine($key, $primaryKey);
-        $query = $table->find('all')->where($conditions);
-        if ($this->_finder !== null) {
-            $query = $query->find($this->_finder);
-        }
-        $event = $this->dispatchEvent('Action.Crud.onFindEntity', compact('query'));
-        if ($event->result) {
-            $query = $event->result;
-        }
-        $entity = $query->firstOrFail();
 
-        return $entity;
+        return $conditions;
     }
 
     /**
@@ -246,55 +312,6 @@ abstract class CrudAction extends Action
         } else {
             throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $entity->errors());
         }
-    }
-
-    /**
-     * @return CrudService
-     */
-    public function getService()
-    {
-        return $this->_service;
-    }
-
-
-    /**
-     * Model id getter.
-     *
-     * @return mixed|string
-     */
-    public function getId()
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Model id field name getter.
-     *
-     * @return string
-     */
-    public function getIdName()
-    {
-        return $this->_idName;
-    }
-
-    /**
-     * Parent id getter.
-     *
-     * @return mixed|string
-     */
-    public function getParentId()
-    {
-        return $this->_parentId;
-    }
-
-    /**
-     * Parent model id field name getter.
-     *
-     * @return mixed|string
-     */
-    public function getParentIdName()
-    {
-        return $this->_parentIdName;
     }
 
     /**

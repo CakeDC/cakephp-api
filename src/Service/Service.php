@@ -284,7 +284,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param int $version Version number.
      * @return $this
      */
-    public function setVersion(int $version)
+    public function setVersion($version)
     {
         $this->_version = $version;
     }
@@ -514,10 +514,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function dispatch()
     {
         try {
-            $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
-            $action = $this->buildAction();
-            $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
-            $result = $action->process();
+            $result = $this->_dispatch();
 
             if ($result instanceof Result) {
                 $this->setResult($result);
@@ -538,6 +535,27 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
 
         return $this->getResult();
+    }
+
+    /**
+     * Dispatch service call through callbacks and action.
+     *
+     * @return Result|mixed
+     */
+    protected function _dispatch()
+    {
+        $event = $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);;
+        if ($event->result instanceof Result) {
+            return $event->result;
+        }
+
+        $action = $this->buildAction();
+        $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
+        if ($event->result instanceof Result) {
+            return $event->result;
+        }
+
+        return $action->process();
     }
 
     /**
@@ -574,10 +592,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if (class_exists($actionClass)) {
             return $service->buildActionClass($actionClass, $route);
         }
-        if (array_key_exists($action, $this->_actionsClassMap)) {
-            $actionClass = $this->_actionsClassMap[$action];
-
-            return $service->buildActionClass($actionClass, $route);
+        $actionsClassMap = $service->getActionsClassMap();
+        if (array_key_exists($action, $actionsClassMap)) {
+            return $service->buildActionClass($actionsClassMap[$action], $route);
         }
         throw new MissingActionException(['class' => $actionClass]);
     }
@@ -594,6 +611,16 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         return $this->_routesWrapper(function () use ($url) {
             return ApiRouter::parseRequest(new ServerRequest($url));
         });
+    }
+
+    /**
+     * Returns action class map.
+     *
+     * @return array
+     */
+    public function getActionsClassMap()
+    {
+        return $this->_actionsClassMap;
     }
 
     /**
