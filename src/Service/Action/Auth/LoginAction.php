@@ -88,7 +88,7 @@ class LoginAction extends Action
             $user = $this->_afterIdentifyUser($user, $socialLogin);
         }
         if (empty($user)) {
-            throw new UserNotFoundException(__d('CakeDC/Api', 'User not found'));
+            throw new UserNotFoundException(__d('CakeDC/Api', 'User not found'), 404);
         } else {
             return $user;
         }
