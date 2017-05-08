@@ -213,11 +213,12 @@ abstract class CrudAction extends Action
      *
      * @param EntityInterface $entity An Entity instance.
      * @param array $data Entity data.
+     * @param array $options Patch entity options.
      * @return \Cake\Datasource\EntityInterface|mixed
      */
-    protected function _patchEntity($entity, $data)
+    protected function _patchEntity($entity, $data, $options = [])
     {
-        $entity = $this->getTable()->patchEntity($entity, $data);
+        $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));
         if ($event->result) {
             $entity = $event->result;
