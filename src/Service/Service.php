@@ -11,6 +11,7 @@
 
 namespace CakeDC\Api\Service;
 
+use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
@@ -525,6 +526,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         } catch (RecordNotFoundException $e) {
             $this->getResult()->code(404);
             $this->getResult()->exception($e);
+        } catch (ValidationException $e) {
+            $this->getResult()->code(422);
+            $this->getResult()->exception($e);
         } catch (Exception $e) {
             $code = $e->getCode();
             if (!is_int($code) || $code < 100 || $code >= 600) {
@@ -544,7 +548,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     protected function _dispatch()
     {
-        $event = $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);;
+        $event = $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
         if ($event->result instanceof Result) {
             return $event->result;
         }
@@ -609,7 +613,12 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function parseRoute($url)
     {
         return $this->_routesWrapper(function () use ($url) {
-            return ApiRouter::parseRequest(new ServerRequest($url));
+            return ApiRouter::parseRequest(new ServerRequest([
+                'url' => $url,
+                'environment' => [
+                    'REQUEST_METHOD' => $this->_request->env('REQUEST_METHOD')
+                ]
+            ]));
         });
     }
 
@@ -732,7 +741,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Sets the result for service.
      *
-     * @param Result $result
+     * @param Result $result A Result object.
      * @return $this
      */
     public function setResult(Result $result)

@@ -29,7 +29,7 @@ class UnauthenticatedException extends Exception
      * @param int $code The code of the error
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($message = null, $code = 403, $previous = null)
+    public function __construct($message = null, $code = 401, $previous = null)
     {
         if (empty($message)) {
             $message = 'Unauthenticated';

@@ -187,6 +187,20 @@ class IntegrationTestCase extends BaseTestCase
     }
 
     /**
+     * Helper method for status assertions.
+     *
+     * @param int $code Status code.
+     * @param string $message The error message.
+     * @return void
+     */
+    public function assertStatus($code, $message = null) {
+        if ($message === null) {
+            $message = "Status code $code does not match";
+        }
+        $this->_assertStatus($code, $code, $message);
+    }
+
+    /**
      * Assert error message.
      *
      * @param array $result Response.

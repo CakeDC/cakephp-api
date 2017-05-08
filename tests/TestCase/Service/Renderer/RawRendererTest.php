@@ -11,7 +11,7 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
-use CakeDC\Api\Exception\UnauthorizedException;
+use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\RawRenderer;
@@ -145,12 +145,12 @@ class RawRendererTest extends TestCase
         $this->Service = new FallbackService($serviceOptions);
 
         Configure::write('debug', 0);
-        $error = new UnauthorizedException();
+        $error = new UnauthenticatedException();
         $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
             ->method('withStringBody')
-            ->with('Unauthorized')
+            ->with('Unauthenticated')
             ->will($this->returnValue($response));
         $response->expects($this->once())
             ->method('withType')
