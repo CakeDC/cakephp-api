@@ -15,6 +15,7 @@ use Cake\Datasource\EntityInterface;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use CakeDC\Users\Exception\MissingEmailException;
 use CakeDC\Users\Exception\TokenExpiredException;
 use CakeDC\Users\Exception\UserAlreadyActiveException;
 use CakeDC\Users\Exception\UserNotActiveException;
@@ -91,6 +92,8 @@ class SocialLoginAction extends Action
             throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 503);
         } catch (TokenExpiredException $ex) {
             throw new Exception($ex->getMessage(), 504);
+        } catch (MissingEmailException $ex) {
+            throw new Exception($ex->getMessage(), 505);
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage(), 500);
         }
