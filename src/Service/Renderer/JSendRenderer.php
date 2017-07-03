@@ -84,8 +84,7 @@ class JSendRenderer extends BaseRenderer
         }
         $this->_mapStatus($result);
 
-        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus
-        ($result->code())->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus($result->code())->withType('application/json'));
 
         return true;
     }
@@ -106,8 +105,7 @@ class JSendRenderer extends BaseRenderer
         }
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
-        $this->_service->setResponse($response->withStringBody($this->_error($message, $exception->getCode(), $data,
-            $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
     }
 
     /**

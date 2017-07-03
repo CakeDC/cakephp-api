@@ -104,7 +104,6 @@ class FilterExtension extends Extension implements EventListenerInterface
                         $query->where([$field . ' IN' => $value]);
                     } else {
                         $query->where([$field => $value]);
-
                     }
                 }
             }

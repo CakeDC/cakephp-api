@@ -661,7 +661,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Sets the parent service method.
      *
-     * @param Service $parentService
+     * @param Service $parentService Parent Service
      * @return $this
      */
     public function setParentService(Service $parentService)
@@ -806,7 +806,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Sets the response.
      *
-     * @param \Cake\Http\Response $response
+     * @param \Cake\Http\Response $response Response
      * @return $this
      */
     public function setResponse(Response $response)
@@ -845,7 +845,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Sets the service renderer.
      *
-     * @param BaseRenderer $renderer
+     * @param BaseRenderer $renderer Rendered
      * @return $this
      */
     public function setRenderer(BaseRenderer $renderer)
