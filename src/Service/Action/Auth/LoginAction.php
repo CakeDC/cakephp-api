@@ -29,9 +29,9 @@ class LoginAction extends Action
 
     use LoginTrait;
 
-	protected $_identifiedField = 'username';
-	protected $_passwordField = 'password';
-	
+    protected $_identifiedField = 'username';
+    protected $_passwordField = 'password';
+
     /**
      * Initialize an action instance
      *

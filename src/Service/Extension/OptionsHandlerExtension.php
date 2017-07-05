@@ -11,10 +11,10 @@
 
 namespace CakeDC\Api\Service\Extension;
 
-use Cake\Event\Event;
-use Cake\Event\EventListenerInterface;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
+use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
 
 /**
  * Class CorsExtension

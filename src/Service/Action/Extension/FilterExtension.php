@@ -13,8 +13,10 @@ namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Log\Log;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
+use SebastianBergmann\Environment\Console;
 
 /**
  * Class FilterExtension
@@ -47,6 +49,7 @@ class FilterExtension extends Extension implements EventListenerInterface
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
+
         if ($event->result) {
             $query = $event->result;
         }
@@ -97,7 +100,11 @@ class FilterExtension extends Extension implements EventListenerInterface
                             $value = $value . '%';
                         }
                     }
-                    $query->where([$field => $value]);
+                    if (is_array($value)) {
+                        $query->where([$field . ' IN' => $value]);
+                    } else {
+                        $query->where([$field => $value]);
+                    }
                 }
             }
         }

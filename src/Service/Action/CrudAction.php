@@ -155,7 +155,6 @@ abstract class CrudAction extends Action
         return $this->_service;
     }
 
-
     /**
      * Model id getter.
      *
@@ -270,11 +269,10 @@ abstract class CrudAction extends Action
         return $entity;
     }
 
-
     /**
      * Build condition for get entity method.
      *
-     * @param string $primaryKey
+     * @param string $primaryKey Primary key
      * @return array
      */
     protected function _buildViewCondition($primaryKey)
@@ -292,8 +290,7 @@ abstract class CrudAction extends Action
                 return var_export($key, true);
             }, $primaryKey);
 
-            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]',
-                $table->getTable(), implode($primaryKey, ', ')));
+            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->getTable(), implode($primaryKey, ', ')));
         }
         $conditions = array_combine($key, $primaryKey);
 

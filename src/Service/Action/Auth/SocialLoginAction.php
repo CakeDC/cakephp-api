@@ -11,7 +11,6 @@
 
 namespace CakeDC\Api\Service\Action\Auth;
 
-use Cake\Datasource\EntityInterface;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
@@ -20,6 +19,7 @@ use CakeDC\Users\Exception\TokenExpiredException;
 use CakeDC\Users\Exception\UserAlreadyActiveException;
 use CakeDC\Users\Exception\UserNotActiveException;
 use CakeDC\Users\Exception\UserNotFoundException;
+use Cake\Datasource\EntityInterface;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Exception;
@@ -83,6 +83,7 @@ class SocialLoginAction extends Action
             if ($result instanceof EntityInterface) {
                 $result = $result->toArray();
             }
+
             return $result;
         } catch (UserNotActiveException $ex) {
             throw new Exception(__d('CakeDC/Api', 'User account has not validated yet'), 501);

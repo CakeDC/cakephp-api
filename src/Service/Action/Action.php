@@ -213,7 +213,9 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     }
 
     /**
-     * @param Service $service
+     * Set a service
+     *
+     * @param Service $service service
      */
     public function setService(Service $service)
     {

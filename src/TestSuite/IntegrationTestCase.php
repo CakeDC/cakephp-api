@@ -193,7 +193,8 @@ class IntegrationTestCase extends BaseTestCase
      * @param string $message The error message.
      * @return void
      */
-    public function assertStatus($code, $message = null) {
+    public function assertStatus($code, $message = null)
+    {
         if ($message === null) {
             $message = "Status code $code does not match";
         }
