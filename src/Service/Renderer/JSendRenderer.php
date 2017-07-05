@@ -72,20 +72,21 @@ class JSendRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->getResponse();
-
-        $data = $result->data();
-        $payload = $result->payload();
         $return = [
-            'data' => $data
+            'data' => $result->data()
         ];
-        if (is_array($payload)) {
-            $return = Hash::merge($return, $payload);
-        }
+        $return = $this->applyPayload($result->payload(), $return);
+        // if (is_array($payload)) {
+            // $return = Hash::merge($return, $payload);
+        // }
         $this->_mapStatus($result);
 
-        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus
-        ($result->code())->withType('application/json'));
+        $response = $this->_service->getResponse();
+        $this->_service->setResponse($this->_service->getResponse()
+            ->withStringBody($this->_format($this->status, $return))
+            ->withStatus($result->code())
+            ->withType('application/json')
+        );
 
         return true;
     }

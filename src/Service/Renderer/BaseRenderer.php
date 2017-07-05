@@ -12,8 +12,11 @@
 namespace CakeDC\Api\Service\Renderer;
 
 use CakeDC\Api\Service\Action\Result;
+use CakeDC\Api\Service\Renderer\PayloadRenderer\PayloadRendererCollection;
+use CakeDC\Api\Service\Renderer\PayloadRenderer\PayloadRendererInterface;
 use CakeDC\Api\Service\Service;
 use Cake\Core\Configure;
+use Cake\Core\InstanceConfigTrait;
 use Exception;
 
 /**
@@ -21,6 +24,22 @@ use Exception;
  */
 abstract class BaseRenderer
 {
+
+    use InstanceConfigTrait;
+
+    /**
+     * Default config
+     *
+     * These are merged with user-provided config when the object is used.
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'payloadRenderers' => [
+            'CakeDC/Api.Pagination',
+//            'CakeDC/Api.Merge',
+        ]
+    ];
 
     /**
      * Reference to the Service.
@@ -30,6 +49,11 @@ abstract class BaseRenderer
     protected $_service = null;
 
     /**
+     * @var PayloadRendererCollection
+     */
+    protected $_payloadRenderers;
+
+    /**
      * Constructor
      *
      * @param Service $service The Service instantiating the Renderer.
@@ -37,6 +61,44 @@ abstract class BaseRenderer
     public function __construct(Service $service)
     {
         $this->_service = $service;
+    }
+
+    /**
+     * Access the payload renderers collection
+     *
+     * @return \CakeDC\Api\Service\Renderer\PayloadRenderer\PayloadRendererCollection
+     */
+    public function payloadRenderers()
+    {
+        if (!$this->_payloadRenderers) {
+            $this->_payloadRenderers = new PayloadRendererCollection($this->getConfig('payloadRenderers') ?: []);
+        }
+
+        return $this->_payloadRenderers;
+    }
+
+    /**
+     * Updates response and result data based on payload.
+     *
+     * @param array $payload Payload data object.
+     * @param mixed $data An api return data.
+     * @return mixed
+     */
+    public function applyPayload(array $payload, $data)
+    {
+        if ($payload === null || !is_array($payload)) {
+            return $data;
+        }
+
+        $response = $this->_service->getResponse();
+        foreach ($this->payloadRenderers() as $payloadRenderer) {
+            $response = $payloadRenderer->applyToResponse($response, $payload);
+            $data = $payloadRenderer->applyToResultData($data, $payload);
+        }
+
+        $this->_service->setResponse($response);
+
+        return $data;
     }
 
     /**
