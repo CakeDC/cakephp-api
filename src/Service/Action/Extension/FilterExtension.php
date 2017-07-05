@@ -16,7 +16,6 @@ use Cake\Event\EventListenerInterface;
 use Cake\Log\Log;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
-use SebastianBergmann\Environment\Console;
 
 /**
  * Class FilterExtension
@@ -91,18 +90,22 @@ class FilterExtension extends Extension implements EventListenerInterface
                     if ($postfix == 'ge' || $postfix == 'ne') {
                         unset($data[$field]);
                     }
-                    if ($postfix !== '') {
-                        $field = str_replace($postfixDelimeter . $postfix, '', $field) . $rule;
-                        if ($postfix == 'llike' || $postfix == 'like') {
-                            $value = '%' . $value;
-                        }
-                        if ($postfix == 'rlike' || $postfix == 'like') {
-                            $value = $value . '%';
-                        }
-                    }
                     if (is_array($value)) {
-                        $query->where([$field . ' IN' => $value]);
+                        if ($postfix == '') {
+                            $query->where([$field . ' IN' => $value]);
+                        } else if ($postfix == 'ne') {
+                            $query->where([$field . ' NOT IN' => $value]);
+                        }
                     } else {
+                        if ($postfix !== '') {
+                            $field = str_replace($postfixDelimeter . $postfix, '', $field) . $rule;
+                            if ($postfix == 'llike' || $postfix == 'like') {
+                                $value = '%' . $value;
+                            }
+                            if ($postfix == 'rlike' || $postfix == 'like') {
+                                $value = $value . '%';
+                            }
+                        }
                         $query->where([$field => $value]);
                     }
                 }
