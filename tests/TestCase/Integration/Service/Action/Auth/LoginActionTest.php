@@ -76,7 +76,7 @@ class LoginActionTest extends IntegrationTestCase
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-1', 'password' => '111']);
         $result = $this->responseJson();
-        $this->assertError($result, 404);
+        $this->assertError($result, 401);
         $this->assertErrorMessage($result, 'User not found');
     }
 }
