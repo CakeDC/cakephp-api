@@ -93,7 +93,7 @@ class FilterExtension extends Extension implements EventListenerInterface
                     if (is_array($value)) {
                         if ($postfix == '') {
                             $query->where([$field . ' IN' => $value]);
-                        } else if ($postfix == 'ne') {
+                        } elseif ($postfix == 'ne') {
                             $query->where([$field . ' NOT IN' => $value]);
                         }
                     } else {
