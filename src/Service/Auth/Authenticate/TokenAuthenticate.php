@@ -81,7 +81,7 @@ class TokenAuthenticate extends BaseAuthenticate
 
         $this->_config['fields']['username'] = $this->config('field');
         $this->_config['userModel'] = $this->config('table');
-        $this->_config['finder'] = 'all';
+        $this->_config['finder'] = $this->getConfig('finderAuth') ?: 'all';
         $result = $this->_query($apiKey)->first();
 
         if (empty($result)) {

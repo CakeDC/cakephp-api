@@ -29,7 +29,7 @@
     "require": {
         "php": ">=5.4.16",
         "cakephp/cakephp": "3.*",
-        "cakedc/users": "^4.0"
+        "cakedc/users": "^5.0"
     },
     "require-dev": {
         "cakedc/users": "*" ,
