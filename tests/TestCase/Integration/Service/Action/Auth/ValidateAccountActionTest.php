@@ -56,7 +56,7 @@ class ValidateAccountActionTest extends IntegrationTestCase
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-6', 'password' => '12345']);
         $result = $this->responseJson();
-        $this->assertError($result, 404);
+        $this->assertError($result, 401);
         $this->assertErrorMessage($result, 'User not found');
 
         $this->sendRequest('/auth/validate_account', 'POST', ['token' => 'token-6']);

@@ -175,7 +175,7 @@ class JSendRenderer extends BaseRenderer
     /**
      * Update status based on result code
      *
-     * @param Result $result result
+     * @param Result $result A result object instance.
      * @return void
      */
     protected function _mapStatus(Result $result)

@@ -893,6 +893,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
+     * Lists supported events.
+     *
      * @return array
      */
     public function implementedEvents()

@@ -80,11 +80,7 @@ class RequestHandlerMiddleware
     public function requestedWith($type = null)
     {
         $request = $this->request;
-        if (!$request->is('post') &&
-            !$request->is('put') &&
-            !$request->is('patch') &&
-            !$request->is('delete')
-        ) {
+        if (!$request->is('post') && !$request->is('put') && !$request->is('patch') && !$request->is('delete')) {
             return null;
         }
         if (is_array($type)) {

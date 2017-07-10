@@ -144,6 +144,8 @@ class Result
     }
 
     /**
+     * To array transformation.
+     *
      * @return array
      */
     public function toArray()
