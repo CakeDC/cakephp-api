@@ -168,7 +168,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                 if ($className === '') {
                     $className = $alias;
                 }
-                $serviceName = Inflector::underscore($className);
+                $serviceName = strtolower($className);
 
                 $indexName = $serviceName . ':index';
                 $route = collection($service->routes())
