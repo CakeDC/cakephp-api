@@ -179,11 +179,15 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
                 $currentId = Inflector::singularize(Inflector::underscore($service->name())) . '_id';
                 $defaults = $route->defaults;
-                $viewRoute = $action->route();
-                $defaults[$currentId] = $viewRoute['id'];
-                $indexPath = $service->routeReverse($defaults);
 
-                $links[] = $this->_reverseRouter->link($serviceName . ':index', $indexPath, 'GET');
+                if(isset($route)) {
+                 
+                    $viewRoute = $action->route();
+                    $defaults[$currentId] = $viewRoute['id'];
+                    $indexPath = $service->routeReverse($defaults);
+
+                    $links[] = $this->_reverseRouter->link($serviceName . ':index', $indexPath, 'GET');
+                }
             }
         }
 
