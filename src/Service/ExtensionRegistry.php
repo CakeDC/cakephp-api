@@ -53,11 +53,27 @@ class ExtensionRegistry extends ObjectRegistry
     protected function _resolveClassName($class)
     {
         $result = App::className($class, 'Service/Extension', 'Extension');
-        if ($result || strpos($class, '.') !== false) {
+        
+        if ($result || strpos($class, '.') === false) {
             return $result;
         }
 
-        return App::className('CakeDC/Api.' . $class, 'Service/Extension', 'Extension');
+        $result = App::className('CakeDC/Api.' . $class, 'Service/Extension', 'Extension');
+        
+        if(class_exists($result)) {
+
+            return $result;
+        }
+        else {
+
+            $result = App::className($class, 'Service/Action/Extension', 'Extension');
+            
+            if ($result || strpos($class, '.') !== false) {
+                return $result;
+            }
+
+            return App::className('CakeDC/Api.' . $class, 'Service/Action/Extension', 'Extension');
+        }
     }
 
     /**
