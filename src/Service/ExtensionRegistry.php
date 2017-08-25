@@ -63,13 +63,11 @@ class ExtensionRegistry extends ObjectRegistry
         $this->_extension_registry = $this;
         
         $result = App::className($class, 'Service/Extension', 'Extension');
-
         if ($result || strpos($class, '.') === false) {
             return $result;
         }
 
         $result = App::className('CakeDC/Api.' . $class, 'Service/Extension', 'Extension');
-
         if(class_exists($result)) {
             return $result;
         }
