@@ -28,6 +28,13 @@ class ExtensionRegistry extends ObjectRegistry
     use EventDispatcherTrait;
 
     /**
+     * The ExtensionRegistry that this collection was initialized with.
+     *
+     * @var ExtensionRegistry
+     */
+    protected $_extension_registry = null;
+    
+    /**
      * The Service that this collection was initialized with.
      *
      * @var Service
@@ -64,11 +71,9 @@ class ExtensionRegistry extends ObjectRegistry
         $result = App::className('CakeDC/Api.' . $class, 'Service/Extension', 'Extension');
 
         if(class_exists($result)) {
-
             return $result;
         }
         else {
-
             $this->_extension_registry = new ActionExtensionRegistry();
             
             $result = App::className($class, 'Service/Action/Extension', 'Extension');
