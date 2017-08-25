@@ -15,6 +15,7 @@ use CakeDC\Api\Service\Exception\MissingExtensionException;
 use Cake\Core\App;
 use Cake\Core\ObjectRegistry;
 use Cake\Event\EventDispatcherTrait;
+use CakeDC\Api\Service\Action\ExtensionRegistry as ActionExtensionRegistry;
 
 /**
  * Class ExtensionRegistry
@@ -68,7 +69,7 @@ class ExtensionRegistry extends ObjectRegistry
         }
         else {
 
-            $this->_extension_registry = new BaseExtensionRegistry();
+            $this->_extension_registry = new ActionExtensionRegistry();
             
             $result = App::className($class, 'Service/Action/Extension', 'Extension');
 
