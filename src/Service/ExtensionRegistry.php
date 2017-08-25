@@ -53,11 +53,27 @@ class ExtensionRegistry extends ObjectRegistry
     protected function _resolveClassName($class)
     {
         $result = App::className($class, 'Service/Extension', 'Extension');
-        if ($result || strpos($class, '.') !== false) {
+
+        if ($result || strpos($class, '.') === false) {
             return $result;
         }
 
-        return App::className('CakeDC/Api.' . $class, 'Service/Extension', 'Extension');
+        $result = App::className('CakeDC/Api.' . $class, 'Service/Extension', 'Extension');
+
+        if(class_exists($result)) {
+
+            return $result;
+        }
+        else {
+
+            $result = App::className($class, 'Service/Action/Extension', 'Extension');
+
+            if ($result || strpos($class, '.') !== false) {
+                return $result;
+            }
+
+            return App::className('CakeDC/Api.' . $class, 'Service/Action/Extension', 'Extension');
+        }
     }
 
     /**
@@ -92,7 +108,9 @@ class ExtensionRegistry extends ObjectRegistry
         if (empty($config['service'])) {
             $config['service'] = $this->_service;
         }
-        $instance = new $class($this, $config);
+        // Need an if statement here, im sure this breaks something
+        // should be, if(x == true) then new $class($this) else new $class(new BaseExtensionRegistry)
+        $instance = new $class(new BaseExtensionRegistry(), $config);
         $this->eventManager()->on($instance);
 
         return $instance;
