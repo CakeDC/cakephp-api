@@ -52,6 +52,8 @@ class ExtensionRegistry extends ObjectRegistry
      */
     protected function _resolveClassName($class)
     {
+        $this->_extension_registry = $this;
+        
         $result = App::className($class, 'Service/Extension', 'Extension');
 
         if ($result || strpos($class, '.') === false) {
@@ -66,6 +68,8 @@ class ExtensionRegistry extends ObjectRegistry
         }
         else {
 
+            $this->_extension_registry = new BaseExtensionRegistry();
+            
             $result = App::className($class, 'Service/Action/Extension', 'Extension');
 
             if ($result || strpos($class, '.') !== false) {
@@ -110,7 +114,7 @@ class ExtensionRegistry extends ObjectRegistry
         }
         // Need an if statement here, im sure this breaks something
         // should be, if(x == true) then new $class($this) else new $class(new BaseExtensionRegistry)
-        $instance = new $class(new BaseExtensionRegistry(), $config);
+        $instance = new $class($this->_extension_registry, $config);
         $this->eventManager()->on($instance);
 
         return $instance;
