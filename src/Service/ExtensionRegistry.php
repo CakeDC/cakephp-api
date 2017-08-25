@@ -112,8 +112,6 @@ class ExtensionRegistry extends ObjectRegistry
         if (empty($config['service'])) {
             $config['service'] = $this->_service;
         }
-        // Need an if statement here, im sure this breaks something
-        // should be, if(x == true) then new $class($this) else new $class(new BaseExtensionRegistry)
         $instance = new $class($this->_extension_registry, $config);
         $this->eventManager()->on($instance);
 
