@@ -76,7 +76,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
         $currentUser = $this
             ->getUsersTable()
             ->find()
-            ->where(['id' => $user['id']])
+            ->where([$this->getUsersTable()->aliasField('id') => $user['id']])
             ->first();
 
         $user = $currentUser->toArray();
