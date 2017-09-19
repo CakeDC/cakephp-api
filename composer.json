@@ -32,7 +32,6 @@
         "cakedc/users": "^5.0"
     },
     "require-dev": {
-        "cakedc/users": "*" ,
         "phpunit/phpunit": "<6.0"
     },
     "suggest": {
