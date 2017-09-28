@@ -11,7 +11,7 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
-use CakeDC\Api\Service\Action\CrudAddAction;
+use CakeDC\Api\Service\Action\AddAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
@@ -19,12 +19,11 @@ use CakeDC\Api\Test\FixturesTrait;
 
 class ActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
     /**
-     * @var CrudAddAction
+     * @var AddAction
      */
     public $Action;
 
