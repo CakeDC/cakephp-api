@@ -16,6 +16,7 @@ use CakeDC\Api\Service\Service;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\LogTrait;
+use Psr\Log\LogLevel;
 
 class LogExtension extends Extension implements EventListenerInterface
 {
@@ -81,6 +82,6 @@ class LogExtension extends Extension implements EventListenerInterface
             'input' => $data,
             'result' => json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
-        $this->log($log);
+        $this->log($log, LogLevel::DEBUG);
     }
 }
