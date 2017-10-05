@@ -52,10 +52,6 @@ class CollectionServiceTest extends TestCase
         parent::tearDown();
     }
 
-    //@todo
-    //testDeleteAction missing
-    //move action tests to action test class
-
     /**
      * Test load value method
      *
