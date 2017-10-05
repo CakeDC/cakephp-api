@@ -10,6 +10,7 @@
  */
 
 use Cake\Core\Configure;
+use Cake\Log\Log;
 
 Configure::load('CakeDC/Api.api');
 collection((array)Configure::read('Api.config'))->each(function ($file) {
