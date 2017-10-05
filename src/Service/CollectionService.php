@@ -14,6 +14,7 @@ namespace CakeDC\Api\Service;
 use CakeDC\Api\Routing\ApiRouter;
 use Cake\Routing\RouteBuilder;
 use CakeDC\Api\Service\Action\Collection\AddEditAction;
+use CakeDC\Api\Service\Action\Collection\DeleteAction;
 
 /**
  * Class CollectionService, manage the /collection endpoint to allow bulk operations
@@ -24,7 +25,7 @@ class CollectionService extends CrudService
 {
     protected $_actionsClassMap = [
         'collectionAddEdit' => AddEditAction::class,
-        'collectionDelete' => '\CakeDC\Api\Service\Action\Collection\DeleteAction',
+        'collectionDelete' => DeleteAction::class,
     ];
 
     /**

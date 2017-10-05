@@ -21,6 +21,7 @@ Documentation
 * [Renderers](Documentation/renderers.md)
 * [Statuses](Documentation/status.md)
 * [Versioning](Documentation/versioning.md)
+* [Collections](Documentation/collections.md)
 
 
 
