@@ -41,7 +41,7 @@ class AuthorsFixture extends TestFixture
         ['id' => 2, 'first_name' => 'Julian', 'last_name' => 'Zero'],
         ['id' => 3, 'first_name' => 'Linda', 'last_name' => 'Black'],
         ['id' => 4, 'first_name' => 'Zdravko', 'last_name' => 'Slav'],
-        ['id' => 5, 'first_name' => 'Alex', 'last_name' => 'Rapido'],
+        ['id' => 5, 'first_name' => 'Alien', 'last_name' => 'Rapido'],
         ['id' => 6, 'first_name' => 'Pedro', 'last_name' => 'Ring'],
         ['id' => 7, 'first_name' => 'Alex', 'last_name' => 'Brill'],
         ['id' => 8, 'first_name' => 'Luke', 'last_name' => 'Unknown'],
