@@ -19,7 +19,7 @@ collection((array)Configure::read('Api.config'))->each(function ($file) {
 Log::setConfig('api', [
     'className' => 'File',
     'path' => LOGS,
-    'scopes' => ['api'],
+    'scopes' => false,
     'levels' => ['error', 'info'],
     'file' => 'api.log',
-])
+]);
