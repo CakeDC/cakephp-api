@@ -25,7 +25,6 @@ use Cake\Utility\Hash;
  */
 class SortExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
