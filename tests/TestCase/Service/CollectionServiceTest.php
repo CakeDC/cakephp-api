@@ -11,15 +11,12 @@
 
 namespace CakeDC\Api\Test\TestCase\Service;
 
-use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
-use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\CollectionService;
-use CakeDC\Api\Service\ListingService;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use Cake\ORM\TableRegistry;
 
 /**
  * Class CollectionServiceTest

@@ -11,9 +11,9 @@
 
 namespace CakeDC\Api\Service\Action\Collection;
 
-use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAction;
+use Cake\Utility\Hash;
 
 /**
  * Class CollectionAction
@@ -55,7 +55,7 @@ abstract class CollectionAction extends CrudAction
     /**
      * Save many entities
      *
-     * @param array $entities
+     * @param array $entities entities
      * @return array of entities saved
      */
     protected function _saveMany($entities = [])
@@ -73,6 +73,7 @@ abstract class CollectionAction extends CrudAction
     /**
      * Create entities from the posted data
      *
+     * @param array $patchOptions options to use un patch
      * @return array entities
      */
     protected function _newEntities($patchOptions = [])
@@ -92,8 +93,9 @@ abstract class CollectionAction extends CrudAction
     /**
      * Ensure the data is a not empty array
      *
-     * @param mixed $datas
+     * @param mixed $datas posted data
      * @throws ValidationException
+     * @return void
      */
     protected function _validateDataIsArray($datas)
     {

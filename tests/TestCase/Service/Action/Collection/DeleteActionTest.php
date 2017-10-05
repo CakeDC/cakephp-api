@@ -11,16 +11,13 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action\Collection;
 
-use Cake\ORM\TableRegistry;
 use CakeDC\Api\Exception\ValidationException;
-use CakeDC\Api\Service\Action\Collection\AddEditAction;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-
-use Cake\Datasource\EntityInterface;
+use Cake\ORM\TableRegistry;
 
 class DeleteActionTest extends TestCase
 {

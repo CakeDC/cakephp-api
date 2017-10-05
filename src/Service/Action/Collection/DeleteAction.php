@@ -11,9 +11,9 @@
 
 namespace CakeDC\Api\Service\Action\Collection;
 
+use CakeDC\Api\Exception\ValidationException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
-use CakeDC\Api\Exception\ValidationException;
 
 /**
  * Class DeleteAction, uses POST and an array of entity ids to delete
@@ -22,6 +22,10 @@ use CakeDC\Api\Exception\ValidationException;
  */
 class DeleteAction extends CollectionAction
 {
+
+    /**
+     * {@inheritdoc}
+     */
     public function validates()
     {
         $datas = $this->data();
@@ -68,7 +72,7 @@ class DeleteAction extends CollectionAction
     /**
      * Delete many entities, atomic
      *
-     * @param $entities
+     * @param array $entities entities
      * @return array
      */
     protected function _deleteMany($entities)
