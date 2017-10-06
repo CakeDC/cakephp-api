@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -20,7 +20,6 @@ use Cake\Utility\Hash;
 
 class ExtendedSortExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -85,7 +84,7 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'asc'])]);
         $result = $this->responseJson();
         $this->assertSuccess($result);
-        $this->assertEquals([5, 7, 11, 15], Hash::extract($result, 'data.{n}.id'));
+        $this->assertEquals([7, 5, 11, 15], Hash::extract($result, 'data.{n}.id'));
 
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'asc', 'last_name' => 'asc'])]);
         $result = $this->responseJson();

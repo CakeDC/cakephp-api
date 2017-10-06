@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -53,8 +53,8 @@ class SortExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
+        $action = $event->getSubject();
+        $query = $event->getData('query');
         if ($event->result) {
             $query = $event->result;
         }
@@ -62,8 +62,8 @@ class SortExtension extends Extension implements EventListenerInterface
         $direction = 'asc';
         $sort = null;
 
-        $directionField = $this->config('directionField');
-        $sortField = $this->config('sortField');
+        $directionField = $this->getConfig('directionField');
+        $sortField = $this->getConfig('sortField');
         if (!empty($data[$directionField])) {
             $direction = $data[$directionField];
         }

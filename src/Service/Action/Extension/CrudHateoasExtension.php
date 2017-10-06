@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -65,9 +65,9 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      */
     public function afterAction(Event $event)
     {
-        $action = $event->subject();
-        $result = $action->service()->result();
-        $actionName = $action->name();
+        $action = $event->getSubject();
+        $result = $action->getService()->result();
+        $actionName = $action->getName();
         $links = [];
         //$route = $action->route();
         if ($actionName == 'view') {
@@ -77,7 +77,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $links = $this->_buildIndexLinks($action);
         }
 
-        $parent = $action->service()->parent();
+        $parent = $action->getService()->parent();
 
         if ($parent !== null) {
             $result = $parent->result();
@@ -94,15 +94,15 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     protected function _buildIndexLinks(Action $action)
     {
         $links = [];
-        $indexRoute = $action->route();
-        $parent = $action->service()->parent();
+        $indexRoute = $action->getRoute();
+        $parent = $action->getService()->getParentService();
         $path = $this->_reverseRouter->indexPath($action);
 
         $links[] = $this->_reverseRouter->link('self', $path, $indexRoute['_method']);
-        $links[] = $this->_reverseRouter->link($action->service()->name() . ':add', $path, 'POST');
+        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':add', $path, 'POST');
 
         if ($parent !== null) {
-            $parentName = $parent->name() . ':view';
+            $parentName = $parent->getName() . ':view';
             $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
             $links[] = $this->_reverseRouter->link($parentName, $path, 'GET');
         }
@@ -119,9 +119,9 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     protected function _buildViewLinks(Action $action)
     {
         $links = [];
-        $viewRoute = $action->route();
-        $service = $action->service();
-        $parent = $action->service()->parent();
+        $viewRoute = $action->getRoute();
+        $service = $action->getService();
+        $parent = $action->getService()->getParentService();
         $path = null;
         if ($parent !== null) {
             $parentRoutes = $parent->routes();
@@ -131,7 +131,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                 $path = $parent->routeReverse($viewRoute);
                 array_pop($viewRoute['pass']);
 
-                $indexName = $service->name() . ':index';
+                $indexName = $service->getName() . ':index';
                 $indexPath = $this->_reverseRouter->parentViewPath($indexName, $action, 'index');
             }
         } else {
@@ -139,7 +139,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $path = $service->routeReverse($viewRoute);
             array_pop($viewRoute['pass']);
 
-            $indexName = $service->name() . ':index';
+            $indexName = $service->getName() . ':index';
             $route = collection($service->routes())
                 ->filter(function ($item) use ($indexName) {
                     return $item->getName() == $indexName;
@@ -149,14 +149,14 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         }
 
         $links[] = $this->_reverseRouter->link('self', $path, $viewRoute['_method']);
-        $links[] = $this->_reverseRouter->link($action->service()->name() . ':edit', $path, 'PUT');
-        $links[] = $this->_reverseRouter->link($action->service()->name() . ':delete', $path, 'DELETE');
+        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':edit', $path, 'PUT');
+        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':delete', $path, 'DELETE');
         if (!empty($indexPath)) {
-            $links[] = $this->_reverseRouter->link($action->service()->name() . ':index', $indexPath, 'GET');
+            $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':index', $indexPath, 'GET');
         }
 
         if ($parent === null && $action instanceof CrudAction) {
-            $table = $action->table();
+            $table = $action->getTable();
             $hasMany = $table->associations()->type('HasMany');
             foreach ($hasMany as $assoc) {
                 $target = $assoc->target();
@@ -177,9 +177,9 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                     })
                     ->first();
 
-                $currentId = Inflector::singularize(Inflector::underscore($service->name())) . '_id';
-                $defaults = $route->defaults;
-                $viewRoute = $action->route();
+                $currentId = Inflector::singularize(Inflector::underscore($service->getName())) . '_id';
+                $defaults = !empty($route->defaults) ? $route->defaults : [];
+                $viewRoute = $action->getRoute();
                 $defaults[$currentId] = $viewRoute['id'];
                 $indexPath = $service->routeReverse($defaults);
 
@@ -188,7 +188,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         }
 
         if ($parent !== null) {
-            $parentName = $parent->name() . ':view';
+            $parentName = $parent->getName() . ':view';
             $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
             $links[] = $this->_reverseRouter->link($parentName, $path, 'GET');
         }

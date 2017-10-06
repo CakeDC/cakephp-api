@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -101,7 +101,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateWrongType()
     {
-        $this->token->config('type', 'wrong');
+        $this->token->setConfig('type', 'wrong');
         $request = new Request('/');
         $this->token->authenticate($request, new Response());
     }
@@ -115,7 +115,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateRequireSSL()
     {
-        $this->token->config('require_ssl', true);
+        $this->token->setConfig('require_ssl', true);
         $request = new Request('/?token=test');
         $this->token->authenticate($request, new Response());
     }
@@ -126,7 +126,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateRequireSSLNoKey()
     {
-        $this->token->config('require_ssl', true);
+        $this->token->setConfig('require_ssl', true);
         $request = new Request('/');
         $this->assertFalse($this->token->authenticate($request, new Response()));
     }
@@ -138,14 +138,14 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testHeaderHappy()
     {
-        $request = $this->getMockBuilder('\Cake\Network\Request')
-            ->setMethods(['header'])
+        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
+            ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())
-            ->method('header')
+            ->method('getHeader')
             ->with('token')
-            ->will($this->returnValue('yyy'));
-        $this->token->config('type', 'header');
+            ->will($this->returnValue(['yyy']));
+        $this->token->setConfig('type', 'header');
         $result = $this->token->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
     }
@@ -157,14 +157,14 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHeaderFail()
     {
-        $request = $this->getMockBuilder('\Cake\Network\Request')
-            ->setMethods(['header'])
+        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
+            ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())
-            ->method('header')
+            ->method('getHeader')
             ->with('token')
-            ->will($this->returnValue('wrong'));
-        $this->token->config('type', 'header');
+            ->will($this->returnValue(['wrong']));
+        $this->token->setConfig('type', 'header');
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
     }

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -48,9 +48,9 @@ abstract class NestedCrudService extends CrudService
      */
     protected function _actionOptions($route)
     {
-        $parent = $this->parent();
+        $parent = $this->getParentService();
         if ($this->_parentIdName === null && $parent instanceof Service) {
-            $parentName = $parent->name();
+            $parentName = $parent->getName();
             $parentIdName = Inflector::singularize($parentName) . '_id';
             if (array_key_exists($parentIdName, $route)) {
                 $this->_parentIdName = $parentIdName;

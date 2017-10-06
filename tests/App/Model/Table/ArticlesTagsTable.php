@@ -1,17 +1,19 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\App\Model\Table;
 
-class ArticlesTagsTable extends \Cake\ORM\Table
+use Cake\ORM\Table;
+
+class ArticlesTagsTable extends Table
 {
     /**
      * Initialize method
@@ -21,9 +23,9 @@ class ArticlesTagsTable extends \Cake\ORM\Table
      */
     public function initialize(array $config)
     {
-        $this->table('articles_tags');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('articles_tags');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id'

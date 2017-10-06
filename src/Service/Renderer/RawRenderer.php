@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -32,10 +32,9 @@ class RawRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->response();
-        $response->statusCode($result->code());
-        $response->type('text/plain');
-        $response->body((string)$result->data());
+        $response = $this->_service->getResponse();
+        $this->_service->setResponse($response->withStringBody((string)$result->data())->withStatus($result->code())
+            ->withType('text/plain'));
 
         return true;
     }
@@ -48,11 +47,10 @@ class RawRenderer extends BaseRenderer
      */
     public function error(Exception $exception)
     {
-        $response = $this->_service->response();
-        $response->type('text/plain');
+        $response = $this->_service->getResponse();
         $message = (Configure::read('debug') > 0) ? $exception->getMessage() . ' on line ' . $exception->getLine() . ' in ' . $exception->getFile() : $exception->getMessage();
         $trace = $exception->getTrace();
         $debug = (Configure::read('debug') > 0) ? "\n" . print_r($trace, true) : '';
-        $response->body($message . $debug);
+        $this->_service->setResponse($response->withStringBody($message . $debug)->withType('text/plain'));
     }
 }

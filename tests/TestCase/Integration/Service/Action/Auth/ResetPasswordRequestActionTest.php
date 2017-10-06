@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -61,7 +61,7 @@ class ResetPasswordRequestActionTest extends IntegrationTestCase
         $this->assertTextEquals('Please check your email to continue with password reset process', $result['data']);
 
         $Users = TableRegistry::get('CakeDC/Users.Users');
-        $user = $Users->find()->where(['id' => Settings::USER1])->hydrate(false)->first();
+        $user = $Users->find()->where(['id' => Settings::USER1])->enableHydration(false)->first();
         $this->assertNotEmpty($user['token']);
     }
 }

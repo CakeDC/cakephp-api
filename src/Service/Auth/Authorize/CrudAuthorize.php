@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -13,8 +13,9 @@ namespace CakeDC\Api\Service\Auth\Authorize;
 
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Service;
+
 use Cake\Core\Configure;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 
 /**
  * Class CrudAuthorize
@@ -44,10 +45,10 @@ class CrudAuthorize extends BaseAuthorize
      * Checks user authorization.
      *
      * @param array $user Active user data.
-     * @param \Cake\Network\Request $request Request instance.
+     * @param \Cake\Http\ServerRequest $request Request instance.
      * @return bool
      */
-    public function authorize($user, Request $request)
+    public function authorize($user, ServerRequest $request)
     {
         return $this->_actionAuth($this->_action);
     }
@@ -60,9 +61,9 @@ class CrudAuthorize extends BaseAuthorize
      */
     protected function _actionAuth(Action $action)
     {
-        $actionName = $action->name();
-        $serviceName = $action->service()->name();
-        $service = $action->service();
+        $actionName = $action->getName();
+        $serviceName = $action->getService()->getName();
+        $service = $action->getService();
 
         $serviceActionAuth = $this->_permission($service, $serviceName . '.' . $actionName);
         if ($serviceActionAuth !== null) {
@@ -81,7 +82,7 @@ class CrudAuthorize extends BaseAuthorize
             return $allow || $authenticated;
         }
 
-        return $this->_serviceAuth($action->service(), $action);
+        return $this->_serviceAuth($action->getService(), $action);
     }
 
     /**
@@ -93,7 +94,7 @@ class CrudAuthorize extends BaseAuthorize
      */
     protected function _serviceAuth(Service $service, Action $action)
     {
-        $serviceName = $service->name();
+        $serviceName = $service->getName();
         $serviceAuth = $this->_permission($service, 'Service.' . $serviceName);
         if ($serviceAuth === null) {
             $serviceAuth = $this->_permission($service, 'default');
@@ -119,7 +120,7 @@ class CrudAuthorize extends BaseAuthorize
         $prefix = 'Api.Auth.Crud.';
         $useVersioning = Configure::read('Api.useVersioning');
         $versionPrefix = Configure::read('Api.versionPrefix');
-        $version = $service->version();
+        $version = $service->getVersion();
         if ($useVersioning) {
             $permission = Configure::read($prefix . $versionPrefix . $version . '.' . $key);
             if (!empty($permission)) {

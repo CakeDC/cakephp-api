@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
-use CakeDC\Api\Exception\UnauthorizedException;
+use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\JSendRenderer;
@@ -64,7 +64,7 @@ class JSendRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -75,7 +75,7 @@ class JSendRendererTest extends TestCase
             'rendererClass' => 'CakeDC/Api.JSend'
         ];
         $this->Service = new FallbackService($serviceOptions);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
         $this->assertTrue($renderer instanceof JSendRenderer);
     }
 
@@ -89,9 +89,8 @@ class JSendRendererTest extends TestCase
         Configure::write('debug', 0);
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
-
         $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
@@ -106,17 +105,20 @@ class JSendRendererTest extends TestCase
         $result->code($statusCode);
         $data = ['id' => 1, 'name' => 'alex'];
         $result->data($data);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
-                 ->with($statusCode);
+            ->method('withStatus')
+            ->with($statusCode)
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('body')
-                ->with('{"status":"success","data":{"id":1,"name":"alex"}}');
+            ->method('withStringBody')
+            ->with('{"status":"success","data":{"id":1,"name":"alex"}}')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/json');
+            ->method('withType')
+            ->with('application/json')
+            ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -130,7 +132,7 @@ class JSendRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -143,15 +145,20 @@ class JSendRendererTest extends TestCase
         $this->Service = new FallbackService($serviceOptions);
 
         Configure::write('debug', 0);
-        $error = new UnauthorizedException();
-        $renderer = $this->Service->renderer();
+        $error = new UnauthenticatedException();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
-            ->method('body')
-            ->with('{"status":"error","message":"Unauthorized","code":401,"data":null}');
+            ->method('withStringBody')
+            ->with('{"status":"error","message":"Unauthenticated","code":401,"data":null}')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('application/json');
+            ->method('withStatus')
+            ->will($this->returnValue($response));
+        $response->expects($this->once())
+            ->method('withType')
+            ->with('application/json')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

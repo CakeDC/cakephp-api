@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -83,7 +83,7 @@ class SimpleRbacAuthorizeTest extends TestCase
     {
         //don't autoload config
         $this->simpleRbacAuthorize = new SimpleRbacAuthorize($this->Action, ['autoload_config' => false]);
-        $this->assertEmpty($this->simpleRbacAuthorize->config('permissions'));
+        $this->assertEmpty($this->simpleRbacAuthorize->getConfig('permissions'));
     }
 
     /**
@@ -113,7 +113,7 @@ class SimpleRbacAuthorizeTest extends TestCase
             ->setConstructorArgs([$this->Action, ['autoload_config' => 'does-not-exist']])
             ->getMock();
         //we should have the default permissions
-        $this->assertEquals($this->defaultPermissions, $this->simpleRbacAuthorize->config('permissions'));
+        $this->assertEquals($this->defaultPermissions, $this->simpleRbacAuthorize->getConfig('permissions'));
     }
 
     protected function assertConstructorPermissions($instance, $config, $permissions)
@@ -123,7 +123,7 @@ class SimpleRbacAuthorizeTest extends TestCase
         $constructor->invoke($this->simpleRbacAuthorize, $this->Action, $config);
 
         //we should have the default permissions
-        $resultPermissions = $this->simpleRbacAuthorize->config('permissions');
+        $resultPermissions = $this->simpleRbacAuthorize->getConfig('permissions');
         $this->assertEquals($permissions, $resultPermissions);
     }
 
@@ -156,13 +156,18 @@ class SimpleRbacAuthorizeTest extends TestCase
                 ->setMethods(['_loadPermissions'])
                 ->disableOriginalConstructor()
                 ->getMock();
-        $simpleRbacAuthorize->config('permissions', $permissions);
+        $simpleRbacAuthorize->setConfig('permissions', $permissions);
 
         return $simpleRbacAuthorize;
     }
 
     /**
      * @dataProvider providerAuthorize
+     * @param $permissions
+     * @param $user
+     * @param $requestParams
+     * @param $expected
+     * @param null $msg
      */
     public function testAuthorize($permissions, $user, $requestParams, $expected, $msg = null)
     {
@@ -503,7 +508,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'service' => ['tests'],
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
-                        return $user['id'] === 1 && $role = 'test';
+                        return $user['id'] === 1 && $role == 'test';
                     }
                 ]],
                 //user
