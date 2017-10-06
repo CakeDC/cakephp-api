@@ -68,5 +68,11 @@ return [
                 ],
             ],
         ],
+        'Log' => [
+            'className' => 'File',
+            'scopes' => ['api'],
+            'levels' => ['error', 'info'],
+            'file' => 'api.log',
+        ]
     ]
 ];
