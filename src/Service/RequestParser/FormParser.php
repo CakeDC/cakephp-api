@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -24,15 +24,15 @@ class FormParser extends BaseParser
      */
     public function params()
     {
-        $request = $this->_service->request();
+        $request = $this->_service->getRequest();
         if ($request == null) {
             stackTrace();
         }
         if ($request->is(['post', 'put'])) {
-            return $request->data;
+            return $request->getData();
         }
 
-        return $request->query;
+        return $request->getQuery();
     }
 
     /**

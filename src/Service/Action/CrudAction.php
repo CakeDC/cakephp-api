@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -60,29 +60,41 @@ abstract class CrudAction extends Action
     protected $_parentIdName = null;
 
     /**
+     * Api table finder method
+     *
+     * @var string
+     */
+    protected $_finder = null;
+
+    /**
      * Action constructor.
      *
      * @param array $config Configuration options passed to the constructor
      */
     public function __construct(array $config = [])
     {
-        parent::__construct($config);
+        if (!empty($config['service'])) {
+            $this->setService($config['service']);
+        }
         if (!empty($config['table'])) {
             $tableName = $config['table'];
         } else {
-            $tableName = $this->service()->table();
+            $tableName = $this->getService()->getTable();
         }
         if ($tableName instanceof Table) {
-            $this->table($tableName);
+            $this->setTable($tableName);
         } else {
             $table = TableRegistry::get($tableName);
-            $this->table($table);
+            $this->setTable($table);
         }
         if (!empty($config['id'])) {
             $this->_id = $config['id'];
         }
         if (!empty($config['idName'])) {
             $this->_idName = $config['idName'];
+        }
+        if (!empty($config['finder'])) {
+            $this->_finder = $config['finder'];
         }
         if (!empty($config['parentId'])) {
             $this->_parentId = $config['parentId'];
@@ -91,24 +103,96 @@ abstract class CrudAction extends Action
             $this->_parentIdName = $config['parentIdName'];
         }
         if (!empty($config['table'])) {
-            $this->table($config['table']);
+            $this->setTable($config['table']);
         }
+        parent::__construct($config);
+    }
+
+    /**
+     * Gets a Table instance.
+     *
+     * @return Table
+     */
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
+    /**
+     * Sets the table instance.
+     *
+     * @param Table $table A Table instance.
+     * @return $this
+     */
+    public function setTable(Table $table)
+    {
+        $this->_table = $table;
+
+        return $this;
     }
 
     /**
      * Api method for table.
      *
      * @param Table $table A Table instance.
+     * @deprecated 3.4.0 Use setTable()/getTable() instead.
      * @return Table
      */
     public function table($table = null)
     {
-        if ($table === null) {
-            return $this->_table;
+        if ($table !== null) {
+            return $this->setTable($table);
         }
-        $this->_table = $table;
 
-        return $this->_table;
+        return $this->getTable();
+    }
+
+    /**
+     * @return CrudService
+     */
+    public function getService()
+    {
+        return $this->_service;
+    }
+
+    /**
+     * Model id getter.
+     *
+     * @return mixed|string
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * Model id field name getter.
+     *
+     * @return string
+     */
+    public function getIdName()
+    {
+        return $this->_idName;
+    }
+
+    /**
+     * Parent id getter.
+     *
+     * @return mixed|string
+     */
+    public function getParentId()
+    {
+        return $this->_parentId;
+    }
+
+    /**
+     * Parent model id field name getter.
+     *
+     * @return mixed|string
+     */
+    public function getParentIdName()
+    {
+        return $this->_parentIdName;
     }
 
     /**
@@ -118,7 +202,7 @@ abstract class CrudAction extends Action
      */
     protected function _newEntity()
     {
-        $entity = $this->table()->newEntity();
+        $entity = $this->getTable()->newEntity();
 
         return $entity;
     }
@@ -128,11 +212,12 @@ abstract class CrudAction extends Action
      *
      * @param EntityInterface $entity An Entity instance.
      * @param array $data Entity data.
+     * @param array $options Patch entity options.
      * @return \Cake\Datasource\EntityInterface|mixed
      */
-    protected function _patchEntity($entity, $data)
+    protected function _patchEntity($entity, $data, $options = [])
     {
-        $entity = $this->table()->patchEntity($entity, $data);
+        $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));
         if ($event->result) {
             $entity = $event->result;
@@ -148,7 +233,11 @@ abstract class CrudAction extends Action
      */
     protected function _getEntities()
     {
-        $query = $this->table()->find();
+        $query = $this->getTable()->find();
+        if ($this->_finder !== null) {
+            $query = $query->find($this->_finder);
+        }
+
         $event = $this->dispatchEvent('Action.Crud.onFindEntities', compact('query'));
         if ($event->result) {
             $query = $event->result;
@@ -167,23 +256,10 @@ abstract class CrudAction extends Action
      */
     protected function _getEntity($primaryKey)
     {
-        $table = $this->table();
-        $key = (array)$table->primaryKey();
-        $alias = $table->alias();
-        foreach ($key as $index => $keyname) {
-            $key[$index] = $alias . '.' . $keyname;
+        $query = $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
+        if ($this->_finder !== null) {
+            $query = $query->find($this->_finder);
         }
-        $primaryKey = (array)$primaryKey;
-        if (count($key) !== count($primaryKey)) {
-            $primaryKey = $primaryKey ?: [null];
-            $primaryKey = array_map(function ($key) {
-                return var_export($key, true);
-            }, $primaryKey);
-
-            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->table(), implode($primaryKey, ', ')));
-        }
-        $conditions = array_combine($key, $primaryKey);
-        $query = $table->find('all')->where($conditions);
         $event = $this->dispatchEvent('Action.Crud.onFindEntity', compact('query'));
         if ($event->result) {
             $query = $event->result;
@@ -194,6 +270,34 @@ abstract class CrudAction extends Action
     }
 
     /**
+     * Build condition for get entity method.
+     *
+     * @param string $primaryKey Primary key
+     * @return array
+     */
+    protected function _buildViewCondition($primaryKey)
+    {
+        $table = $this->getTable();
+        $key = (array)$table->getPrimaryKey();
+        $alias = $table->getAlias();
+        foreach ($key as $index => $keyname) {
+            $key[$index] = $alias . '.' . $keyname;
+        }
+        $primaryKey = (array)$primaryKey;
+        if (count($key) !== count($primaryKey)) {
+            $primaryKey = $primaryKey ?: [null];
+            $primaryKey = array_map(function ($key) {
+                return var_export($key, true);
+            }, $primaryKey);
+
+            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->getTable(), implode($primaryKey, ', ')));
+        }
+        $conditions = array_combine($key, $primaryKey);
+
+        return $conditions;
+    }
+
+    /**
      * Save entity.
      *
      * @param EntityInterface $entity An Entity instance.
@@ -201,51 +305,11 @@ abstract class CrudAction extends Action
      */
     protected function _save($entity)
     {
-        if ($this->table()->save($entity)) {
+        if ($this->getTable()->save($entity)) {
             return $entity;
         } else {
-            throw new ValidationException(__('Validation on {0} failed', $this->table()->alias()), 0, null, $entity->errors());
+            throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $entity->errors());
         }
-    }
-
-    /**
-     * Model id getter.
-     *
-     * @return mixed|string
-     */
-    public function id()
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Model id field name getter.
-     *
-     * @return string
-     */
-    public function idName()
-    {
-        return $this->_idName;
-    }
-
-    /**
-     * Parent id getter.
-     *
-     * @return mixed|string
-     */
-    public function parentId()
-    {
-        return $this->_parentId;
-    }
-
-    /**
-     * Parent model id field name getter.
-     *
-     * @return mixed|string
-     */
-    public function parentIdName()
-    {
-        return $this->_parentIdName;
     }
 
     /**
@@ -255,11 +319,10 @@ abstract class CrudAction extends Action
      */
     protected function _describe()
     {
-        $table = $this->table();
-        $schema = $table->schema();
+        $table = $this->getTable();
+        $schema = $table->getSchema();
 
         $entity = $this->_newEntity();
-//		$q=$entity->visibleProperties();
         $reverseRouter = new ReverseRouting();
         $path = $reverseRouter->indexPath($this);
         $actions = [

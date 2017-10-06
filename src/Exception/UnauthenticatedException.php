@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -29,7 +29,7 @@ class UnauthenticatedException extends Exception
      * @param int $code The code of the error
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($message = null, $code = 403, $previous = null)
+    public function __construct($message = null, $code = 401, $previous = null)
     {
         if (empty($message)) {
             $message = 'Unauthenticated';
