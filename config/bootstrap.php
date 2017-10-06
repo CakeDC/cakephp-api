@@ -17,10 +17,12 @@ collection((array)Configure::read('Api.config'))->each(function ($file) {
     Configure::load($file);
 });
 
-Log::setConfig('api', [
-    'className' => 'File',
-    'path' => LOGS,
-    'scopes' => false,
-    'levels' => ['error', 'info'],
-    'file' => 'api.log',
-]);
+if (!Log::engine('api')) {
+    Log::setConfig('api', [
+        'className' => Configure::read('Api.Log.className'),
+        'path' => LOGS,
+        'scopes' => Configure::read('Api.Log.scopes'),
+        'levels' => Configure::read('Api.Log.levels'),
+        'file' => Configure::read('Api.Log.file'),
+    ]);
+}
