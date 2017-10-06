@@ -90,7 +90,7 @@ class SortExtensionTest extends IntegrationTestCase
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'first_name']);
         $result = $this->responseJson();
         $this->assertSuccess($result);
-        $this->assertEquals([5, 7, 11, 15], Hash::extract($result, 'data.{n}.id'));
+        $this->assertEquals([7, 5, 11, 15], Hash::extract($result, 'data.{n}.id'));
     }
 
     public function testSortByNameDesc()
