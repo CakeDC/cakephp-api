@@ -20,7 +20,6 @@ use Cake\Utility\Hash;
 
 class ExtendedSortExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 

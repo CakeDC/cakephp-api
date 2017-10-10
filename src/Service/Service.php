@@ -283,7 +283,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * Sets service version.
      *
      * @param int $version Version number.
-     * @return $this
+     * @return void
      */
     public function setVersion($version)
     {
@@ -359,7 +359,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * Sets the Request.
      *
      * @param \Cake\Http\ServerRequest $request A Request object.
-     * @return $this
+     * @return void
      */
     public function setRequest(ServerRequest $request)
     {
