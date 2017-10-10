@@ -1,49 +1,31 @@
 Collections
 ==========
 
-Collections service and related actions allow to execute actions on 
-many entities on the same endpoint call. This feature was created 
-to allow easy integration with bulk actions, allowing to delete/edit/add
-many entities.
+Collection actions allow to process many entities on the same endpoint call. 
+This feature was created to allow easy integration with bulk actions, allowing to 
+delete/edit/add many entities.
 
-There is a CollectionService class provided, in case you want to extend it,
-but this feature will be possibly added to existing CrudService services.
+Adding collections to your own service is easy, use the `initialize()` method of your Service class.
 
-Adding collections to your own service is easy
-
-* Add routing
+* Use mapAction, map 3 routes to cover add/edit/delete
 
 ```php
-    protected $_actionsClassMap = [
-        'collectionAddEdit' => AddEditAction::class,
-        'collectionDelete' => DeleteAction::class,
-    ];
-
-    /**
-     * Initialize service level routes
-     *
-     * @return void
-     */
-    public function loadRoutes()
-    {
-        ApiRouter::scope('/' . $this->getName(), function (RouteBuilder $routes) {
-            $routes->extensions($this->_routeExtensions);
-            $routes->connect('/collection/add', [
-                'controller' => $this->getName(),
-                'action' => 'collectionAddEdit',
-            ]);
-            $routes->connect('/collection/edit', [
-                'controller' => $this->getName(),
-                'action' => 'collectionAddEdit',
-            ]);
-            $routes->connect('/collection/delete', [
-                'controller' => $this->getName(),
-                'action' => 'collectionDelete',
-            ]);
-        });
-    }
+$this->mapAction('collectionAdd', AddEditAction::class, [
+    'method' => ['POST'],
+    'mapCors' => true,
+    'path' => 'collection/add'
+]);
+$this->mapAction('collectionEdit', AddEditAction::class, [
+    'method' => ['POST'],
+    'mapCors' => true,
+    'path' => 'collection/edit'
+]);
+$this->mapAction('collectionDelete', DeleteAction::class, [
+    'method' => ['POST'],
+    'mapCors' => true,
+    'path' => 'collection/delete'
+]);
 ```
-
 If you need additional features, you can extend the specific actions 
 and override the mapping configuration to use your own implementation.
 

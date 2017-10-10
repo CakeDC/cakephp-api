@@ -13,6 +13,7 @@ namespace CakeDC\Api\Test\TestCase\Service\Action\Collection;
 
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Collection\AddEditAction;
+use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
@@ -155,6 +156,41 @@ class AddEditActionTest extends TestCase
                 ]
             ], $ex->getValidationErrors());
         }
+    }
+
+    public function testIntegrationArticlesCollection()
+    {
+        $ArticlesTable = TableRegistry::get('Articles');
+        $initialCount = $ArticlesTable->find()->count();
+        $post = [
+            ['title' => 'Article1'],
+            ['title' => 'Article2']
+        ];
+
+        $this->_initializeRequest([
+            'params' => [
+                'service' => 'articlesCollection',
+            ],
+            'post' => $post,
+        ], 'POST');
+        $options = [
+            'version' => null,
+            'service' => null,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/articles_collection/collection/add'
+        ];
+        $Service = ServiceRegistry::get($this->request['service'], $options);
+        $this->assertTrue($Service instanceof FallbackService);
+        $this->assertEquals('articles_collection', $Service->getName());
+
+        $action = $Service->buildAction();
+        $action->Auth->allow('*');
+
+        $action->setTable($ArticlesTable);
+        $result = $action->process();
+        $finalCount = $ArticlesTable->find()->count();
+        $this->assertEquals(2, $finalCount - $initialCount, 'We should have added 3 new articles');
     }
 
     protected function _initializeAction($post = [])
