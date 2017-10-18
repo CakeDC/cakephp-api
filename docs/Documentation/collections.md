@@ -10,22 +10,23 @@ Adding collections to your own service is easy, use the `initialize()` method of
 * Use mapAction, map 3 routes to cover add/edit/delete
 
 ```php
-$this->mapAction('collectionAdd', AddEditAction::class, [
+$this->mapAction('bulkAdd', AddEditAction::class, [
     'method' => ['POST'],
     'mapCors' => true,
-    'path' => 'collection/add'
+    'path' => 'bulk'
 ]);
-$this->mapAction('collectionEdit', AddEditAction::class, [
-    'method' => ['POST'],
+$this->mapAction('bulkEdit', AddEditAction::class, [
+    'method' => ['PUT'],
     'mapCors' => true,
-    'path' => 'collection/edit'
+    'path' => 'bulk'
 ]);
-$this->mapAction('collectionDelete', DeleteAction::class, [
-    'method' => ['POST'],
+$this->mapAction('bulkDelete', DeleteAction::class, [
+    'method' => ['DELETE'],
     'mapCors' => true,
-    'path' => 'collection/delete'
+    'path' => 'bulk'
 ]);
 ```
+
 If you need additional features, you can extend the specific actions 
 and override the mapping configuration to use your own implementation.
 
@@ -37,7 +38,7 @@ Here are a couple examples, curl based
 
 ```
     curl --request POST \
-      --url http://collections.3dev/api/posts/collection/edit \
+      --url http://collections.3dev/api/posts/bulk \
       --header 'content-type: multipart/form-data; boundary=---011000010111000001101001' \
       --form '0[title]=edit existing post title for id 15' \
       --form '1[title]=this is a new post' \
@@ -47,8 +48,8 @@ Here are a couple examples, curl based
   * Delete 2 entities with id's 14 and 15
   
   ```
-    curl --request POST \
-      --url http://collections.3dev/api/posts/collection/delete \
+    curl --request DELETE \
+      --url http://collections.3dev/api/posts/bulk \
       --header 'content-type: multipart/form-data; boundary=---011000010111000001101001' \
       --form '1[id]=14' \
       --form '0[id]=15' 
