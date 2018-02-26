@@ -10,8 +10,6 @@ API Plugin for CakePHP
 
 The **CakePHP-API** Plugin allows to easily expose a versioned API in a few lines of code.
 
-IMPORTANT: This plugin is **BETA**, use it at your own risk.
-
 Requirements
 ------------
 
