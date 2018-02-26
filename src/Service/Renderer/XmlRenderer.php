@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -38,11 +38,10 @@ class XmlRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->response();
-        $response->statusCode($result->code());
-        $response->type('application/xml');
+        $response = $this->_service->getResponse();
         $xml = $this->_format($result->data());
-        $response->body($this->_encode($xml));
+        $this->_service->setResponse($response->withStringBody($this->_encode($xml))->withType('application/xml')
+            ->withStatus($result->code()));
 
         return true;
     }
@@ -55,8 +54,7 @@ class XmlRenderer extends BaseRenderer
      */
     public function error(Exception $exception)
     {
-        $response = $this->_service->response();
-        $response->type('application/xml');
+        $response = $this->_service->getResponse();
         $data = [
             'error' => [
                 'code' => $exception->getCode(),
@@ -69,7 +67,7 @@ class XmlRenderer extends BaseRenderer
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $response->body($this->_encode($data));
+        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withType('application/xml'));
     }
 
     /**

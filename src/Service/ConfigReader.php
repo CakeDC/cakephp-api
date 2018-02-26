@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 namespace CakeDC\Api\Service;
@@ -70,9 +70,9 @@ class ConfigReader
             $options = $this->_mergeWithDefaults($byServiceOptions, $byServiceDefault);
         }
 
-        $options = $this->_mergeWithDefaults($options, $defaultByName);
+        $options = $this->_mergeWithDefaults($defaultByName, $options);
 
-        return $this->_mergeWithDefaults($options, $defaults);
+        return $this->_mergeWithDefaults($defaults, $options);
     }
 
     /**

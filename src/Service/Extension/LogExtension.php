@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,6 +16,7 @@ use CakeDC\Api\Service\Service;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\LogTrait;
+use Psr\Log\LogLevel;
 
 class LogExtension extends Extension implements EventListenerInterface
 {
@@ -58,7 +59,7 @@ class LogExtension extends Extension implements EventListenerInterface
      */
     public function beforeProcess(Event $event)
     {
-        $this->_service = $event->data['service'];
+        $this->_service = $event->getData('service');
         $this->_timer = microtime(true);
     }
 
@@ -71,9 +72,9 @@ class LogExtension extends Extension implements EventListenerInterface
     public function afterProcess(Event $event)
     {
         $duration = round((microtime(true) - $this->_timer) * 1000, 0);
-        $url = $this->_service->baseUrl();
-        $data = $this->_service->parser()->params();
-        $result = $this->_service->result()->toArray();
+        $url = $this->_service->getBaseUrl();
+        $data = $this->_service->getParser()->params();
+        $result = $this->_service->getResult()->toArray();
         $log = [
             'url' => $url,
             'method' => env('REQUEST_METHOD'),
@@ -81,6 +82,6 @@ class LogExtension extends Extension implements EventListenerInterface
             'input' => $data,
             'result' => json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
-        $this->log($log);
+        $this->log($log, LogLevel::INFO, ['api']);
     }
 }

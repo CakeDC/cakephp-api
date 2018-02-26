@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -59,7 +59,7 @@ class ValidateAccountRequestActionTest extends IntegrationTestCase
         $this->assertTextEquals('Token has been reset successfully. Please check your email.', $result['data']);
 
         $Users = TableRegistry::get('CakeDC/Users.Users');
-        $user = $Users->find()->where(['id' => Settings::USER6])->hydrate(false)->first();
+        $user = $Users->find()->where(['id' => Settings::USER6])->enableHydration(false)->first();
         $this->assertNotEmpty($user['token']);
     }
 }

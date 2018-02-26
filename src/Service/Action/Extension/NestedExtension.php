@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -47,10 +47,10 @@ class NestedExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
-        $foreignKey = $action->parentId();
-        $field = $action->parentIdName();
+        $action = $event->getSubject();
+        $query = $event->getData('query');
+        $foreignKey = $action->getParentId();
+        $field = $action->getParentIdName();
         if ($field !== null) {
             $query->where([$field => $foreignKey]);
         }
@@ -69,10 +69,10 @@ class NestedExtension extends Extension implements EventListenerInterface
      */
     public function findEntity(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
-        $foreignKey = $action->parentId();
-        $field = $action->parentIdName();
+        $action = $event->getSubject();
+        $query = $event->getData('query');
+        $foreignKey = $action->getParentId();
+        $field = $action->getParentIdName();
         if ($field !== null) {
             $query->where([$field => $foreignKey]);
         }
@@ -91,13 +91,13 @@ class NestedExtension extends Extension implements EventListenerInterface
      */
     public function patchEntity(Event $event)
     {
-        $action = $event->subject();
-        $entity = $event->data['entity'];
+        $action = $event->getSubject();
+        $entity = $event->getData('entity');
         if ($event->result) {
             $entity = $event->result;
         }
-        $foreignKey = $action->parentId();
-        $field = $action->parentIdName();
+        $foreignKey = $action->getParentId();
+        $field = $action->getParentIdName();
         if ($field !== null) {
             $entity->set($field, $foreignKey);
         }

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -59,14 +59,14 @@ class Auth
     /**
      * Request object
      *
-     * @var \Cake\Network\Request
+     * @var \Cake\Http\ServerRequest
      */
     public $request;
 
     /**
      * Response object
      *
-     * @var \Cake\Network\Response
+     * @var \Cake\Http\Response
      */
     public $response;
 
@@ -106,7 +106,7 @@ class Auth
         if (array_key_exists('response', $config)) {
             $this->response = $config['response'];
         }
-        $this->config($config);
+        $this->setConfig($config);
         $this->initialize($config);
     }
 
@@ -139,13 +139,13 @@ class Auth
             'authError' => __d('CakeDC/Api', 'You are not authorized to access that location.')
         ];
 
-        $config = $this->config();
+        $config = $this->getConfig();
         foreach ($config as $key => $value) {
             if ($value !== null) {
                 unset($defaults[$key]);
             }
         }
-        $this->config($defaults);
+        $this->setConfig($defaults);
     }
 
     /**
@@ -241,7 +241,7 @@ class Auth
      */
     protected function _isAllowed(Action $action)
     {
-        $action = strtolower($action->name());
+        $action = strtolower($action->getName());
 
         return in_array($action, array_map('strtolower', $this->allowedActions)) ||
             in_array('*', $this->allowedActions);
@@ -250,6 +250,7 @@ class Auth
     /**
      * __get method this method will return an attribute of this class
      *
+     * @param string $name Name
      * @return mixed
      */
     public function __get($name)
@@ -257,6 +258,8 @@ class Auth
         if (isset($this->{$name})) {
             return $this->{$name};
         }
+
+        return null;
     }
 
     /**
@@ -264,7 +267,7 @@ class Auth
      *
      * @param string $name name of the attribute
      * @param string $value value of the attribute
-     * @return mixed
+     * @return void
      */
     public function __set($name, $value)
     {

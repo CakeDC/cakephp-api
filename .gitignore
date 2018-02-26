@@ -8,3 +8,4 @@ composer.lock
 tmp
 pmip
 webroot/coverage
+.php_cs.cache

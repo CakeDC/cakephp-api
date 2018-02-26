@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -15,6 +15,7 @@ use CakeDC\Api\Service\Action\Auth\LoginAction;
 use CakeDC\Api\Service\Action\Auth\RegisterAction;
 use CakeDC\Api\Service\Action\Auth\ResetPasswordAction;
 use CakeDC\Api\Service\Action\Auth\ResetPasswordRequestAction;
+use CakeDC\Api\Service\Action\Auth\SocialLoginAction;
 use CakeDC\Api\Service\Action\Auth\ValidateAccountAction;
 use CakeDC\Api\Service\Action\Auth\ValidateAccountRequestAction;
 use Cake\Utility\Hash;
@@ -41,6 +42,7 @@ class AuthService extends Service
         $this->mapAction('reset_password', ResetPasswordAction::class, $methods);
         $this->mapAction('validate_account_request', ValidateAccountRequestAction::class, $methods);
         $this->mapAction('validate_account', ValidateAccountAction::class, $methods);
+        $this->mapAction('social_login', SocialLoginAction::class, $methods);
     }
 
     /**

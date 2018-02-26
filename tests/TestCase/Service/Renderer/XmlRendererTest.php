@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
-use CakeDC\Api\Exception\UnauthorizedException;
+use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\XmlRenderer;
@@ -64,7 +64,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -75,7 +75,7 @@ class XmlRendererTest extends TestCase
             'rendererClass' => 'CakeDC/Api.Xml'
         ];
         $this->Service = new FallbackService($serviceOptions);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
         $this->assertTrue($renderer instanceof XmlRenderer);
     }
 
@@ -88,7 +88,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -105,17 +105,20 @@ class XmlRendererTest extends TestCase
         $result->code($statusCode);
         $data = 'Updated!';
         $result->data($data);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
-                 ->with($statusCode);
+                 ->method('withStatus')
+                 ->with($statusCode)
+                 ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('body')
-                ->with($this->_xmlMessage('<data><value>Updated!</value></data>'));
+                ->method('withStringBody')
+                ->with($this->_xmlMessage('<data><value>Updated!</value></data>'))
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/xml');
+                 ->method('withType')
+                 ->with('application/xml')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -129,7 +132,7 @@ class XmlRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -142,15 +145,17 @@ class XmlRendererTest extends TestCase
         $this->Service = new FallbackService($serviceOptions);
 
         Configure::write('debug', 0);
-        $error = new UnauthorizedException();
-        $renderer = $this->Service->renderer();
+        $error = new UnauthenticatedException();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
-                 ->method('body')
-                ->with($this->_xmlMessage('<error><code>401</code><message>Unauthorized</message></error>'));
+                ->method('withStringBody')
+                ->with($this->_xmlMessage('<error><code>401</code><message>Unauthenticated</message></error>'))
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('application/xml');
+                 ->method('withType')
+                 ->with('application/xml')
+                ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

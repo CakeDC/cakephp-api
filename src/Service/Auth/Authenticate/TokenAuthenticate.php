@@ -1,19 +1,20 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Utility\Hash;
 use \OutOfBoundsException;
 
 /**
@@ -44,11 +45,11 @@ class TokenAuthenticate extends BaseAuthenticate
      * Authenticate callback
      * Reads the Api Key based on configuration and login the user
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @param Response $response Cake response object.
      * @return mixed
      */
-    public function authenticate(Request $request, Response $response)
+    public function authenticate(ServerRequest $request, Response $response)
     {
         return $this->getUser($request);
     }
@@ -56,12 +57,12 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param Request $request Cake request object.
+     * @param ServerRequest $request Cake request object.
      * @return mixed
      */
-    public function getUser(Request $request)
+    public function getUser(ServerRequest $request)
     {
-        $type = $this->config('type');
+        $type = $this->getConfig('type');
         if (!in_array($type, $this->types)) {
             throw new OutOfBoundsException(__d('CakeDC/Api', 'Type {0} is not valid', $type));
         }
@@ -75,12 +76,12 @@ class TokenAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->config('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 
-        $this->_config['fields']['username'] = $this->config('field');
-        $this->_config['userModel'] = $this->config('table');
+        $this->_config['fields']['username'] = $this->getConfig('field');
+        $this->_config['userModel'] = $this->getConfig('table');
         $this->_config['finder'] = $this->getConfig('finderAuth') ?: 'all';
         $result = $this->_query($apiKey)->first();
 
@@ -95,26 +96,26 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function querystring(Request $request)
+    public function querystring(ServerRequest $request)
     {
-        $name = $this->config('name');
+        $name = $this->getConfig('name');
 
-        return $request->query($name);
+        return $request->getQuery($name);
     }
 
     /**
      * Get the api key from the header
      *
-     * @param Request $request request
+     * @param ServerRequest $request request
      * @return string api key
      */
-    public function header(Request $request)
+    public function header(ServerRequest $request)
     {
-        $name = $this->config('name');
+        $name = $this->getConfig('name');
 
-        return $request->header($name);
+        return Hash::get($request->getHeader($name), 0);
     }
 }
