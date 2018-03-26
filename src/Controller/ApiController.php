@@ -13,6 +13,7 @@ namespace CakeDC\Api\Controller;
 
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
+use Cake\Utility\Inflector;
 use Exception;
 
 class ApiController extends AppController
@@ -100,10 +101,9 @@ class ApiController extends AppController
                 }
                 $options += [
                     'version' => $version,
-                    // 'controller' => $this,
                     'request' => $this->request,
                     'response' => $this->response,
-                    'baseUrl' => $url,
+                    'baseUrl' => Inflector::underscore($url),
                 ];
                 $options += (new ConfigReader())->serviceOptions($service, $version);
                 $Service = ServiceRegistry::get($service, $options);
