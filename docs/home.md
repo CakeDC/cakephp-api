@@ -7,7 +7,7 @@ Requirements
 ------------
 
 * CakePHP 3.2.9+
-* PHP 5.5.9+
+* PHP 5.6.9+
 
 Documentation
 -------------
@@ -16,6 +16,7 @@ Documentation
 * [Installation](Documentation/installation.md)
 * [Configuration](Documentation/configuration.md)
 * [Routing](Documentation/routing.md)
+* [Services](Documentation/services.md)
 * [Actions](Documentation/actions.md)
 * [Extensions](Documentation/extensions.md)
 * [Renderers](Documentation/renderers.md)
