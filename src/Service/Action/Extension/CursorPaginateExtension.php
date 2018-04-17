@@ -160,7 +160,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     {
         $action = $event->getSubject();
         $records = $event->getData('records');
-        $result = $action->service()->result();
+        $result = $action->getService()->getResult();
 
         $newMaxId = null;
         $newSinceId = null;
@@ -184,7 +184,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
             $newMaxId = $maxId;
         }
 
-        $indexRoute = $action->route();
+        $indexRoute = $action->getRoute();
 
         $links = [];
         $path = $this->_reverseRouter->indexPath($action, function ($route) use ($newSinceId) {

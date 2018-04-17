@@ -96,6 +96,11 @@ abstract class CrudService extends Service
      */
     public function table($table = null)
     {
+        deprecationWarning(
+            'Service::table() is deprecated. ' .
+            'Use Service::setTable()/getTable() instead.'
+        );
+
         if ($table !== null) {
             return $this->setTable($table);
         }

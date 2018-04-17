@@ -16,8 +16,8 @@ use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 
 class ServiceRegistryTest extends TestCase
 {
@@ -58,7 +58,7 @@ class ServiceRegistryTest extends TestCase
                 'service' => 'authors',
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,

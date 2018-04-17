@@ -95,12 +95,12 @@ class CrudAddActionTest extends TestCase
         ], 'POST');
         $options = [
             'version' => null,
-            'service' => $this->request['service'],
+            'service' => $this->request->getParam('service'),
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/articles',
         ];
-        $this->Service = ServiceRegistry::get($this->request['service'], $options);
+        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
 
         $this->Action = new CrudAddAction([
             'service' => $this->Service,

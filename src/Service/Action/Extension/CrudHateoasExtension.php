@@ -66,7 +66,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     public function afterAction(Event $event)
     {
         $action = $event->getSubject();
-        $result = $action->getService()->result();
+        $result = $action->getService()->getResult();
         $actionName = $action->getName();
         $links = [];
         //$route = $action->route();
@@ -77,10 +77,10 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $links = $this->_buildIndexLinks($action);
         }
 
-        $parent = $action->getService()->parent();
+        $parent = $action->getService()->getParentService();
 
         if ($parent !== null) {
-            $result = $parent->result();
+            $result = $parent->getResult();
         }
         $result->setPayload('links', $links);
     }
@@ -157,10 +157,10 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
         if ($parent === null && $action instanceof CrudAction) {
             $table = $action->getTable();
-            $hasMany = $table->associations()->type('HasMany');
+            $hasMany = $table->associations()->getByType('HasMany');
             foreach ($hasMany as $assoc) {
-                $target = $assoc->target();
-                $alias = $target->alias();
+                $target = $assoc->getTarget();
+                $alias = $target->getAlias();
 
                 $targetClass = get_class($target);
                 list(, $className) = namespaceSplit($targetClass);

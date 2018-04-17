@@ -48,7 +48,7 @@ class ListActionTest extends TestCase
                 'pass' => []
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,

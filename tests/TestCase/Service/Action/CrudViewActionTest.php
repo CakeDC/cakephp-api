@@ -46,7 +46,7 @@ class CrudViewActionTest extends TestCase
                 ]
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -81,7 +81,7 @@ class CrudViewActionTest extends TestCase
         ]);
 
         $onFindEntity = false;
-        $this->Action->eventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
             $onFindEntity = true;
         });
 

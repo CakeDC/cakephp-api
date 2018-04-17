@@ -44,21 +44,23 @@ class CorsExtension extends Extension implements EventListenerInterface
     public function onAction(Event $Event)
     {
         $action = $Event->getSubject();
-        $request = $action->service()->request();
-        $response = $action->service()->response();
-        $response->cors($request)
-             ->allowOrigin($this->getConfig('origin') ?: ['*'])
-             ->allowMethods($this->getConfig('methods') ?: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'])
-             ->allowHeaders($this->getConfig('headers') ?: [
-                 'X-CSRF-Token',
-                 'Content-Type',
-                 'Access-Control-Allow-Headers',
-                 'Access-Control-Allow-Origin',
-                 'Authorization',
-                 'X-Requested-With'
-             ])
-             ->allowCredentials()
-             ->maxAge($this->getConfig('maxAge') ?: 300)
-             ->build();
+        $request = $action->getService()->getRequest();
+        $response = $action->getService()->getResponse();
+        $action->getService()->setResponse(
+            $response->cors($request)
+                 ->allowOrigin($this->getConfig('origin') ?: ['*'])
+                 ->allowMethods($this->getConfig('methods') ?: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'])
+                 ->allowHeaders($this->getConfig('headers') ?: [
+                     'X-CSRF-Token',
+                     'Content-Type',
+                     'Access-Control-Allow-Headers',
+                     'Access-Control-Allow-Origin',
+                     'Authorization',
+                     'X-Requested-With'
+                 ])
+                 ->allowCredentials()
+                 ->maxAge($this->getConfig('maxAge') ?: 300)
+                 ->build()
+        );
     }
 }

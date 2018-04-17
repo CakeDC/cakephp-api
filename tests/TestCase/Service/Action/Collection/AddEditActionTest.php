@@ -180,7 +180,7 @@ class AddEditActionTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles_collection/collection/add'
         ];
-        $Service = ServiceRegistry::get($this->request['service'], $options);
+        $Service = ServiceRegistry::get($this->request->getParam('service'), $options);
         $this->assertTrue($Service instanceof FallbackService);
         $this->assertEquals('articles_collection', $Service->getName());
 
@@ -208,7 +208,7 @@ class AddEditActionTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles_collection/collection/add'
         ];
-        $this->Service = ServiceRegistry::get($this->request['service'], $options);
+        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
 
         $this->Action = new AddEditAction([
             'service' => $this->Service,

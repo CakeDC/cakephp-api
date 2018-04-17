@@ -126,6 +126,7 @@ class IntegrationTestCase extends BaseTestCase
                 }
             }
         }
+        $this->useHttpServer(true);
         $this->_sendRequest($url, $method, $data);
     }
 

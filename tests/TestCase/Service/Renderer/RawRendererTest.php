@@ -63,7 +63,7 @@ class RawRendererTest extends TestCase
     public function testRendererInitializeByClassName()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
+            ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -87,7 +87,7 @@ class RawRendererTest extends TestCase
     public function testRendererSuccess()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
+            ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -131,7 +131,7 @@ class RawRendererTest extends TestCase
     public function testRendererError()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
+            ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 

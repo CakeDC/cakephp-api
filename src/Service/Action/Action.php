@@ -159,6 +159,11 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function name($name = null)
     {
+        deprecationWarning(
+            'Action::name() is deprecated. ' .
+            'Use Action::setName()/getName() instead.'
+        );
+
         if ($name !== null) {
             return $this->setName($name);
         }
@@ -193,10 +198,16 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Api method for activated route.
      *
      * @param array $route Activated route.
+     * @deprecated 3.4.0 Use setRoute()/getRoute() instead.
      * @return array
      */
     public function route($route = null)
     {
+        deprecationWarning(
+            'Action::route() is deprecated. ' .
+            'Use Action::setRoute()/getRoute() instead.'
+        );
+
         if ($route !== null) {
             return $this->setRoute($route);
         }
@@ -226,10 +237,16 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Set or get service.
      *
      * @param Service $service An Service instance.
+     * @deprecated 3.4.0 Use setService()/getService() instead.
      * @return Service
      */
     public function service($service = null)
     {
+        deprecationWarning(
+            'Action::service() is deprecated. ' .
+            'Use Action::setService()/getService() instead.'
+        );
+
         if ($service !== null) {
             return $this->setService($service);
         }

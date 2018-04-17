@@ -13,7 +13,7 @@ namespace CakeDC\Api\Test\App\Service\Action\Author;
 
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAction;
-use Cake\Network\Exception\NotImplementedException;
+use Cake\Http\Exception\NotImplementedException;
 use Cake\Validation\Validator;
 
 class IndexAction extends CrudAction

@@ -17,8 +17,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 
 class TokenAuthenticateTest extends TestCase
 {
@@ -37,7 +37,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function setUp()
     {
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
             'request' => $request,
@@ -67,7 +67,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHappy()
     {
-        $request = new Request('/?token=yyy');
+        $request = new ServerRequest('/?token=yyy');
         $result = $this->token->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
     }
@@ -79,15 +79,15 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateFail()
     {
-        $request = new Request('/');
+        $request = new ServerRequest('/');
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new Request('/?token=none');
+        $request = new ServerRequest('/?token=none');
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new Request('/?token=');
+        $request = new ServerRequest('/?token=');
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
     }
@@ -102,21 +102,21 @@ class TokenAuthenticateTest extends TestCase
     public function testAuthenticateWrongType()
     {
         $this->token->setConfig('type', 'wrong');
-        $request = new Request('/');
+        $request = new ServerRequest('/');
         $this->token->authenticate($request, new Response());
     }
 
     /**
      * test
      *
-     * @expectedException \Cake\Network\Exception\ForbiddenException
+     * @expectedException \Cake\Http\Exception\ForbiddenException
      * @expectedExceptionMessage SSL is required for ApiKey Authentication
      *
      */
     public function testAuthenticateRequireSSL()
     {
         $this->token->setConfig('require_ssl', true);
-        $request = new Request('/?token=test');
+        $request = new ServerRequest('/?token=test');
         $this->token->authenticate($request, new Response());
     }
 
@@ -127,7 +127,7 @@ class TokenAuthenticateTest extends TestCase
     public function testAuthenticateRequireSSLNoKey()
     {
         $this->token->setConfig('require_ssl', true);
-        $request = new Request('/');
+        $request = new ServerRequest('/');
         $this->assertFalse($this->token->authenticate($request, new Response()));
     }
 

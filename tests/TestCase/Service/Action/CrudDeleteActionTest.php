@@ -62,7 +62,7 @@ class CrudDeleteActionTest extends TestCase
         ]);
 
         $onFindEntity = false;
-        $this->Action->eventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
             $onFindEntity = true;
         });
 
@@ -98,12 +98,12 @@ class CrudDeleteActionTest extends TestCase
         ], 'DELETE');
         $options = [
             'version' => null,
-            'service' => $this->request['service'],
+            'service' => $this->request->getParam('service'),
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/articles/' . $id,
         ];
-        $this->Service = ServiceRegistry::get($this->request['service'], $options);
+        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
 
         $this->Action = new CrudDeleteAction([
             'service' => $this->Service,

@@ -89,7 +89,7 @@ class RegisterAction extends Action
         }
         $userSaved = $usersTable->register($user, $requestData, $options);
         if (!$userSaved) {
-            throw new ValidationException(__d('CakeDC/Api', 'The user could not be saved'), 0, null, $user->errors());
+            throw new ValidationException(__d('CakeDC/Api', 'The user could not be saved'), 0, null, $user->getErrors());
         }
 
         return $this->_afterRegister($userSaved);

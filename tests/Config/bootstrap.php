@@ -27,4 +27,4 @@ Cake\Core\Plugin::load('CakeDC/Users', [
 ]);
 
 Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
-Security::salt(Configure::read('Security.salt'));
+Security::setSalt(Configure::read('Security.salt'));

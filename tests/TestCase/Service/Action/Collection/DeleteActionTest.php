@@ -168,7 +168,7 @@ class DeleteActionTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles_collection/collection/delete'
         ];
-        $this->Service = ServiceRegistry::get($this->request['service'], $options);
+        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
 
         $this->Action = new DeleteAction([
             'service' => $this->Service,

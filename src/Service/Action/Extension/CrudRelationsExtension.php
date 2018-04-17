@@ -11,6 +11,7 @@
 
 namespace CakeDC\Api\Service\Action\Extension;
 
+use Cake\ORM\Association;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\CrudAction;
 use Cake\Event\Event;
@@ -106,7 +107,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     }
 
     /**
-     * @param Action $action An Action instance.
+     * @param CrudAction $action An Action instance.
      * @param Query $query A Query instance.
      * @return mixed
      */
@@ -114,12 +115,13 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     {
         $associations = $this->_includeAssociations($action);
         if (empty($associations) && $this->_includeDirectAssociations($action)) {
-            $relations = $action->getTable()
+            $relations = $action
+                ->getTable()
                 ->associations()
-                ->type(['HasOne', 'BelongsTo']);
+                ->getByType(['HasOne', 'BelongsTo']);
             $associations = collection($relations)
-                ->map(function ($relation) {
-                    return $relation->target()->table();
+                ->map(function (Association $relation) {
+                    return $relation->getTarget()->getTable();
                 })
                 ->toArray();
         }
@@ -134,7 +136,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
             ->toArray();
 
         collection($tables)->each(function ($name) use ($query, $action) {
-            $assoc = $action->getTable()->association($name);
+            $assoc = $action->getTable()->getAssociation($name);
             if ($assoc !== null) {
                 $query->select($assoc);
             }

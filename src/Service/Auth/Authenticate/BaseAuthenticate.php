@@ -230,7 +230,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
      * can be:
      *
      * - Null - No action taken, AuthComponent should return appropriate response.
-     * - Cake\Network\Response - A response object, which will cause AuthComponent to
+     * - Cake\Http\Response - A response object, which will cause AuthComponent to
      *   simply return that response.
      *
      * @param ServerRequest $request A request object.

@@ -30,7 +30,7 @@ abstract class CollectionAction extends CrudAction
      */
     protected function _validateMany()
     {
-        $validator = $this->getTable()->validator();
+        $validator = $this->getTable()->getValidator();
         $datas = $this->data();
         $this->_validateDataIsArray($datas);
         $index = 0;
@@ -64,7 +64,7 @@ abstract class CollectionAction extends CrudAction
             return $entities;
         } else {
             $errors = collection($entities)->reduce(function ($errors, $entity) {
-                $errors[] = $entity->errors();
+                $errors[] = $entity->getErrors();
             }, []);
             throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $errors);
         }

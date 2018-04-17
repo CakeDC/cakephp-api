@@ -51,7 +51,7 @@ class DescribeActionTest extends TestCase
                 'service' => 'articles',
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,

@@ -262,6 +262,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function name($name = null)
     {
+        deprecationWarning(
+            'Service::name() is deprecated. ' .
+            'Use Service::setName()/getName() instead.'
+        );
+
         if ($name !== null) {
             return $this->setName($name);
         }
@@ -299,6 +304,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function version($version = null)
     {
+        deprecationWarning(
+            'Service::version() is deprecated. ' .
+            'Use Service::setVersion()/getVersion() instead.'
+        );
+
         if ($version !== null) {
             return $this->setVersion($version);
         }
@@ -338,6 +348,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function parser(BaseParser $parser = null)
     {
+        deprecationWarning(
+            'Service::parser() is deprecated. ' .
+            'Use Service::setParser()/getParser() instead.'
+        );
+
         if ($parser !== null) {
             return $this->setParser($parser);
         }
@@ -375,6 +390,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function request($request = null)
     {
+        deprecationWarning(
+            'Service::request() is deprecated. ' .
+            'Use Service::setRequest()/getRequest() instead.'
+        );
+
         if ($request !== null) {
             return $this->setRequest($request);
         }
@@ -429,7 +449,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $defaultOptions = $this->routerDefaultOptions();
         ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions) {
             if (is_array($this->_routeExtensions)) {
-                $routes->extensions($this->_routeExtensions);
+                $routes->setExtensions($this->_routeExtensions);
             }
             if (!empty($defaultOptions['map'])) {
                 $routes->resources($this->getName(), $defaultOptions);
@@ -616,7 +636,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             return ApiRouter::parseRequest(new ServerRequest([
                 'url' => $url,
                 'environment' => [
-                    'REQUEST_METHOD' => $this->_request->env('REQUEST_METHOD')
+                    'REQUEST_METHOD' => $this->_request->getEnv('REQUEST_METHOD')
                 ]
             ]));
         });
@@ -680,6 +700,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function parent(Service $service = null)
     {
+        deprecationWarning(
+            'Service::parent() is deprecated. ' .
+            'Use Service::setParentService()/getParentService() instead.'
+        );
+
         if ($service !== null) {
             return $this->setParentService($service);
         }
@@ -763,6 +788,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function result($value = null)
     {
+        deprecationWarning(
+            'Service::result() is deprecated. ' .
+            'Use Service::setResult()/getResult() instead.'
+        );
+
         if ($value !== null) {
             return $this->setResult($value);
         }
@@ -825,6 +855,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function response(Response $response = null)
     {
+        deprecationWarning(
+            'Service::response() is deprecated. ' .
+            'Use Service::setResponse()/getResponse() instead.'
+        );
+
         if ($response !== null) {
             return $this->setResponse($response);
         }
@@ -864,6 +899,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function renderer(BaseRenderer $renderer = null)
     {
+        deprecationWarning(
+            'Service::renderer() is deprecated. ' .
+            'Use Service::setRenderer()/getRenderer() instead.'
+        );
+
         if ($renderer !== null) {
             return $this->setRenderer($renderer);
         }
@@ -957,6 +997,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function extensions($extensions = null)
     {
+        deprecationWarning(
+            'Service::extensions() is deprecated. ' .
+            'Use Service::setExtensions()/getExtensions() instead.'
+        );
+
         if ($extensions !== null) {
             $this->setExtensions($extensions);
         }

@@ -113,7 +113,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
-        $result = $action->service()->result();
+        $result = $action->getService()->getResult();
         $count = $query->count();
         $limit = $this->_limit($action);
         $pagination = [

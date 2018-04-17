@@ -140,6 +140,11 @@ abstract class CrudAction extends Action
      */
     public function table($table = null)
     {
+        deprecationWarning(
+            'Action::table() is deprecated. ' .
+            'Use Action::setTable()/getTable() instead.'
+        );
+
         if ($table !== null) {
             return $this->setTable($table);
         }
@@ -308,7 +313,7 @@ abstract class CrudAction extends Action
         if ($this->getTable()->save($entity)) {
             return $entity;
         } else {
-            throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $entity->errors());
+            throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $entity->getErrors());
         }
     }
 
@@ -333,7 +338,7 @@ abstract class CrudAction extends Action
         ];
 
         $validators = [];
-        foreach ($table->validator()
+        foreach ($table->getValidator()
                        ->getIterator() as $name => $field) {
             $validators[$name] = [
                 'validatePresence' => $field->isPresenceRequired(),
@@ -381,9 +386,9 @@ abstract class CrudAction extends Action
             ->map(function ($type) use ($table) {
                 return [
                     'type' => $type,
-                    'assocs' => collection($table->associations()->type($type))
+                    'assocs' => collection($table->associations()->getByType($type))
                         ->map(function ($assoc) {
-                            return $assoc->target()->table();
+                            return $assoc->getTarget()->getTable();
                         })
                         ->toArray()
                 ];
@@ -395,7 +400,7 @@ abstract class CrudAction extends Action
             ->map(function ($column) use ($schema) {
                 return [
                     'name' => $column,
-                    'column' => $schema->column($column)
+                    'column' => $schema->getColumn($column)
                 ];
             })
             ->combine('name', 'column')
@@ -403,7 +408,7 @@ abstract class CrudAction extends Action
 
         return [
             'entity' => [
-                'hidden' => $entity->hiddenProperties(),
+                'hidden' => $entity->getHidden(),
 
                 // ... fields with data types
             ],

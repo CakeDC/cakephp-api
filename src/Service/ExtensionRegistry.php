@@ -93,7 +93,7 @@ class ExtensionRegistry extends ObjectRegistry
             $config['service'] = $this->_service;
         }
         $instance = new $class($this, $config);
-        $this->eventManager()->on($instance);
+        $this->getEventManager()->on($instance);
 
         return $instance;
     }

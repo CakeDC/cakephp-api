@@ -54,7 +54,7 @@ class FilterExtension extends Extension implements EventListenerInterface
         }
 
         /* @var Table $table */
-        $table = $query->repository();
+        $table = $query->getRepository();
         $schema = $table->getSchema();
         $fields = $schema->columns();
         $fields = array_flip($fields);

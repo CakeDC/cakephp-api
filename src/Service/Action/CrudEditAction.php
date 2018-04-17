@@ -28,7 +28,7 @@ class CrudEditAction extends CrudAction
      */
     public function validates()
     {
-        $validator = $this->getTable()->validator();
+        $validator = $this->getTable()->getValidator();
         $errors = $validator->errors($this->data(), false);
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);

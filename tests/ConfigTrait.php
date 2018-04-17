@@ -12,8 +12,8 @@
 namespace CakeDC\Api\Test;
 
 use Cake\Core\Configure;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 use Cake\Utility\Hash;
 
 /**
@@ -140,7 +140,7 @@ trait ConfigTrait
         if (empty($requestOptions['params']['pass'])) {
             $requestOptions['params']['pass'] = [];
         }
-        $this->request = new Request($requestOptions);
+        $this->request = new ServerRequest($requestOptions);
 
         if (empty($options['response'])) {
             $this->response = new Response();

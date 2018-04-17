@@ -19,8 +19,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 
 class ExtensionRegistryTest extends TestCase
 {
@@ -37,7 +37,7 @@ class ExtensionRegistryTest extends TestCase
     {
         parent::setUp();
 
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
             'request' => $request,

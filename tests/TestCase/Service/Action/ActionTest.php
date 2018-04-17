@@ -68,7 +68,7 @@ class ActionTest extends TestCase
                 'tag_id' => 1
             ],
         ], 'PUT');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,

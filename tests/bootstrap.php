@@ -114,7 +114,7 @@ Cake\Core\Configure::write('Session', [
 Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 
 mb_internal_encoding(Configure::read('App.encoding'));
-Security::salt(Configure::read('Security.salt'));
+Security::setSalt(Configure::read('Security.salt'));
 Email::setConfigTransport(Configure::consume('EmailTransport'));
 Email::setConfig(Configure::consume('Email'));
 

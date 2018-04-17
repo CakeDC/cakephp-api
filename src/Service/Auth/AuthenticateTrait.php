@@ -191,7 +191,7 @@ trait AuthenticateTrait
             }
             $config = array_merge($global, (array)$config);
             $this->_authenticateObjects[$alias] = new $className($this->_action, $config);
-            $this->eventManager()->on($this->_authenticateObjects[$alias]);
+            $this->getEventManager()->on($this->_authenticateObjects[$alias]);
         }
 
         return $this->_authenticateObjects;
