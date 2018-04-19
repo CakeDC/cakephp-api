@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -35,7 +35,7 @@ class PaginationExtensionTest extends IntegrationTestCase
         Configure::write('App.fullBaseUrl', 'http://example.com');
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -51,7 +51,7 @@ class PaginationExtensionTest extends IntegrationTestCase
     public function testDefault()
     {
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $expected = [
             'page' => 1,
             'limit' => 20,
@@ -65,7 +65,7 @@ class PaginationExtensionTest extends IntegrationTestCase
     public function testLimitDefault()
     {
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(20, $result['pagination']['limit']);
         $this->assertEquals(range(1, 15), Hash::extract($result, 'data.{n}.id'));
@@ -74,7 +74,7 @@ class PaginationExtensionTest extends IntegrationTestCase
     public function testCustomLimit()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $expected = [
             'page' => 1,
             'limit' => 4,
@@ -89,7 +89,7 @@ class PaginationExtensionTest extends IntegrationTestCase
     public function testCustomLimitAndPage()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'page' => 2]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $expected = [
             'page' => 2,
             'limit' => 4,

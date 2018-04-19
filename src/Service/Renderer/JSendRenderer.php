@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -74,8 +74,8 @@ class JSendRenderer extends BaseRenderer
     {
         $response = $this->_service->getResponse();
 
-        $data = $result->data();
-        $payload = $result->payload();
+        $data = $result->getData();
+        $payload = $result->getPayload();
         $return = [
             'data' => $data
         ];
@@ -84,7 +84,7 @@ class JSendRenderer extends BaseRenderer
         }
         $this->_mapStatus($result);
 
-        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus($result->code())->withType('application/json'));
+        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus($result->getCode())->withType('application/json'));
 
         return true;
     }
@@ -180,7 +180,7 @@ class JSendRenderer extends BaseRenderer
      */
     protected function _mapStatus(Result $result)
     {
-        $code = (int)$result->code();
+        $code = (int)$result->getCode();
         if ($code == 0 || $code >= 200 && $code <= 399) {
             $this->status = self::STATUS_SUCCESS;
         } else {

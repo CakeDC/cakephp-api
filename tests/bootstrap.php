@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -138,3 +138,10 @@ Cake\Datasource\ConnectionManager::setConfig('test', [
 ]);
 
 class_alias('CakeDC\Api\Test\App\Controller\AppController', 'App\Controller\AppController');
+
+$isCli = PHP_SAPI === 'cli';
+if ($isCli) {
+    (new Cake\Console\ConsoleErrorHandler(Cake\Core\Configure::read('Error')))->register();
+} else {
+     (new Cake\Error\ErrorHandler(Cake\Core\Configure::read('Error')))->register();
+}

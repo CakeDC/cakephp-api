@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -39,9 +39,9 @@ class XmlRenderer extends BaseRenderer
     public function response(Result $result = null)
     {
         $response = $this->_service->getResponse();
-        $xml = $this->_format($result->data());
+        $xml = $this->_format($result->getData());
         $this->_service->setResponse($response->withStringBody($this->_encode($xml))->withType('application/xml')
-            ->withStatus($result->code()));
+            ->withStatus($result->getCode()));
 
         return true;
     }

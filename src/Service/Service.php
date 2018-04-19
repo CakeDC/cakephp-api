@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -540,21 +540,21 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             if ($result instanceof Result) {
                 $this->setResult($result);
             } else {
-                $this->getResult()->data($result);
-                $this->getResult()->code(200);
+                $this->getResult()->setData($result);
+                $this->getResult()->setCode(200);
             }
         } catch (RecordNotFoundException $e) {
-            $this->getResult()->code(404);
-            $this->getResult()->exception($e);
+            $this->getResult()->setCode(404);
+            $this->getResult()->setException($e);
         } catch (ValidationException $e) {
-            $this->getResult()->code(422);
-            $this->getResult()->exception($e);
+            $this->getResult()->setCode(422);
+            $this->getResult()->setException($e);
         } catch (Exception $e) {
             $code = $e->getCode();
             if (!is_int($code) || $code < 100 || $code >= 600) {
-                $this->getResult()->code(500);
+                $this->getResult()->setCode(500);
             }
-            $this->getResult()->exception($e);
+            $this->getResult()->setException($e);
         }
         $this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
 
@@ -606,7 +606,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
                 'response' => $this->getResponse(),
                 'refresh' => true,
             ];
-            $service = ServiceRegistry::get($serviceName, $options);
+            $service = ServiceRegistry::getServiceLocator()->get($serviceName, $options);
             $service->setParentService($this);
         }
         $action = $route['action'];
@@ -811,10 +811,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if ($result === null) {
             $result = $this->getResult();
         }
-        $this->setResponse($this->getResponse()->withStatus($result->code()));
-        if ($result->exception() !== null) {
+        $this->setResponse($this->getResponse()->withStatus($result->getCode()));
+        if ($result->getException() !== null) {
             $this->getRenderer()
-                 ->error($result->exception());
+                 ->error($result->getException());
         } else {
             $this->getRenderer()
                  ->response($result);

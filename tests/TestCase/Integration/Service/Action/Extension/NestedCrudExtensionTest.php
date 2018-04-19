@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -35,7 +35,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         Configure::write('App.fullBaseUrl', 'http://example.com');
         $this->_tokenAccess();
         $this->_loadDefaultExtensions([]);
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -52,7 +52,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
     public function testIndex()
     {
         $this->sendRequest('/authors/1/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([1, 10, 13, 15], Hash::extract($result['data'], '{n}.id'));
     }
@@ -60,7 +60,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
     public function testView()
     {
         $this->sendRequest('/authors/1/articles/1', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $article = [
             'id' => 1,
@@ -72,7 +72,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $result['data']);
 
         $this->sendRequest('/authors/1/articles/2', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 404);
         $this->assertNull($result['data']);
     }
@@ -85,13 +85,13 @@ class NestedCrudExtensionTest extends IntegrationTestCase
             'published' => 'Y'
         ];
         $this->sendRequest('/authors/1/articles', 'POST', $article);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertArrayHasKey('id', $result['data']);
         $id = $result['data']['id'];
 
         $this->sendRequest('/authors/1/articles/' . $id, 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
 
         $res = array_intersect_key($article, $result['data']);
@@ -106,13 +106,13 @@ class NestedCrudExtensionTest extends IntegrationTestCase
             'published' => 'Y'
         ];
         $this->sendRequest('/authors/1/articles/1', 'PUT', $article);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertArrayHasKey('id', $result['data']);
         $this->assertEquals(1, $result['data']['id']);
 
         $this->sendRequest('/authors/1/articles/1', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
 
         $res = array_intersect_key($article, $result['data']);
@@ -127,7 +127,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
             'published' => 'Y'
         ];
         $this->sendRequest('/authors/1/articles/2', 'PUT', $article);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 404);
         $this->assertNull($result['data']);
     }
@@ -135,15 +135,15 @@ class NestedCrudExtensionTest extends IntegrationTestCase
     public function testDelete()
     {
         $this->sendRequest('/authors/1/articles/1', 'DELETE');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
 
         $this->sendRequest('/authors/1/articles/1', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 404);
 
         $this->sendRequest('/authors/1/articles/2', 'DELETE');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 404);
     }
 }

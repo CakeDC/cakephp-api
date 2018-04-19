@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -32,16 +32,45 @@ trait LocatorAwareTrait
      *
      * @param \CakeDC\Api\Service\Locator\LocatorInterface|null $serviceLocator LocatorInterface instance.
      * @return \CakeDC\Api\Service\Locator\LocatorInterface
+     * @deprecated 3.6.0 Use getTableLocator()/setTableLocator() instead.
      */
     public function serviceLocator(LocatorInterface $serviceLocator = null)
     {
-        if ($serviceLocator !== null) {
-            $this->_serviceLocator = $serviceLocator;
-        }
-        if (!$this->_serviceLocator) {
-            $this->_serviceLocator = ServiceRegistry::locator();
+        deprecationWarning(
+            get_called_class() . '::tableLocator() is deprecated. ' .
+            'Use getTableLocator()/setTableLocator() instead.'
+        );
+        if ($tableLocator !== null) {
+            $this->setTableLocator($tableLocator);
         }
 
-        return $this->_serviceLocator;
+        return $this->getTableLocator();
+    }
+
+    /**
+     * Sets the table locator.
+     *
+     * @param \Cake\ORM\Locator\LocatorInterface $tableLocator LocatorInterface instance.
+     * @return $this
+     */
+    public function setTableLocator(LocatorInterface $tableLocator)
+    {
+        $this->_tableLocator = $tableLocator;
+
+        return $this;
+    }
+
+    /**
+     * Gets the table locator.
+     *
+     * @return \Cake\ORM\Locator\LocatorInterface
+     */
+    public function getTableLocator()
+    {
+        if (!$this->_tableLocator) {
+            $this->_tableLocator = TableRegistry::getTableLocator();
+        }
+
+        return $this->_tableLocator;
     }
 }
