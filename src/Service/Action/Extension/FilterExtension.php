@@ -58,7 +58,7 @@ class FilterExtension extends Extension implements EventListenerInterface
         $schema = $table->getSchema();
         $fields = $schema->columns();
         $fields = array_flip($fields);
-        $data = $action->data();
+        $data = $action->getData();
         $postfixDelimeter = '$';
         $filterPostfixes = [
             '' => '',

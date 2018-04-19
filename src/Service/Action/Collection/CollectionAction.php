@@ -31,7 +31,7 @@ abstract class CollectionAction extends CrudAction
     protected function _validateMany()
     {
         $validator = $this->getTable()->getValidator();
-        $datas = $this->data();
+        $datas = $this->getData();
         $this->_validateDataIsArray($datas);
         $index = 0;
         $errors = collection($datas)->reduce(function ($errors, $data) use ($validator, &$index) {
@@ -78,7 +78,7 @@ abstract class CollectionAction extends CrudAction
      */
     protected function _newEntities($patchOptions = [])
     {
-        $datas = $this->data();
+        $datas = $this->getData();
         $this->_validateDataIsArray($datas);
 
         return collection($datas)->reduce(function ($entities, $data) use ($patchOptions) {

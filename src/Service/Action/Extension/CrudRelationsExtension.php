@@ -74,7 +74,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      */
     protected function _includeAssociations(CrudAction $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         if (!empty($data['include_associations']) && empty($data['include_relations'])) {
             $data['include_relations'] = $data['include_associations'];
         }
@@ -101,7 +101,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      */
     protected function _includeDirectAssociations(CrudAction $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
 
         return (is_array($data) && !empty($data['include_direct']));
     }

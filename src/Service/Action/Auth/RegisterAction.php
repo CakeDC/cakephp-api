@@ -54,7 +54,7 @@ class RegisterAction extends Action
     {
         $validator = $this->getUsersTable()->getRegisterValidators($this->_registerOptions());
 
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -72,7 +72,7 @@ class RegisterAction extends Action
         $usersTable = $this->getUsersTable();
         $user = $usersTable->newEntity();
         $options = $this->_registerOptions();
-        $requestData = $this->data();
+        $requestData = $this->getData();
         $event = $this->dispatchEvent(UsersAuthComponent::EVENT_BEFORE_REGISTER, [
             'usersTable' => $usersTable,
             'options' => $options,

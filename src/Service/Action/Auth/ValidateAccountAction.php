@@ -54,7 +54,7 @@ class ValidateAccountAction extends Action
         $validator
             ->requirePresence('token', 'create')
             ->notEmpty('token');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -70,7 +70,7 @@ class ValidateAccountAction extends Action
      */
     public function execute()
     {
-        $data = $this->data();
+        $data = $this->getData();
         $token = $data['token'];
 
         try {

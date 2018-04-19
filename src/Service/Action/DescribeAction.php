@@ -35,7 +35,7 @@ class DescribeAction extends Action
         $validator
             ->requirePresence('service', 'create')
             ->notEmpty('service');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -51,7 +51,7 @@ class DescribeAction extends Action
      */
     public function execute()
     {
-        $serviceName = $this->data()['service'];
+        $serviceName = $this->getData()['service'];
         $service = ServiceRegistry::getServiceLocator()->get($serviceName);
         if ($service instanceof CrudService) {
             $route = [

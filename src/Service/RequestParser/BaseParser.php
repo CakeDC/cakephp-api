@@ -41,7 +41,7 @@ abstract class BaseParser
      *
      * @return array
      */
-    abstract public function params();
+    abstract public function getParams();
 
     /**
      * Processes the HTTP request.

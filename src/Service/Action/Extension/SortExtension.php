@@ -58,7 +58,7 @@ class SortExtension extends Extension implements EventListenerInterface
         if ($event->result) {
             $query = $event->result;
         }
-        $data = $action->data();
+        $data = $action->getData();
         $direction = 'asc';
         $sort = null;
 

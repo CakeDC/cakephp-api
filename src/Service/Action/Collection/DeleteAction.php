@@ -28,7 +28,7 @@ class DeleteAction extends CollectionAction
      */
     public function validates()
     {
-        $datas = $this->data();
+        $datas = $this->getData();
         $this->_validateDataIsArray($datas);
         $index = 0;
         $pkKey = $this->getTable()->getPrimaryKey();

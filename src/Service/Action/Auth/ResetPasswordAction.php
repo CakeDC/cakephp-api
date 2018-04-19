@@ -55,7 +55,7 @@ class ResetPasswordAction extends Action
         $validator
             ->requirePresence('token', 'create')
             ->notEmpty('token');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -71,7 +71,7 @@ class ResetPasswordAction extends Action
      */
     public function execute()
     {
-        $data = $this->data();
+        $data = $this->getData();
         $token = $data['token'];
 
         try {
@@ -103,7 +103,7 @@ class ResetPasswordAction extends Action
         $user->id = $userId;
         try {
             $validator = $this->getUsersTable()->validationPasswordConfirm(new Validator());
-            $user = $this->getUsersTable()->patchEntity($user, $this->data(), ['validate' => $validator]);
+            $user = $this->getUsersTable()->patchEntity($user, $this->getData(), ['validate' => $validator]);
             if ($user->getErrors()) {
                 throw new ValidationException(__d('CakeDC/Api', 'Password could not be changed'), 0, null, $user->getErrors());
             } else {

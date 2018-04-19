@@ -54,7 +54,7 @@ class ExtendedSortExtension extends Extension implements EventListenerInterface
         if ($event->result) {
             $query = $event->result;
         }
-        $data = $action->data();
+        $data = $action->getData();
         $sort = null;
 
         $sortField = $this->getConfig('sortField');

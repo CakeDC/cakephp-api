@@ -112,7 +112,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         $this->setConfig($config);
         $this->initialize($config);
         $this->_eventManager->on($this);
-        $this->extensions($extensionRegistry);
+        $this->setExtensions($extensionRegistry);
         $this->_loadExtensions();
     }
 
@@ -237,8 +237,8 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Set or get service.
      *
      * @param Service $service An Service instance.
-     * @deprecated 3.4.0 Use setService()/getService() instead.
      * @return Service
+     * @deprecated 3.4.0 Use setService()/getService() instead.
      */
     public function service($service = null)
     {
@@ -331,7 +331,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     protected function _executeAction($methodName = 'action')
     {
         $parser = $this->getService()->getParser();
-        $params = $parser->params();
+        $params = $parser->getParams();
         $arguments = [];
         $reflection = new ReflectionMethod($this, $methodName);
         foreach ($reflection->getParameters() as $param) {
@@ -384,9 +384,49 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return mixed
      */
+    public function getData()
+    {
+        return $this->getService()->getParser()->getParams();
+    }
+
+    /**
+     * Returns action input params
+     *
+     * @return mixed
+     * @deprecated 3.6.0 Use getData() instead.
+     */
     public function data()
     {
-        return $this->getService()->getParser()->params();
+        deprecationWarning(
+            'Action::data() is deprecated. ' .
+            'Use Action::getData() instead.'
+        );
+
+        return $this->getData();
+    }
+
+    /**
+     * @return \CakeDC\Api\Service\Action\ExtensionRegistry
+     */
+    public function getExtensions()
+    {
+        return $this->_extensions;
+    }
+
+    /**
+     * Set a service
+     *
+     * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
+     */
+    public function setExtensions($extensions = null)
+    {
+        if ($extensions === null && $this->_extensions === null) {
+            $this->_extensions = new ExtensionRegistry($this);
+        } else {
+            $this->_extensions = $extensions;
+        }
+
+        return $this;
     }
 
     /**
@@ -397,17 +437,24 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
      *
      * @return \CakeDC\Api\Service\Action\ExtensionRegistry
+     * @deprecated 3.6.0 Use setExtensions()/getExtensions() instead.
      */
     public function extensions($extensions = null)
     {
-        if ($extensions === null && $this->_extensions === null) {
-            $this->_extensions = new ExtensionRegistry($this);
-        }
-        if ($extensions !== null) {
-            $this->_extensions = $extensions;
+        deprecationWarning(
+            'Action::extensions() is deprecated. ' .
+            'Use Action::setExtensions()/getExtensions() instead.'
+        );
+
+        if ($this->_extensions === null && $extensions === null) {
+            $this->setExtensions($extensions);
+
+            return $this->getExtensions();
         }
 
-        return $this->_extensions;
+        if ($service !== null) {
+            return $this->setExtensions($extensions);
+        }
     }
 
     /**
@@ -420,7 +467,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if (empty($this->extensions)) {
             return;
         }
-        $registry = $this->extensions();
+        $registry = $this->getExtensions();
         $extensions = $registry->normalizeArray($this->extensions);
         foreach ($extensions as $properties) {
             $instance = $registry->load($properties['class'], $properties['config']);

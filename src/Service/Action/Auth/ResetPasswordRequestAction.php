@@ -55,7 +55,7 @@ class ResetPasswordRequestAction extends Action
         $validator
             ->requirePresence('reference', 'create')
             ->notEmpty('reference');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -71,7 +71,7 @@ class ResetPasswordRequestAction extends Action
      */
     public function execute()
     {
-        $data = $this->data();
+        $data = $this->getData();
         $reference = $data['reference'];
         try {
             $resetUser = $this->getUsersTable()->resetToken($reference, [

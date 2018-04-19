@@ -71,7 +71,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     protected function _page(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $pageField = $this->getConfig('pageField');
         if (!empty($data[$pageField]) && is_numeric($data[$pageField])) {
             return (int)$data[$pageField];
@@ -88,7 +88,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     protected function _limit(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $limitField = $this->getConfig('limitField');
         $maxLimit = $action->getConfig($limitField);
         if (empty($maxLimit)) {

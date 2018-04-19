@@ -58,7 +58,7 @@ class OptionsHandlerExtension extends Extension implements EventListenerInterfac
             ]);
             $action->Auth->allow('options');
             $result = $service->getResult();
-            $result->data($action->process());
+            $result->getData($action->process());
 
             return $result;
         }

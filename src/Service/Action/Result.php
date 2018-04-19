@@ -31,7 +31,7 @@ class Result
     /**
      * Response data
      *
-     * @var array
+     * @var array|mixed
      */
     protected $_data = null;
 
@@ -68,7 +68,7 @@ class Result
     /**
      * Gets a result data.
      *
-     * @return array
+     * @return array|mixed
      */
     public function getData()
     {
@@ -78,7 +78,7 @@ class Result
     /**
      * Sets a result data.
      *
-     * @param sarray $value data to be delivered for the api
+     * @param array|mixed $value data to be delivered for the api
      * @return $this
      */
     public function setData($value)
@@ -91,7 +91,7 @@ class Result
     /**
      * Get and set result data.
      *
-     * @param sarray $value data to be delivered for the api
+     * @param array|mixed $value data to be delivered for the api
      * @deprecated 3.6.0 Use setData()/getData() instead.
      * @return array
      */
@@ -122,7 +122,7 @@ class Result
     /**
      * Sets a result code.
      *
-     * @param sarray $value code to be delivered for the api
+     * @param int $value code to be delivered for the api
      * @return $this
      */
     public function setCode($value)
@@ -166,7 +166,7 @@ class Result
     /**
      * Sets a result exception.
      *
-     * @param sarray $value exception to be delivered for the api
+     * @param Exception $value exception to be delivered for the api
      * @return $this
      */
     public function setException($value)
@@ -200,8 +200,8 @@ class Result
     /**
      * Appends value to Payload.
      *
-     * @param string $key the key to be setted in the payload
-     * @param mixed $value value to be setted as payload
+     * @param string $key the key to be used in the payload
+     * @param mixed $value value to be used as payload
      * @return void
      */
     public function appendPayload($key, $value)
@@ -212,7 +212,7 @@ class Result
     /**
      * Gets a result payload.
      *
-     * @return Payload
+     * @return array|mixed Payload
      */
     public function getPayload($key = null)
     {
@@ -230,12 +230,12 @@ class Result
     /**
      * Sets a result payload.
      *
-     * @param sarray $value payload to be delivered for the api
+     * @param mixed $value payload to be delivered for the api
      * @return $this
      */
     public function setPayload($value)
     {
-        $this->_payload = $name;
+        $this->_payload = $value;
 
         return $this;
     }

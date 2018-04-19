@@ -29,7 +29,7 @@ class CrudAddAction extends CrudAction
     public function validates()
     {
         $validator = $this->getTable()->getValidator();
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -45,7 +45,7 @@ class CrudAddAction extends CrudAction
     public function execute()
     {
         $entity = $this->_newEntity();
-        $entity = $this->_patchEntity($entity, $this->data());
+        $entity = $this->_patchEntity($entity, $this->getData());
 
         return $this->_save($entity);
     }

@@ -104,7 +104,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     protected function _sinceId(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $sinceIdField = $this->getConfig('sinceIdField');
         if (!empty($sinceIdField) && !empty($data[$sinceIdField]) && is_numeric($data[$sinceIdField])) {
             return (int)$data[$sinceIdField];
@@ -121,7 +121,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     protected function _maxId(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $maxIdField = $this->getConfig('maxIdField');
         if (!empty($maxIdField) && !empty($data[$maxIdField]) && is_numeric($data[$maxIdField])) {
             return (int)$data[$maxIdField];
@@ -138,7 +138,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     protected function _count(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $countField = $this->getConfig('countField');
         $maxCount = $this->getConfig('defaultCount');
         if (!empty($countField) && !empty($data[$countField]) && is_numeric($data[$countField])) {

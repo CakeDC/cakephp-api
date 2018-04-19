@@ -22,7 +22,7 @@ class FormParser extends BaseParser
      *
      * @return array
      */
-    public function params()
+    public function getParams()
     {
         $request = $this->_service->getRequest();
         if ($request == null) {
