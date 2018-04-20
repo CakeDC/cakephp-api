@@ -11,11 +11,11 @@
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use Cake\ORM\Association;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\CrudAction;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\Association;
 use Cake\ORM\Query;
 use Cake\Utility\Inflector;
 
