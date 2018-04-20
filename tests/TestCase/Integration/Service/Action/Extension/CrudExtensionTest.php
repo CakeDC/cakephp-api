@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -34,7 +34,7 @@ class CrudExtensionTest extends IntegrationTestCase
         Configure::write('App.fullBaseUrl', 'http://example.com');
         $this->_tokenAccess();
         $this->_loadDefaultExtensions([]);
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -51,7 +51,7 @@ class CrudExtensionTest extends IntegrationTestCase
     public function testIndex()
     {
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(15, count($result['data']));
     }
@@ -59,7 +59,7 @@ class CrudExtensionTest extends IntegrationTestCase
     public function testView()
     {
         $this->sendRequest('/articles/1', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $article = [
             'id' => 1,
@@ -80,13 +80,13 @@ class CrudExtensionTest extends IntegrationTestCase
             'published' => 'Y'
         ];
         $this->sendRequest('/articles', 'POST', $article);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertArrayHasKey('id', $result['data']);
         $id = $result['data']['id'];
 
         $this->sendRequest('/articles/' . $id, 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
 
         $res = array_intersect_key($article, $result['data']);
@@ -102,13 +102,13 @@ class CrudExtensionTest extends IntegrationTestCase
             'published' => 'Y'
         ];
         $this->sendRequest('/articles/1', 'PUT', $article);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertArrayHasKey('id', $result['data']);
         $this->assertEquals(1, $result['data']['id']);
 
         $this->sendRequest('/articles/1', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
 
         $res = array_intersect_key($article, $result['data']);
@@ -118,11 +118,11 @@ class CrudExtensionTest extends IntegrationTestCase
     public function testDelete()
     {
         $this->sendRequest('/articles/1', 'DELETE');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
 
         $this->sendRequest('/articles/1', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 404);
     }
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -71,7 +71,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     protected function _page(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $pageField = $this->getConfig('pageField');
         if (!empty($data[$pageField]) && is_numeric($data[$pageField])) {
             return (int)$data[$pageField];
@@ -88,7 +88,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     protected function _limit(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $limitField = $this->getConfig('limitField');
         $maxLimit = $action->getConfig($limitField);
         if (empty($maxLimit)) {
@@ -113,7 +113,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
-        $result = $action->service()->result();
+        $result = $action->getService()->getResult();
         $count = $query->count();
         $limit = $this->_limit($action);
         $pagination = [
@@ -122,6 +122,6 @@ class PaginateExtension extends Extension implements EventListenerInterface
             'pages' => ceil($count / $limit),
             'count' => $count
         ];
-        $result->setPayload('pagination', $pagination);
+        $result->appendPayload('pagination', $pagination);
     }
 }

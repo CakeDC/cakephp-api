@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -63,7 +63,7 @@ class XmlRendererTest extends TestCase
     public function testRendererInitializeByClassName()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
+            ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -87,7 +87,7 @@ class XmlRendererTest extends TestCase
     public function testRendererSuccess()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
+            ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -102,9 +102,9 @@ class XmlRendererTest extends TestCase
 
         $result = new Result();
         $statusCode = 200;
-        $result->code($statusCode);
+        $result->setCode($statusCode);
         $data = 'Updated!';
-        $result->data($data);
+        $result->setData($data);
         $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
@@ -131,7 +131,7 @@ class XmlRendererTest extends TestCase
     public function testRendererError()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
+            ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 

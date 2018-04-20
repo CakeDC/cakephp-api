@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -73,7 +73,7 @@ class LogExtension extends Extension implements EventListenerInterface
     {
         $duration = round((microtime(true) - $this->_timer) * 1000, 0);
         $url = $this->_service->getBaseUrl();
-        $data = $this->_service->getParser()->params();
+        $data = $this->_service->getParser()->getParams();
         $result = $this->_service->getResult()->toArray();
         $log = [
             'url' => $url,

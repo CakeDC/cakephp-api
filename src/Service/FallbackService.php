@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -55,7 +55,7 @@ class FallbackService extends NestedCrudService
 
         $defaultOptions = $this->routerDefaultOptions();
         ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions) {
-            $routes->extensions($this->_routeExtensions);
+            $routes->setExtensions($this->_routeExtensions);
             $options = $defaultOptions;
             $options['map'] = array_merge($options['map'], [
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
@@ -63,14 +63,14 @@ class FallbackService extends NestedCrudService
             ]);
             $routes->resources($this->getName(), $options, function ($routes) use ($table) {
                 if (is_array($this->_routeExtensions)) {
-                    $routes->extensions($this->_routeExtensions);
+                    $routes->setExtensions($this->_routeExtensions);
 
                     $keys = ['HasMany'/*, 'HasOne'*/];
 
                     foreach ($keys as $type) {
-                        foreach ($table->associations()->type($type) as $assoc) {
-                            $target = $assoc->target();
-                            $alias = $target->alias();
+                        foreach ($table->associations()->getByType($type) as $assoc) {
+                            $target = $assoc->getTarget();
+                            $alias = $target->getAlias();
 
                             $targetClass = get_class($target);
                             list(, $className) = namespaceSplit($targetClass);

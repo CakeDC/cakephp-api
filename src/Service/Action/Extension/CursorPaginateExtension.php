@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -104,7 +104,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     protected function _sinceId(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $sinceIdField = $this->getConfig('sinceIdField');
         if (!empty($sinceIdField) && !empty($data[$sinceIdField]) && is_numeric($data[$sinceIdField])) {
             return (int)$data[$sinceIdField];
@@ -121,7 +121,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     protected function _maxId(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $maxIdField = $this->getConfig('maxIdField');
         if (!empty($maxIdField) && !empty($data[$maxIdField]) && is_numeric($data[$maxIdField])) {
             return (int)$data[$maxIdField];
@@ -138,7 +138,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     protected function _count(Action $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         $countField = $this->getConfig('countField');
         $maxCount = $this->getConfig('defaultCount');
         if (!empty($countField) && !empty($data[$countField]) && is_numeric($data[$countField])) {
@@ -160,7 +160,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     {
         $action = $event->getSubject();
         $records = $event->getData('records');
-        $result = $action->service()->result();
+        $result = $action->getService()->getResult();
 
         $newMaxId = null;
         $newSinceId = null;
@@ -184,7 +184,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
             $newMaxId = $maxId;
         }
 
-        $indexRoute = $action->route();
+        $indexRoute = $action->getRoute();
 
         $links = [];
         $path = $this->_reverseRouter->indexPath($action, function ($route) use ($newSinceId) {
@@ -210,6 +210,6 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
             'since_id' => $sinceId,
             'max_id' => $maxId,
         ];
-        $result->setPayload('pagination', $pagination);
+        $result->appendPayload('pagination', $pagination);
     }
 }

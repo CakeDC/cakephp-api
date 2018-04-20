@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -33,7 +33,7 @@ class RawRenderer extends BaseRenderer
     public function response(Result $result = null)
     {
         $response = $this->_service->getResponse();
-        $this->_service->setResponse($response->withStringBody((string)$result->data())->withStatus($result->code())
+        $this->_service->setResponse($response->withStringBody((string)$result->getData())->withStatus($result->getCode())
             ->withType('text/plain'));
 
         return true;

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -54,7 +54,7 @@ class ExtendedSortExtension extends Extension implements EventListenerInterface
         if ($event->result) {
             $query = $event->result;
         }
-        $data = $action->data();
+        $data = $action->getData();
         $sort = null;
 
         $sortField = $this->getConfig('sortField');

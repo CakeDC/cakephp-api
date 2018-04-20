@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -30,8 +30,8 @@ abstract class CollectionAction extends CrudAction
      */
     protected function _validateMany()
     {
-        $validator = $this->getTable()->validator();
-        $datas = $this->data();
+        $validator = $this->getTable()->getValidator();
+        $datas = $this->getData();
         $this->_validateDataIsArray($datas);
         $index = 0;
         $errors = collection($datas)->reduce(function ($errors, $data) use ($validator, &$index) {
@@ -64,7 +64,7 @@ abstract class CollectionAction extends CrudAction
             return $entities;
         } else {
             $errors = collection($entities)->reduce(function ($errors, $entity) {
-                $errors[] = $entity->errors();
+                $errors[] = $entity->getErrors();
             }, []);
             throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $errors);
         }
@@ -78,7 +78,7 @@ abstract class CollectionAction extends CrudAction
      */
     protected function _newEntities($patchOptions = [])
     {
-        $datas = $this->data();
+        $datas = $this->getData();
         $this->_validateDataIsArray($datas);
 
         return collection($datas)->reduce(function ($entities, $data) use ($patchOptions) {

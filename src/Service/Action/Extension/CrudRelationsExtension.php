@@ -1,16 +1,17 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
+use Cake\ORM\Association;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\CrudAction;
 use Cake\Event\Event;
@@ -73,7 +74,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      */
     protected function _includeAssociations(CrudAction $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
         if (!empty($data['include_associations']) && empty($data['include_relations'])) {
             $data['include_relations'] = $data['include_associations'];
         }
@@ -100,13 +101,13 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      */
     protected function _includeDirectAssociations(CrudAction $action)
     {
-        $data = $action->data();
+        $data = $action->getData();
 
         return (is_array($data) && !empty($data['include_direct']));
     }
 
     /**
-     * @param Action $action An Action instance.
+     * @param CrudAction $action An Action instance.
      * @param Query $query A Query instance.
      * @return mixed
      */
@@ -114,12 +115,13 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     {
         $associations = $this->_includeAssociations($action);
         if (empty($associations) && $this->_includeDirectAssociations($action)) {
-            $relations = $action->getTable()
+            $relations = $action
+                ->getTable()
                 ->associations()
-                ->type(['HasOne', 'BelongsTo']);
+                ->getByType(['HasOne', 'BelongsTo']);
             $associations = collection($relations)
-                ->map(function ($relation) {
-                    return $relation->target()->table();
+                ->map(function (Association $relation) {
+                    return $relation->getTarget()->getTable();
                 })
                 ->toArray();
         }
@@ -134,7 +136,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
             ->toArray();
 
         collection($tables)->each(function ($name) use ($query, $action) {
-            $assoc = $action->getTable()->association($name);
+            $assoc = $action->getTable()->getAssociation($name);
             if ($assoc !== null) {
                 $query->select($assoc);
             }

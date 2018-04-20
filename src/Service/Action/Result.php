@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -31,7 +31,7 @@ class Result
     /**
      * Response data
      *
-     * @var array
+     * @var array|mixed
      */
     protected $_data = null;
 
@@ -58,89 +58,203 @@ class Result
     public function __construct($data = null, $code = null)
     {
         if ($data !== null) {
-            $this->data($data);
+            $this->setData($data);
         }
         if ($code !== null) {
-            $this->code($code);
+            $this->setCode($code);
         }
     }
 
     /**
-     * Data api method.
+     * Gets a result data.
      *
-     * @param array $value data to be delivered for the api
+     * @return array|mixed
+     */
+    public function getData()
+    {
+        return $this->_data;
+    }
+
+    /**
+     * Sets a result data.
+     *
+     * @param array|mixed $value data to be delivered for the api
+     * @return $this
+     */
+    public function setData($value)
+    {
+        $this->_data = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get and set result data.
+     *
+     * @param array|mixed $value data to be delivered for the api
+     * @deprecated 3.6.0 Use setData()/getData() instead.
      * @return array
      */
     public function data($value = null)
     {
-        if ($value === null) {
-            return $this->_data;
-        }
-        $this->_data = $value;
+        deprecationWarning(
+            'Result::data() is deprecated. ' .
+            'Use Result::setData()/getData() instead.'
+        );
 
-        return $this->_data;
+        if ($value !== null) {
+            return $this->setData($value);
+        }
+
+        return $this->getData();
+    }
+
+    /**
+     * Gets a result code.
+     *
+     * @return int
+     */
+    public function getCode()
+    {
+        return $this->_code;
+    }
+
+    /**
+     * Sets a result code.
+     *
+     * @param int $value code to be delivered for the api
+     * @return $this
+     */
+    public function setCode($value)
+    {
+        $this->_code = $value;
+
+        return $this;
     }
 
     /**
      * Code api method.
      *
      * @param int $value code of the api request
+     * @deprecated 3.6.0 Use setCode()/getCode() instead.
      * @return int
      */
     public function code($value = null)
     {
-        if ($value === null) {
-            return $this->_code;
-        }
-        $this->_code = $value;
+        deprecationWarning(
+            'Result::code() is deprecated. ' .
+            'Use Result::setCode()/getCode() instead.'
+        );
 
-        return $this->_code;
+        if ($value !== null) {
+            return $this->setCode($value);
+        }
+
+        return $this->getCode();
     }
 
     /**
-     * Exception api.
+     * Gets a result exception.
      *
-     * @param Exception $value set the excepltion value
      * @return Exception
      */
-    public function exception($value = null)
+    public function getException()
     {
-        if ($value === null) {
-            return $this->_exception;
-        }
-        $this->_exception = $value;
-
         return $this->_exception;
     }
 
     /**
-     * Payload setter.
+     * Sets a result exception.
      *
-     * @param string $key the key to be setted in the payload
-     * @param mixed $value value to be setted as payload
+     * @param Exception $value exception to be delivered for the api
+     * @return $this
+     */
+    public function setException($value)
+    {
+        $this->_exception = $value;
+
+        return $this;
+    }
+
+    /**
+     * Exception api method.
+     *
+     * @param Exception $value exception of the api request
+     * @deprecated 3.6.0 Use setException()/getException() instead.
+     * @return Exception
+     */
+    public function exception($value = null)
+    {
+        deprecationWarning(
+            'Result::exception() is deprecated. ' .
+            'Use Result::setException()/getException() instead.'
+        );
+
+        if ($value !== null) {
+            return $this->setException($value);
+        }
+
+        return $this->getException();
+    }
+
+    /**
+     * Appends value to Payload.
+     *
+     * @param string $key the key to be used in the payload
+     * @param mixed $value value to be used as payload
      * @return void
      */
-    public function setPayload($key, $value)
+    public function appendPayload($key, $value)
     {
         $this->_payload[$key] = $value;
     }
 
     /**
-     * Payload api method
+     * Gets a result payload.
      *
-     * @param string $key the key to get the payload
-     * @return mixed
+     * @return array|mixed Payload
      */
-    public function payload($key = null)
+    public function getPayload($key = null)
     {
         if ($key === null) {
             return $this->_payload;
         }
+
         if (isset($this->_payload[$key])) {
             return $this->_payload[$key];
         }
 
         return null;
+    }
+
+    /**
+     * Sets a result payload.
+     *
+     * @param mixed $value payload to be delivered for the api
+     * @return $this
+     */
+    public function setPayload($value)
+    {
+        $this->_payload = $value;
+
+        return $this;
+    }
+
+    /**
+     * Payload api method.
+     *
+     * @param string $value payload of the api request
+     * @deprecated 3.6.0 Use getPayload() instead.
+     * @return mixed
+     */
+    public function payload($key = null)
+    {
+        deprecationWarning(
+            'Result::payload() is deprecated. ' .
+            'Use Result::getPayload() instead.'
+        );
+
+        return $this->getPayload($key);
     }
 
     /**

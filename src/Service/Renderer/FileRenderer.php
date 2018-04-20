@@ -11,19 +11,17 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
-use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Result;
+use CakeDC\Api\Service\Renderer\BaseRenderer;
 use Cake\Core\Configure;
-use Cake\Utility\Hash;
 use Exception;
 
 /**
- * Class JsonRenderer
- * JSON content negotiation Renderer.
+ * Class FileRenderer
  *
  * @package CakeDC\Api\Service\Renderer
  */
-class JsonRenderer extends BaseRenderer
+class FileRenderer extends BaseRenderer
 {
 
     /**
@@ -34,14 +32,11 @@ class JsonRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->getResponse();
-        $data = $result->getData();
-        $payload = $result->getPayload();
-        if (is_array($data) && is_array($payload)) {
-            $data = Hash::merge($data, $payload);
-        }
-        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withStatus($result->getCode())
-            ->withType('application/json'));
+        $response = $this->_service
+            ->getResponse()
+            ->withFile($result->getData())
+            ->withStatus($result->getCode());
+        $this->_service->setResponse($response);
 
         return true;
     }

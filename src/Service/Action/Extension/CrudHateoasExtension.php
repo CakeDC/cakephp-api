@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -66,7 +66,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     public function afterAction(Event $event)
     {
         $action = $event->getSubject();
-        $result = $action->getService()->result();
+        $result = $action->getService()->getResult();
         $actionName = $action->getName();
         $links = [];
         //$route = $action->route();
@@ -77,12 +77,12 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $links = $this->_buildIndexLinks($action);
         }
 
-        $parent = $action->getService()->parent();
+        $parent = $action->getService()->getParentService();
 
         if ($parent !== null) {
-            $result = $parent->result();
+            $result = $parent->getResult();
         }
-        $result->setPayload('links', $links);
+        $result->appendPayload('links', $links);
     }
 
     /**
@@ -157,10 +157,10 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
         if ($parent === null && $action instanceof CrudAction) {
             $table = $action->getTable();
-            $hasMany = $table->associations()->type('HasMany');
+            $hasMany = $table->associations()->getByType('HasMany');
             foreach ($hasMany as $assoc) {
-                $target = $assoc->target();
-                $alias = $target->alias();
+                $target = $assoc->getTarget();
+                $alias = $target->getAlias();
 
                 $targetClass = get_class($target);
                 list(, $className) = namespaceSplit($targetClass);

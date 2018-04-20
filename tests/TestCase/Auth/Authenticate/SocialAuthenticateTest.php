@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -18,8 +18,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 
 class SocialAuthenticateTest extends TestCase
 {
@@ -38,7 +38,7 @@ class SocialAuthenticateTest extends TestCase
      */
     public function setUp()
     {
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
             'request' => $request,
@@ -68,7 +68,7 @@ class SocialAuthenticateTest extends TestCase
      */
     public function testAuthenticateHappy()
     {
-        $request = new Request('/?provider=Facebook&token=token-1234&token_secret=token-secret');
+        $request = new ServerRequest('/?provider=Facebook&token=token-1234&token_secret=token-secret');
         $result = $this->social->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
     }
@@ -80,15 +80,15 @@ class SocialAuthenticateTest extends TestCase
      */
     public function testAuthenticateFail()
     {
-        $request = new Request('/');
+        $request = new ServerRequest('/');
         $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new Request('/?provider=Facebook&token=none');
+        $request = new ServerRequest('/?provider=Facebook&token=none');
         $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new Request('/?provider=Facebook&token=');
+        $request = new ServerRequest('/?provider=Facebook&token=');
         $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
     }
@@ -103,21 +103,21 @@ class SocialAuthenticateTest extends TestCase
     public function testAuthenticateWrongType()
     {
         $this->social->setConfig('type', 'wrong');
-        $request = new Request('/');
+        $request = new ServerRequest('/');
         $this->social->authenticate($request, new Response());
     }
 
     /**
      * test
      *
-     * @expectedException \Cake\Network\Exception\ForbiddenException
+     * @expectedException \Cake\Http\Exception\ForbiddenException
      * @expectedExceptionMessage SSL is required for ApiKey Authentication
      *
      */
     public function testAuthenticateRequireSSL()
     {
         $this->social->setConfig('require_ssl', true);
-        $request = new Request('/?token=token-1234&token_secret=token-secret&provider=Facebook');
+        $request = new ServerRequest('/?token=token-1234&token_secret=token-secret&provider=Facebook');
         $this->social->authenticate($request, new Response());
     }
 
@@ -128,7 +128,7 @@ class SocialAuthenticateTest extends TestCase
     public function testAuthenticateRequireSSLNoKey()
     {
         $this->social->setConfig('require_ssl', true);
-        $request = new Request('/');
+        $request = new ServerRequest('/');
         $this->assertFalse($this->social->authenticate($request, new Response()));
     }
 

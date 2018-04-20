@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -95,7 +95,7 @@ class ServiceTest extends TestCase
                 'service' => 'authors',
             ]
         ], 'DELETE');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -123,7 +123,7 @@ class ServiceTest extends TestCase
                 'service' => 'authors',
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -138,7 +138,7 @@ class ServiceTest extends TestCase
         $this->assertTextEquals('/authors', $Service->getBaseUrl());
         $action = $Service->buildAction();
         $this->assertEquals('authors', $action->getService()->getName());
-        $this->assertEquals('authors', $action->getTable()->table());
+        $this->assertEquals('authors', $action->getTable()->getTable());
     }
 
     /**
@@ -157,7 +157,7 @@ class ServiceTest extends TestCase
                 ]
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -173,7 +173,7 @@ class ServiceTest extends TestCase
         $this->assertEquals('author_id', $action->getParentIdName());
         $this->assertEquals('articles', $action->getService()->getName());
         $this->assertEquals('authors', $action->getService()->getParentService()->getName());
-        $this->assertEquals('articles', $action->getTable()->table());
+        $this->assertEquals('articles', $action->getTable()->getTable());
     }
 
     /**
@@ -195,7 +195,7 @@ class ServiceTest extends TestCase
                 ]
             ]
         ], 'PUT');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -231,7 +231,7 @@ class ServiceTest extends TestCase
                 'pass' => [],
             ]
         ], 'GET');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $version = null;
         $options = [
             'version' => $version,

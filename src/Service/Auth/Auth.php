@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -32,8 +32,8 @@ use Cake\Core\InstanceConfigTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Log\LogTrait;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Response;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
 
 /**
  * Class Auth
@@ -124,7 +124,7 @@ class Auth
         if (array_key_exists('action', $config)) {
             $this->_action = $config['action'];
         }
-        $this->eventManager($this->_action->eventManager());
+        $this->setEventManager($this->_action->getEventManager());
     }
 
     /**

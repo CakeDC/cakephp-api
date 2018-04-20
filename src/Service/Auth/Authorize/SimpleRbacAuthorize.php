@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,7 +16,7 @@ use CakeDC\Users\Auth\Rules\Rule;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Log\LogTrait;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Psr\Log\LogLevel;
@@ -143,7 +143,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param Request $request request
      * @return bool
      */
-    public function authorize($user, Request $request)
+    public function authorize($user, ServerRequest $request)
     {
         $roleField = $this->getConfig('role_field');
         $role = $this->getConfig('default_role');
@@ -165,7 +165,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param Request $request request
      * @return bool true if there is a match in permissions
      */
-    protected function _checkRules(array $user, $role, Request $request)
+    protected function _checkRules(array $user, $role, ServerRequest $request)
     {
         $permissions = $this->getConfig('permissions');
         foreach ($permissions as $permission) {

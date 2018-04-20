@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -55,7 +55,7 @@ class LoginActionTest extends IntegrationTestCase
     public function testSuccessLogin()
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-1', 'password' => '12345']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $expected = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -75,7 +75,7 @@ class LoginActionTest extends IntegrationTestCase
     public function testLoginFail()
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-1', 'password' => '111']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 401);
         $this->assertErrorMessage($result, 'User not found');
     }

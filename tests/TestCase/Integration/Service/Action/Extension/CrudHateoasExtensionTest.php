@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.CrudHateoas');
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -58,7 +58,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
     public function testView()
     {
         $this->sendRequest('/articles/1', 'GET', []);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $links = [
             [
@@ -92,7 +92,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
     public function testIndex()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $links = [
             [
@@ -114,7 +114,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
     public function testViewNested()
     {
         $this->sendRequest('/authors/1/articles/1', 'GET', []);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $links = [
             [
@@ -154,7 +154,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
     public function testIndexNested()
     {
         $this->sendRequest('/authors/1/articles', 'GET', ['limit' => 4]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $links = [
             [

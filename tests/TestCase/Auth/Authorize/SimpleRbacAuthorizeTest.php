@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -18,8 +18,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Users\Auth\Rules\Rule;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase
@@ -55,7 +55,7 @@ class SimpleRbacAuthorizeTest extends TestCase
      */
     public function setUp()
     {
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new Response();
 
         $this->Service = new FallbackService([
@@ -172,9 +172,9 @@ class SimpleRbacAuthorizeTest extends TestCase
     public function testAuthorize($permissions, $user, $requestParams, $expected, $msg = null)
     {
         $this->simpleRbacAuthorize = $this->preparePermissions($permissions);
-        $request = new Request();
+        $request = new ServerRequest();
 
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
             'request' => $request,

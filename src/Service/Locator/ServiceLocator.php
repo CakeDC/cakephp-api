@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -56,6 +56,50 @@ class ServiceLocator implements LocatorInterface
      * Stores a list of options to be used when instantiating an object
      * with a matching alias.
      *
+     * @param string|array $alias Name of the alias or array to completely overwrite current config.
+     * @param array|null $options list of options for the alias
+     * @return $this
+     * @throws \RuntimeException When you attempt to configure an existing table instance.
+     */
+    public function setConfig($alias, $options = null)
+    {
+        if (!is_string($alias)) {
+            $this->_config = $alias;
+
+            return $this;
+        }
+
+        if (isset($this->_instances[$alias])) {
+            throw new RuntimeException(sprintf(
+                'You cannot configure "%s", it has already been constructed.',
+                $alias
+            ));
+        }
+
+        $this->_config[$alias] = $options;
+
+        return $this;
+    }
+
+    /**
+     * Returns configuration for an alias or the full configuration array for all aliases.
+     *
+     * @param string|null $alias Alias to get config for, null for complete config.
+     * @return array The config data.
+     */
+    public function getConfig($alias = null)
+    {
+        if ($alias === null) {
+            return $this->_config;
+        }
+
+        return isset($this->_config[$alias]) ? $this->_config[$alias] : [];
+    }
+
+    /**
+     * Stores a list of options to be used when instantiating an object
+     * with a matching alias.
+     *
      * The options that can be stored are those that are recognized by `get()`
      * If second argument is omitted, it will return the current settings
      * for $alias.
@@ -67,26 +111,23 @@ class ServiceLocator implements LocatorInterface
      * @param array|null $options list of options for the alias
      * @return array The config data.
      * @throws RuntimeException When you attempt to configure an existing method instance.
+     * @deprecated 3.6.0 Use setConfig()/getConfig() instead.
      */
     public function config($alias = null, $options = null)
     {
-        if ($alias === null) {
-            return $this->_config;
-        }
-        if (!is_string($alias)) {
-            return $this->_config = $alias;
-        }
-        if ($options === null) {
-            return isset($this->_config[$alias]) ? $this->_config[$alias] : [];
-        }
-        if (isset($this->_instances[$alias])) {
-            throw new RuntimeException(sprintf(
-                'You cannot configure "%s", it has already been constructed.',
-                $alias
-            ));
+        deprecationWarning(
+            'ServiceLocator::config() is deprecated. ' .
+            'Use getConfig()/setConfig() instead.'
+        );
+        if ($alias !== null) {
+            if (is_string($alias) && $options === null) {
+                return $this->getConfig($alias);
+            }
+
+            $this->setConfig($alias, $options);
         }
 
-        return $this->_config[$alias] = $options;
+        return $this->getConfig($alias);
     }
 
     /**

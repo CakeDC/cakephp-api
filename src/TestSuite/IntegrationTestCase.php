@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -59,7 +59,7 @@ class IntegrationTestCase extends BaseTestCase
      * @param string $userId User id.
      * @return string
      */
-    public function defaultUser($userId = null)
+    public function getDefaultUser($userId = null)
     {
         if ($userId === null) {
             $userId = $this->_defaultUserId;
@@ -79,7 +79,7 @@ class IntegrationTestCase extends BaseTestCase
     protected function _userToken($userId = null)
     {
         if ($userId === null) {
-            $userId = $this->defaultUser();
+            $userId = $this->getDefaultUser();
         }
         $Users = TableRegistry::get('CakeDC/Users.Users');
         $user = $Users->find()->where(['id' => $userId])->first();
@@ -126,6 +126,7 @@ class IntegrationTestCase extends BaseTestCase
                 }
             }
         }
+        $this->useHttpServer(true);
         $this->_sendRequest($url, $method, $data);
     }
 
@@ -164,7 +165,7 @@ class IntegrationTestCase extends BaseTestCase
     /**
      * @return mixed
      */
-    public function responseJson()
+    public function getJsonResponse()
     {
         return json_decode((string)$this->_response->getBody(), true);
     }
