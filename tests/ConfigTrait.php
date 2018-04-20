@@ -12,8 +12,8 @@
 namespace CakeDC\Api\Test;
 
 use Cake\Core\Configure;
-use Cake\Http\ServerRequest;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 
 /**

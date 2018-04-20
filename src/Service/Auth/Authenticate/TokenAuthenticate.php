@@ -11,9 +11,9 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Utility\Hash;
 use \OutOfBoundsException;
 

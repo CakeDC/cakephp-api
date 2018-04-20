@@ -18,8 +18,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Users\Auth\Rules\Rule;
-use Cake\Http\ServerRequest;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase

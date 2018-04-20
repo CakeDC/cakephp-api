@@ -31,9 +31,9 @@ use CakeDC\Api\Service\Service;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
-use Cake\Log\LogTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
+use Cake\Log\LogTrait;
 
 /**
  * Class Auth
