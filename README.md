@@ -13,11 +13,13 @@ The **CakePHP-API** Plugin allows to easily expose a versioned API in a few line
 Versions and branches
 ---------------------
 
-| CakePHP | CakeDC Users Plugin | Tag   | Notes |
+| CakePHP | CakeDC Api Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
-| 3.5             | [5.x](https://github.com/cakedc/cakephp-api/tree/5.0.0)                      | 5.0.0 | stable |
-| 3.4             | [4.x](https://github.com/cakedc/cakephp-api/tree/4.0.0)                      | 4.0.0 | stable |
-| 3.3             | [3.x](https://github.com/cakedc/cakephp-api/tree/3.3)                      | 3.3 | stable |
+| ^3.6            | [master](https://github.com/cakedc/cakephp-api/tree/master)            | 6.0.0 | stable   |
+| ^3.6            | [develop](https://github.com/cakedc/cakephp-api/tree/develop)          |   -   | unstable |
+| 3.5             | [5.x](https://github.com/cakedc/cakephp-api/tree/5.0.0)                | 5.0.0 | stable   |
+| 3.4             | [4.x](https://github.com/cakedc/cakephp-api/tree/4.0.0)                | 4.0.0 | stable   |
+| 3.3             | [3.x](https://github.com/cakedc/cakephp-api/tree/3.3)                  | 3.3   | stable   |
 
 Documentation
 -------------
