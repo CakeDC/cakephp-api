@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class ValidateAccountRequestAction extends Action
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->Auth->allow($this->name());
+        $this->Auth->allow($this->getName());
     }
 
     /**
@@ -55,7 +55,7 @@ class ValidateAccountRequestAction extends Action
         $validator
             ->requirePresence('reference', 'create')
             ->notEmpty('reference');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -71,7 +71,7 @@ class ValidateAccountRequestAction extends Action
      */
     public function execute()
     {
-        $data = $this->data();
+        $data = $this->getData();
         $reference = $data['reference'];
         try {
             if ($this->getUsersTable()->resetToken($reference, [

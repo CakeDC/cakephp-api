@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 namespace CakeDC\Api\Service;
@@ -38,18 +38,44 @@ class ServiceRegistry implements EventDispatcherInterface
      *
      * @param \CakeDC\Api\Service\Locator\LocatorInterface|null $locator Instance of a locator to use.
      * @return \CakeDC\Api\Service\Locator\LocatorInterface
+     * @deprecated 3.5.0 Use getServiceLocator()/setServiceLocator() instead.
      */
     public static function locator(LocatorInterface $locator = null)
     {
+        deprecationWarning(
+            'TableRegistry::locator() is deprecated. ' .
+            'Use setServiceLocator()/getServiceLocator() instead.'
+        );
         if ($locator) {
-            static::$_locator = $locator;
+            static::setServiceLocator($locator);
         }
 
+        return static::getServiceLocator();
+    }
+
+    /**
+     * Returns a singleton instance of LocatorInterface implementation.
+     *
+     * @return \CakeDC\Api\Service\Locator\LocatorInterface
+     */
+    public static function getServiceLocator()
+    {
         if (!static::$_locator) {
-            static::$_locator = new static::$_defaultLocatorClass;
+            static::$_locator = new static::$_defaultLocatorClass();
         }
 
         return static::$_locator;
+    }
+
+    /**
+     * Sets singleton instance of LocatorInterface implementation.
+     *
+     * @param \CakeDC\Api\Service\Locator\LocatorInterface $serviceLocator Instance of a locator to use.
+     * @return void
+     */
+    public static function setServiceLocator(LocatorInterface $serviceLocator)
+    {
+        static::$_locator = $serviceLocator;
     }
 
     /**
@@ -59,10 +85,16 @@ class ServiceRegistry implements EventDispatcherInterface
      * @param string|null $alias Name of the alias
      * @param array|null $options list of options for the alias
      * @return array The config data.
+     * @deprecated 3.6.0 Use \CakeDC\Api\Service\Locator\ServiceLocator::getConfig()/setConfig() instead.
      */
     public static function config($alias = null, $options = null)
     {
-        return static::locator()->config($alias, $options);
+        deprecationWarning(
+            'ServiceRegistry::config() is deprecated. ' .
+            'Use \CakeDC\Api\Service\Locator\ServiceLocator::getConfig()/setConfig() instead.'
+        );
+
+        return static::getServiceLocator()->config($alias, $options);
     }
 
     /**
@@ -71,10 +103,11 @@ class ServiceRegistry implements EventDispatcherInterface
      * @param string $alias The alias name you want to get.
      * @param array $options The options you want to build the table with.
      * @return \CakeDC\Api\Service\Service
+     * @deprecated 3.6.0 Use \CakeDC\Api\Service\Locator\ServiceLocator::get() instead.
      */
     public static function get($alias, array $options = [])
     {
-        return static::locator()->get($alias, $options);
+        return static::getServiceLocator()->get($alias, $options);
     }
 
     /**
@@ -82,10 +115,11 @@ class ServiceRegistry implements EventDispatcherInterface
      *
      * @param string $alias The alias to check for.
      * @return bool
+     * @deprecated 3.6.0 Use \CakeDC\Api\Service\Locator\ServiceLocator::exists() instead.
      */
     public static function exists($alias)
     {
-        return static::locator()->exists($alias);
+        return static::getServiceLocator()->exists($alias);
     }
 
     /**
@@ -94,10 +128,11 @@ class ServiceRegistry implements EventDispatcherInterface
      * @param string $alias The alias to set.
      * @param \CakeDC\Api\Service\Service $object The table to set.
      * @return \CakeDC\Api\Service\Service
+     * @deprecated 3.6.0 Use \CakeDC\Api\Service\Locator\ServiceLocator::set() instead.
      */
     public static function set($alias, Service $object)
     {
-        return static::locator()->set($alias, $object);
+        return static::getServiceLocator()->set($alias, $object);
     }
 
     /**
@@ -105,20 +140,22 @@ class ServiceRegistry implements EventDispatcherInterface
      *
      * @param string $alias The alias to remove.
      * @return void
+     * @deprecated 3.6.0 Use \CakeDC\Api\Service\Locator\ServiceLocator::remove() instead.
      */
     public static function remove($alias)
     {
-        static::locator()->remove($alias);
+        static::getServiceLocator()->remove($alias);
     }
 
     /**
      * Clears the registry of configuration and instances.
      *
      * @return void
+     * @deprecated 3.6.0 Use \CakeDC\Api\Service\Locator\ServiceLocator::clear() instead.
      */
     public static function clear()
     {
-        static::locator()->clear();
+        static::getServiceLocator()->clear();
     }
 
     /**
@@ -130,6 +167,11 @@ class ServiceRegistry implements EventDispatcherInterface
      */
     public static function __callStatic($name, $arguments)
     {
-        return call_user_func_array([static::locator(), $name], $arguments);
+        deprecationWarning(
+            'TableRegistry::' . $name . '() is deprecated. ' .
+            'Use \CakeDC\Api\Service\Locator\ServiceLocator::' . $name . '() instead.'
+        );
+
+        return call_user_func_array([static::getServiceLocator(), $name], $arguments);
     }
 }

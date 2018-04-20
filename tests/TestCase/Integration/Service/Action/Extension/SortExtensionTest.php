@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -25,7 +25,6 @@ use Cake\Utility\Hash;
  */
 class SortExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -41,7 +40,7 @@ class SortExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.Sort');
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -58,7 +57,7 @@ class SortExtensionTest extends IntegrationTestCase
     public function testDefault()
     {
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $expected = [
             'page' => 1,
             'limit' => 20,
@@ -72,7 +71,7 @@ class SortExtensionTest extends IntegrationTestCase
     public function testSortById()
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
     }
@@ -80,7 +79,7 @@ class SortExtensionTest extends IntegrationTestCase
     public function testSortByIdDesc()
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id', 'direction' => 'desc']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(array_reverse(range(12, 15)), Hash::extract($result, 'data.{n}.id'));
     }
@@ -88,15 +87,15 @@ class SortExtensionTest extends IntegrationTestCase
     public function testSortByName()
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'first_name']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
-        $this->assertEquals([5, 7, 11, 15], Hash::extract($result, 'data.{n}.id'));
+        $this->assertEquals([7, 5, 11, 15], Hash::extract($result, 'data.{n}.id'));
     }
 
     public function testSortByNameDesc()
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'first_name', 'direction' => 'desc']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([4, 9, 14, 10], Hash::extract($result, 'data.{n}.id'));
     }

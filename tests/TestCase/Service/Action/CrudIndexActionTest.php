@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,8 +16,10 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
+
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
+use Cake\ORM\ResultSet;
 
 class CrudIndexActionTest extends TestCase
 {
@@ -39,7 +41,7 @@ class CrudIndexActionTest extends TestCase
     {
         parent::setUp();
 
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
             'request' => $request,
@@ -73,15 +75,15 @@ class CrudIndexActionTest extends TestCase
     public function testExecute()
     {
         $onFindEntities = $afterFindEntities = false;
-        $this->Action->eventManager()->on('Action.Crud.onFindEntities', function () use (&$onFindEntities) {
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntities', function () use (&$onFindEntities) {
             $onFindEntities = true;
         });
-        $this->Action->eventManager()->on('Action.Crud.afterFindEntities', function () use (&$afterFindEntities) {
+        $this->Action->getEventManager()->on('Action.Crud.afterFindEntities', function () use (&$afterFindEntities) {
             $afterFindEntities = true;
         });
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\ORM\ResultSet);
+        $this->assertTrue($result instanceof ResultSet);
         $this->assertTrue($onFindEntities);
         $this->assertTrue($afterFindEntities);
     }

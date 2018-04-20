@@ -10,13 +10,16 @@ API Plugin for CakePHP
 
 The **CakePHP-API** Plugin allows to easily expose a versioned API in a few lines of code.
 
-IMPORTANT: This plugin is **BETA**, use it at your own risk.
+Versions and branches
+---------------------
 
-Requirements
-------------
-
-* CakePHP 3.2.9+
-* PHP 5.5.9+
+| CakePHP | CakeDC Api Plugin | Tag   | Notes |
+| :-------------: | :------------------------: | :--:  | :---- |
+| ^3.6            | [master](https://github.com/cakedc/cakephp-api/tree/master)            | 6.0.0 | stable   |
+| ^3.6            | [develop](https://github.com/cakedc/cakephp-api/tree/develop)          |   -   | unstable |
+| 3.5             | [5.x](https://github.com/cakedc/cakephp-api/tree/5.0.0)                | 5.0.0 | stable   |
+| 3.4             | [4.x](https://github.com/cakedc/cakephp-api/tree/4.0.0)                | 4.0.0 | stable   |
+| 3.3             | [3.x](https://github.com/cakedc/cakephp-api/tree/3.3)                  | 3.3   | stable   |
 
 Documentation
 -------------

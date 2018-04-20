@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,8 +16,8 @@ use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 
 class ServiceRegistryTest extends TestCase
 {
@@ -58,7 +58,7 @@ class ServiceRegistryTest extends TestCase
                 'service' => 'authors',
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -68,7 +68,7 @@ class ServiceRegistryTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertEquals('authors', $Service->name());
+        $this->assertEquals('authors', $Service->getName());
     }
 
     /**
@@ -97,6 +97,6 @@ class ServiceRegistryTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertTextEquals('/authors/1/articles', $Service->baseUrl());
+        $this->assertTextEquals('/authors/1/articles', $Service->getBaseUrl());
     }
 }

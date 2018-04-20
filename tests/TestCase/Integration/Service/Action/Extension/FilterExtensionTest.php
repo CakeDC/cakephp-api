@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class FilterExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.Filter');
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -58,17 +58,17 @@ class FilterExtensionTest extends IntegrationTestCase
     public function testFilterByFields()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'title' => 'Article N4']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([4], Hash::extract($result, 'data.{n}.id'));
 
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'title$like' => 'Article N']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([4, 5, 6, 7], Hash::extract($result, 'data.{n}.id'));
 
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'id$gt' => '5', 'id$lt' => 7]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([6], Hash::extract($result, 'data.{n}.id'));
     }

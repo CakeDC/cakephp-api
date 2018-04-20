@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -27,7 +27,7 @@ class IntegrationTestCase extends BaseTestCase
 {
 
     /**
-     * @var Current logged in user
+     * @var string|int Current logged in user
      */
     protected $_defaultUserId;
 
@@ -59,7 +59,7 @@ class IntegrationTestCase extends BaseTestCase
      * @param string $userId User id.
      * @return string
      */
-    public function defaultUser($userId = null)
+    public function getDefaultUser($userId = null)
     {
         if ($userId === null) {
             $userId = $this->_defaultUserId;
@@ -79,7 +79,7 @@ class IntegrationTestCase extends BaseTestCase
     protected function _userToken($userId = null)
     {
         if ($userId === null) {
-            $userId = $this->defaultUser();
+            $userId = $this->getDefaultUser();
         }
         $Users = TableRegistry::get('CakeDC/Users.Users');
         $user = $Users->find()->where(['id' => $userId])->first();
@@ -97,7 +97,7 @@ class IntegrationTestCase extends BaseTestCase
      * @param string $method HTTP method.
      * @param array $data Api parameters.
      * @param string $userId Current user id.
-     * @return mixed
+     * @return void
      */
     public function sendRequest($url, $method, $data = [], $userId = null)
     {
@@ -107,7 +107,9 @@ class IntegrationTestCase extends BaseTestCase
         Configure::load('api');
 
         if (!is_string($url)) {
-            return $this->_sendRequest($url, $method, $data);
+            $this->_sendRequest($url, $method, $data);
+
+            return;
         }
         $url = '/api' . $url;
         if (is_string($url)) {
@@ -124,6 +126,7 @@ class IntegrationTestCase extends BaseTestCase
                 }
             }
         }
+        $this->useHttpServer(true);
         $this->_sendRequest($url, $method, $data);
     }
 
@@ -156,15 +159,15 @@ class IntegrationTestCase extends BaseTestCase
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals($result['status'], 'success');
-        $this->assertEquals(200, $this->_response->statusCode());
+        $this->assertEquals(200, $this->_response->getStatusCode());
     }
 
     /**
      * @return mixed
      */
-    public function responseJson()
+    public function getJsonResponse()
     {
-        return json_decode($this->_response->body(), true);
+        return json_decode((string)$this->_response->getBody(), true);
     }
 
     /**
@@ -178,10 +181,25 @@ class IntegrationTestCase extends BaseTestCase
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals($result['status'], 'error');
-        $this->assertEquals(200, $this->_response->statusCode());
+        $this->assertEquals(200, $this->_response->getStatusCode());
         if (!empty($code)) {
             $this->assertEquals($code, $result['code']);
         }
+    }
+
+    /**
+     * Helper method for status assertions.
+     *
+     * @param int $code Status code.
+     * @param string $message The error message.
+     * @return void
+     */
+    public function assertStatus($code, $message = null)
+    {
+        if ($message === null) {
+            $message = "Status code $code does not match";
+        }
+        $this->_assertStatus($code, $code, $message);
     }
 
     /**

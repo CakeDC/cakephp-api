@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Action\CrudAction;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Query;
@@ -45,23 +45,23 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
      */
     public function findEntities(Event $Event)
     {
-        return $this->_autocompleteList($Event->subject(), $Event->data['query']);
+        return $this->_autocompleteList($Event->getSubject(), $Event->getData('query'));
     }
 
     /**
-     * @param Action $action An Action instance.
+     * @param CrudAction $action An Action instance.
      * @param \Cake\ORM\Query $query A Query instance.
      * @return \Cake\ORM\Query
      */
-    protected function _autocompleteList(Action $action, Query $query)
+    protected function _autocompleteList(CrudAction $action, Query $query)
     {
-        $data = $action->data();
+        $data = $action->getData();
         if (!(is_array($data) && !empty($data['autocomplete_list']))) {
             return $query;
         }
         $query = $query->select([
-            $action->table()->primaryKey(),
-            $action->table()->displayField()
+            $action->getTable()->getPrimaryKey(),
+            $action->getTable()->getDisplayField()
         ]);
 
         return $query;

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,6 +16,8 @@ use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+
+use Cake\Datasource\EntityInterface;
 
 class CrudEditActionTest extends TestCase
 {
@@ -62,12 +64,12 @@ class CrudEditActionTest extends TestCase
         ]);
 
         $onFindEntity = false;
-        $this->Action->eventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
             $onFindEntity = true;
         });
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\Datasource\EntityInterface);
+        $this->assertTrue($result instanceof EntityInterface);
         $this->assertTrue($onFindEntity);
     }
 
@@ -84,7 +86,7 @@ class CrudEditActionTest extends TestCase
         ]);
 
         $result = $this->Action->execute();
-        $this->assertTrue($result instanceof \Cake\Datasource\EntityInterface);
+        $this->assertTrue($result instanceof EntityInterface);
     }
 
     /**
@@ -114,12 +116,12 @@ class CrudEditActionTest extends TestCase
         ], 'PUT');
         $options = [
             'version' => null,
-            'service' => $this->request['service'],
+            'service' => $this->request->getParam('service'),
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/articles/' . $id,
         ];
-        $this->Service = ServiceRegistry::get($this->request['service'], $options);
+        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
 
         $this->Action = new CrudEditAction([
             'service' => $this->Service,

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -36,7 +36,7 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions([]);
         // setup permissions in test actions
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -52,7 +52,7 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
     public function testDefault()
     {
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         // $expected = [];
         $this->assertSuccess($result);
         // $this->assertEquals($expected, $result);

@@ -1,19 +1,20 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\App\Model\Table;
 
+use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-class ArticlesTable extends \Cake\ORM\Table
+class ArticlesTable extends Table
 {
     /**
      * Initialize method
@@ -23,9 +24,9 @@ class ArticlesTable extends \Cake\ORM\Table
      */
     public function initialize(array $config)
     {
-        $this->table('articles');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('articles');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Authors', [

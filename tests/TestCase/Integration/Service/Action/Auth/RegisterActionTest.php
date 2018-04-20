@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -62,7 +62,7 @@ class RegisterActionTest extends IntegrationTestCase
             'last_name' => 'last 100',
             'tos' => true,
         ]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $expected = [
             'username' => 'user-100',
@@ -82,7 +82,7 @@ class RegisterActionTest extends IntegrationTestCase
     public function testRegisterValidationFail()
     {
         $this->sendRequest('/auth/register', 'POST', ['username' => 'user-100']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertError($result, 422);
         $this->assertEquals(['password', 'password_confirm', 'tos'], array_keys(Hash::get($result, 'data')));
         $this->assertErrorMessage($result, 'Validation failed');

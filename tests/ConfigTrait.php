@@ -1,19 +1,19 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test;
 
 use Cake\Core\Configure;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 use Cake\Utility\Hash;
 
 /**
@@ -140,14 +140,14 @@ trait ConfigTrait
         if (empty($requestOptions['params']['pass'])) {
             $requestOptions['params']['pass'] = [];
         }
-        $this->request = new Request($requestOptions);
+        $this->request = new ServerRequest($requestOptions);
 
         if (empty($options['response'])) {
             $this->response = new Response();
         } else {
             $this->response = $options['response'];
         }
-        $this->Controller = $this->createMock('Cake\Controller\Controller', ['redirect']);
+        $this->Controller = $this->createMock('Cake\Controller\Controller');
         $this->Controller->request = $this->request;
         $this->Controller->response = $this->response;
     }

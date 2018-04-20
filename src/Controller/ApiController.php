@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -13,6 +13,7 @@ namespace CakeDC\Api\Controller;
 
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
+use Cake\Utility\Inflector;
 use Exception;
 
 class ApiController extends AppController
@@ -42,7 +43,7 @@ class ApiController extends AppController
     /**
      * Process api request
      *
-     * @return \Cake\Http\Client\Response|\Cake\Network\Response|null
+     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
      */
     public function process()
     {
@@ -81,7 +82,7 @@ class ApiController extends AppController
      * Process api request
      *
      * @param array $options Options
-     * @return \Cake\Http\Client\Response|\Cake\Network\Response|null
+     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
      */
     protected function _process($options = [])
     {
@@ -95,27 +96,24 @@ class ApiController extends AppController
                 }
 
                 $url = '/' . $service;
-                if (!empty($this->request->params['pass'])) {
-                    $url .= '/' . join('/', $this->request->params['pass']);
+                if (!empty($this->request->getParam('pass'))) {
+                    $url .= '/' . join('/', $this->request->getParam('pass'));
                 }
                 $options += [
                     'version' => $version,
-                    // 'controller' => $this,
                     'request' => $this->request,
                     'response' => $this->response,
-                    'baseUrl' => $url,
+                    'baseUrl' => Inflector::underscore($url),
                 ];
                 $options += (new ConfigReader())->serviceOptions($service, $version);
-                $Service = ServiceRegistry::get($service, $options);
+                $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
                 $result = $Service->dispatch();
 
                 return $Service->respond($result);
             }
-            $this->response->statusCode(404);
-            $this->response->body(__('Service not found'));
+            $this->response = $this->response->withStringBody(__('Service not found'))->withStatus(404);
         } catch (Exception $e) {
-            $this->response->statusCode(400);
-            $this->response->body($e->getMessage());
+            $this->response = $this->response->withStringBody($e->getMessage())->withStatus(400);
         }
 
         return $this->response;

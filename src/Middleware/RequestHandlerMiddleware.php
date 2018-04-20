@@ -1,9 +1,16 @@
 <?php
+/**
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
 namespace CakeDC\Api\Middleware;
 
-use Cake\Http\RequestTransformer;
-use Cake\Http\ResponseTransformer;
 use Cake\Utility\Exception\XmlException;
 use Cake\Utility\Xml;
 use Psr\Http\Message\ResponseInterface;
@@ -20,9 +27,16 @@ class RequestHandlerMiddleware
     /**
      * Request object
      *
-     * @var \Cake\Network\Request
+     * @var \Cake\Http\ServerRequest
      */
     public $request;
+
+    /**
+     * Response object
+     *
+     * @var \Cake\Http\Response
+     */
+    public $response;
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
@@ -36,8 +50,9 @@ class RequestHandlerMiddleware
             'json' => ['json_decode', true],
             'xml' => [[$this, 'convertXml']],
         ];
-        $this->request = RequestTransformer::toCake($request);
-        $this->response = ResponseTransformer::toCake($response);
+
+        $this->request = $request;
+        $this->response = $response;
         $parsedBody = $request->getParsedBody();
 
         foreach ($inputTypeMap as $type => $handler) {

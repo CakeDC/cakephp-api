@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -35,7 +35,7 @@ class DescribeAction extends Action
         $validator
             ->requirePresence('service', 'create')
             ->notEmpty('service');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -51,8 +51,8 @@ class DescribeAction extends Action
      */
     public function execute()
     {
-        $serviceName = $this->data()['service'];
-        $service = ServiceRegistry::get($serviceName);
+        $serviceName = $this->getData()['service'];
+        $service = ServiceRegistry::getServiceLocator()->get($serviceName);
         if ($service instanceof CrudService) {
             $route = [
                 'plugin' => null,
@@ -64,8 +64,8 @@ class DescribeAction extends Action
                 '_matchedRoute' => '/' . $serviceName,
             ];
             $action = $service->buildActionClass('\CakeDC\Api\Service\Action\CrudDescribeAction', $route);
-            $service->request($this->service()->request());
-            $service->response($this->service()->response());
+            $service->setRequest($this->getService()->getRequest());
+            $service->setResponse($this->getService()->getResponse());
 
             return $action->execute();
         }

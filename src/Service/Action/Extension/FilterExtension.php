@@ -1,20 +1,21 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use CakeDC\Api\Service\Action\Action;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Log\Log;
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
 
 /**
  * Class FilterExtension
@@ -45,16 +46,19 @@ class FilterExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
+        $action = $event->getSubject();
+        $query = $event->getData('query');
+
         if ($event->result) {
             $query = $event->result;
         }
-        $table = $query->repository();
-        $schema = $table->schema();
+
+        /* @var Table $table */
+        $table = $query->getRepository();
+        $schema = $table->getSchema();
         $fields = $schema->columns();
         $fields = array_flip($fields);
-        $data = $action->data();
+        $data = $action->getData();
         $postfixDelimeter = '$';
         $filterPostfixes = [
             '' => '',
@@ -86,16 +90,24 @@ class FilterExtension extends Extension implements EventListenerInterface
                     if ($postfix == 'ge' || $postfix == 'ne') {
                         unset($data[$field]);
                     }
-                    if ($postfix !== '') {
-                        $field = str_replace($postfixDelimeter . $postfix, '', $field) . $rule;
-                        if ($postfix == 'llike' || $postfix == 'like') {
-                            $value = '%' . $value;
+                    if (is_array($value)) {
+                        if ($postfix == '') {
+                            $query->where([$field . ' IN' => $value]);
+                        } elseif ($postfix == 'ne') {
+                            $query->where([$field . ' NOT IN' => $value]);
                         }
-                        if ($postfix == 'rlike' || $postfix == 'like') {
-                            $value = $value . '%';
+                    } else {
+                        if ($postfix !== '') {
+                            $field = str_replace($postfixDelimeter . $postfix, '', $field) . $rule;
+                            if ($postfix == 'llike' || $postfix == 'like') {
+                                $value = '%' . $value;
+                            }
+                            if ($postfix == 'rlike' || $postfix == 'like') {
+                                $value = $value . '%';
+                            }
                         }
+                        $query->where([$field => $value]);
                     }
-                    $query->where([$field => $value]);
                 }
             }
         }

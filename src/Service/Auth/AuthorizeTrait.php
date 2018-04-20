@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -28,7 +28,7 @@ namespace CakeDC\Api\Service\Auth;
 use Cake\Controller\Component\AuthComponent;
 use Cake\Core\App;
 use Cake\Core\Exception\Exception;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 
 trait AuthorizeTrait
@@ -58,11 +58,11 @@ trait AuthorizeTrait
      *
      * @param array|null $user The user to check the authorization of.
      *   If empty the user fetched from storage will be used.
-     * @param \Cake\Network\Request|null $request The request to authenticate for.
+     * @param \Cake\Http\ServerRequest|null $request The request to authenticate for.
      *   If empty, the current request will be used.
      * @return bool True if $user is authorized, otherwise false
      */
-    public function isAuthorized($user = null, Request $request = null)
+    public function isAuthorized($user = null, ServerRequest $request = null)
     {
         if (empty($user) && !$this->user()) {
             return false;

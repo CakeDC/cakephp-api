@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class ResetPasswordAction extends Action
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->Auth->allow($this->name());
+        $this->Auth->allow($this->getName());
     }
 
     /**
@@ -55,7 +55,7 @@ class ResetPasswordAction extends Action
         $validator
             ->requirePresence('token', 'create')
             ->notEmpty('token');
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -71,7 +71,7 @@ class ResetPasswordAction extends Action
      */
     public function execute()
     {
-        $data = $this->data();
+        $data = $this->getData();
         $token = $data['token'];
 
         try {
@@ -103,9 +103,9 @@ class ResetPasswordAction extends Action
         $user->id = $userId;
         try {
             $validator = $this->getUsersTable()->validationPasswordConfirm(new Validator());
-            $user = $this->getUsersTable()->patchEntity($user, $this->data(), ['validate' => $validator]);
-            if ($user->errors()) {
-                throw new ValidationException(__d('CakeDC/Api', 'Password could not be changed'), 0, null, $user->errors());
+            $user = $this->getUsersTable()->patchEntity($user, $this->getData(), ['validate' => $validator]);
+            if ($user->getErrors()) {
+                throw new ValidationException(__d('CakeDC/Api', 'Password could not be changed'), 0, null, $user->getErrors());
             } else {
                 $user = $this->getUsersTable()->changePassword($user);
                 if ($user) {

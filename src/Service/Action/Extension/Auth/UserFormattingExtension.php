@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -49,7 +49,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      */
     public function onLoginFormat(Event $event)
     {
-        return $this->_userCleanup($event->data['user']);
+        return $this->_userCleanup($event->getData('user'));
     }
 
     /**
@@ -60,7 +60,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      */
     public function onRegisterFormat(Event $event)
     {
-        return $this->_userCleanup($event->data['user']);
+        return $this->_userCleanup($event->getData('user'));
     }
 
     /**
@@ -76,7 +76,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
         $currentUser = $this
             ->getUsersTable()
             ->find()
-            ->where(['id' => $user['id']])
+            ->where([$this->getUsersTable()->aliasField('id') => $user['id']])
             ->first();
 
         $user = $currentUser->toArray();

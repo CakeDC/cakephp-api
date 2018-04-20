@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -36,7 +36,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         Configure::write('App.fullBaseUrl', 'http://example.com');
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.CursorPaginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -52,7 +52,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     public function testListDefault()
     {
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(20, Hash::get($result, 'pagination.count'));
         $this->assertEquals(null, Hash::get($result, 'pagination.since_id'));
@@ -77,7 +77,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
 //        ]);
 
         $this->sendRequest('/articles', 'GET');
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(null, Hash::get($result, 'pagination.since_id'));
@@ -89,7 +89,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     public function testListWithCountAsGetParam()
     {
         $this->sendRequest('/articles', 'GET', ['count' => 5]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(null, Hash::get($result, 'pagination.since_id'));
@@ -101,7 +101,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     public function testListWithMaxId()
     {
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'max_id' => 11]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(null, Hash::get($result, 'pagination.since_id'));
@@ -114,7 +114,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     {
         $this->_addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'max_id' => 11]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(null, Hash::get($result, 'pagination.since_id'));
@@ -127,7 +127,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     {
         $this->_addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(null, Hash::get($result, 'pagination.since_id'));
@@ -139,7 +139,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     public function testListWithSinceId()
     {
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'since_id' => 15]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(15, Hash::get($result, 'pagination.since_id'));
@@ -152,7 +152,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     {
         $this->_addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'since_id' => 15]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(5, Hash::get($result, 'pagination.count'));
         $this->assertEquals(15, Hash::get($result, 'pagination.since_id'));

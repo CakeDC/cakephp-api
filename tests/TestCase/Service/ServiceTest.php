@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -95,7 +95,7 @@ class ServiceTest extends TestCase
                 'service' => 'authors',
             ]
         ], 'DELETE');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -105,9 +105,9 @@ class ServiceTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertEquals('authors', $Service->name());
+        $this->assertEquals('authors', $Service->getName());
 
-        $this->assertTextEquals('/authors', $Service->baseUrl());
+        $this->assertTextEquals('/authors', $Service->getBaseUrl());
         $action = $Service->buildAction();
     }
 
@@ -123,7 +123,7 @@ class ServiceTest extends TestCase
                 'service' => 'authors',
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -133,12 +133,12 @@ class ServiceTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertEquals('authors', $Service->name());
+        $this->assertEquals('authors', $Service->getName());
 
-        $this->assertTextEquals('/authors', $Service->baseUrl());
+        $this->assertTextEquals('/authors', $Service->getBaseUrl());
         $action = $Service->buildAction();
-        $this->assertEquals('authors', $action->service()->name());
-        $this->assertEquals('authors', $action->table()->table());
+        $this->assertEquals('authors', $action->getService()->getName());
+        $this->assertEquals('authors', $action->getTable()->getTable());
     }
 
     /**
@@ -157,7 +157,7 @@ class ServiceTest extends TestCase
                 ]
             ]
         ]);
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -167,13 +167,13 @@ class ServiceTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertTextEquals('/authors/1/articles', $Service->baseUrl());
+        $this->assertTextEquals('/authors/1/articles', $Service->getBaseUrl());
         $action = $Service->buildAction();
-        $this->assertEquals('1', $action->parentId());
-        $this->assertEquals('author_id', $action->parentIdName());
-        $this->assertEquals('articles', $action->service()->name());
-        $this->assertEquals('authors', $action->service()->parent()->name());
-        $this->assertEquals('articles', $action->table()->table());
+        $this->assertEquals('1', $action->getParentId());
+        $this->assertEquals('author_id', $action->getParentIdName());
+        $this->assertEquals('articles', $action->getService()->getName());
+        $this->assertEquals('authors', $action->getService()->getParentService()->getName());
+        $this->assertEquals('articles', $action->getTable()->getTable());
     }
 
     /**
@@ -195,7 +195,7 @@ class ServiceTest extends TestCase
                 ]
             ]
         ], 'PUT');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
@@ -205,7 +205,7 @@ class ServiceTest extends TestCase
         ];
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertTextEquals('/articles/tag/1', $Service->baseUrl());
+        $this->assertTextEquals('/articles/tag/1', $Service->getBaseUrl());
         $action = $Service->buildAction();
         $this->assertEquals('CakeDC\Api\Test\App\Service\Action\ArticlesTagAction', get_class($action));
     }
@@ -231,7 +231,7 @@ class ServiceTest extends TestCase
                 'pass' => [],
             ]
         ], 'GET');
-        $service = $this->request['service'];
+        $service = $this->request->getParam('service');
         $version = null;
         $options = [
             'version' => $version,
@@ -243,7 +243,7 @@ class ServiceTest extends TestCase
         $options += (new ConfigReader())->serviceOptions($service, $version);
         $Service = ServiceRegistry::get($service, $options);
         $this->assertTrue($Service instanceof Service);
-        $this->assertTextEquals('/authors', $Service->baseUrl());
+        $this->assertTextEquals('/authors', $Service->getBaseUrl());
         $action = $Service->buildAction();
         $this->assertEquals($actionClass, get_class($action));
         $this->assertTextEquals('custom action applied', $action->process());

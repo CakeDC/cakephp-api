@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -93,13 +93,13 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     public function __construct(array $config = [])
     {
         if (!empty($config['name'])) {
-            $this->name($config['name']);
+            $this->setName($config['name']);
         }
         if (!empty($config['service'])) {
-            $this->service($config['service']);
+            $this->setService($config['service']);
         }
         if (!empty($config['route'])) {
-            $this->_route = $config['route'];
+            $this->setRoute($config['route']);
         }
         if (!empty($config['Extension'])) {
             $this->extensions = (Hash::merge($this->extensions, $config['Extension']));
@@ -109,10 +109,10 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             $eventManager = $config['eventManager'];
         }
         $this->_eventManager = $eventManager ?: new EventManager();
-        $this->config($config);
+        $this->setConfig($config);
         $this->initialize($config);
         $this->_eventManager->on($this);
-        $this->extensions($extensionRegistry);
+        $this->setExtensions($extensionRegistry);
         $this->_loadExtensions();
     }
 
@@ -128,35 +128,109 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     }
 
     /**
-     * Api method for action name.
+     * Gets an action name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * Sets an action name.
+     *
+     * @param string $name An action name.
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->_name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get and set service name.
      *
      * @param string $name Action name.
+     * @deprecated 3.4.0 Use setName()/getName() instead.
      * @return string
      */
     public function name($name = null)
     {
-        if ($name === null) {
-            return $this->_name;
-        }
-        $this->_name = $name;
+        deprecationWarning(
+            'Action::name() is deprecated. ' .
+            'Use Action::setName()/getName() instead.'
+        );
 
-        return $this->_name;
+        if ($name !== null) {
+            return $this->setName($name);
+        }
+
+        return $this->getName();
+    }
+
+    /**
+     * Returns activated route.
+     *
+     * @return array
+     */
+    public function getRoute()
+    {
+        return $this->_route;
+    }
+
+    /**
+     * Sets activated route.
+     *
+     * @param array $route Route config.
+     * @return $this
+     */
+    public function setRoute(array $route)
+    {
+        $this->_route = $route;
+
+        return $this;
     }
 
     /**
      * Api method for activated route.
      *
      * @param array $route Activated route.
+     * @deprecated 3.4.0 Use setRoute()/getRoute() instead.
      * @return array
      */
     public function route($route = null)
     {
-        if ($route === null) {
-            return $this->_route;
-        }
-        $this->_route = $route;
+        deprecationWarning(
+            'Action::route() is deprecated. ' .
+            'Use Action::setRoute()/getRoute() instead.'
+        );
 
-        return $this->_route;
+        if ($route !== null) {
+            return $this->setRoute($route);
+        }
+
+        return $this->getRoute();
+    }
+
+    /**
+     * @return Service
+     */
+    public function getService()
+    {
+        return $this->_service;
+    }
+
+    /**
+     * Set a service
+     *
+     * @param Service $service service
+     */
+    public function setService(Service $service)
+    {
+        $this->_service = $service;
     }
 
     /**
@@ -164,15 +238,20 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @param Service $service An Service instance.
      * @return Service
+     * @deprecated 3.4.0 Use setService()/getService() instead.
      */
     public function service($service = null)
     {
-        if ($service === null) {
-            return $this->_service;
-        }
-        $this->_service = $service;
+        deprecationWarning(
+            'Action::service() is deprecated. ' .
+            'Use Action::setService()/getService() instead.'
+        );
 
-        return $this->_service;
+        if ($service !== null) {
+            return $this->setService($service);
+        }
+
+        return $this->getService();
     }
 
     /**
@@ -251,8 +330,8 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     protected function _executeAction($methodName = 'action')
     {
-        $parser = $this->service()->parser();
-        $params = $parser->params();
+        $parser = $this->getService()->getParser();
+        $params = $parser->getParams();
         $arguments = [];
         $reflection = new ReflectionMethod($this, $methodName);
         foreach ($reflection->getParameters() as $param) {
@@ -305,9 +384,49 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return mixed
      */
+    public function getData()
+    {
+        return $this->getService()->getParser()->getParams();
+    }
+
+    /**
+     * Returns action input params
+     *
+     * @return mixed
+     * @deprecated 3.6.0 Use getData() instead.
+     */
     public function data()
     {
-        return $this->service()->parser()->params();
+        deprecationWarning(
+            'Action::data() is deprecated. ' .
+            'Use Action::getData() instead.'
+        );
+
+        return $this->getData();
+    }
+
+    /**
+     * @return \CakeDC\Api\Service\Action\ExtensionRegistry
+     */
+    public function getExtensions()
+    {
+        return $this->_extensions;
+    }
+
+    /**
+     * Set a service
+     *
+     * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
+     */
+    public function setExtensions($extensions = null)
+    {
+        if ($extensions === null && $this->_extensions === null) {
+            $this->_extensions = new ExtensionRegistry($this);
+        } else {
+            $this->_extensions = $extensions;
+        }
+
+        return $this;
     }
 
     /**
@@ -318,17 +437,24 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
      *
      * @return \CakeDC\Api\Service\Action\ExtensionRegistry
+     * @deprecated 3.6.0 Use setExtensions()/getExtensions() instead.
      */
     public function extensions($extensions = null)
     {
-        if ($extensions === null && $this->_extensions === null) {
-            $this->_extensions = new ExtensionRegistry($this);
-        }
-        if ($extensions !== null) {
-            $this->_extensions = $extensions;
+        deprecationWarning(
+            'Action::extensions() is deprecated. ' .
+            'Use Action::setExtensions()/getExtensions() instead.'
+        );
+
+        if ($this->_extensions === null && $extensions === null) {
+            $this->setExtensions($extensions);
+
+            return $this->getExtensions();
         }
 
-        return $this->_extensions;
+        if ($service !== null) {
+            return $this->setExtensions($extensions);
+        }
     }
 
     /**
@@ -341,7 +467,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if (empty($this->extensions)) {
             return;
         }
-        $registry = $this->extensions();
+        $registry = $this->getExtensions();
         $extensions = $registry->normalizeArray($this->extensions);
         foreach ($extensions as $properties) {
             $instance = $registry->load($properties['class'], $properties['config']);
@@ -374,12 +500,12 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     protected function _authConfig()
     {
-        $defaultConfig = (array)$this->config('Auth');
+        $defaultConfig = (array)$this->getConfig('Auth');
 
         return Hash::merge($defaultConfig, [
             'service' => $this->_service,
-            'request' => $this->_service->request(),
-            'response' => $this->_service->response(),
+            'request' => $this->_service->getRequest(),
+            'response' => $this->_service->getResponse(),
             'action' => $this,
         ]);
     }

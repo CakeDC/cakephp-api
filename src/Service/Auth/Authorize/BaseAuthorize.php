@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -27,7 +27,7 @@ namespace CakeDC\Api\Service\Auth\Authorize;
 
 use CakeDC\Api\Service\Action\Action;
 use Cake\Core\InstanceConfigTrait;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 
 /**
  * Abstract base authorization adapter for Api Auth.
@@ -60,22 +60,23 @@ abstract class BaseAuthorize
     public function __construct(Action $action, array $config = [])
     {
         $this->setAction($action);
-        $this->config($config);
+        $this->setConfig($config);
     }
 
     /**
      * Checks user authorization.
      *
      * @param array $user Active user data
-     * @param \Cake\Network\Request $request Request instance.
+     * @param \Cake\Http\ServerRequest $request Request instance.
      * @return bool
      */
-    abstract public function authorize($user, Request $request);
+    abstract public function authorize($user, ServerRequest $request);
 
     /**
      * Action setter.
      *
      * @param Action $action An Action instance.
+     * @return void
      */
     public function setAction(Action $action)
     {

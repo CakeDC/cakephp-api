@@ -6,7 +6,7 @@
         "cakephp",
         "api",
         "rest",
-        "hateaos",
+        "hateoas",
         "crud"
     ],
     "homepage": "https://github.com/CakeDC/cakephp-api",
@@ -28,15 +28,11 @@
     },
     "require": {
         "php": ">=5.4.16",
-        "cakephp/cakephp": "3.*",
-        "cakedc/users": "^5.0"
+        "cakephp/cakephp": "^3.6",
+        "cakedc/users": "^7.0"
     },
     "require-dev": {
-        "cakedc/users": "*" ,
         "phpunit/phpunit": "<6.0"
-    },
-    "suggest": {
-        "cakedc/users": "Users Plugin for CakePHP"
     },
     "autoload": {
         "psr-4": {

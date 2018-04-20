@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class CrudAutocompleteListExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.CrudAutocompleteList');
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -58,7 +58,7 @@ class CrudAutocompleteListExtensionTest extends IntegrationTestCase
     public function testNoAutocompleteList()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'autocomplete_list' => false]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([1, 3, 2, 4], Hash::extract($result, 'data.{n}.author_id'));
         $this->assertEquals(['id', 'author_id', 'title', 'body', 'published'], array_keys(Hash::get($result, 'data.0')));
@@ -67,7 +67,7 @@ class CrudAutocompleteListExtensionTest extends IntegrationTestCase
     public function testAutocompleteList()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'autocomplete_list' => true]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(['id', 'title'], array_keys(Hash::get($result, 'data.0')));
     }

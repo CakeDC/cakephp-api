@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.CrudRelations');
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -58,7 +58,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
     public function testNoInclude()
     {
         $this->sendRequest('/articles/1', 'GET', ['include_direct' => false]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $expected = [
             'id' => 1,
@@ -73,7 +73,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
     public function testIncludeDirect()
     {
         $this->sendRequest('/articles/1', 'GET', ['include_direct' => true]);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $expected = [
             'id' => 1,
@@ -93,7 +93,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
     public function testIncludeNoRelations()
     {
         $this->sendRequest('/articles/1', 'GET', ['include_relations' => '']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $expected = [
             'id' => 1,
@@ -108,7 +108,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
     public function testIncludeAuthorRelations()
     {
         $this->sendRequest('/articles/1', 'GET', ['include_relations' => 'authors']);
-        $result = $this->responseJson();
+        $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $expected = [
             'id' => 1,

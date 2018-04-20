@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -52,8 +52,8 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
+        $action = $event->getSubject();
+        $query = $event->getData('query');
         if ($event->result) {
             $query = $event->result;
         }
@@ -71,8 +71,8 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     protected function _page(Action $action)
     {
-        $data = $action->data();
-        $pageField = $this->config('pageField');
+        $data = $action->getData();
+        $pageField = $this->getConfig('pageField');
         if (!empty($data[$pageField]) && is_numeric($data[$pageField])) {
             return (int)$data[$pageField];
         } else {
@@ -88,11 +88,11 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     protected function _limit(Action $action)
     {
-        $data = $action->data();
-        $limitField = $this->config('limitField');
-        $maxLimit = $action->config($limitField);
+        $data = $action->getData();
+        $limitField = $this->getConfig('limitField');
+        $maxLimit = $action->getConfig($limitField);
         if (empty($maxLimit)) {
-            $maxLimit = $this->config('defaultLimit');
+            $maxLimit = $this->getConfig('defaultLimit');
         }
         if (!empty($limitField) && !empty($data[$limitField]) && is_numeric($data[$limitField])) {
             $limit = min((int)$data[$limitField], $maxLimit);
@@ -111,9 +111,9 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function afterFind(Event $event)
     {
-        $action = $event->subject();
-        $query = $event->data['query'];
-        $result = $action->service()->result();
+        $action = $event->getSubject();
+        $query = $event->getData('query');
+        $result = $action->getService()->getResult();
         $count = $query->count();
         $limit = $this->_limit($action);
         $pagination = [
@@ -122,6 +122,6 @@ class PaginateExtension extends Extension implements EventListenerInterface
             'pages' => ceil($count / $limit),
             'count' => $count
         ];
-        $result->setPayload('pagination', $pagination);
+        $result->appendPayload('pagination', $pagination);
     }
 }

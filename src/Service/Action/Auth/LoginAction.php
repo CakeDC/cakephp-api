@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -29,6 +29,9 @@ class LoginAction extends Action
 
     use LoginTrait;
 
+    protected $_identifiedField = 'username';
+    protected $_passwordField = 'password';
+
     /**
      * Initialize an action instance
      *
@@ -37,8 +40,14 @@ class LoginAction extends Action
      */
     public function initialize(array $config)
     {
+        if (isset($config['identifiedField'])) {
+            $this->_identifiedField = $config['identifiedField'];
+        }
+        if (isset($config['passwordField'])) {
+            $this->_passwordField = $config['passwordField'];
+        }
         parent::initialize($config);
-        $this->Auth->allow($this->name());
+        $this->Auth->allow($this->getName());
     }
 
     /**
@@ -50,12 +59,12 @@ class LoginAction extends Action
     {
         $validator = new Validator();
         $validator
-            ->requirePresence('username', 'create')
-            ->notEmpty('username');
+            ->requirePresence($this->_identifiedField, 'create')
+            ->notEmpty($this->_identifiedField);
         $validator
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
-        $errors = $validator->errors($this->data());
+            ->requirePresence($this->_passwordField, 'create')
+            ->notEmpty($this->_passwordField);
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -116,7 +125,12 @@ class LoginAction extends Action
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [
-                'CakeDC/Api.Form' => []
+                'CakeDC/Api.Form' => [
+                    'fields' => [
+                        'username' => $this->_identifiedField,
+                        'password' => $this->_passwordField,
+                    ]
+                ]
             ],
         ]);
     }

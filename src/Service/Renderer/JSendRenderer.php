@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -59,7 +59,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function accept()
     {
-        $request = $this->_service->request();
+        $request = $this->_service->getRequest();
 
         return ($request->accepts('application/json') || $request->accepts('text/json') || $request->accepts('text/javascript'));
     }
@@ -72,11 +72,10 @@ class JSendRenderer extends BaseRenderer
      */
     public function response(Result $result = null)
     {
-        $response = $this->_service->response();
-        $response->statusCode($result->code());
-        $response->type('application/json');
-        $data = $result->data();
-        $payload = $result->payload();
+        $response = $this->_service->getResponse();
+
+        $data = $result->getData();
+        $payload = $result->getPayload();
         $return = [
             'data' => $data
         ];
@@ -84,7 +83,8 @@ class JSendRenderer extends BaseRenderer
             $return = Hash::merge($return, $payload);
         }
         $this->_mapStatus($result);
-        $response->body($this->_format($this->status, $return));
+
+        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus($result->getCode())->withType('application/json'));
 
         return true;
     }
@@ -97,8 +97,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function error(Exception $exception)
     {
-        $response = $this->_service->response();
-        $response->type('application/json');
+        $response = $this->_service->getResponse();
         if ($exception instanceof ValidationException) {
             $data = $exception->getValidationErrors();
         } else {
@@ -106,8 +105,7 @@ class JSendRenderer extends BaseRenderer
         }
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
-        $response->statusCode((int)$this->errorCode);
-        $response->body($this->_error($message, $exception->getCode(), $data, $trace));
+        $this->_service->setResponse($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
     }
 
     /**
@@ -182,7 +180,7 @@ class JSendRenderer extends BaseRenderer
      */
     protected function _mapStatus(Result $result)
     {
-        $code = (int)$result->code();
+        $code = (int)$result->getCode();
         if ($code == 0 || $code >= 200 && $code <= 399) {
             $this->status = self::STATUS_SUCCESS;
         } else {

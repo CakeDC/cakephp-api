@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -41,7 +41,7 @@ class CorsExtensionTest extends IntegrationTestCase
         $this->_tokenAccess();
         $this->_loadDefaultExtensions('CakeDC/Api.Cors');
         $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->defaultUser(Settings::USER1);
+        $this->getDefaultUser(Settings::USER1);
     }
 
     /**
@@ -59,16 +59,16 @@ class CorsExtensionTest extends IntegrationTestCase
     {
         $this->_request['headers']['Origin'] = 'http://foobar.com';
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id']);
-        $result = $this->responseJson();
-        $headers = $this->_response->header();
+        $result = $this->getJsonResponse();
+        $headers = $this->_response->getHeaders();
         $this->assertSuccess($result);
         $this->assertTrue(!empty($headers));
-        $this->assertEquals('*', $headers['Access-Control-Allow-Origin']);
-        $expectedMethods = 'GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH';
+        $this->assertEquals(['*'], $headers['Access-Control-Allow-Origin']);
+        $expectedMethods = ['GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH'];
         $this->assertEquals($expectedMethods, $headers['Access-Control-Allow-Methods']);
-        $expectedHeaders = 'X-CSRF-Token, Content-Type, Access-Control-Allow-Headers, Access-Control-Allow-Origin, Authorization, X-Requested-With';
+        $expectedHeaders = ['X-CSRF-Token, Content-Type, Access-Control-Allow-Headers, Access-Control-Allow-Origin, Authorization, X-Requested-With'];
         $this->assertEquals($expectedHeaders, $headers['Access-Control-Allow-Headers']);
-        $this->assertEquals('true', $headers['Access-Control-Allow-Credentials']);
-        $this->assertEquals(300, $headers['Access-Control-Max-Age']);
+        $this->assertEquals(['true'], $headers['Access-Control-Allow-Credentials']);
+        $this->assertEquals([300], $headers['Access-Control-Max-Age']);
     }
 }

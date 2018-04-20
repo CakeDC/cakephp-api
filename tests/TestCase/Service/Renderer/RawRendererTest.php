@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
-use CakeDC\Api\Exception\UnauthorizedException;
+use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\RawRenderer;
@@ -63,8 +63,8 @@ class RawRendererTest extends TestCase
     public function testRendererInitializeByClassName()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->getMockBuilder('Cake\Http\Response')
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -75,7 +75,7 @@ class RawRendererTest extends TestCase
             'rendererClass' => 'CakeDC/Api.Raw'
         ];
         $this->Service = new FallbackService($serviceOptions);
-        $renderer = $this->Service->renderer();
+        $renderer = $this->Service->getRenderer();
         $this->assertTrue($renderer instanceof RawRenderer);
     }
 
@@ -87,8 +87,8 @@ class RawRendererTest extends TestCase
     public function testRendererSuccess()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->getMockBuilder('Cake\Http\Response')
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -102,20 +102,23 @@ class RawRendererTest extends TestCase
 
         $result = new Result();
         $statusCode = 200;
-        $result->code($statusCode);
+        $result->setCode($statusCode);
         $data = 'Updated!';
-        $result->data($data);
-        $renderer = $this->Service->renderer();
+        $result->setData($data);
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
-                 ->method('statusCode')
-                 ->with($statusCode);
+                 ->method('withStatus')
+                 ->with($statusCode)
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('body')
-                ->with($data);
+                 ->method('withStringBody')
+                ->with($data)
+                ->will($this->returnValue($response));
         $response->expects($this->once())
-                 ->method('type')
-                 ->with('text/plain');
+                 ->method('withType')
+                 ->with('text/plain')
+                ->will($this->returnValue($response));
 
         $renderer->response($result);
     }
@@ -128,8 +131,8 @@ class RawRendererTest extends TestCase
     public function testRendererError()
     {
         $response = $this
-            ->getMockBuilder('Cake\Network\Response')
-            ->setMethods(['statusCode', 'type', 'body'])
+            ->getMockBuilder('Cake\Http\Response')
+            ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -142,15 +145,17 @@ class RawRendererTest extends TestCase
         $this->Service = new FallbackService($serviceOptions);
 
         Configure::write('debug', 0);
-        $error = new UnauthorizedException();
-        $renderer = $this->Service->renderer();
+        $error = new UnauthenticatedException();
+        $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())
-            ->method('body')
-            ->with('Unauthorized');
+            ->method('withStringBody')
+            ->with('Unauthenticated')
+            ->will($this->returnValue($response));
         $response->expects($this->once())
-            ->method('type')
-            ->with('text/plain');
+            ->method('withType')
+            ->with('text/plain')
+            ->will($this->returnValue($response));
 
         $renderer->error($error);
     }

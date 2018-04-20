@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,7 +16,7 @@ use CakeDC\Users\Auth\Rules\Rule;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Log\LogTrait;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Psr\Log\LogLevel;
@@ -103,10 +103,10 @@ class SimpleRbacAuthorize extends BaseAuthorize
     public function __construct(Action $action, array $config = [])
     {
         parent::__construct($action, $config);
-        $autoload = $this->config('autoload_config');
+        $autoload = $this->getConfig('autoload_config');
         if ($autoload) {
             $loadedPermissions = $this->_loadPermissions($autoload);
-            $this->config('permissions', $loadedPermissions);
+            $this->setConfig('permissions', $loadedPermissions);
         }
     }
 
@@ -143,10 +143,10 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param Request $request request
      * @return bool
      */
-    public function authorize($user, Request $request)
+    public function authorize($user, ServerRequest $request)
     {
-        $roleField = $this->config('role_field');
-        $role = $this->config('default_role');
+        $roleField = $this->getConfig('role_field');
+        $role = $this->getConfig('default_role');
         if (Hash::check($user, $roleField)) {
             $role = Hash::get($user, $roleField);
         }
@@ -165,9 +165,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param Request $request request
      * @return bool true if there is a match in permissions
      */
-    protected function _checkRules(array $user, $role, Request $request)
+    protected function _checkRules(array $user, $role, ServerRequest $request)
     {
-        $permissions = $this->config('permissions');
+        $permissions = $this->getConfig('permissions');
         foreach ($permissions as $permission) {
             $allowed = $this->_matchRule($permission, $user, $role, $request);
             if ($allowed !== null) {
@@ -189,9 +189,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     protected function _matchRule($permission, $user, $role, $request)
     {
-        $action = $this->_action->name();
-        $service = $this->_action->service()->name();
-        $version = $this->_action->service()->version();
+        $action = $this->_action->getName();
+        $service = $this->_action->getService()->getName();
+        $version = $this->_action->getService()->getVersion();
 
         if ($this->_matchOrAsterisk($permission, 'role', $role) &&
                 $this->_matchOrAsterisk($permission, 'version', $version, true) &&

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -25,10 +25,8 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Request;
-use Cake\Network\Response;
-use \OutOfBoundsException;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 
 /**
  * Class FormAuthenticate.
@@ -39,14 +37,14 @@ class FormAuthenticate extends BaseAuthenticate
     /**
      * Checks the fields to ensure they are supplied.
      *
-     * @param \Cake\Network\Request $request The request that contains login information.
+     * @param \Cake\Http\ServerRequest $request The request that contains login information.
      * @param array $fields The fields to be checked.
      * @return bool False if the fields have not been supplied. True if they exist.
      */
-    protected function _checkFields(Request $request, array $fields)
+    protected function _checkFields(ServerRequest $request, array $fields)
     {
         foreach ([$fields['username'], $fields['password']] as $field) {
-            $value = $request->data($field);
+            $value = $request->getData($field);
             if (empty($value) || !is_string($value)) {
                 return false;
             }
@@ -60,11 +58,11 @@ class FormAuthenticate extends BaseAuthenticate
      * to find POST data that is used to find a matching record in the `config.userModel`. Will return false if
      * there is no post data, either username or password is missing, or if the scope conditions have not been met.
      *
-     * @param \Cake\Network\Request $request The request that contains login information.
-     * @param \Cake\Network\Response $response Unused response object.
+     * @param \Cake\Http\ServerRequest $request The request that contains login information.
+     * @param \Cake\Http\Response $response Unused response object.
      * @return mixed False on login failure.  An array of User data on success.
      */
-    public function authenticate(Request $request, Response $response)
+    public function authenticate(ServerRequest $request, Response $response)
     {
         $fields = $this->_config['fields'];
         if (!$this->_checkFields($request, $fields)) {
@@ -72,8 +70,8 @@ class FormAuthenticate extends BaseAuthenticate
         }
 
         return $this->_findUser(
-            $request->data[$fields['username']],
-            $request->data[$fields['password']]
+            $request->getData($fields['username']),
+            $request->getData($fields['password'])
         );
     }
 }

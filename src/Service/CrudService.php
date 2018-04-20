@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -58,26 +58,54 @@ abstract class CrudService extends Service
     {
         parent::__construct($config);
         if (isset($config['table'])) {
-            $this->table($config['table']);
+            $this->setTable($config['table']);
         } else {
-            $this->table(Inflector::camelize($this->name()));
+            $this->setTable(Inflector::camelize($this->getName()));
         }
     }
 
     /**
-     * Table getter and setter method.
+     * Gets a Table name.
      *
-     * @param string $table Table name.
+     * @return string
+     */
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
+    /**
+     * Sets the table instance.
+     *
+     * @param string $table A Table name.
+     * @return $this
+     */
+    public function setTable($table)
+    {
+        $this->_table = $table;
+
+        return $this;
+    }
+
+    /**
+     * Api method for table.
+     *
+     * @param string $table A Table name.
+     * @deprecated 3.4.0 Use setTable()/getTable() instead.
      * @return string
      */
     public function table($table = null)
     {
-        if ($table === null) {
-            return $this->_table;
-        }
-        $this->_table = $table;
+        deprecationWarning(
+            'Service::table() is deprecated. ' .
+            'Use Service::setTable()/getTable() instead.'
+        );
 
-        return $this->_table;
+        if ($table !== null) {
+            return $this->setTable($table);
+        }
+
+        return $this->getTable();
     }
 
     /**

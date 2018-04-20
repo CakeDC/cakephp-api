@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -42,7 +42,7 @@ class RegisterAction extends Action
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->Auth->allow($this->name());
+        $this->Auth->allow($this->getName());
     }
 
     /**
@@ -54,7 +54,7 @@ class RegisterAction extends Action
     {
         $validator = $this->getUsersTable()->getRegisterValidators($this->_registerOptions());
 
-        $errors = $validator->errors($this->data());
+        $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
@@ -72,7 +72,7 @@ class RegisterAction extends Action
         $usersTable = $this->getUsersTable();
         $user = $usersTable->newEntity();
         $options = $this->_registerOptions();
-        $requestData = $this->data();
+        $requestData = $this->getData();
         $event = $this->dispatchEvent(UsersAuthComponent::EVENT_BEFORE_REGISTER, [
             'usersTable' => $usersTable,
             'options' => $options,
@@ -89,7 +89,7 @@ class RegisterAction extends Action
         }
         $userSaved = $usersTable->register($user, $requestData, $options);
         if (!$userSaved) {
-            throw new ValidationException(__d('CakeDC/Api', 'The user could not be saved'), 0, null, $user->errors());
+            throw new ValidationException(__d('CakeDC/Api', 'The user could not be saved'), 0, null, $user->getErrors());
         }
 
         return $this->_afterRegister($userSaved);
