@@ -15,7 +15,7 @@ Versions and branches
 
 | CakePHP | CakeDC Users Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
-| 3.5             | [5.x](https://github.com/cakedc/cakephp-api/tree/5.0.0)                      | 5.0.0 | stable |
+| 3.5             | [5.x](https://github.com/cakedc/cakephp-api/tree/5.x)                      | 5.0.0 | stable |
 | 3.4             | [4.x](https://github.com/cakedc/cakephp-api/tree/4.0.0)                      | 4.0.0 | stable |
 | 3.3             | [3.x](https://github.com/cakedc/cakephp-api/tree/3.3)                      | 3.3 | stable |
 
