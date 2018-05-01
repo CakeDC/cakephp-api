@@ -15,6 +15,7 @@ use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Utility\Inflector;
 use Exception;
+use Cake\Core\Configure;
 
 class ApiController extends AppController
 {
@@ -86,6 +87,8 @@ class ApiController extends AppController
      */
     protected function _process($options = [])
     {
+        $routesInflectorMethod = Configure::read('Api.routesInflectorMethod', 'underscore');
+
         $this->autoRender = false;
         try {
             if (!empty($this->request['service'])) {
@@ -103,7 +106,7 @@ class ApiController extends AppController
                     'version' => $version,
                     'request' => $this->request,
                     'response' => $this->response,
-                    'baseUrl' => Inflector::underscore($url),
+                    'baseUrl' => $routesInflectorMethod === false ? $url : Inflector::{$routesInflectorMethod}($url)
                 ];
                 $options += (new ConfigReader())->serviceOptions($service, $version);
                 $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
