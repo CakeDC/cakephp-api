@@ -13,9 +13,9 @@ namespace CakeDC\Api\Controller;
 
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
+use Cake\Core\Configure;
 use Cake\Utility\Inflector;
 use Exception;
-use Cake\Core\Configure;
 
 class ApiController extends AppController
 {
