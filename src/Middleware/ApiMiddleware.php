@@ -26,6 +26,33 @@ class ApiMiddleware
 {
 
     /**
+     * Api configuration. If the key has a `.` it will be treated as a plugin prefix.
+     *
+     * @var string
+     */
+    protected $configuration = '';
+
+    protected $space = '';
+    
+    protected $prefix = 'api';
+
+    /**
+     * Constructor
+     *
+     * @param string|null $configuration Configuration.
+     * @throws \InvalidArgumentException When invalid subject has been passed.
+     */
+    public function __construct($prefix, $space = null)
+    {
+        if ($space == null) {
+            $this->space == '';
+        } else {
+            $this->space = $space;
+        }
+        $this->prefix = $prefix;
+    }
+
+    /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Message\ResponseInterface $response The response.
      * @param callable $next The next middleware to call.
@@ -33,10 +60,21 @@ class ApiMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
+        $existsApiConfig = Configure::read('Api');
+        Configure::write('Api', []);
+        if ($this->space == '') {
+            $config = 'api';
+        } else {
+            $config = $this->space . '.api';
+        }
+        
+        Configure::load($config);
+
         $prefix = Configure::read('Api.prefix');
         if (empty($prefix)) {
-            $prefix = 'api';
+            $prefix = $this->prefix;
         }
+        
         $useVersioning = Configure::read('Api.useVersioning');
         if ($useVersioning) {
             $versionPrefix = Configure::read('Api.versionPrefix');
@@ -48,7 +86,10 @@ class ApiMiddleware
         $path = $request->getUri()->getPath();
         if (preg_match($expr, $path, $matches)) {
             $version = isset($matches['version']) ? $matches['version'] : null;
-            $service = $matches['service'];
+            $serviceClass = $service = $matches['service'];
+            if ($this->space !== '') {
+                $serviceClass = $this->space . '.' . $service;
+            }
 
             $url = '/' . $service;
             if (!empty($matches['base'])) {
@@ -56,6 +97,7 @@ class ApiMiddleware
             }
             $options = [
                 'service' => $service,
+                'classPrefix' => $this->space,
                 'version' => $version,
                 'request' => $request,
                 'response' => $response,
@@ -73,6 +115,7 @@ class ApiMiddleware
                 $response = $response->withStringBody($e->getMessage());
             }
 
+            Configure::write('Api', $existsApiConfig);
             return $response;
         }
 
