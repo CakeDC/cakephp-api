@@ -174,6 +174,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     protected $_extensions;
 
+    protected $classPrefix = '';
+
     /**
      * Service constructor.
      *
@@ -183,6 +185,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     {
         if (isset($config['request'])) {
             $this->setRequest($config['request']);
+        }
+        if (isset($config['classPrefix'])) {
+            $this->classPrefix = $config['classPrefix'];
         }
         if (isset($config['response'])) {
             $this->setResponse($config['response']);
@@ -586,6 +591,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
                 'response' => $this->getResponse(),
                 'refresh' => true,
             ];
+            if ($this->classPrefix !== '') {
+                $options['classPrefix'] = $this->classPrefix;
+            }
             $service = ServiceRegistry::get($serviceName, $options);
             $service->setParentService($this);
         }

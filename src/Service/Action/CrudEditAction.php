@@ -22,22 +22,6 @@ class CrudEditAction extends CrudAction
 {
 
     /**
-     * Apply validation process.
-     *
-     * @return bool
-     */
-    public function validates()
-    {
-        $validator = $this->getTable()->validator();
-        $errors = $validator->errors($this->data(), false);
-        if (!empty($errors)) {
-            throw new ValidationException(__('Validation failed'), 0, null, $errors);
-        }
-
-        return true;
-    }
-
-    /**
      * Execute action.
      *
      * @return mixed

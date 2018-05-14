@@ -148,13 +148,21 @@ class ServiceLocator implements LocatorInterface
         if (empty($options['className'])) {
             $options['className'] = Inflector::camelize($alias);
         }
+        if (!empty($options['classPrefix'])) {
+            $_options = $options;
+            $_options['className'] = $options['classPrefix'] . '.' . $_options['className'];
+            $className = $this->_getClassName($alias, $_options);
+        } else {
+            $_options = $options;
+            $className = $this->_getClassName($alias, $_options);
+        }
 
-        $className = $this->_getClassName($alias, $options);
         if (!$className && strpos($options['className'], '.') === false) {
             $_options = $options;
             $_options['className'] = 'CakeDC/Api.' . $_options['className'];
             $className = $this->_getClassName($alias, $_options);
         }
+
         if ($className) {
             $options['className'] = $className;
             $options['service'] = Inflector::underscore($alias);

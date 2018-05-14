@@ -28,7 +28,7 @@
     },
     "require": {
         "php": ">=5.4.16",
-        "cakephp/cakephp": "^3.4",
+        "cakephp/cakephp": "~3.5.15",
         "cakedc/users": "^5.0|^6.0"
     },
     "require-dev": {
