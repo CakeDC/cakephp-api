@@ -58,7 +58,7 @@ class ApiController extends AppController
      */
     public function listing()
     {
-        $this->request['service'] = 'listing';
+        $this->request->setParam('service', 'listing');
         $options = [
             'className' => 'CakeDC/Api.Listing'
         ];
@@ -72,7 +72,7 @@ class ApiController extends AppController
      */
     public function describe()
     {
-        $this->request['service'] = 'describe';
+        $this->request->setParam('service', 'describe');
         $options = [
             'className' => 'CakeDC/Api.Describe'
         ];
@@ -91,11 +91,11 @@ class ApiController extends AppController
 
         $this->autoRender = false;
         try {
-            if (!empty($this->request['service'])) {
-                $service = $this->request['service'];
+            if (!empty($this->request->getParam('service'))) {
+                $service = $this->request->getParam('service');
                 $version = null;
-                if (!empty($this->request['version'])) {
-                    $version = $this->request['version'];
+                if (!empty($this->request->getParam('version'))) {
+                    $version = $this->request->getParam('version');
                 }
 
                 $url = '/' . $service;
