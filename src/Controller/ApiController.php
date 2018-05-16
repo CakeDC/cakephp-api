@@ -58,7 +58,7 @@ class ApiController extends AppController
      */
     public function listing()
     {
-        $this->request->setParam('service', 'listing');
+        $this->request->withParam('service', 'listing');
         $options = [
             'className' => 'CakeDC/Api.Listing'
         ];
@@ -72,7 +72,7 @@ class ApiController extends AppController
      */
     public function describe()
     {
-        $this->request->setParam('service', 'describe');
+        $this->request->withParam('service', 'describe');
         $options = [
             'className' => 'CakeDC/Api.Describe'
         ];
