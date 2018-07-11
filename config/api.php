@@ -18,6 +18,9 @@ return [
         // Data parse from cakephp request object
         'parser' => 'CakeDC/Api.Form',
 
+        //routes inflector: specify underscore, dasherize, or false for neither/no inflection
+        'routesInflectorMethod' => false,
+
         // version is not used
         'useVersioning' => false,
         'versionPrefix' => 'v',

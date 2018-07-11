@@ -13,6 +13,7 @@ namespace CakeDC\Api\Controller;
 
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
+use Cake\Core\Configure;
 use Cake\Utility\Inflector;
 use Exception;
 
@@ -57,7 +58,7 @@ class ApiController extends AppController
      */
     public function listing()
     {
-        $this->request['service'] = 'listing';
+        $this->request = $this->request->withParam('service', 'listing');
         $options = [
             'className' => 'CakeDC/Api.Listing'
         ];
@@ -71,7 +72,7 @@ class ApiController extends AppController
      */
     public function describe()
     {
-        $this->request['service'] = 'describe';
+        $this->request = $this->request->withParam('service', 'describe');
         $options = [
             'className' => 'CakeDC/Api.Describe'
         ];
@@ -86,13 +87,15 @@ class ApiController extends AppController
      */
     protected function _process($options = [])
     {
+        $routesInflectorMethod = Configure::read('Api.routesInflectorMethod', 'underscore');
+
         $this->autoRender = false;
         try {
-            if (!empty($this->request['service'])) {
-                $service = $this->request['service'];
+            if (!empty($this->request->getParam('service'))) {
+                $service = $this->request->getParam('service');
                 $version = null;
-                if (!empty($this->request['version'])) {
-                    $version = $this->request['version'];
+                if (!empty($this->request->getParam('version'))) {
+                    $version = $this->request->getParam('version');
                 }
 
                 $url = '/' . $service;
@@ -103,7 +106,7 @@ class ApiController extends AppController
                     'version' => $version,
                     'request' => $this->request,
                     'response' => $this->response,
-                    'baseUrl' => Inflector::underscore($url),
+                    'baseUrl' => $routesInflectorMethod === false ? $url : Inflector::{$routesInflectorMethod}($url)
                 ];
                 $options += (new ConfigReader())->serviceOptions($service, $version);
                 $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
