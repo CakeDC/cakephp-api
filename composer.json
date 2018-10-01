@@ -32,7 +32,8 @@
         "cakedc/users": "^7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "<6.0"
+        "phpunit/phpunit": "<6.0",
+        "league/flysystem-vfs": "^1.0"
     },
     "autoload": {
         "psr-4": {
