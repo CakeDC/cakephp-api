@@ -13,9 +13,9 @@ namespace CakeDC\Api\Service\Renderer;
 
 use CakeDC\Api\Service\Action\Result;
 use Cake\Core\Configure;
-use Cake\Utility\Hash;
 use Cake\Http\Response;
 use Cake\Log\LogTrait;
+use Cake\Utility\Hash;
 use Exception;
 use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
