@@ -216,7 +216,6 @@ class FlysystemRendererTest extends TestCase
         $response->expects($this->never())
             ->method('withStringBody');
 
-
         $renderer->error($error);
     }
 
