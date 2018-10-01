@@ -12,6 +12,7 @@
 namespace CakeDC\Api\Service\Renderer;
 
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use CakeDC\Api\Service\Action\Result;
 use Cake\Http\Response;
 use Cake\Log\LogTrait;
@@ -37,7 +38,10 @@ class FlysystemRenderer extends FileRenderer
     {
         $data = $result->getData();
         try {
-            $file = $this->getFile($data['filesystem'], $data['path']);
+            $file = $this->getFile(
+                Hash::get($data, 'filesystem'),
+                Hash::get($data, 'path')
+            );
 
             $this->_service->setResponse(
                 $this->deliverAsset($this->_service->getResponse(), $file)
@@ -59,7 +63,7 @@ class FlysystemRenderer extends FileRenderer
      * @param string $path of file at filesystem
      * @return File
      */
-    protected function getFile(Filesystem $filesystem, string $path): File
+    protected function getFile(Filesystem $filesystem, $path)
     {
         return $filesystem->get($path);
     }
@@ -71,7 +75,7 @@ class FlysystemRenderer extends FileRenderer
      * @param File $file file object
      * @return Response
      */
-    public function deliverAsset(Response $response, File $file) : Response
+    public function deliverAsset(Response $response, File $file)
     {
         $contentType = $file->getType();
         $modified = $file->getTimestamp();
