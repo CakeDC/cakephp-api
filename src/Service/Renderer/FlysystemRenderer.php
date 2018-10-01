@@ -11,9 +11,9 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
+use CakeDC\Api\Service\Action\Result;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
-use CakeDC\Api\Service\Action\Result;
 use Cake\Http\Response;
 use Cake\Log\LogTrait;
 use Exception;
