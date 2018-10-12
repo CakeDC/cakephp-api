@@ -42,9 +42,10 @@ class FlysystemRenderer extends FileRenderer
                 Hash::get($data, 'filesystem'),
                 Hash::get($data, 'path')
             );
+            $name = Hash::get($data, 'name');
 
             $this->_service->setResponse(
-                $this->deliverAsset($this->_service->getResponse(), $file)
+                $this->deliverAsset($this->_service->getResponse(), $file, $name)
             );
         } catch (FileNotFoundException $e) {
             $response = $this->_service->getResponse()
@@ -73,9 +74,10 @@ class FlysystemRenderer extends FileRenderer
      *
      * @param Response $response service response
      * @param File $file file object
+     * @param string $name file name shown to user
      * @return Response
      */
-    public function deliverAsset(Response $response, File $file)
+    public function deliverAsset(Response $response, File $file, $name)
     {
         $contentType = $file->getType();
         $modified = $file->getTimestamp();
@@ -86,6 +88,8 @@ class FlysystemRenderer extends FileRenderer
         return $response->withBody($stream)
             // Content
             ->withHeader('Content-Type', $contentType)
+            //Name
+            ->withDownload($name)
             // Cache
             ->withHeader('Cache-Control', 'public,max-age=' . $maxAge)
             ->withHeader('Date', gmdate('D, j M Y G:i:s \G\M\T', time()))
