@@ -81,7 +81,7 @@ class FlysystemRenderer extends FileRenderer
     {
         $contentType = $file->getType();
         $modified = $file->getTimestamp();
-        $expire = strtotime(Configure::write('Api.Flysystem.expire'));
+        $expire = strtotime(Configure::read('Api.Flysystem.expire'));
         $maxAge = $expire - time();
         $stream = new Stream($file->readStream());
 
