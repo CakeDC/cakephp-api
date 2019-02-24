@@ -86,7 +86,7 @@ class JwtAuthenticate extends BaseAuthenticate
      * - `key` - The key, or map of keys used to decode JWT. If not set, value
      *   of Security::salt() will be used.
      *
-     * @param \Cake\Controller\ComponentRegistry $registry The Component registry
+     * @param Action $action AbstractClass with implementations
      *   used on this request.
      * @param array $config Array of config to use.
      */
@@ -121,6 +121,8 @@ class JwtAuthenticate extends BaseAuthenticate
      * @param \Cake\Http\ServerRequest $request The request object.
      * @param \Cake\Http\Response $response Response object.
      *
+     * @throws Exception
+     *
      * @return bool|array User record array or false on failure.
      */
     public function authenticate(ServerRequest $request, Response $response)
@@ -132,6 +134,8 @@ class JwtAuthenticate extends BaseAuthenticate
      * Get user record based on info available in JWT.
      *
      * @param \Cake\Http\ServerRequest $request Request object.
+     *
+     * @throws Exception
      *
      * @return bool|array User record array or false on failure.
      */
@@ -165,6 +169,8 @@ class JwtAuthenticate extends BaseAuthenticate
      * Get payload data.
      *
      * @param \Cake\Http\ServerRequest|null $request Request instance or null
+     *
+     * @throws Exception
      *
      * @return object|null Payload object on success, null on failurec
      */
@@ -220,6 +226,8 @@ class JwtAuthenticate extends BaseAuthenticate
      * Decode JWT token.
      *
      * @param string $token JWT token to decode.
+     *
+     * @throws Exception
      *
      * @return object|null The JWT's payload as a PHP object, null on failure.
      */
