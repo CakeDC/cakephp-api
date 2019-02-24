@@ -2,13 +2,12 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
+use CakeDC\Api\Service\Action\Action;
 use Cake\Core\Configure;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Security;
-use CakeDC\Api\Service\Action\Action;
-use CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate;
 use Exception;
 use Firebase\JWT\JWT;
 
