@@ -73,4 +73,7 @@ So global Auth configuration one should put into  `Api.Service.default.Action.de
  ]
  ```
  * If no rule allowed = true is matched for a given user role and url, default return value will be false
+  
+ ### JWT (Json Web Token Authentication).
  
+ * [Example tutorial](Documentation/Auth/jwt.md)
