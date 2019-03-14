@@ -115,17 +115,8 @@ Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5
 
 mb_internal_encoding(Configure::read('App.encoding'));
 Security::setSalt(Configure::read('Security.salt'));
-Email::setConfigTransport(Configure::consume('EmailTransport'));
+\Cake\Mailer\TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Email::setConfig(Configure::consume('Email'));
-
-Cake\Core\Plugin::load('CakeDC/Api', [
-    'path' => ROOT . DS,
-    'autoload' => true,
-    'bootstrap' => true,
-]);
-
-Cake\Routing\DispatcherFactory::add('Routing');
-Cake\Routing\DispatcherFactory::add('ControllerFactory');
 
 // Ensure default test connection is defined
 if (!getenv('db_dsn')) {
@@ -145,3 +136,7 @@ if ($isCli) {
 } else {
      (new Cake\Error\ErrorHandler(Cake\Core\Configure::read('Error')))->register();
 }
+\Cake\Routing\Router::reload();
+$application = new \CakeDC\Api\Test\App\Application(CONFIG);
+$application->bootstrap();
+$application->pluginBootstrap();

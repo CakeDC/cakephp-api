@@ -11,11 +11,12 @@
 
 namespace CakeDC\Api\TestSuite;
 
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\View\Exception\MissingTemplateException;
 use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestCase as BaseTestCase;
 use Cake\Utility\Hash;
 
 /**
@@ -23,8 +24,9 @@ use Cake\Utility\Hash;
  *
  * @package CakeDC\Api\TestSuite
  */
-class IntegrationTestCase extends BaseTestCase
+class IntegrationTestCase extends \Cake\TestSuite\TestCase
 {
+    use IntegrationTestTrait;
 
     /**
      * @var string|int Current logged in user
@@ -50,7 +52,7 @@ class IntegrationTestCase extends BaseTestCase
     public function tearDown()
     {
         parent::tearDown();
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
     }
 
     /**
@@ -81,7 +83,7 @@ class IntegrationTestCase extends BaseTestCase
         if ($userId === null) {
             $userId = $this->getDefaultUser();
         }
-        $Users = TableRegistry::get('CakeDC/Users.Users');
+        $Users = TableRegistry::getTableLocator()->get('CakeDC/Users.Users');
         $user = $Users->find()->where(['id' => $userId])->first();
         if ($user instanceof EntityInterface) {
             return $user['api_token'];
@@ -101,7 +103,7 @@ class IntegrationTestCase extends BaseTestCase
      */
     public function sendRequest($url, $method, $data = [], $userId = null)
     {
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
         $userToken = $this->_userToken($userId);
 
         Configure::load('api');
@@ -127,7 +129,13 @@ class IntegrationTestCase extends BaseTestCase
             }
         }
         $this->useHttpServer(true);
-        $this->_sendRequest($url, $method, $data);
+        try {
+            ServiceRegistry::getServiceLocator()->clear();
+            TableRegistry::getTableLocator()->clear();
+            $this->_sendRequest($url, $method, $data);
+        } catch (MissingTemplateException $ex) {
+            throw new MissingTemplateException(sprintf('Possibly related to %s', $this->_exception->getMessage()), 500, $ex);
+        }
     }
 
     /**

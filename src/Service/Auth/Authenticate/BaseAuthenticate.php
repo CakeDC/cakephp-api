@@ -149,7 +149,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
     protected function _query($username)
     {
         $config = $this->_config;
-        $table = TableRegistry::get($config['userModel']);
+        $table = TableRegistry::getTableLocator()->get($config['userModel']);
 
         $options = [
             'conditions' => [

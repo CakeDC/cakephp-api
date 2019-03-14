@@ -12,6 +12,7 @@
  * @since     3.3.0
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace CakeDC\Api\Test\App;
 
 use Authentication\AuthenticationService;
@@ -22,6 +23,7 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use CakeDC\Api\Service\ServiceRegistry;
 
 /**
  * Application setup class.
@@ -31,6 +33,27 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  */
 class Application extends BaseApplication
 {
+    public function bootstrap()
+    {
+        parent::bootstrap();
+        ServiceRegistry::getServiceLocator()->clear();
+
+        $this->addPlugin('CakeDC/Users', [
+            'path' => ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS
+        ]);
+        $this->addPlugin('CakeDC/Api', [
+            'path' => ROOT . DS
+        ]);
+    }
+
+    public function pluginBootstrap()
+    {
+        parent::pluginBootstrap();
+
+        Configure::load('api');
+        Configure::write('Users.config', ['users']);
+    }
+
     /**
      * Setup the middleware your application will use.
      *
@@ -39,32 +62,16 @@ class Application extends BaseApplication
      */
     public function middleware($middleware)
     {
-        // $service = new AuthenticationService();
-
-        // $service->loadIdentifier('Authentication.Token', [
-            // 'dataField' => 'token',
-            // 'tokenField' => 'api_token',
-        // ]);
-        // $service->loadAuthenticator('Authentication.Token', [
-            // 'queryParam' => 'token',
-        // ]);
-
-        // Add it to the authentication middleware
-        // $authentication = new AuthenticationMiddleware($service);
-
-        // Add the middleware to the middleware queue
-
-        $middleware// Catch any exceptions in the lower layers,
+        $middleware
+            // Catch any exceptions in the lower layers,
             // and make an error page/response
             ->add(new ErrorHandlerMiddleware(Configure::read('Error.exceptionRenderer')))
-
             // ->add($authentication)
             // Apply Api
-             ->add(new ApiMiddleware())
-
+            ->add(new ApiMiddleware())
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware())// Apply routing
-            ->add(new RoutingMiddleware());
+            ->add(new RoutingMiddleware($this));
 
         return $middleware;
     }

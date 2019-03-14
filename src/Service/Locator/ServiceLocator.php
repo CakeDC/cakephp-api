@@ -71,7 +71,7 @@ class ServiceLocator implements LocatorInterface
 
         if (isset($this->_instances[$alias])) {
             throw new RuntimeException(sprintf(
-                'You cannot configure "%s", it has already been constructed.',
+                'You cannot configure "%s", service has already been constructed.',
                 $alias
             ));
         }

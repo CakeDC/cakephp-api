@@ -44,7 +44,7 @@ class ServiceTest extends TestCase
      */
     public function tearDown()
     {
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
         parent::tearDown();
     }
 
@@ -63,6 +63,7 @@ class ServiceTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/authors'
         ]);
+        $this->assertInstanceOf(FallbackService::class, $this->Service);
     }
 
     /**
@@ -80,6 +81,7 @@ class ServiceTest extends TestCase
             'baseUrl' => '/authors',
             'rendererClass' => 'CakeDC/Api.Raw'
         ]);
+        $this->assertInstanceOf(FallbackService::class, $this->Service);
     }
 
     /**

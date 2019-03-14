@@ -11,6 +11,8 @@
 
 namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Auth;
 
+use Cake\ORM\TableRegistry;
+use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
@@ -25,7 +27,6 @@ use Cake\Utility\Hash;
  */
 class LoginActionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
