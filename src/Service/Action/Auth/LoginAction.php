@@ -26,7 +26,6 @@ use Cake\Validation\Validator;
  */
 class LoginAction extends Action
 {
-
     use LoginTrait;
 
     protected $_identifiedField = 'username';

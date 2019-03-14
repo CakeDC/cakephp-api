@@ -29,7 +29,6 @@ use Exception;
  */
 class ValidateAccountRequestAction extends Action
 {
-
     use CustomUsersTableTrait;
 
     /**

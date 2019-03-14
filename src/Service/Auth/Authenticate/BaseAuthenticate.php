@@ -41,7 +41,6 @@ use Cake\ORM\TableRegistry;
  */
 abstract class BaseAuthenticate implements EventListenerInterface
 {
-
     use InstanceConfigTrait;
 
     /**

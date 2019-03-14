@@ -134,7 +134,7 @@ $isCli = PHP_SAPI === 'cli';
 if ($isCli) {
     (new Cake\Console\ConsoleErrorHandler(Cake\Core\Configure::read('Error')))->register();
 } else {
-     (new Cake\Error\ErrorHandler(Cake\Core\Configure::read('Error')))->register();
+    (new Cake\Error\ErrorHandler(Cake\Core\Configure::read('Error')))->register();
 }
 \Cake\Routing\Router::reload();
 $application = new \CakeDC\Api\Test\App\Application(CONFIG);

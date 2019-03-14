@@ -23,7 +23,6 @@ use Cake\Core\Configure;
 
 class ServiceTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 

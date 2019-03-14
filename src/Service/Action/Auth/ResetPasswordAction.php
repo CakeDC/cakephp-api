@@ -29,7 +29,6 @@ use Exception;
  */
 class ResetPasswordAction extends Action
 {
-
     use CustomUsersTableTrait;
 
     /**

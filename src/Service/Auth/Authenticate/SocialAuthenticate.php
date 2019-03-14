@@ -23,7 +23,6 @@ use \OutOfBoundsException;
  */
 class SocialAuthenticate extends BaseAuthenticate
 {
-
     const TYPE_QUERYSTRING = 'querystring';
     const TYPE_HEADER = 'header';
 
