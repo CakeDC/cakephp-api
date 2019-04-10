@@ -51,7 +51,7 @@ class FallbackService extends NestedCrudService
      */
     public function loadRoutes()
     {
-        $table = TableRegistry::get($this->_table);
+        $table = TableRegistry::getTableLocator()->get($this->_table);
 
         $defaultOptions = $this->routerDefaultOptions();
         ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions) {

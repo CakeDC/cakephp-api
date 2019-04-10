@@ -26,7 +26,6 @@ use Cake\Validation\Validator;
  */
 class LoginAction extends Action
 {
-
     use LoginTrait;
 
     protected $_identifiedField = 'username';
@@ -60,10 +59,10 @@ class LoginAction extends Action
         $validator = new Validator();
         $validator
             ->requirePresence($this->_identifiedField, 'create')
-            ->notEmpty($this->_identifiedField);
+            ->notBlank($this->_identifiedField);
         $validator
             ->requirePresence($this->_passwordField, 'create')
-            ->notEmpty($this->_passwordField);
+            ->notBlank($this->_passwordField);
         $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);

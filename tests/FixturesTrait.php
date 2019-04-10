@@ -25,11 +25,11 @@ trait FixturesTrait
      * @var array
      */
     public $fixtures = [
-        'plugin.CakeDC/Api.social_accounts',
-        'plugin.CakeDC/Api.users',
-        'plugin.CakeDC/Api.articles',
-        'plugin.CakeDC/Api.authors',
-        'plugin.CakeDC/Api.tags',
-        'plugin.CakeDC/Api.articles_tags',
+        'plugin.CakeDC/Api.SocialAccounts',
+        'plugin.CakeDC/Api.Users',
+        'plugin.CakeDC/Api.Articles',
+        'plugin.CakeDC/Api.Authors',
+        'plugin.CakeDC/Api.Tags',
+        'plugin.CakeDC/Api.ArticlesTags',
     ];
 }

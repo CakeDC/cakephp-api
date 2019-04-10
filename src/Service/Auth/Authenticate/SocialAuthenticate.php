@@ -23,7 +23,6 @@ use \OutOfBoundsException;
  */
 class SocialAuthenticate extends BaseAuthenticate
 {
-
     const TYPE_QUERYSTRING = 'querystring';
     const TYPE_HEADER = 'header';
 
@@ -120,7 +119,7 @@ class SocialAuthenticate extends BaseAuthenticate
      */
     protected function _socialQuery($provider, $token, $tokenSecret)
     {
-        $table = TableRegistry::get($this->getConfig('table'));
+        $table = TableRegistry::getTableLocator()->get($this->getConfig('table'));
 
         $conditions = [
             $table->aliasField($this->getConfig('provider_field')) => $provider,

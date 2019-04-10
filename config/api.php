@@ -76,6 +76,9 @@ return [
             'scopes' => ['api'],
             'levels' => ['error', 'info'],
             'file' => 'api.log',
+        ],
+        'Flysystem' => [
+            'expire' => '+1 day'
         ]
     ]
 ];

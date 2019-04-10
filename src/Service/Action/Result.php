@@ -243,7 +243,7 @@ class Result
     /**
      * Payload api method.
      *
-     * @param string $value payload of the api request
+     * @param string $key payload of the api request
      * @deprecated 3.6.0 Use getPayload() instead.
      * @return mixed
      */

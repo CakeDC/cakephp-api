@@ -40,8 +40,8 @@ trait LocatorAwareTrait
             get_called_class() . '::tableLocator() is deprecated. ' .
             'Use getTableLocator()/setTableLocator() instead.'
         );
-        if ($tableLocator !== null) {
-            $this->setTableLocator($tableLocator);
+        if ($serviceLocator !== null) {
+            $this->setTableLocator($serviceLocator);
         }
 
         return $this->getTableLocator();

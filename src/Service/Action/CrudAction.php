@@ -84,7 +84,7 @@ abstract class CrudAction extends Action
         if ($tableName instanceof Table) {
             $this->setTable($tableName);
         } else {
-            $table = TableRegistry::get($tableName);
+            $table = TableRegistry::getTableLocator()->get($tableName);
             $this->setTable($table);
         }
         if (!empty($config['id'])) {

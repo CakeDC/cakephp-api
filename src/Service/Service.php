@@ -310,7 +310,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         );
 
         if ($version !== null) {
-            return $this->setVersion($version);
+            $this->setVersion($version);
         }
 
         return $this->getVersion();
@@ -396,7 +396,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         );
 
         if ($request !== null) {
-            return $this->setRequest($request);
+            $this->setRequest($request);
         }
 
         return $this->getRequest();

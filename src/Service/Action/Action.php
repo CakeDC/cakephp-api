@@ -451,10 +451,6 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
             return $this->getExtensions();
         }
-
-        if ($service !== null) {
-            return $this->setExtensions($extensions);
-        }
     }
 
     /**

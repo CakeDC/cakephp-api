@@ -11,14 +11,15 @@
 
 namespace CakeDC\Api\Test\TestCase\Integration\Service;
 
+use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 use CakeDC\Api\Test\FixturesTrait;
 use Cake\Core\Configure;
 
 class FallbackServiceTest extends IntegrationTestCase
 {
-
     use FixturesTrait;
+    use ConfigTrait;
 
     /**
      * setUp
@@ -27,7 +28,7 @@ class FallbackServiceTest extends IntegrationTestCase
      */
     public function setUp()
     {
-        Configure::write('App.fullBaseUrl', 'http://example.com');
+        $this->_publicAccess();
         parent::setUp();
     }
 
@@ -44,6 +45,6 @@ class FallbackServiceTest extends IntegrationTestCase
     public function testArticlesIndex()
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 5]);
-        $json = json_decode((string)$this->_response->getBody(), true);
+        $this->assertResponseOk();
     }
 }

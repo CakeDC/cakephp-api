@@ -47,12 +47,12 @@ Let's define it here:
 
 
 ```php
-namespace App\Api\Service\Action\Auth;
+namespace App\Api\Service\Action\Stats;
 
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 
-class LoginAction extends Action
+class StatsAction extends Action
 {
 
     public function validates()

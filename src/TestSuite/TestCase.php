@@ -42,6 +42,6 @@ class TestCase extends BaseTestCase
     public function tearDown()
     {
         parent::tearDown();
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
     }
 }

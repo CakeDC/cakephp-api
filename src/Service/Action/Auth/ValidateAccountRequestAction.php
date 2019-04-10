@@ -29,7 +29,6 @@ use Exception;
  */
 class ValidateAccountRequestAction extends Action
 {
-
     use CustomUsersTableTrait;
 
     /**
@@ -54,7 +53,7 @@ class ValidateAccountRequestAction extends Action
         $validator = new Validator();
         $validator
             ->requirePresence('reference', 'create')
-            ->notEmpty('reference');
+            ->notBlank('reference');
         $errors = $validator->errors($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
