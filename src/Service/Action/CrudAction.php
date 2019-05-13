@@ -1,24 +1,27 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action;
 
-use CakeDC\Api\Exception\ValidationException;
-use CakeDC\Api\Service\CrudService;
-use CakeDC\Api\Service\Utility\ReverseRouting;
-use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
+use Cake\ORM\Association;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
+use Cake\Validation\ValidationRule;
+use Cake\Validation\ValidationSet;
+use CakeDC\Api\Exception\ValidationException;
+use CakeDC\Api\Service\Utility\ReverseRouting;
 
 /**
  * Class CrudAction
@@ -28,7 +31,7 @@ use Cake\Utility\Inflector;
 abstract class CrudAction extends Action
 {
     /**
-     * @var Table
+     * @var \Cake\ORM\Table
      */
     protected $_table = null;
 
@@ -44,7 +47,7 @@ abstract class CrudAction extends Action
     /**
      * Crud service.
      *
-     * @var CrudService
+     * @var \CakeDC\Api\Service\CrudService
      */
     protected $_service;
 
@@ -70,6 +73,7 @@ abstract class CrudAction extends Action
      * Action constructor.
      *
      * @param array $config Configuration options passed to the constructor
+     * @throws \Exception
      */
     public function __construct(array $config = [])
     {
@@ -111,7 +115,7 @@ abstract class CrudAction extends Action
     /**
      * Gets a Table instance.
      *
-     * @return Table
+     * @return \Cake\ORM\Table
      */
     public function getTable()
     {
@@ -121,7 +125,7 @@ abstract class CrudAction extends Action
     /**
      * Sets the table instance.
      *
-     * @param Table $table A Table instance.
+     * @param \Cake\ORM\Table $table A Table instance.
      * @return $this
      */
     public function setTable(Table $table)
@@ -132,28 +136,7 @@ abstract class CrudAction extends Action
     }
 
     /**
-     * Api method for table.
-     *
-     * @param Table $table A Table instance.
-     * @deprecated 3.4.0 Use setTable()/getTable() instead.
-     * @return Table
-     */
-    public function table($table = null)
-    {
-        deprecationWarning(
-            'Action::table() is deprecated. ' .
-            'Use Action::setTable()/getTable() instead.'
-        );
-
-        if ($table !== null) {
-            return $this->setTable($table);
-        }
-
-        return $this->getTable();
-    }
-
-    /**
-     * @return CrudService
+     * @return \CakeDC\Api\Service\CrudService
      */
     public function getService()
     {
@@ -203,11 +186,11 @@ abstract class CrudAction extends Action
     /**
      * Builds new entity instance.
      *
-     * @return EntityInterface
+     * @return \Cake\Datasource\EntityInterface
      */
     protected function _newEntity()
     {
-        $entity = $this->getTable()->newEntity();
+        $entity = $this->getTable()->newEntity([]);
 
         return $entity;
     }
@@ -215,7 +198,7 @@ abstract class CrudAction extends Action
     /**
      * Patch entity.
      *
-     * @param EntityInterface $entity An Entity instance.
+     * @param \Cake\Datasource\EntityInterface $entity An Entity instance.
      * @param array $data Entity data.
      * @param array $options Patch entity options.
      * @return \Cake\Datasource\EntityInterface|mixed
@@ -224,8 +207,8 @@ abstract class CrudAction extends Action
     {
         $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));
-        if ($event->result) {
-            $entity = $event->result;
+        if ($event->getResult()) {
+            $entity = $event->getResult();
         }
 
         return $entity;
@@ -244,11 +227,11 @@ abstract class CrudAction extends Action
         }
 
         $event = $this->dispatchEvent('Action.Crud.onFindEntities', compact('query'));
-        if ($event->result) {
-            $query = $event->result;
+        if ($event->getResult()) {
+            $query = $event->getResult();
         }
         $records = $query->all();
-        $event = $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
+        $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
 
         return $records;
     }
@@ -257,7 +240,7 @@ abstract class CrudAction extends Action
      * Returns single entity by id.
      *
      * @param mixed $primaryKey Primary key.
-     * @return \Cake\Collection\Collection
+     * @return \Cake\Datasource\EntityInterface|array
      */
     protected function _getEntity($primaryKey)
     {
@@ -266,8 +249,8 @@ abstract class CrudAction extends Action
             $query = $query->find($this->_finder);
         }
         $event = $this->dispatchEvent('Action.Crud.onFindEntity', compact('query'));
-        if ($event->result) {
-            $query = $event->result;
+        if ($event->getResult()) {
+            $query = $event->getResult();
         }
         $entity = $query->firstOrFail();
 
@@ -305,8 +288,8 @@ abstract class CrudAction extends Action
     /**
      * Save entity.
      *
-     * @param EntityInterface $entity An Entity instance.
-     * @return EntityInterface
+     * @param \Cake\Datasource\EntityInterface $entity An Entity instance.
+     * @return \Cake\Datasource\EntityInterface
      */
     protected function _save($entity)
     {
@@ -340,12 +323,14 @@ abstract class CrudAction extends Action
         $validators = [];
         foreach ($table->getValidator()
                        ->getIterator() as $name => $field) {
+            /** @var ValidationSet $field */
             $validators[$name] = [
                 'validatePresence' => $field->isPresenceRequired(),
                 'emptyAllowed' => $field->isEmptyAllowed(),
-                'rules' => []
+                'rules' => [],
             ];
             foreach ($field->getIterator() as $ruleName => $rule) {
+                /** @var ValidationRule $rule */
                 $_rule = $rule->get('rule');
                 if (is_callable($_rule)) {
                     continue;
@@ -372,10 +357,10 @@ abstract class CrudAction extends Action
         }
 
         $labels = collection($schema->columns())
-            ->map(function ($column) use ($schema) {
+            ->map(function ($column) {
                 return [
                     'name' => $column,
-                    'label' => __(Inflector::humanize(preg_replace('/_id$/', '', $column)))
+                    'label' => __(Inflector::humanize(preg_replace('/_id$/', '', $column))),
                 ];
             })
             ->combine('name', 'label')
@@ -383,24 +368,24 @@ abstract class CrudAction extends Action
 
         $associationTypes = ['BelongsTo', 'HasOne', 'HasMany', 'BelongsToMany'];
         $associations = collection($associationTypes)
-            ->map(function ($type) use ($table) {
+            ->map(function (string $type) use ($table) {
                 return [
                     'type' => $type,
                     'assocs' => collection($table->associations()->getByType($type))
-                        ->map(function ($assoc) {
+                        ->map(function (Association $assoc) {
                             return $assoc->getTarget()->getTable();
                         })
-                        ->toArray()
+                        ->toArray(),
                 ];
             })
             ->combine('type', 'assocs')
             ->toArray();
 
         $fieldTypes = collection($schema->columns())
-            ->map(function ($column) use ($schema) {
+            ->map(function (string $column) use ($schema) {
                 return [
                     'name' => $column,
-                    'column' => $schema->getColumn($column)
+                    'column' => $schema->getColumn($column),
                 ];
             })
             ->combine('name', 'column')
@@ -414,11 +399,11 @@ abstract class CrudAction extends Action
             ],
             'schema' => [
                 'columns' => $fieldTypes,
-                'labels' => $labels
+                'labels' => $labels,
             ],
             'validators' => $validators,
             'relations' => $associations,
-            'actions' => $actions
+            'actions' => $actions,
         ];
     }
 }

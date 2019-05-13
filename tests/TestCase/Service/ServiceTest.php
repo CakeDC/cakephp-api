@@ -1,16 +1,17 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\App\Service;
 
+use Cake\Routing\Exception\MissingRouteException;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
@@ -31,7 +32,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -41,7 +42,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         parent::tearDown();
@@ -87,10 +88,10 @@ class ServiceTest extends TestCase
      * Test load value method
      *
      * @return void
-     * @expectedException \Cake\Routing\Exception\MissingRouteException
      */
     public function testActionNotFound()
     {
+        $this->expectException(MissingRouteException::class);
         $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
@@ -104,7 +105,7 @@ class ServiceTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/authors'
         ];
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertEquals('authors', $Service->getName());
 
@@ -132,7 +133,7 @@ class ServiceTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/authors'
         ];
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertEquals('authors', $Service->getName());
 
@@ -166,7 +167,7 @@ class ServiceTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/authors/1/articles',
         ];
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/authors/1/articles', $Service->getBaseUrl());
         $action = $Service->buildAction();
@@ -204,7 +205,7 @@ class ServiceTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles/tag/1',
         ];
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/articles/tag/1', $Service->getBaseUrl());
         $action = $Service->buildAction();
@@ -242,7 +243,7 @@ class ServiceTest extends TestCase
             'baseUrl' => '/authors'
         ];
         $options += (new ConfigReader())->serviceOptions($service, $version);
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/authors', $Service->getBaseUrl());
         $action = $Service->buildAction();

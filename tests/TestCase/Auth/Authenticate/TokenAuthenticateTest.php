@@ -1,16 +1,17 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Auth\Authenticate;
 
+use Cake\Http\Exception\ForbiddenException;
 use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\Auth\Authenticate\TokenAuthenticate;
 use CakeDC\Api\Service\FallbackService;
@@ -35,7 +36,7 @@ class TokenAuthenticateTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $request = new ServerRequest();
         $response = new Response();
@@ -55,7 +56,7 @@ class TokenAuthenticateTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->token, $this->controller);
     }
@@ -67,7 +68,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHappy()
     {
-        $request = new ServerRequest('/?token=yyy');
+        $request = new ServerRequest(['url' => '/?token=yyy']);
         $result = $this->token->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
     }
@@ -79,44 +80,40 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateFail()
     {
-        $request = new ServerRequest('/');
+        $request = new ServerRequest(['url' => '/']);
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new ServerRequest('/?token=none');
+        $request = new ServerRequest(['url' => '/?token=none']);
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
 
-        $request = new ServerRequest('/?token=');
+        $request = new ServerRequest(['url' => '/?token=']);
         $result = $this->token->authenticate($request, new Response());
         $this->assertFalse($result);
     }
 
     /**
      * test
-     *
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage Type wrong is not valid
-     *
      */
     public function testAuthenticateWrongType()
     {
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('Type wrong is not valid');
         $this->token->setConfig('type', 'wrong');
-        $request = new ServerRequest('/');
+        $request = new ServerRequest(['url' => '/']);
         $this->token->authenticate($request, new Response());
     }
 
     /**
      * test
-     *
-     * @expectedException \Cake\Http\Exception\ForbiddenException
-     * @expectedExceptionMessage SSL is required for ApiKey Authentication
-     *
      */
     public function testAuthenticateRequireSSL()
     {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('SSL is required for ApiKey Authentication');
         $this->token->setConfig('require_ssl', true);
-        $request = new ServerRequest('/?token=test');
+        $request = new ServerRequest(['url' => '/?token=test']);
         $this->token->authenticate($request, new Response());
     }
 
@@ -127,7 +124,7 @@ class TokenAuthenticateTest extends TestCase
     public function testAuthenticateRequireSSLNoKey()
     {
         $this->token->setConfig('require_ssl', true);
-        $request = new ServerRequest('/');
+        $request = new ServerRequest(['url' => '/']);
         $this->assertFalse($this->token->authenticate($request, new Response()));
     }
 

@@ -1,16 +1,19 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service;
 
+use Cake\Utility\Hash;
 use CakeDC\Api\Service\Action\Auth\LoginAction;
 use CakeDC\Api\Service\Action\Auth\RegisterAction;
 use CakeDC\Api\Service\Action\Auth\ResetPasswordAction;
@@ -18,7 +21,6 @@ use CakeDC\Api\Service\Action\Auth\ResetPasswordRequestAction;
 use CakeDC\Api\Service\Action\Auth\SocialLoginAction;
 use CakeDC\Api\Service\Action\Auth\ValidateAccountAction;
 use CakeDC\Api\Service\Action\Auth\ValidateAccountRequestAction;
-use Cake\Utility\Hash;
 
 /**
  * Class AuthService
@@ -27,7 +29,6 @@ use Cake\Utility\Hash;
  */
 class AuthService extends Service
 {
-
     /**
      * @inheritdoc
      * @return void

@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -25,15 +27,13 @@
 
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
-use CakeDC\Api\Service\Action\Action;
-
 use Cake\Auth\PasswordHasherFactory;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\EventListenerInterface;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-
 use Cake\ORM\TableRegistry;
+use CakeDC\Api\Service\Action\Action;
 
 /**
  * Base Authentication class with common methods and properties.
@@ -63,13 +63,13 @@ abstract class BaseAuthenticate implements EventListenerInterface
     protected $_defaultConfig = [
         'fields' => [
             'username' => 'username',
-            'password' => 'password'
+            'password' => 'password',
         ],
         'userModel' => 'Users',
         'scope' => [],
         'finder' => 'all',
         'contain' => null,
-        'passwordHasher' => 'Default'
+        'passwordHasher' => 'Default',
     ];
 
     /**
@@ -152,8 +152,8 @@ abstract class BaseAuthenticate implements EventListenerInterface
 
         $options = [
             'conditions' => [
-                $table->aliasField($config['fields']['username']) => $username
-            ]
+                $table->aliasField($config['fields']['username']) => $username,
+            ],
         ];
 
         if (!empty($config['scope'])) {
@@ -232,7 +232,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
      * - Cake\Http\Response - A response object, which will cause AuthComponent to
      *   simply return that response.
      *
-     * @param ServerRequest $request A request object.
+     * @param \Cake\Http\ServerRequest $request A request object.
      * @param \Cake\Http\Response $response A response object.
      * @return void
      */
@@ -256,7 +256,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
      *
      * @return array List of events this class listens to. Defaults to `[]`.
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [];
     }

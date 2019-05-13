@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -20,7 +22,6 @@ use Exception;
  */
 class Result
 {
-
     /**
      * Response code
      *
@@ -45,17 +46,17 @@ class Result
     /**
      * Exception structure
      *
-     * @var Exception
+     * @var \Exception|null
      */
     protected $_exception = null;
 
     /**
      * Result constructor.
      *
-     * @param array $data data to be delivered for the api
+     * @param array|null $data data to be delivered for the api
      * @param int $code code of the api request
      */
-    public function __construct($data = null, $code = null)
+    public function __construct(?array $data = null, $code = null)
     {
         if ($data !== null) {
             $this->setData($data);
@@ -79,34 +80,13 @@ class Result
      * Sets a result data.
      *
      * @param array|mixed $value data to be delivered for the api
-     * @return $this
+     * @return self
      */
     public function setData($value)
     {
         $this->_data = $value;
 
         return $this;
-    }
-
-    /**
-     * Get and set result data.
-     *
-     * @param array|mixed $value data to be delivered for the api
-     * @deprecated 3.6.0 Use setData()/getData() instead.
-     * @return array
-     */
-    public function data($value = null)
-    {
-        deprecationWarning(
-            'Result::data() is deprecated. ' .
-            'Use Result::setData()/getData() instead.'
-        );
-
-        if ($value !== null) {
-            return $this->setData($value);
-        }
-
-        return $this->getData();
     }
 
     /**
@@ -123,7 +103,7 @@ class Result
      * Sets a result code.
      *
      * @param int $value code to be delivered for the api
-     * @return $this
+     * @return self
      */
     public function setCode($value)
     {
@@ -133,32 +113,11 @@ class Result
     }
 
     /**
-     * Code api method.
-     *
-     * @param int $value code of the api request
-     * @deprecated 3.6.0 Use setCode()/getCode() instead.
-     * @return int
-     */
-    public function code($value = null)
-    {
-        deprecationWarning(
-            'Result::code() is deprecated. ' .
-            'Use Result::setCode()/getCode() instead.'
-        );
-
-        if ($value !== null) {
-            return $this->setCode($value);
-        }
-
-        return $this->getCode();
-    }
-
-    /**
      * Gets a result exception.
      *
-     * @return Exception
+     * @return \Exception|null
      */
-    public function getException()
+    public function getException(): ?Exception
     {
         return $this->_exception;
     }
@@ -166,8 +125,8 @@ class Result
     /**
      * Sets a result exception.
      *
-     * @param Exception $value exception to be delivered for the api
-     * @return $this
+     * @param \Exception $value exception to be delivered for the api
+     * @return self
      */
     public function setException($value)
     {
@@ -177,34 +136,13 @@ class Result
     }
 
     /**
-     * Exception api method.
-     *
-     * @param Exception $value exception of the api request
-     * @deprecated 3.6.0 Use setException()/getException() instead.
-     * @return Exception
-     */
-    public function exception($value = null)
-    {
-        deprecationWarning(
-            'Result::exception() is deprecated. ' .
-            'Use Result::setException()/getException() instead.'
-        );
-
-        if ($value !== null) {
-            return $this->setException($value);
-        }
-
-        return $this->getException();
-    }
-
-    /**
      * Appends value to Payload.
      *
      * @param string $key the key to be used in the payload
      * @param mixed $value value to be used as payload
      * @return void
      */
-    public function appendPayload($key, $value)
+    public function appendPayload(string $key, $value): void
     {
         $this->_payload[$key] = $value;
     }
@@ -212,6 +150,7 @@ class Result
     /**
      * Gets a result payload.
      *
+     * @param string $key Payload key.
      * @return array|mixed Payload
      */
     public function getPayload($key = null)
@@ -238,23 +177,6 @@ class Result
         $this->_payload = $value;
 
         return $this;
-    }
-
-    /**
-     * Payload api method.
-     *
-     * @param string $key payload of the api request
-     * @deprecated 3.6.0 Use getPayload() instead.
-     * @return mixed
-     */
-    public function payload($key = null)
-    {
-        deprecationWarning(
-            'Result::payload() is deprecated. ' .
-            'Use Result::getPayload() instead.'
-        );
-
-        return $this->getPayload($key);
     }
 
     /**

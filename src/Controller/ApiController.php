@@ -1,27 +1,28 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Controller;
 
-use CakeDC\Api\Service\ConfigReader;
-use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Service\ConfigReader;
+use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
 
 class ApiController extends AppController
 {
-
     /**
-     * @var ServiceRegistry
+     * @var \CakeDC\Api\Service\ServiceRegistry
      */
     public $Services;
 
@@ -30,7 +31,7 @@ class ApiController extends AppController
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         if ($this->components()->has('Auth')) {
@@ -58,9 +59,9 @@ class ApiController extends AppController
      */
     public function listing()
     {
-        $this->request = $this->request->withParam('service', 'listing');
+        $this->setRequest( $this->getRequest()->withParam('service', 'listing'));
         $options = [
-            'className' => 'CakeDC/Api.Listing'
+            'className' => 'CakeDC/Api.Listing',
         ];
         $this->_process($options);
     }
@@ -72,9 +73,9 @@ class ApiController extends AppController
      */
     public function describe()
     {
-        $this->request = $this->request->withParam('service', 'describe');
+        $this->setRequest( $this->getRequest()->withParam('service', 'describe'));
         $options = [
-            'className' => 'CakeDC/Api.Describe'
+            'className' => 'CakeDC/Api.Describe',
         ];
         $this->_process($options);
     }
@@ -91,22 +92,22 @@ class ApiController extends AppController
 
         $this->autoRender = false;
         try {
-            if (!empty($this->request->getParam('service'))) {
-                $service = $this->request->getParam('service');
+            if (!empty($this->getRequest()->getParam('service'))) {
+                $service = $this->getRequest()->getParam('service');
                 $version = null;
-                if (!empty($this->request->getParam('version'))) {
-                    $version = $this->request->getParam('version');
+                if (!empty($this->getRequest()->getParam('version'))) {
+                    $version = $this->getRequest()->getParam('version');
                 }
 
                 $url = '/' . $service;
-                if (!empty($this->request->getParam('pass'))) {
-                    $url .= '/' . join('/', $this->request->getParam('pass'));
+                if (!empty($this->getRequest()->getParam('pass'))) {
+                    $url .= '/' . join('/', $this->getRequest()->getParam('pass'));
                 }
                 $options += [
                     'version' => $version,
-                    'request' => $this->request,
-                    'response' => $this->response,
-                    'baseUrl' => $routesInflectorMethod === false ? $url : Inflector::{$routesInflectorMethod}($url)
+                    'request' => $this->getRequest(),
+                    'response' => $this->getResponse(),
+                    'baseUrl' => $routesInflectorMethod === false ? $url : Inflector::{$routesInflectorMethod}($url),
                 ];
                 $options += (new ConfigReader())->serviceOptions($service, $version);
                 $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
@@ -114,11 +115,11 @@ class ApiController extends AppController
 
                 return $Service->respond($result);
             }
-            $this->response = $this->response->withStringBody(__('Service not found'))->withStatus(404);
+            $this->setResponse($this->getResponse()->withStringBody(__('Service not found'))->withStatus(404));
         } catch (Exception $e) {
-            $this->response = $this->response->withStringBody($e->getMessage())->withStatus(400);
+            $this->setResponse($this->getResponse()->withStringBody($e->getMessage())->withStatus(400));
         }
 
-        return $this->response;
+        return $this->getResponse();
     }
 }

@@ -1,19 +1,22 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Middleware;
 
+use Cake\Core\Configure;
+use Cake\Http\CallbackStream;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
-use Cake\Core\Configure;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,7 +27,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ApiMiddleware
 {
-
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Message\ResponseInterface $response The response.
@@ -47,7 +49,7 @@ class ApiMiddleware
 
         $path = $request->getUri()->getPath();
         if (preg_match($expr, $path, $matches)) {
-            $version = isset($matches['version']) ? $matches['version'] : null;
+            $version = $matches['version'] ?? null;
             $service = $matches['service'];
 
             $url = '/' . $service;
@@ -70,7 +72,9 @@ class ApiMiddleware
                 $response = $Service->respond($result);
             } catch (Exception $e) {
                 $response->withStatus(400);
-                $response = $response->withStringBody($e->getMessage());
+                $response = $response->withBody(new CallbackStream(function () use ($e) {
+                        echo $e->getMessage();
+                }));
             }
 
             return $response;

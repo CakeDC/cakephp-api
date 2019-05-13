@@ -1,21 +1,22 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension\Auth;
 
-use CakeDC\Api\Service\Action\Extension\Extension;
-use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use CakeDC\Api\Service\Action\Extension\Extension;
+use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
  * Class UserFormattingExtension
@@ -24,7 +25,6 @@ use Cake\Event\EventListenerInterface;
  */
 class UserFormattingExtension extends Extension implements EventListenerInterface
 {
-
     use CustomUsersTableTrait;
 
     /**
@@ -33,7 +33,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Action.Auth.onLoginFormat' => 'onLoginFormat',
@@ -44,8 +44,8 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
     /**
      * On Login Format.
      *
-     * @param Event $event An Event instance
-     * @return EntityInterface
+     * @param \Cake\Event\Event $event An Event instance
+     * @return array
      */
     public function onLoginFormat(Event $event)
     {
@@ -55,8 +55,8 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
     /**
      * On Register Format.
      *
-     * @param Event $event An Event instance
-     * @return EntityInterface
+     * @param \Cake\Event\Event $event An Event instance
+     * @return array
      */
     public function onRegisterFormat(Event $event)
     {
@@ -65,7 +65,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
 
     /**
      * @param array $user User data
-     * @return EntityInterface
+     * @return array
      */
     protected function _userCleanup($user)
     {

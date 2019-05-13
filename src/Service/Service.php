@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -178,6 +178,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * Service constructor.
      *
      * @param array $config Service configuration.
+     * @throws Exception
      */
     public function __construct(array $config = [])
     {
@@ -221,6 +222,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * Initialize method
      *
      * @return void
+     * @throws \ReflectionException
      */
     public function initialize()
     {
@@ -254,27 +256,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * Get and set service name.
-     *
-     * @param string $name Service name.
-     * @deprecated 3.4.0 Use setName()/getName() instead.
-     * @return string
-     */
-    public function name($name = null)
-    {
-        deprecationWarning(
-            'Service::name() is deprecated. ' .
-            'Use Service::setName()/getName() instead.'
-        );
-
-        if ($name !== null) {
-            return $this->setName($name);
-        }
-
-        return $this->getName();
-    }
-
-    /**
      * Gets service version number.
      *
      * @return int
@@ -293,27 +274,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function setVersion($version)
     {
         $this->_version = $version;
-    }
-
-    /**
-     * Get and set service version.
-     *
-     * @param int $version Version number.
-     * @deprecated 3.4.0 Use setVersion()/getVersion() instead.
-     * @return int|$this
-     */
-    public function version($version = null)
-    {
-        deprecationWarning(
-            'Service::version() is deprecated. ' .
-            'Use Service::setVersion()/getVersion() instead.'
-        );
-
-        if ($version !== null) {
-            $this->setVersion($version);
-        }
-
-        return $this->getVersion();
     }
 
     /**
@@ -340,27 +300,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * Service parser configuration method.
-     *
-     * @param BaseParser $parser A Parser instance.
-     * @deprecated 3.4.0 Use getParser()/setParser() instead.
-     * @return BaseParser|$this
-     */
-    public function parser(BaseParser $parser = null)
-    {
-        deprecationWarning(
-            'Service::parser() is deprecated. ' .
-            'Use Service::setParser()/getParser() instead.'
-        );
-
-        if ($parser !== null) {
-            return $this->setParser($parser);
-        }
-
-        return $this->getParser();
-    }
-
-    /**
      * Gets the Request.
      *
      * @return \Cake\Http\ServerRequest
@@ -379,27 +318,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function setRequest(ServerRequest $request)
     {
         $this->_request = $request;
-    }
-
-    /**
-     * Get and set request.
-     *
-     * @param \Cake\Http\ServerRequest $request A Request object.
-     * @deprecated 3.4.0 Use getRequest()/setRequest() instead.
-     * @return \Cake\Http\ServerRequest|$this
-     */
-    public function request($request = null)
-    {
-        deprecationWarning(
-            'Service::request() is deprecated. ' .
-            'Use Service::setRequest()/getRequest() instead.'
-        );
-
-        if ($request !== null) {
-            $this->setRequest($request);
-        }
-
-        return $this->getRequest();
     }
 
     /**
@@ -565,18 +483,19 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * Dispatch service call through callbacks and action.
      *
      * @return Result|mixed
+     * @throws Exception
      */
     protected function _dispatch()
     {
         $event = $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
-        if ($event->result instanceof Result) {
-            return $event->result;
+        if ($event->getResult() instanceof Result) {
+            return $event->getResult();
         }
 
         $action = $this->buildAction();
         $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
-        if ($event->result instanceof Result) {
-            return $event->result;
+        if ($event->getResult() instanceof Result) {
+            return $event->getResult();
         }
 
         return $action->process();
@@ -692,27 +611,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * Parent service get and set methods.
-     *
-     * @param Service $service Parent Service instance.
-     * @deprecated 3.4.0 Use getParentService()/setParentService() instead.
-     * @return Service|$this
-     */
-    public function parent(Service $service = null)
-    {
-        deprecationWarning(
-            'Service::parent() is deprecated. ' .
-            'Use Service::setParentService()/getParentService() instead.'
-        );
-
-        if ($service !== null) {
-            return $this->setParentService($service);
-        }
-
-        return $this->getParentService();
-    }
-
-    /**
      * Build action class
      *
      * @param string $class Class name.
@@ -782,25 +680,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * @param null $value value
-     * @deprecated 3.4.0 Use getResult()/setResult() instead.
-     * @return Result
-     */
-    public function result($value = null)
-    {
-        deprecationWarning(
-            'Service::result() is deprecated. ' .
-            'Use Service::setResult()/getResult() instead.'
-        );
-
-        if ($value !== null) {
-            return $this->setResult($value);
-        }
-
-        return $this->getResult();
-    }
-
-    /**
      * Fill up response and stop execution.
      *
      * @param Result $result A Result instance.
@@ -847,27 +726,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * Get and set response.
-     *
-     * @param \Cake\Http\Response $response  A Response object.
-     * @deprecated 3.4.0 Use getResponse()/setResponse() instead.
-     * @return \Cake\Http\Response
-     */
-    public function response(Response $response = null)
-    {
-        deprecationWarning(
-            'Service::response() is deprecated. ' .
-            'Use Service::setResponse()/getResponse() instead.'
-        );
-
-        if ($response !== null) {
-            return $this->setResponse($response);
-        }
-
-        return $this->getResponse();
-    }
-
-    /**
      * Gets the service renderer.
      *
      * @return BaseRenderer
@@ -888,27 +746,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $this->_renderer = $renderer;
 
         return $this;
-    }
-
-    /**
-     * Service renderer configuration method.
-     *
-     * @param BaseRenderer $renderer A Renderer instance.
-     * @deprecated 3.4.0 Use getRenderer()/setRenderer() instead.
-     * @return BaseRenderer|$this
-     */
-    public function renderer(BaseRenderer $renderer = null)
-    {
-        deprecationWarning(
-            'Service::renderer() is deprecated. ' .
-            'Use Service::setRenderer()/getRenderer() instead.'
-        );
-
-        if ($renderer !== null) {
-            return $this->setRenderer($renderer);
-        }
-
-        return $this->getRenderer();
     }
 
     /**
@@ -937,7 +774,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         $eventMap = [
             'Service.beforeDispatch' => 'beforeDispatch',
@@ -973,10 +810,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Sets the extension registry for this service.
      *
-     * @param \CakeDC\Api\Service\ExtensionRegistry $extensions The extension registry instance.
-     * @return $this
+     * @param \CakeDC\Api\Service\ExtensionRegistry|null $extensions The extension registry instance.
+     * @return self
      */
-    public function setExtensions($extensions)
+    public function setExtensions(?ExtensionRegistry $extensions): self
     {
         if ($extensions === null) {
             $extensions = new ExtensionRegistry($this);
@@ -987,32 +824,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * Get the extension registry for this service.
-     *
-     * If called with the first parameter, it will be set as the action $this->_extensions property
-     *
-     * @param \CakeDC\Api\Service\ExtensionRegistry|null $extensions Extension registry.
-     * @deprecated 3.4.0 Use getExtensions()/setExtensions() instead.
-     * @return \CakeDC\Api\Service\ExtensionRegistry|$this
-     */
-    public function extensions($extensions = null)
-    {
-        deprecationWarning(
-            'Service::extensions() is deprecated. ' .
-            'Use Service::setExtensions()/getExtensions() instead.'
-        );
-
-        if ($extensions !== null) {
-            $this->setExtensions($extensions);
-        }
-
-        return $this->getExtensions();
-    }
-
-    /**
      * Loads the defined extensions using the Extension factory.
      *
      * @return void
+     * @throws Exception
      */
     protected function _loadExtensions()
     {

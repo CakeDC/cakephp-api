@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -20,7 +22,6 @@ use Cake\Utility\Inflector;
  */
 abstract class CrudService extends Service
 {
-
     /**
      * Actions classes map.
      *
@@ -85,27 +86,6 @@ abstract class CrudService extends Service
         $this->_table = $table;
 
         return $this;
-    }
-
-    /**
-     * Api method for table.
-     *
-     * @param string $table A Table name.
-     * @deprecated 3.4.0 Use setTable()/getTable() instead.
-     * @return string
-     */
-    public function table($table = null)
-    {
-        deprecationWarning(
-            'Service::table() is deprecated. ' .
-            'Use Service::setTable()/getTable() instead.'
-        );
-
-        if ($table !== null) {
-            return $this->setTable($table);
-        }
-
-        return $this->getTable();
     }
 
     /**

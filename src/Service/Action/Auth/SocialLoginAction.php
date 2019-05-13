@@ -1,16 +1,21 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Utility\Hash;
+use Cake\Validation\Validator;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
@@ -19,9 +24,6 @@ use CakeDC\Users\Exception\TokenExpiredException;
 use CakeDC\Users\Exception\UserAlreadyActiveException;
 use CakeDC\Users\Exception\UserNotActiveException;
 use CakeDC\Users\Exception\UserNotFoundException;
-use Cake\Datasource\EntityInterface;
-use Cake\Utility\Hash;
-use Cake\Validation\Validator;
 use Exception;
 
 /**
@@ -31,7 +33,6 @@ use Exception;
  */
 class SocialLoginAction extends Action
 {
-
     use CustomUsersTableTrait;
 
     /**
@@ -70,7 +71,7 @@ class SocialLoginAction extends Action
      * Execute action.
      *
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute()
     {
@@ -109,7 +110,7 @@ class SocialLoginAction extends Action
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [
-                'CakeDC/Api.Form' => []
+                'CakeDC/Api.Form' => [],
             ],
         ]);
     }

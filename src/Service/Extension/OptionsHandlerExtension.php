@@ -1,20 +1,24 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Extension;
 
-use CakeDC\Api\Service\Action\DummyAction;
-use CakeDC\Api\Service\Action\Result;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use CakeDC\Api\Service\Action\Result;
+use Cake\Http\ServerRequest;
+use CakeDC\Api\Service\Action\DummyAction;
+use CakeDC\Api\Service\Service;
 
 /**
  * Class CorsExtension
@@ -23,13 +27,12 @@ use Cake\Event\EventListenerInterface;
  */
 class OptionsHandlerExtension extends Extension implements EventListenerInterface
 {
-
     /**
      * Events supported by this extension.
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Service.beforeDispatch' => 'onDispatch',
@@ -39,12 +42,15 @@ class OptionsHandlerExtension extends Extension implements EventListenerInterfac
     /**
      * Cors process before dispatch.
      *
-     * @param Event $Event An Event instance
-     * @return Result|void
+     * @param \Cake\Event\EventInterface $event An Event instance
+     * @return \CakeDC\Api\Service\Action\Result|null
+     * @throws \Exception
      */
-    public function onDispatch(Event $Event)
+    public function onDispatch(EventInterface $event): ?Result
     {
-        $service = $Event->getData('service');
+        /** @var Service $service */
+        $service = $event->getData('service');
+        /** @var ServerRequest $request */
         $request = $service->getRequest();
 
         if ($request->is('options')) {
@@ -53,14 +59,16 @@ class OptionsHandlerExtension extends Extension implements EventListenerInterfac
                 'service' => $service,
                 'route' => null,
                 'Extension' => [
-                    'CakeDC/Api.Cors'
-                ]
+                    'CakeDC/Api.Cors',
+                ],
             ]);
             $action->Auth->allow('options');
             $result = $service->getResult();
-            $result->getData($action->process());
+            $result->setData($action->process());
 
             return $result;
         }
+
+        return null;
     }
 }

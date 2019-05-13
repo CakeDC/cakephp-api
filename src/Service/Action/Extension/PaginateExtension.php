@@ -1,20 +1,21 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use CakeDC\Api\Service\Action\Action;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Entity;
+use CakeDC\Api\Service\Action\Action;
 
 /**
  * Class PaginateExtension
@@ -23,7 +24,6 @@ use Cake\ORM\Entity;
  */
 class PaginateExtension extends Extension implements EventListenerInterface
 {
-
     protected $_defaultConfig = [
         'defaultLimit' => 20,
         'limitField' => 'limit',
@@ -36,7 +36,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Action.Crud.onFindEntities' => 'findEntities',
@@ -47,15 +47,15 @@ class PaginateExtension extends Extension implements EventListenerInterface
     /**
      * Find entities
      *
-     * @param Event $event An Event instance
-     * @return Entity
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\ORM\Entity
      */
     public function findEntities(Event $event)
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
-        if ($event->result) {
-            $query = $event->result;
+        if ($event->getResult()) {
+            $query = $event->getResult();
         }
         $query->limit($this->_limit($action));
         $query->page($this->_page($action));
@@ -66,7 +66,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     /**
      * Returns current page.
      *
-     * @param Action $action An Action instance
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance
      * @return int
      */
     protected function _page(Action $action)
@@ -83,7 +83,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     /**
      * Returns current limit
      *
-     * @param Action $action An Action instance
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance
      * @return mixed
      */
     protected function _limit(Action $action)
@@ -106,7 +106,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
     /**
      * after find entities
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return void
      */
     public function afterFind(Event $event)
@@ -120,7 +120,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
             'page' => $this->_page($action),
             'limit' => $limit,
             'pages' => ceil($count / $limit),
-            'count' => $count
+            'count' => $count,
         ];
         $result->appendPayload('pagination', $pagination);
     }

@@ -1,16 +1,17 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAddAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
@@ -35,7 +36,7 @@ class CrudAddActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -45,9 +46,9 @@ class CrudAddActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
         unset($this->Action, $this->request);
         parent::tearDown();
     }
@@ -72,10 +73,10 @@ class CrudAddActionTest extends TestCase
      * Test load value method
      *
      * @return void
-     * @expectedException \CakeDC\Api\Exception\ValidationException
      */
     public function testExecuteValidationError()
     {
+        $this->expectException(ValidationException::class);
         $this->_initializeAction([
             'title' => ''
         ]);
@@ -100,7 +101,7 @@ class CrudAddActionTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles',
         ];
-        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
 
         $this->Action = new CrudAddAction([
             'service' => $this->Service,

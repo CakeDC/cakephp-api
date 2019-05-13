@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -31,7 +33,6 @@ use Cake\Core\Exception\Exception;
 
 trait StorageTrait
 {
-
     /**
      * Storage object.
      *
@@ -46,7 +47,7 @@ trait StorageTrait
      *   object as storage or if null returns configured storage object.
      * @return \Cake\Auth\Storage\StorageInterface|null
      */
-    public function storage(StorageInterface $storage = null)
+    public function storage(?StorageInterface $storage = null)
     {
         if ($storage !== null) {
             $this->_storage = $storage;

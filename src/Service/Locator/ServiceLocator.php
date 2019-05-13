@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -87,47 +87,13 @@ class ServiceLocator implements LocatorInterface
      * @param string|null $alias Alias to get config for, null for complete config.
      * @return array The config data.
      */
-    public function getConfig($alias = null)
+    public function getConfig(?string $alias = null): array
     {
         if ($alias === null) {
             return $this->_config;
         }
 
         return isset($this->_config[$alias]) ? $this->_config[$alias] : [];
-    }
-
-    /**
-     * Stores a list of options to be used when instantiating an object
-     * with a matching alias.
-     *
-     * The options that can be stored are those that are recognized by `get()`
-     * If second argument is omitted, it will return the current settings
-     * for $alias.
-     *
-     * If no arguments are passed it will return the full configuration array for
-     * all aliases
-     *
-     * @param string|null $alias Name of the alias
-     * @param array|null $options list of options for the alias
-     * @return array The config data.
-     * @throws RuntimeException When you attempt to configure an existing method instance.
-     * @deprecated 3.6.0 Use setConfig()/getConfig() instead.
-     */
-    public function config($alias = null, $options = null)
-    {
-        deprecationWarning(
-            'ServiceLocator::config() is deprecated. ' .
-            'Use getConfig()/setConfig() instead.'
-        );
-        if ($alias !== null) {
-            if (is_string($alias) && $options === null) {
-                return $this->getConfig($alias);
-            }
-
-            $this->setConfig($alias, $options);
-        }
-
-        return $this->getConfig($alias);
     }
 
     /**
@@ -163,7 +129,7 @@ class ServiceLocator implements LocatorInterface
      * @return \CakeDC\Api\Service\Service
      * @throws \RuntimeException When you try to configure an alias that already exists.
      */
-    public function get($alias, array $options = [])
+    public function get(string $alias, array $options = []): Service
     {
         $alias = Inflector::camelize($alias);
 
@@ -255,7 +221,7 @@ class ServiceLocator implements LocatorInterface
     /**
      * {@inheritDoc}
      */
-    public function exists($alias)
+    public function exists(string $alias): bool
     {
         return isset($this->_instances[$alias]);
     }
@@ -263,7 +229,7 @@ class ServiceLocator implements LocatorInterface
     /**
      * {@inheritDoc}
      */
-    public function set($alias, Service $object)
+    public function set(string $alias, Service $object): Service
     {
         return $this->_instances[$alias] = $object;
     }
@@ -271,7 +237,7 @@ class ServiceLocator implements LocatorInterface
     /**
      * {@inheritDoc}
      */
-    public function clear()
+    public function clear(): void
     {
         $this->_instances = [];
         $this->_config = [];
@@ -294,7 +260,7 @@ class ServiceLocator implements LocatorInterface
     /**
      * {@inheritDoc}
      */
-    public function remove($alias)
+    public function remove(string $alias): void
     {
         unset(
             $this->_instances[$alias],

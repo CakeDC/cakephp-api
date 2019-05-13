@@ -1,19 +1,18 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action;
 
-use CakeDC\Api\Exception\ValidationException;
-use CakeDC\Api\Service\Auth\Auth;
-use CakeDC\Api\Service\Service;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherInterface;
@@ -22,6 +21,9 @@ use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
 use Cake\Utility\Hash;
 use Cake\Validation\ValidatorAwareTrait;
+use CakeDC\Api\Exception\ValidationException;
+use CakeDC\Api\Service\Auth\Auth;
+use CakeDC\Api\Service\Service;
 use Exception;
 use ReflectionMethod;
 
@@ -46,7 +48,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * An Auth instance.
      *
-     * @var Auth
+     * @var \CakeDC\Api\Service\Auth\Auth
      */
     public $Auth;
 
@@ -60,7 +62,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * A Service reference.
      *
-     * @var Service
+     * @var \CakeDC\Api\Service\Service
      */
     protected $_service;
 
@@ -89,6 +91,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Action constructor.
      *
      * @param array $config Configuration options passed to the constructor
+     * @throws Exception
      */
     public function __construct(array $config = [])
     {
@@ -102,7 +105,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             $this->setRoute($config['route']);
         }
         if (!empty($config['Extension'])) {
-            $this->extensions = (Hash::merge($this->extensions, $config['Extension']));
+            $this->extensions = Hash::merge($this->extensions, $config['Extension']);
         }
         $extensionRegistry = $eventManager = null;
         if (!empty($config['eventManager'])) {
@@ -141,34 +144,13 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Sets an action name.
      *
      * @param string $name An action name.
-     * @return $this
+     * @return self
      */
     public function setName($name)
     {
         $this->_name = $name;
 
         return $this;
-    }
-
-    /**
-     * Get and set service name.
-     *
-     * @param string $name Action name.
-     * @deprecated 3.4.0 Use setName()/getName() instead.
-     * @return string
-     */
-    public function name($name = null)
-    {
-        deprecationWarning(
-            'Action::name() is deprecated. ' .
-            'Use Action::setName()/getName() instead.'
-        );
-
-        if ($name !== null) {
-            return $this->setName($name);
-        }
-
-        return $this->getName();
     }
 
     /**
@@ -185,7 +167,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Sets activated route.
      *
      * @param array $route Route config.
-     * @return $this
+     * @return self
      */
     public function setRoute(array $route)
     {
@@ -195,28 +177,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     }
 
     /**
-     * Api method for activated route.
-     *
-     * @param array $route Activated route.
-     * @deprecated 3.4.0 Use setRoute()/getRoute() instead.
-     * @return array
-     */
-    public function route($route = null)
-    {
-        deprecationWarning(
-            'Action::route() is deprecated. ' .
-            'Use Action::setRoute()/getRoute() instead.'
-        );
-
-        if ($route !== null) {
-            return $this->setRoute($route);
-        }
-
-        return $this->getRoute();
-    }
-
-    /**
-     * @return Service
+     * @return \CakeDC\Api\Service\Service
      */
     public function getService()
     {
@@ -226,32 +187,11 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Set a service
      *
-     * @param Service $service service
+     * @param \CakeDC\Api\Service\Service $service service
      */
     public function setService(Service $service)
     {
         $this->_service = $service;
-    }
-
-    /**
-     * Set or get service.
-     *
-     * @param Service $service An Service instance.
-     * @return Service
-     * @deprecated 3.4.0 Use setService()/getService() instead.
-     */
-    public function service($service = null)
-    {
-        deprecationWarning(
-            'Action::service() is deprecated. ' .
-            'Use Action::setService()/getService() instead.'
-        );
-
-        if ($service !== null) {
-            return $this->setService($service);
-        }
-
-        return $this->getService();
     }
 
     /**
@@ -275,13 +215,15 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Action execution life cycle.
      *
      * @return mixed
+     * @throws Exception
      */
     public function process()
     {
+        $data = null;
         $event = $this->dispatchEvent('Action.beforeProcess', ['action' => $this]);
 
         if ($event->isStopped()) {
-            return $event->result;
+            return $event->getResult();
         }
 
         $event = new Event('Action.onAuth', $this, ['action' => $this]);
@@ -292,7 +234,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if ($event->isStopped()) {
             $this->dispatchEvent('Action.beforeValidateStopped', []);
 
-            return $event->result;
+            return $event->getResult();
         }
 
         if (!$this->validates()) {
@@ -305,7 +247,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if ($event->isStopped()) {
             $this->dispatchEvent('Action.beforeExecuteStopped', []);
 
-            return $event->result;
+            return $event->getResult();
         }
 
         // thrown before execute action event (with stop on false)
@@ -326,7 +268,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @param string $methodName Method name.
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     protected function _executeAction($methodName = 'action')
     {
@@ -347,7 +289,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
                     $arguments[] = $param->getDefaultValue();
                 } else {
                     $value = $params[$paramName];
-                    $arguments[] = (is_numeric($value)) ? 0 + $value : $value;
+                    $arguments[] = is_numeric($value) ? 0 + $value : $value;
                 }
             }
         }
@@ -359,7 +301,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         $eventMap = [
             'Action.beforeProcess' => 'beforeProcess',
@@ -390,22 +332,6 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     }
 
     /**
-     * Returns action input params
-     *
-     * @return mixed
-     * @deprecated 3.6.0 Use getData() instead.
-     */
-    public function data()
-    {
-        deprecationWarning(
-            'Action::data() is deprecated. ' .
-            'Use Action::getData() instead.'
-        );
-
-        return $this->getData();
-    }
-
-    /**
      * @return \CakeDC\Api\Service\Action\ExtensionRegistry
      */
     public function getExtensions()
@@ -417,6 +343,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Set a service
      *
      * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
+     * @return self
      */
     public function setExtensions($extensions = null)
     {
@@ -430,33 +357,10 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     }
 
     /**
-     * Get the extension registry for this action.
-     *
-     * If called with the first parameter, it will be set as the action $this->_extensions property
-     *
-     * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
-     *
-     * @return \CakeDC\Api\Service\Action\ExtensionRegistry
-     * @deprecated 3.6.0 Use setExtensions()/getExtensions() instead.
-     */
-    public function extensions($extensions = null)
-    {
-        deprecationWarning(
-            'Action::extensions() is deprecated. ' .
-            'Use Action::setExtensions()/getExtensions() instead.'
-        );
-
-        if ($this->_extensions === null && $extensions === null) {
-            $this->setExtensions($extensions);
-
-            return $this->getExtensions();
-        }
-    }
-
-    /**
      * Loads the defined extensions using the Extension factory.
      *
      * @return void
+     * @throws Exception
      */
     protected function _loadExtensions()
     {
@@ -474,7 +378,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Initialize auth.
      *
-     * @return Auth
+     * @return \CakeDC\Api\Service\Auth\Auth
      */
     protected function _initializeAuth()
     {

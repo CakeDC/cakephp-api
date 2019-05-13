@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -18,7 +20,6 @@ use CakeDC\Api\Service\ServiceRegistry;
  */
 trait LocatorAwareTrait
 {
-
     /**
      * Service locator instance
      *
@@ -27,35 +28,14 @@ trait LocatorAwareTrait
     protected $_serviceLocator;
 
     /**
-     * Sets the service locator.
-     * If no parameters are passed, it will return the currently used locator.
-     *
-     * @param \CakeDC\Api\Service\Locator\LocatorInterface|null $serviceLocator LocatorInterface instance.
-     * @return \CakeDC\Api\Service\Locator\LocatorInterface
-     * @deprecated 3.6.0 Use getTableLocator()/setTableLocator() instead.
-     */
-    public function serviceLocator(LocatorInterface $serviceLocator = null)
-    {
-        deprecationWarning(
-            get_called_class() . '::tableLocator() is deprecated. ' .
-            'Use getTableLocator()/setTableLocator() instead.'
-        );
-        if ($serviceLocator !== null) {
-            $this->setTableLocator($serviceLocator);
-        }
-
-        return $this->getTableLocator();
-    }
-
-    /**
      * Sets the table locator.
      *
-     * @param \Cake\ORM\Locator\LocatorInterface $tableLocator LocatorInterface instance.
-     * @return $this
+     * @param \CakeDC\Api\Service\Locator\LocatorInterface $serviceLocator LocatorInterface instance.
+     * @return self
      */
-    public function setTableLocator(LocatorInterface $tableLocator)
+    public function setServiceLocator(LocatorInterface $serviceLocator)
     {
-        $this->_tableLocator = $tableLocator;
+        $this->_serviceLocator = $serviceLocator;
 
         return $this;
     }
@@ -63,14 +43,14 @@ trait LocatorAwareTrait
     /**
      * Gets the table locator.
      *
-     * @return \Cake\ORM\Locator\LocatorInterface
+     * @return \CakeDC\Api\Service\Locator\LocatorInterface
      */
-    public function getTableLocator()
+    public function getServiceLocator()
     {
-        if (!$this->_tableLocator) {
-            $this->_tableLocator = TableRegistry::getTableLocator();
+        if (!$this->_serviceLocator) {
+            $this->_serviceLocator = ServiceRegistry::getServiceLocator();
         }
 
-        return $this->_tableLocator;
+        return $this->_serviceLocator;
     }
 }

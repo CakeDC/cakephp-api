@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -37,7 +39,6 @@ use Cake\Utility\Hash;
  */
 trait AuthenticateTrait
 {
-
     /**
      * Objects that will be used for authentication checks.
      *
@@ -113,8 +114,8 @@ trait AuthenticateTrait
             if (!empty($result) && is_array($result)) {
                 $this->_authenticationProvider = $auth;
                 $event = $this->dispatchEvent('Auth.afterIdentify', [$result, $auth]);
-                if ($event->result !== null) {
-                    $result = $event->result;
+                if ($event->getResult() !== null) {
+                    $result = $event->getResult();
                 }
                 $this->storage()->write($result);
 
@@ -146,8 +147,8 @@ trait AuthenticateTrait
             if (!empty($result) && is_array($result)) {
                 $this->_authenticationProvider = $auth;
                 $event = $this->dispatchEvent('Auth.afterIdentify', [$result, $auth]);
-                if ($event->result !== null) {
-                    return $event->result;
+                if ($event->getResult() !== null) {
+                    return $event->getResult();
                 }
 
                 return $result;
@@ -210,7 +211,7 @@ trait AuthenticateTrait
             $this->constructAuthenticate();
         }
 
-        return isset($this->_authenticateObjects[$alias]) ? $this->_authenticateObjects[$alias] : null;
+        return $this->_authenticateObjects[$alias] ?? null;
     }
 
     /**

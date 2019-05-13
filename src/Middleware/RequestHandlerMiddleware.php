@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -23,7 +25,6 @@ use RuntimeException;
  */
 class RequestHandlerMiddleware
 {
-
     /**
      * Request object
      *
@@ -93,13 +94,13 @@ class RequestHandlerMiddleware
             return false;
         }
 
-        list($contentType) = explode(';', $request->contentType());
+        [$contentType] = explode(';', $request->contentType());
         $response = $this->response;
         if ($type === null) {
             return $response->mapType($contentType);
         }
         if (is_string($type)) {
-            return ($type === $response->mapType($contentType));
+            return $type === $response->mapType($contentType);
         }
     }
 

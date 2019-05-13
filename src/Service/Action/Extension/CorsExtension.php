@@ -1,17 +1,18 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use CakeDC\Api\Service\Action\Action;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 
@@ -22,13 +23,12 @@ use Cake\Event\EventListenerInterface;
  */
 class CorsExtension extends Extension implements EventListenerInterface
 {
-
     /**
      * Events supported by this extension.
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Action.beforeProcess' => 'onAction',
@@ -38,7 +38,7 @@ class CorsExtension extends Extension implements EventListenerInterface
     /**
      * new entity
      *
-     * @param Event $Event An Event instance
+     * @param \Cake\Event\Event $Event An Event instance
      * @return void
      */
     public function onAction(Event $Event)
@@ -56,7 +56,7 @@ class CorsExtension extends Extension implements EventListenerInterface
                      'Access-Control-Allow-Headers',
                      'Access-Control-Allow-Origin',
                      'Authorization',
-                     'X-Requested-With'
+                     'X-Requested-With',
                  ])
                  ->allowCredentials()
                  ->maxAge($this->getConfig('maxAge') ?: 300)

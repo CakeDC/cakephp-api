@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -58,7 +58,7 @@ class FlysystemRenderer extends FileRenderer
     }
 
     /**
-     * Get flystem file object
+     * Get flysystem file object
      *
      * @param Filesystem $filesystem custom filesystem
      * @param string $path of file at filesystem
@@ -89,7 +89,7 @@ class FlysystemRenderer extends FileRenderer
             // Content
             ->withHeader('Content-Type', $contentType)
             //Name
-            ->withDownload($name)
+            ->withDownload((string)$name)
             // Cache
             ->withHeader('Cache-Control', 'public,max-age=' . $maxAge)
             ->withHeader('Date', gmdate('D, j M Y G:i:s \G\M\T', time()))

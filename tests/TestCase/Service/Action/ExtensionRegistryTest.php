@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -15,6 +15,7 @@ use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\Action\ExtensionRegistry;
 use CakeDC\Api\Service\Action\Extension\PaginateExtension;
 use CakeDC\Api\Service\Action\Extension\SortExtension;
+use CakeDC\Api\Service\Exception\MissingExtensionException;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
@@ -33,7 +34,7 @@ class ExtensionRegistryTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -57,7 +58,7 @@ class ExtensionRegistryTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->ExtensionRegistry, $this->Action);
         parent::tearDown();
@@ -79,11 +80,11 @@ class ExtensionRegistryTest extends TestCase
     /**
      * Test load unexists class  method
      *
-     * @expectedException \CakeDC\Api\Service\Exception\MissingExtensionException
      * @return void
      */
     public function testLoadWrongClass()
     {
+        $this->expectException(MissingExtensionException::class);
         $this->ExtensionRegistry->load('Unknown', []);
     }
 }

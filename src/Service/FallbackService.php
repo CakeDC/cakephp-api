@@ -1,20 +1,23 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service;
 
-use CakeDC\Api\Routing\ApiRouter;
+use Cake\ORM\Association;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Routing\ApiRouter;
 
 /**
  * Class FallbackService
@@ -23,7 +26,6 @@ use Cake\Utility\Inflector;
  */
 class FallbackService extends NestedCrudService
 {
-
     /**
      * Table name.
      *
@@ -61,7 +63,7 @@ class FallbackService extends NestedCrudService
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ':id'],
             ]);
-            $routes->resources($this->getName(), $options, function ($routes) use ($table) {
+            $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table) {
                 if (is_array($this->_routeExtensions)) {
                     $routes->setExtensions($this->_routeExtensions);
 
@@ -69,11 +71,12 @@ class FallbackService extends NestedCrudService
 
                     foreach ($keys as $type) {
                         foreach ($table->associations()->getByType($type) as $assoc) {
+                            /** @var Association $assoc */
                             $target = $assoc->getTarget();
                             $alias = $target->getAlias();
 
                             $targetClass = get_class($target);
-                            list(, $className) = namespaceSplit($targetClass);
+                            [, $className] = namespaceSplit($targetClass);
                             $className = preg_replace('/(.*)Table$/', '\1', $className);
                             if ($className === '') {
                                 $className = $alias;
@@ -83,7 +86,7 @@ class FallbackService extends NestedCrudService
                                 'map' => [
                                     'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                                     'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ':id'],
-                                ]
+                                ],
                             ];
                             $routes->resources($className, $options);
                         }

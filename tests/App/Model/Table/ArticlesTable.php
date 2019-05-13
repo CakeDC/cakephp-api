@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -22,7 +22,7 @@ class ArticlesTable extends Table
      * @param  array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->setTable('articles');
         $this->setDisplayField('title');
@@ -40,15 +40,15 @@ class ArticlesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->requirePresence('title', 'create')
-            ->notEmpty('title');
+            ->notEmptyString('title');
 
         return $validator;
     }
@@ -57,13 +57,13 @@ class ArticlesTable extends Table
     {
         if ($templates === null) {
             $templates = [
-                'name' => 'Article N%s',
+                'title' => 'Article N%s',
                 'body' => 'Article N%s Body',
             ];
         }
         foreach (range(1, $count) as $itemId) {
-            $article = $this->newEntity();
-            $article['name'] = __($templates['name'], $itemId);
+            $article = $this->newEntity([]);
+            $article['title'] = __($templates['title'], $itemId);
             $article['body'] = __($templates['body'], $itemId);
             $article['author_id'] = $authorId;
             $this->save($article);

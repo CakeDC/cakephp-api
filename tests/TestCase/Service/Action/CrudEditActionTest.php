@@ -1,16 +1,18 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudEditAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
@@ -35,7 +37,7 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -45,9 +47,9 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
         unset($this->Service, $this->Action, $this->request);
         parent::tearDown();
     }
@@ -77,10 +79,10 @@ class CrudEditActionTest extends TestCase
      * Test load value method
      *
      * @return void
-     * @expectedException \CakeDC\Api\Exception\ValidationException
      */
     public function testExecuteValidationError()
     {
+        $this->expectException(ValidationException::class);
         $this->_initializeAction(1, [
             'title' => ''
         ]);
@@ -93,10 +95,10 @@ class CrudEditActionTest extends TestCase
      * Test load value method
      *
      * @return void
-     * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function testExecuteNotFound()
     {
+        $this->expectException(RecordNotFoundException::class);
         $this->_initializeAction(999, [
             'title' => 'New message'
         ]);
@@ -121,7 +123,7 @@ class CrudEditActionTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles/' . $id,
         ];
-        $this->Service = ServiceRegistry::get($this->request->getParam('service'), $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
 
         $this->Action = new CrudEditAction([
             'service' => $this->Service,

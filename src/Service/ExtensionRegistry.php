@@ -1,20 +1,22 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service;
 
-use CakeDC\Api\Service\Exception\MissingExtensionException;
 use Cake\Core\App;
 use Cake\Core\ObjectRegistry;
 use Cake\Event\EventDispatcherTrait;
+use CakeDC\Api\Service\Exception\MissingExtensionException;
 
 /**
  * Class ExtensionRegistry
@@ -23,22 +25,21 @@ use Cake\Event\EventDispatcherTrait;
  */
 class ExtensionRegistry extends ObjectRegistry
 {
-
     use EventDispatcherTrait;
 
     /**
      * The Service that this collection was initialized with.
      *
-     * @var Service
+     * @var \CakeDC\Api\Service\Service
      */
     protected $_service = null;
 
     /**
      * Constructor.
      *
-     * @param Service $service Service instance.
+     * @param \CakeDC\Api\Service\Service $service Service instance.
      */
-    public function __construct(Service $service = null)
+    public function __construct(?Service $service = null)
     {
         if ($service) {
             $this->_service = $service;
@@ -68,11 +69,11 @@ class ExtensionRegistry extends ObjectRegistry
      * @return void
      * @throws \Exception
      */
-    protected function _throwMissingClassError($class, $plugin)
+    protected function _throwMissingClassError(string $class, ?string $plugin): void
     {
         throw new MissingExtensionException([
             'class' => $class . 'Extension',
-            'plugin' => $plugin
+            'plugin' => $plugin,
         ]);
     }
 

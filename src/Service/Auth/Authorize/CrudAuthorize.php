@@ -1,21 +1,22 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Auth\Authorize;
 
-use CakeDC\Api\Service\Action\Action;
-use CakeDC\Api\Service\Service;
-
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
+use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Service;
 
 /**
  * Class CrudAuthorize
@@ -40,7 +41,6 @@ use Cake\Http\ServerRequest;
  */
 class CrudAuthorize extends BaseAuthorize
 {
-
     /**
      * Checks user authorization.
      *
@@ -56,7 +56,7 @@ class CrudAuthorize extends BaseAuthorize
     /**
      * Authorize.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return bool|null
      */
     protected function _actionAuth(Action $action)
@@ -88,8 +88,8 @@ class CrudAuthorize extends BaseAuthorize
     /**
      * Authorize service.
      *
-     * @param Service $service A Service instance.
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Service $service A Service instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return bool|null
      */
     protected function _serviceAuth(Service $service, Action $action)
@@ -111,7 +111,7 @@ class CrudAuthorize extends BaseAuthorize
     /**
      * Check permission.
      *
-     * @param Service $service A Service instance.
+     * @param \CakeDC\Api\Service\Service $service A Service instance.
      * @param string $key permission key.
      * @return string
      */

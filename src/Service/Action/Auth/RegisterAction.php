@@ -1,26 +1,26 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
+use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Component\UsersAuthComponent;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 use CakeDC\Users\Controller\Traits\RegisterTrait;
-use CakeDC\Users\Exception\UserNotFoundException;
-use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
-use Cake\Utility\Hash;
-use Cake\Validation\Validator;
 
 /**
  * Class RegisterAction
@@ -29,7 +29,6 @@ use Cake\Validation\Validator;
  */
 class RegisterAction extends Action
 {
-
     use CustomUsersTableTrait;
     use RegisterTrait;
 
@@ -70,7 +69,7 @@ class RegisterAction extends Action
     public function execute()
     {
         $usersTable = $this->getUsersTable();
-        $user = $usersTable->newEntity();
+        $user = $usersTable->newEntity([]);
         $options = $this->_registerOptions();
         $requestData = $this->getData();
         $event = $this->dispatchEvent(UsersAuthComponent::EVENT_BEFORE_REGISTER, [
@@ -79,8 +78,8 @@ class RegisterAction extends Action
             'userEntity' => $user,
         ]);
 
-        if ($event->result instanceof EntityInterface) {
-            if ($userSaved = $usersTable->register($user, $event->result->toArray(), $options)) {
+        if ($event->getResult() instanceof EntityInterface) {
+            if ($userSaved = $usersTable->register($user, $event->getResult()->toArray(), $options)) {
                 return $this->_afterRegister($userSaved);
             }
         }
@@ -98,8 +97,8 @@ class RegisterAction extends Action
     /**
      * Prepare flash messages after registration, and dispatch afterRegister event
      *
-     * @param EntityInterface $userSaved User entity saved
-     * @return EntityInterface
+     * @param \Cake\Datasource\EntityInterface $userSaved User entity saved
+     * @return \Cake\Datasource\EntityInterface
      */
     protected function _afterRegister(EntityInterface $userSaved)
     {
@@ -109,15 +108,15 @@ class RegisterAction extends Action
             $message = __d('CakeDC/Api', 'Please validate your account before log in');
         }
         $event = $this->dispatchEvent(UsersAuthComponent::EVENT_AFTER_REGISTER, [
-            'user' => $userSaved
+            'user' => $userSaved,
         ]);
-        if ($event->result instanceof EntityInterface) {
-            $userSaved = $event->result;
+        if ($event->getResult() instanceof EntityInterface) {
+            $userSaved = $event->getResult();
         }
 
         $event = $this->dispatchEvent('Action.Auth.onRegisterFormat', ['user' => $userSaved]);
-        if ($event->result) {
-            $userSaved = $event->result;
+        if ($event->getResult()) {
+            $userSaved = $event->getResult();
         }
 
         $userSaved['message'] = $message;
@@ -134,7 +133,7 @@ class RegisterAction extends Action
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [
-                'CakeDC/Api.Form' => []
+                'CakeDC/Api.Form' => [],
             ],
         ]);
     }
@@ -150,7 +149,7 @@ class RegisterAction extends Action
         $options = [
             'token_expiration' => $tokenExpiration,
             'validate_email' => $validateEmail,
-            'use_tos' => $useTos
+            'use_tos' => $useTos,
         ];
 
         return $options;

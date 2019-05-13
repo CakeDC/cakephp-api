@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -18,16 +20,27 @@ use CakeDC\Api\Service\Service;
  */
 interface LocatorInterface
 {
+    /**
+     * Returns configuration for an alias or the full configuration array for
+     * all aliases.
+     *
+     * @param string|null $alias Alias to get config for, null for complete config.
+     * @return array The config data.
+     */
+    public function getConfig(?string $alias = null): array;
 
     /**
      * Stores a list of options to be used when instantiating an object
      * with a matching alias.
      *
-     * @param string|null $alias Name of the alias
+     * @param string|array $alias Name of the alias or array to completely
+     *   overwrite current config.
      * @param array|null $options list of options for the alias
-     * @return array The config data.
+     * @return $this
+     * @throws \RuntimeException When you attempt to configure an existing
+     *   table instance.
      */
-    public function config($alias = null, $options = null);
+    public function setConfig($alias, $options = null);
 
     /**
      * Get a service instance from the registry.
@@ -36,7 +49,7 @@ interface LocatorInterface
      * @param array $options The options you want to build the service with.
      * @return \CakeDC\Api\Service\Service
      */
-    public function get($alias, array $options = []);
+    public function get(string $alias, array $options = []): Service;
 
     /**
      * Check to see if an instance exists in the registry.
@@ -44,7 +57,7 @@ interface LocatorInterface
      * @param string $alias The alias to check for.
      * @return bool
      */
-    public function exists($alias);
+    public function exists(string $alias): bool;
 
     /**
      * Set an instance.
@@ -53,14 +66,14 @@ interface LocatorInterface
      * @param \CakeDC\Api\Service\Service $object The service to set.
      * @return \CakeDC\Api\Service\Service
      */
-    public function set($alias, Service $object);
+    public function set(string $alias, Service $object): Service;
 
     /**
      * Clears the registry of configuration and instances.
      *
      * @return void
      */
-    public function clear();
+    public function clear(): void;
 
     /**
      * Removes an instance from the registry.
@@ -68,5 +81,5 @@ interface LocatorInterface
      * @param string $alias The alias to remove.
      * @return void
      */
-    public function remove($alias);
+    public function remove(string $alias): void;
 }

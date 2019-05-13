@@ -1,23 +1,25 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
+use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
+use Cake\Utility\Inflector;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\CrudAction;
 use CakeDC\Api\Service\Action\ExtensionRegistry;
 use CakeDC\Api\Service\Utility\ReverseRouting;
-use Cake\Event\Event;
-use Cake\Event\EventListenerInterface;
-use Cake\Utility\Inflector;
 
 /**
  * Class CrudHateoasExtension
@@ -26,16 +28,15 @@ use Cake\Utility\Inflector;
  */
 class CrudHateoasExtension extends Extension implements EventListenerInterface
 {
-
     /**
-     * @var ReverseRouting
+     * @var \CakeDC\Api\Service\Utility\ReverseRouting
      */
     protected $_reverseRouter;
 
     /**
      * CrudHateous Extension constructor.
      *
-     * @param ExtensionRegistry $registry An ExtensionRegistry instance.
+     * @param \CakeDC\Api\Service\Action\ExtensionRegistry $registry An ExtensionRegistry instance.
      * @param array $config Configuration.
      */
     public function __construct(ExtensionRegistry $registry, array $config = [])
@@ -50,7 +51,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Action.afterProcess' => 'afterAction',
@@ -60,7 +61,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     /**
      * After action callback.
      *
-     * @param Event $event An Event instance.
+     * @param \Cake\Event\Event $event An Event instance.
      * @return void
      */
     public function afterAction(Event $event)
@@ -88,7 +89,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     /**
      * Builds index action links.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return array
      */
     protected function _buildIndexLinks(Action $action)
@@ -113,7 +114,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     /**
      * Builds view action links.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return array
      */
     protected function _buildViewLinks(Action $action)
@@ -163,7 +164,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                 $alias = $target->getAlias();
 
                 $targetClass = get_class($target);
-                list(, $className) = namespaceSplit($targetClass);
+                [, $className] = namespaceSplit($targetClass);
                 $className = preg_replace('/(.*)Table$/', '\1', $className);
                 if ($className === '') {
                     $className = $alias;

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -38,7 +38,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('Api', []);
@@ -49,7 +49,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         ServiceRegistry::getServiceLocator()->clear();
@@ -100,6 +100,8 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param array $data Api parameters.
      * @param string $userId Current user id.
      * @return void
+     * @throws \PHPUnit\Exception
+     * @throws \Throwable
      */
     public function sendRequest($url, $method, $data = [], $userId = null)
     {
@@ -128,13 +130,13 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
                 }
             }
         }
-        $this->useHttpServer(true);
+        //$this->useHttpServer(true);
         try {
             ServiceRegistry::getServiceLocator()->clear();
             TableRegistry::getTableLocator()->clear();
             $this->_sendRequest($url, $method, $data);
         } catch (MissingTemplateException $ex) {
-            throw new MissingTemplateException(sprintf('Possibly related to %s', $this->_exception->getMessage()), 500, $ex);
+            throw new MissingTemplateException(sprintf('Possibly related to %s', $this->_exception->getMessage()), [], 500, $ex);
         }
     }
 

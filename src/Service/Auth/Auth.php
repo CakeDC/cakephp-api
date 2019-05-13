@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -25,15 +27,13 @@
 
 namespace CakeDC\Api\Service\Auth;
 
-use CakeDC\Api\Exception\UnauthenticatedException;
-use CakeDC\Api\Service\Action\Action;
-use CakeDC\Api\Service\Service;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Response;
 use Cake\Log\LogTrait;
+use CakeDC\Api\Exception\UnauthenticatedException;
+use CakeDC\Api\Service\Action\Action;
 
 /**
  * Class Auth
@@ -84,12 +84,12 @@ class Auth
     protected $_registry = null;
 
     /**
-     * @var Service
+     * @var \CakeDC\Api\Service\Service
      */
     protected $_service;
 
     /**
-     * @var Action
+     * @var \CakeDC\Api\Service\Action\Action
      */
     protected $_action;
 
@@ -136,7 +136,7 @@ class Auth
     {
         $defaults = [
             'authenticate' => ['CakeDC/Api.Token'],
-            'authError' => __d('CakeDC/Api', 'You are not authorized to access that location.')
+            'authError' => __d('CakeDC/Api', 'You are not authorized to access that location.'),
         ];
 
         $config = $this->getConfig();
@@ -208,7 +208,7 @@ class Auth
      * `checkAuthIn` config.
      *
      * @param \Cake\Event\Event $event Event instance.
-     * @return Response|null
+     * @return \Cake\Http\Response|null
      */
     public function authCheck(Event $event)
     {
@@ -236,7 +236,7 @@ class Auth
     /**
      * Checks whether current action is accessible without authentication.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return bool True if action is accessible without authentication else false
      */
     protected function _isAllowed(Action $action)

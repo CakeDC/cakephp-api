@@ -1,19 +1,22 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Collection;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAction;
-use Cake\Utility\Hash;
 
 /**
  * Class CollectionAction
@@ -22,7 +25,6 @@ use Cake\Utility\Hash;
  */
 abstract class CollectionAction extends CrudAction
 {
-
     /**
      * Apply validation process to many entities
      *
@@ -31,10 +33,10 @@ abstract class CollectionAction extends CrudAction
     protected function _validateMany()
     {
         $validator = $this->getTable()->getValidator();
-        $datas = $this->getData();
-        $this->_validateDataIsArray($datas);
+        $data = $this->getData();
+        $this->_validateDataIsArray($data);
         $index = 0;
-        $errors = collection($datas)->reduce(function ($errors, $data) use ($validator, &$index) {
+        $errors = collection($data)->reduce(function ($errors, $data) use ($validator, &$index) {
             $error = $validator->errors($data);
             if ($error) {
                 $errors[$index] = $error;
@@ -57,13 +59,14 @@ abstract class CollectionAction extends CrudAction
      *
      * @param array $entities entities
      * @return array of entities saved
+     * @throws \Exception
      */
-    protected function _saveMany($entities = [])
+    protected function _saveMany(array $entities = []): array
     {
         if ($this->getTable()->saveMany($entities)) {
             return $entities;
         } else {
-            $errors = collection($entities)->reduce(function ($errors, $entity) {
+            $errors = collection($entities)->reduce(function ($errors, EntityInterface $entity) {
                 $errors[] = $entity->getErrors();
             }, []);
             throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $errors);
@@ -78,10 +81,10 @@ abstract class CollectionAction extends CrudAction
      */
     protected function _newEntities($patchOptions = [])
     {
-        $datas = $this->getData();
-        $this->_validateDataIsArray($datas);
+        $data = $this->getData();
+        $this->_validateDataIsArray($data);
 
-        return collection($datas)->reduce(function ($entities, $data) use ($patchOptions) {
+        return collection($data)->reduce(function ($entities, $data) use ($patchOptions) {
             $entity = $this->_newEntity();
             $entity = $this->_patchEntity($entity, $data, $patchOptions);
             $entities[] = $entity;
@@ -93,13 +96,13 @@ abstract class CollectionAction extends CrudAction
     /**
      * Ensure the data is a not empty array
      *
-     * @param mixed $datas posted data
-     * @throws ValidationException
+     * @param mixed $data posted data
+     * @throws \CakeDC\Api\Exception\ValidationException
      * @return void
      */
-    protected function _validateDataIsArray($datas)
+    protected function _validateDataIsArray($data): void
     {
-        if (!is_array($datas) || Hash::dimensions($datas) < 2) {
+        if (!is_array($data) || Hash::dimensions($data) < 2) {
             throw new ValidationException(__('Validation failed, POST data is not an array of items'), 0, null);
         }
     }

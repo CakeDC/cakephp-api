@@ -1,19 +1,19 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Extension;
 
-use CakeDC\Api\Service\Action\Action;
-use CakeDC\Api\Service\Service;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\LogTrait;
 use Psr\Log\LogLevel;
@@ -23,17 +23,17 @@ class LogExtension extends Extension implements EventListenerInterface
     use LogTrait;
 
     /**
-     * @var Service
+     * @var \CakeDC\Api\Service\Service
      */
     protected $_service;
 
     /**
-     * @var Action
+     * @var \CakeDC\Api\Service\Action\Action
      */
     protected $_action;
 
     /**
-     * @var int
+     * @var float
      */
     protected $_timer;
 
@@ -43,7 +43,7 @@ class LogExtension extends Extension implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Service.beforeDispatch' => 'beforeProcess',
@@ -54,10 +54,10 @@ class LogExtension extends Extension implements EventListenerInterface
     /**
      * before process
      *
-     * @param Event $event An Event instance.
+     * @param \Cake\Event\EventInterface $event An Event instance.
      * @return void
      */
-    public function beforeProcess(Event $event)
+    public function beforeProcess(EventInterface $event)
     {
         $this->_service = $event->getData('service');
         $this->_timer = microtime(true);
@@ -66,10 +66,10 @@ class LogExtension extends Extension implements EventListenerInterface
     /**
      * after process
      *
-     * @param Event $event An Event instance.
+     * @param \Cake\Event\EventInterface $event An Event instance.
      * @return void
      */
-    public function afterProcess(Event $event)
+    public function afterProcess(EventInterface $event)
     {
         $duration = round((microtime(true) - $this->_timer) * 1000, 0);
         $url = $this->_service->getBaseUrl();

@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -15,16 +17,15 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
-use \OutOfBoundsException;
+use OutOfBoundsException;
 
 /**
  * Class TokenAuthenticate. Login the uses by Api Key
  */
 class TokenAuthenticate extends BaseAuthenticate
 {
-
-    const TYPE_QUERYSTRING = 'querystring';
-    const TYPE_HEADER = 'header';
+    public const TYPE_QUERYSTRING = 'querystring';
+    public const TYPE_HEADER = 'header';
 
     public $types = [self::TYPE_QUERYSTRING, self::TYPE_HEADER];
 
@@ -45,8 +46,8 @@ class TokenAuthenticate extends BaseAuthenticate
      * Authenticate callback
      * Reads the Api Key based on configuration and login the user
      *
-     * @param ServerRequest $request Cake request object.
-     * @param Response $response Cake response object.
+     * @param \Cake\Http\ServerRequest $request Cake request object.
+     * @param \Cake\Http\Response $response Cake response object.
      * @return mixed
      */
     public function authenticate(ServerRequest $request, Response $response)
@@ -57,7 +58,7 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param ServerRequest $request Cake request object.
+     * @param \Cake\Http\ServerRequest $request Cake request object.
      * @return mixed
      */
     public function getUser(ServerRequest $request)
@@ -96,7 +97,7 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param ServerRequest $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return string api key
      */
     public function querystring(ServerRequest $request)
@@ -109,7 +110,7 @@ class TokenAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the header
      *
-     * @param ServerRequest $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return string api key
      */
     public function header(ServerRequest $request)

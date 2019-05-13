@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -30,7 +30,7 @@ class ServiceRegistryTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -40,9 +40,9 @@ class ServiceRegistryTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
-        ServiceRegistry::clear();
+        ServiceRegistry::getServiceLocator()->clear();
         parent::tearDown();
     }
 
@@ -66,7 +66,7 @@ class ServiceRegistryTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/authors'
         ];
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertEquals('authors', $Service->getName());
     }
@@ -95,7 +95,7 @@ class ServiceRegistryTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/authors/1/articles',
         ];
-        $Service = ServiceRegistry::get($service, $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/authors/1/articles', $Service->getBaseUrl());
     }

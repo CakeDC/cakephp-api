@@ -1,24 +1,26 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Auth\Authorize;
 
-use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Auth\Rules\Rule;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Service\Action\Action;
+use CakeDC\Users\Auth\Rules\Rule;
 use Psr\Log\LogLevel;
 
 /**
@@ -97,7 +99,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
     /**
      * Autoload permission configuration
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @param array $config config
      */
     public function __construct(Action $action, array $config = [])
@@ -140,7 +142,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * Set a default role if no role is provided
      *
      * @param array $user user data
-     * @param Request $request request
+     * @param \CakeDC\Api\Service\Auth\Authorize\Request $request request
      * @return bool
      */
     public function authorize($user, ServerRequest $request)
@@ -162,7 +164,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      *
      * @param array $user current user array
      * @param string $role effective role for the current user
-     * @param Request $request request
+     * @param \CakeDC\Api\Service\Auth\Authorize\Request $request request
      * @return bool true if there is a match in permissions
      */
     protected function _checkRules(array $user, $role, ServerRequest $request)
@@ -184,7 +186,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param array $permission configuration
      * @param array $user current user
      * @param string $role effective user role
-     * @param Request $request request
+     * @param \CakeDC\Api\Service\Auth\Authorize\Request $request request
      * @return bool if rule matched, null if rule not matched
      */
     protected function _matchRule($permission, $user, $role, $request)

@@ -1,22 +1,23 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
+use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\ExtensionRegistry;
 use CakeDC\Api\Service\Utility\ReverseRouting;
-use Cake\Event\Event;
-use Cake\Event\EventListenerInterface;
-use Cake\ORM\Entity;
 
 /**
  * Class CursorPaginateExtension
@@ -25,7 +26,6 @@ use Cake\ORM\Entity;
  */
 class CursorPaginateExtension extends Extension implements EventListenerInterface
 {
-
     protected $_defaultConfig = [
         'cursorField' => 'id',
         'countField' => 'count',
@@ -35,14 +35,14 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     ];
 
     /**
-     * @var ReverseRouting
+     * @var \CakeDC\Api\Service\Utility\ReverseRouting
      */
     protected $_reverseRouter;
 
     /**
      * CursorPaginateExtension constructor.
      *
-     * @param ExtensionRegistry $registry An Extension Registry instance.
+     * @param \CakeDC\Api\Service\Action\ExtensionRegistry $registry An Extension Registry instance.
      * @param array $config Configuration.
      * @internal param array $options
      */
@@ -58,7 +58,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Action.Crud.onFindEntities' => 'findEntities',
@@ -69,15 +69,15 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     /**
      * find entities
      *
-     * @param Event $event An Event instance.
-     * @return Entity
+     * @param \Cake\Event\Event $event An Event instance.
+     * @return \Cake\ORM\Entity
      */
     public function findEntities(Event $event)
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
-        if ($event->result) {
-            $query = $event->result;
+        if ($event->getResult()) {
+            $query = $event->getResult();
         }
         $query->limit($this->_count($action));
         $sinceId = $this->_sinceId($action);
@@ -99,7 +99,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     /**
      * Returns since id.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
     protected function _sinceId(Action $action)
@@ -116,7 +116,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     /**
      * Returns max id.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
     protected function _maxId(Action $action)
@@ -133,7 +133,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     /**
      * Returns count.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
     protected function _count(Action $action)
@@ -153,8 +153,8 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     /**
      * after find entities
      *
-     * @param Event $event An Event instance.
-     * @return Entity
+     * @param \Cake\Event\Event $event An Event instance.
+     * @return \Cake\ORM\Entity
      */
     public function afterFind(Event $event)
     {

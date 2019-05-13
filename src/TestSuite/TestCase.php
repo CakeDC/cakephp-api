@@ -1,20 +1,18 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\TestSuite;
 
 use CakeDC\Api\Service\ServiceRegistry;
-use Cake\Core\Configure;
 use Cake\TestSuite\TestCase as BaseTestCase;
-use Cake\Utility\Hash;
 
 /**
  * Class TestCase
@@ -29,7 +27,7 @@ class TestCase extends BaseTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -39,7 +37,7 @@ class TestCase extends BaseTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         ServiceRegistry::getServiceLocator()->clear();

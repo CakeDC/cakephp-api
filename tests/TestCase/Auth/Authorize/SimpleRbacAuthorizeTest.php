@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -53,7 +53,7 @@ class SimpleRbacAuthorizeTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $request = new ServerRequest();
         $response = new Response();
@@ -71,7 +71,7 @@ class SimpleRbacAuthorizeTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->simpleRbacAuthorize, $this->Service, $this->Action);
     }
@@ -167,13 +167,11 @@ class SimpleRbacAuthorizeTest extends TestCase
      * @param $user
      * @param $requestParams
      * @param $expected
-     * @param null $msg
+     * @param string|null $msg
      */
     public function testAuthorize($permissions, $user, $requestParams, $expected, $msg = null)
     {
         $this->simpleRbacAuthorize = $this->preparePermissions($permissions);
-        $request = new ServerRequest();
-
         $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
@@ -188,6 +186,7 @@ class SimpleRbacAuthorizeTest extends TestCase
 
         $this->simpleRbacAuthorize->setAction($action);
 
+        $msg = (string)$msg;
         $result = $this->simpleRbacAuthorize->authorize($user, $request);
         $this->assertSame($expected, $result, $msg);
     }

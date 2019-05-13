@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -52,7 +52,7 @@ class XmlRenderer extends BaseRenderer
      * @param Exception $exception The exception object.
      * @return void
      */
-    public function error(Exception $exception)
+    public function error(Exception $exception): void
     {
         $response = $this->_service->getResponse();
         $data = [
@@ -74,9 +74,9 @@ class XmlRenderer extends BaseRenderer
      * Formats a response as an XML structure.
      *
      * @param mixed $content The content to process.
-     * @return string
+     * @return array
      */
-    protected function _format($content = null)
+    protected function _format($content = null): array
     {
         if (is_array($content) || $content instanceof Collection || $content instanceof ResultSetInterface) {
             $data = $this->_array($content);
@@ -86,16 +86,18 @@ class XmlRenderer extends BaseRenderer
             $data = ['value' => $content];
         }
 
-        return ['data' => $data];
+        return [
+            'data' => $data,
+        ];
     }
 
     /**
      * Formats an object as an XML node.
      *
      * @param object $data The object to process.
-     * @return string
+     * @return array
      */
-    protected function _object($data)
+    protected function _object($data): array
     {
         $xml = [];
         if ($data instanceof EntityInterface) {
@@ -120,16 +122,18 @@ class XmlRenderer extends BaseRenderer
             $xml['property'][] = $property;
         }
 
-        return ['object' => $xml];
+        return [
+            'object' => $xml,
+        ];
     }
 
     /**
      * Formats an array as an XML node.
      *
-     * @param array $data The array to process.
-     * @return string
+     * @param array|Collection $data The array to process.
+     * @return array
      */
-    protected function _array($data)
+    protected function _array($data): array
     {
         $xml = [];
         $items = [];
@@ -163,7 +167,7 @@ class XmlRenderer extends BaseRenderer
      * @param mixed $data Encoded data.
      * @return string
      */
-    protected function _encode($data)
+    protected function _encode($data): string
     {
         $xmlObject = Xml::fromArray($data, ['format' => 'tags']);
 

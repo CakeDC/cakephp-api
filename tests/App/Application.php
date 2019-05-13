@@ -15,8 +15,7 @@
 
 namespace CakeDC\Api\Test\App;
 
-use Authentication\AuthenticationService;
-use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Http\MiddlewareQueue;
 use CakeDC\Api\Middleware\ApiMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -33,7 +32,7 @@ use CakeDC\Api\Service\ServiceRegistry;
  */
 class Application extends BaseApplication
 {
-    public function bootstrap()
+    public function bootstrap(): void
     {
         parent::bootstrap();
         ServiceRegistry::getServiceLocator()->clear();
@@ -46,7 +45,7 @@ class Application extends BaseApplication
         ]);
     }
 
-    public function pluginBootstrap()
+    public function pluginBootstrap(): void
     {
         parent::pluginBootstrap();
 
@@ -60,7 +59,7 @@ class Application extends BaseApplication
      * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware.
      */
-    public function middleware($middleware)
+    public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
     {
         $middleware
             // Catch any exceptions in the lower layers,

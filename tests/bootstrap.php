@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -58,8 +58,26 @@ def('CAKE', CORE_PATH . 'src' . DS);
 require ROOT . '/vendor/cakephp/cakephp/src/basics.php';
 require ROOT . '/vendor/autoload.php';
 
-Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
-Cake\Core\Configure::write('App.encoding', 'UTF-8');
+Configure::write('App', [
+    'namespace' => 'CakeDC\Api\Test\App',
+    'encoding' => 'UTF-8',
+    'base' => false,
+    'baseUrl' => false,
+    'dir' => 'src',
+    'webroot' => WEBROOT_DIR,
+    'wwwRoot' => WWW_ROOT,
+    'fullBaseUrl' => 'http://localhost',
+    'imageBaseUrl' => 'img/',
+    'jsBaseUrl' => 'js/',
+    'cssBaseUrl' => 'css/',
+    'paths' => [
+        'plugins' => [dirname(APP) . DS . 'plugins' . DS],
+        // 'templates' => [TEST_APP . 'templates' . DS]
+    ]
+]);
+
+// Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
+// Cake\Core\Configure::write('App.encoding', 'UTF-8');
 Cake\Core\Configure::write('debug', true);
 
 $TMP = new \Cake\Filesystem\Folder(TMP);
@@ -131,10 +149,11 @@ Cake\Datasource\ConnectionManager::setConfig('test', [
 class_alias('CakeDC\Api\Test\App\Controller\AppController', 'App\Controller\AppController');
 
 $isCli = PHP_SAPI === 'cli';
+$conf = (array)Cake\Core\Configure::read('Error');
 if ($isCli) {
-    (new Cake\Console\ConsoleErrorHandler(Cake\Core\Configure::read('Error')))->register();
+    (new Cake\Console\ConsoleErrorHandler($conf))->register();
 } else {
-    (new Cake\Error\ErrorHandler(Cake\Core\Configure::read('Error')))->register();
+    (new Cake\Error\ErrorHandler($conf))->register();
 }
 \Cake\Routing\Router::reload();
 $application = new \CakeDC\Api\Test\App\Application(CONFIG);

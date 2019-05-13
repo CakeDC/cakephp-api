@@ -1,22 +1,23 @@
 <?php
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use CakeDC\Api\Service\Action\CrudViewAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Datasource\EntityInterface;
 
 class CrudViewActionTest extends TestCase
 {
@@ -34,7 +35,7 @@ class CrudViewActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -54,7 +55,7 @@ class CrudViewActionTest extends TestCase
             'response' => $this->response,
             'baseUrl' => '/articles/1'
         ];
-        $this->Service = ServiceRegistry::get($service, $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($service, $options);
     }
 
     /**
@@ -62,7 +63,7 @@ class CrudViewActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -94,10 +95,10 @@ class CrudViewActionTest extends TestCase
      * Test load value method
      *
      * @return void
-     * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function testExecuteNotFound()
     {
+        $this->expectException(RecordNotFoundException::class);
         $this->Action = new CrudViewAction([
             'service' => $this->Service,
             'id' => 999,

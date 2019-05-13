@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -16,15 +18,15 @@ use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use \OutOfBoundsException;
+use OutOfBoundsException;
 
 /**
  * Class SocialAuthenticate. Login the uses by Api Key
  */
 class SocialAuthenticate extends BaseAuthenticate
 {
-    const TYPE_QUERYSTRING = 'querystring';
-    const TYPE_HEADER = 'header';
+    public const TYPE_QUERYSTRING = 'querystring';
+    public const TYPE_HEADER = 'header';
 
     public $types = [self::TYPE_QUERYSTRING, self::TYPE_HEADER];
 
@@ -50,15 +52,15 @@ class SocialAuthenticate extends BaseAuthenticate
         //require SSL to pass the token. You should always require SSL to use tokens for Auth
         'require_ssl' => true,
         //finder for social accounts,
-        'finder' => 'active'
+        'finder' => 'active',
     ];
 
     /**
      * Authenticate callback
      * Reads the Api Key based on configuration and login the user
      *
-     * @param ServerRequest $request Cake request object.
-     * @param Response $response Cake response object.
+     * @param \Cake\Http\ServerRequest $request Cake request object.
+     * @param \Cake\Http\Response $response Cake response object.
      * @return mixed
      */
     public function authenticate(ServerRequest $request, Response $response)
@@ -69,7 +71,7 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Stateless Authentication System
      *
-     * @param ServerRequest $request Cake request object.
+     * @param \Cake\Http\ServerRequest $request Cake request object.
      * @return mixed
      */
     public function getUser(ServerRequest $request)
@@ -83,7 +85,7 @@ class SocialAuthenticate extends BaseAuthenticate
             throw new OutOfBoundsException(__d('CakeDC/Api', 'Type {0} has no associated callable', $type));
         }
 
-        list($provider, $token, $tokenSecret) = $this->$type($request);
+        [$provider, $token, $tokenSecret] = $this->$type($request);
         if (empty($provider) || empty($token)) {
             return false;
         }
@@ -134,7 +136,7 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the querystring
      *
-     * @param ServerRequest $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return string api key
      */
     public function querystring(ServerRequest $request)
@@ -149,7 +151,7 @@ class SocialAuthenticate extends BaseAuthenticate
     /**
      * Get the api key from the header
      *
-     * @param ServerRequest $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return string api key
      */
     public function header(ServerRequest $request)

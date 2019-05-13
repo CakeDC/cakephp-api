@@ -1,23 +1,24 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use CakeDC\Api\Service\Action\Action;
-use CakeDC\Api\Service\Action\CrudAction;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Association;
 use Cake\ORM\Query;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Service\Action\CrudAction;
 
 /**
  * Class CrudRelationsExtension
@@ -29,14 +30,13 @@ use Cake\Utility\Inflector;
  */
 class CrudRelationsExtension extends Extension implements EventListenerInterface
 {
-
     /**
      * Returns a list of events this object is implementing. When the class is registered
      * in an event manager, each individual method will be associated with the respective event.
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Action.Crud.onFindEntities' => 'findEntities',
@@ -47,7 +47,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     /**
      * On find entity
      *
-     * @param Event $event An Event instance.
+     * @param \Cake\Event\Event $event An Event instance.
      * @return \Cake\ORM\Query
      */
     public function findEntity(Event $event)
@@ -58,7 +58,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     /**
      * On find entities.
      *
-     * @param Event $event An Event instance.
+     * @param \Cake\Event\Event $event An Event instance.
      * @return \Cake\ORM\Query
      */
     public function findEntities(Event $event)
@@ -69,7 +69,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     /**
      * Checks if endpoint returns additional associations.
      *
-     * @param CrudAction $action A CrudAction instance.
+     * @param \CakeDC\Api\Service\Action\CrudAction $action A CrudAction instance.
      * @return array|bool
      */
     protected function _includeAssociations(CrudAction $action)
@@ -96,19 +96,19 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     /**
      * Checks if endpoint returns direct associations, i.e. all belongsTo and all hasOne.
      *
-     * @param CrudAction $action An CrudAction instance.
+     * @param \CakeDC\Api\Service\Action\CrudAction $action An CrudAction instance.
      * @return bool
      */
     protected function _includeDirectAssociations(CrudAction $action)
     {
         $data = $action->getData();
 
-        return (is_array($data) && !empty($data['include_direct']));
+        return is_array($data) && !empty($data['include_direct']);
     }
 
     /**
-     * @param CrudAction $action An Action instance.
-     * @param Query $query A Query instance.
+     * @param \CakeDC\Api\Service\Action\CrudAction $action An Action instance.
+     * @param \Cake\ORM\Query $query A Query instance.
      * @return mixed
      */
     protected function _attachAssociations(CrudAction $action, Query $query)
