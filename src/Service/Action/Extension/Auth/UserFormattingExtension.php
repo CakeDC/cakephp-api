@@ -79,6 +79,10 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
             ->where([$this->getUsersTable()->aliasField('id') => $user['id']])
             ->first();
 
+        if (empty($currentUser)) {
+            return $user;
+        }
+
         $user = $currentUser->toArray();
         $user['api_token'] = $currentUser['api_token'];
 
