@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -23,7 +25,6 @@ use Cake\Utility\Hash;
  */
 trait ConfigTrait
 {
-
     /**
      * Configure public auth access
      */
@@ -31,9 +32,22 @@ trait ConfigTrait
     {
         $config = Configure::read('Test.Api');
         $config['Auth'] = [
-            'allow' => '*'
+            'allow' => '*',
+        ];
+        $config['Service'] = [
+                'default' => [
+                    'options' => [],
+                    'Action' => [
+                        'default' => [
+                            'Auth' => [
+                                'allow' => '*',
+                            ],
+                        ],
+                    ],
+                ],
         ];
         Configure::write('Test.Api', $config);
+        Configure::load('api');
     }
 
     /**
@@ -44,15 +58,15 @@ trait ConfigTrait
         $config = (array)Configure::read('Test.Api');
         $auth = [
             'authorize' => [
-                'CakeDC/Api.Crud' => []
+                'CakeDC/Api.Crud' => [],
             ],
             'authenticate' => [
                 'all' => [
                     'finder' => 'active',
                 ],
                 'CakeDC/Api.Form' => [
-                    'userModel' => 'CakeDC/Users.Users'
-                ]
+                    'userModel' => 'CakeDC/Users.Users',
+                ],
             ],
         ];
         $path = 'Service.default.Action.default.Auth';
@@ -68,13 +82,13 @@ trait ConfigTrait
         $config = (array)Configure::read('Test.Api');
         $config['Auth'] = [
             'Crud' => [
-                'default' => 'allow'
+                'default' => 'allow',
             ],
         ];
 
         $auth = [
             'authorize' => [
-                'CakeDC/Api.Crud' => []
+                'CakeDC/Api.Crud' => [],
             ],
             'authenticate' => [
                 'all' => [
@@ -83,7 +97,7 @@ trait ConfigTrait
                 'CakeDC/Api.Token' => [
                     'require_ssl' => false,
                     'table' => 'CakeDC/Users.Users',
-                ]
+                ],
             ],
         ];
         $path = 'Service.default.Action.default.Auth';

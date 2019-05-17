@@ -30,7 +30,7 @@ abstract class CollectionAction extends CrudAction
      *
      * @return bool
      */
-    protected function _validateMany()
+    protected function _validateMany(): bool
     {
         $validator = $this->getTable()->getValidator();
         $data = $this->getData();
@@ -67,9 +67,10 @@ abstract class CollectionAction extends CrudAction
             return $entities;
         } else {
             $errors = collection($entities)->reduce(function ($errors, EntityInterface $entity) {
-                $errors[] = $entity->getErrors();
+                return array_merge($errors, $entity->getErrors());
             }, []);
-            throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $errors);
+            $message = __('Validation on {0} failed', $this->getTable()->getAlias());
+            throw new ValidationException($message, 0, null, $errors);
         }
     }
 
@@ -79,7 +80,7 @@ abstract class CollectionAction extends CrudAction
      * @param array $patchOptions options to use un patch
      * @return array entities
      */
-    protected function _newEntities($patchOptions = [])
+    protected function _newEntities(array $patchOptions = []): array
     {
         $data = $this->getData();
         $this->_validateDataIsArray($data);

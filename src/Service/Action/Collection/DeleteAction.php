@@ -26,7 +26,7 @@ class DeleteAction extends CollectionAction
     /**
      * {@inheritdoc}
      */
-    public function validates()
+    public function validates(): bool
     {
         $data = $this->getData();
         $this->_validateDataIsArray($data);
@@ -49,7 +49,8 @@ class DeleteAction extends CollectionAction
         }, []);
 
         if (!empty($errors)) {
-            throw new ValidationException(__('Validation failed, some keys missing for delete action'), 0, null, $errors);
+            $message = __('Validation failed, some keys missing for delete action');
+            throw new ValidationException($message, 0, null, $errors);
         }
 
         return true;
@@ -77,7 +78,7 @@ class DeleteAction extends CollectionAction
      * @return array
      * @throws \Exception
      */
-    protected function _deleteMany($entities)
+    protected function _deleteMany(array $entities): array
     {
         $deleted = [];
         $this->getTable()->getConnection()->transactional(function () use ($entities, &$deleted) {

@@ -51,7 +51,7 @@ class ExtensionRegistry extends ObjectRegistry
      * @param string $class The class to resolve.
      * @return string|false The resolved name or false for failure.
      */
-    protected function _resolveClassName($class)
+    protected function _resolveClassName($class): ?string
     {
         $result = App::className($class, 'Service/Extension', 'Extension');
         if ($result || strpos($class, '.') !== false) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,19 +13,17 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudEditAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-
-use Cake\Datasource\EntityInterface;
+use CakeDC\Api\TestSuite\TestCase;
 
 class CrudEditActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -62,7 +62,7 @@ class CrudEditActionTest extends TestCase
     public function testExecuteSuccess()
     {
         $this->_initializeAction(1, [
-            'title' => 'New message'
+            'title' => 'New message',
         ]);
 
         $onFindEntity = false;
@@ -84,7 +84,7 @@ class CrudEditActionTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction(1, [
-            'title' => ''
+            'title' => '',
         ]);
 
         $result = $this->Action->execute();
@@ -100,7 +100,7 @@ class CrudEditActionTest extends TestCase
     {
         $this->expectException(RecordNotFoundException::class);
         $this->_initializeAction(999, [
-            'title' => 'New message'
+            'title' => 'New message',
         ]);
         $this->Action->execute();
     }

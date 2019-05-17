@@ -27,7 +27,7 @@ class CrudEditAction extends CrudAction
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = $this->getTable()->getValidator();
         $errors = $validator->errors($this->getData(), false);

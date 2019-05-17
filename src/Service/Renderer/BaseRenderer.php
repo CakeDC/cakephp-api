@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,9 +13,9 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
+use Cake\Core\Configure;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\Service;
-use Cake\Core\Configure;
 use Exception;
 
 /**
@@ -21,7 +23,6 @@ use Exception;
  */
 abstract class BaseRenderer
 {
-
     /**
      * Reference to the Service.
      *
@@ -32,7 +33,7 @@ abstract class BaseRenderer
     /**
      * Constructor
      *
-     * @param Service $service The Service instantiating the Renderer.
+     * @param \CakeDC\Api\Service\Service $service The Service instantiating the Renderer.
      */
     public function __construct(Service $service)
     {
@@ -44,7 +45,7 @@ abstract class BaseRenderer
      *
      * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         return true;
     }
@@ -52,26 +53,26 @@ abstract class BaseRenderer
     /**
      * Builds the HTTP response.
      *
-     * @param Result $result The result object returned by the Service.
+     * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
-    abstract public function response(Result $result = null);
+    abstract public function response(?Result $result = null): bool;
 
     /**
      * Processes an exception thrown while processing the request.
      *
-     * @param Exception $exception The exception object.
+     * @param \Exception $exception The exception object.
      * @return void
      */
-    abstract public function error(Exception $exception);
+    abstract public function error(Exception $exception): void;
 
     /**
      * Format error message.
      *
-     * @param Exception $exception An Exception instance.
+     * @param \Exception $exception An Exception instance.
      * @return string
      */
-    protected function _buildMessage(Exception $exception)
+    protected function _buildMessage(Exception $exception): string
     {
         $message = $exception->getMessage();
         if (Configure::read('debug') > 0) {
@@ -84,7 +85,7 @@ abstract class BaseRenderer
     /**
      * Returns formatted stack trace
      *
-     * @param Exception $exception An Exception instance.
+     * @param \Exception $exception An Exception instance.
      * @return array|null
      */
     protected function _stackTrace(Exception $exception): ?array

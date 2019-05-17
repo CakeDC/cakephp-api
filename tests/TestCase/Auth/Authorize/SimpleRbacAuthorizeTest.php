@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,20 +13,17 @@
 
 namespace CakeDC\Api\Test\TestCase\Auth\Authorize;
 
-use CakeDC\Api\Service\Action\Action;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize;
 use CakeDC\Api\Service\FallbackService;
-use CakeDC\Api\Service\Service;
 use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Users\Auth\Rules\Rule;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
 use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase
 {
-
     /**
      * @var Service
      */
@@ -60,7 +59,7 @@ class SimpleRbacAuthorizeTest extends TestCase
 
         $this->Service = new FallbackService([
             'request' => $request,
-            'response' => $response
+            'response' => $response,
         ]);
         $this->Action = new CrudIndexAction([
             'service' => $this->Service,
@@ -134,7 +133,7 @@ class SimpleRbacAuthorizeTest extends TestCase
     {
         $permissions = [[
             'service' => 'Test',
-            'action' => 'test'
+            'action' => 'test',
         ]];
         $className = 'CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize';
         $this->simpleRbacAuthorize = $this->getMockBuilder($className)
@@ -218,10 +217,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-strict-all-deny' => [
                 //permissions
@@ -240,10 +239,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-pl-null-allowed-null' => [
                 //permissions
@@ -261,10 +260,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-asterisk' => [
                 //permissions
@@ -282,10 +281,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-asterisk-main-app' => [
                 //permissions
@@ -303,10 +302,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-role-asterisk' => [
                 //permissions
@@ -324,10 +323,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-service-asterisk' => [
                 //permissions
@@ -345,10 +344,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-action-asterisk' => [
                 //permissions
@@ -366,10 +365,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-some-asterisk-allowed' => [
                 //permissions
@@ -387,10 +386,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-some-asterisk-deny' => [
                 //permissions
@@ -409,10 +408,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                false
+                false,
             ],
             'all-deny' => [
                 //permissions
@@ -431,10 +430,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'Any',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                false
+                false,
             ],
             'dasherized' => [
                 //permissions
@@ -453,10 +452,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'test-tests',
-                    'action' => 'test-action'
+                    'action' => 'test-action',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-array' => [
                 //permissions
@@ -474,10 +473,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-array' => [
                 //permissions
@@ -495,10 +494,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'three'
+                    'action' => 'three',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-callback-check-params' => [
                 //permissions
@@ -508,7 +507,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
                         return $user['id'] === 1 && $role == 'test';
-                    }
+                    },
                 ]],
                 //user
                 [
@@ -519,10 +518,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-callback-deny' => [
                 //permissions
@@ -532,7 +531,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
                         return false;
-                    }
+                    },
                 ]],
                 //user
                 [
@@ -543,10 +542,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-prefix' => [
                 //permissions
@@ -566,10 +565,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 [
                     'prefix' => 'admin',
                     'service' => 'tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
 
             'rule-class' => [
@@ -591,10 +590,10 @@ class SimpleRbacAuthorizeTest extends TestCase
                 //request
                 [
                     'service' => 'tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
         ];
     }

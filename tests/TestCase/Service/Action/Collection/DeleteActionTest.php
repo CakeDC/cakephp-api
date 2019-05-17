@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,13 +13,13 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action\Collection;
 
+use Cake\ORM\TableRegistry;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\ORM\TableRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 
 class DeleteActionTest extends TestCase
 {
@@ -60,7 +62,7 @@ class DeleteActionTest extends TestCase
         $initialCount = $ArticlesTable->find()->count();
         $this->_initializeAction([
             ['id' => 1],
-            ['id' => 2]
+            ['id' => 2],
         ]);
 
         $this->Action->execute();
@@ -109,7 +111,7 @@ class DeleteActionTest extends TestCase
         $this->expectExceptionMessage('Validation failed');
         $this->_initializeAction([
             ['not-id' => 'something'],
-            ['blank' => new \ArrayObject()]
+            ['blank' => new \ArrayObject()],
         ]);
 
         $this->Action->execute();
@@ -122,7 +124,7 @@ class DeleteActionTest extends TestCase
     {
         $this->_initializeAction([
             ['id' => 1],
-            ['id' => 7]
+            ['id' => 7],
         ]);
 
         $this->assertTrue($this->Action->validates());
@@ -135,7 +137,7 @@ class DeleteActionTest extends TestCase
     {
         $this->_initializeAction([
             ['id' => 1],
-            ['id' => '']
+            ['id' => ''],
         ]);
 
         try {
@@ -146,9 +148,9 @@ class DeleteActionTest extends TestCase
                 // note the index here is important, first entity (0) is valid
                 1 => [
                     'id' => [
-                        '_empty' => 'Missing id'
-                    ]
-                ]
+                        '_empty' => 'Missing id',
+                    ],
+                ],
             ], $ex->getValidationErrors());
         }
     }
@@ -166,7 +168,7 @@ class DeleteActionTest extends TestCase
             'service' => null,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/articles_collection/collection/delete'
+            'baseUrl' => '/articles_collection/collection/delete',
         ];
         $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
 

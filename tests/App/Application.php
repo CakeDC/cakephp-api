@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -15,13 +17,13 @@
 
 namespace CakeDC\Api\Test\App;
 
-use Cake\Http\MiddlewareQueue;
-use CakeDC\Api\Middleware\ApiMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use CakeDC\Api\Middleware\ApiMiddleware;
 use CakeDC\Api\Service\ServiceRegistry;
 
 /**
@@ -38,10 +40,10 @@ class Application extends BaseApplication
         ServiceRegistry::getServiceLocator()->clear();
 
         $this->addPlugin('CakeDC/Users', [
-            'path' => ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS
+            'path' => ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS,
         ]);
         $this->addPlugin('CakeDC/Api', [
-            'path' => ROOT . DS
+            'path' => ROOT . DS,
         ]);
     }
 

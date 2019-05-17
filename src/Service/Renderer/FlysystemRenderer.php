@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,11 +13,11 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
-use CakeDC\Api\Service\Action\Result;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
+use CakeDC\Api\Service\Action\Result;
 use Exception;
 use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
@@ -31,10 +33,10 @@ class FlysystemRenderer extends FileRenderer
     /**
      * Builds the HTTP response.
      *
-     * @param Result $result The result object returned by the Service.
+     * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
-    public function response(Result $result = null)
+    public function response(?Result $result = null): bool
     {
         $data = $result->getData();
         try {
@@ -60,11 +62,11 @@ class FlysystemRenderer extends FileRenderer
     /**
      * Get flysystem file object
      *
-     * @param Filesystem $filesystem custom filesystem
+     * @param \League\Flysystem\Filesystem $filesystem custom filesystem
      * @param string $path of file at filesystem
-     * @return File
+     * @return \League\Flysystem\File
      */
-    protected function getFile(Filesystem $filesystem, $path)
+    protected function getFile(Filesystem $filesystem, string $path): File
     {
         return $filesystem->get($path);
     }
@@ -72,12 +74,12 @@ class FlysystemRenderer extends FileRenderer
     /**
      * Deliver the asset stream in body
      *
-     * @param Response $response service response
-     * @param File $file file object
-     * @param string $name file name shown to user
-     * @return Response
+     * @param \Cake\Http\Response $response service response
+     * @param \League\Flysystem\File $file file object
+     * @param string|null $name file name shown to user
+     * @return \Cake\Http\Response
      */
-    public function deliverAsset(Response $response, File $file, $name)
+    public function deliverAsset(Response $response, File $file, ?string $name): Response
     {
         $contentType = $file->getType();
         $modified = $file->getTimestamp();
@@ -100,11 +102,11 @@ class FlysystemRenderer extends FileRenderer
     /**
      * Handle error setting a response status
      *
-     * @param Exception $exception thrown at service or action
+     * @param \Exception $exception thrown at service or action
      *
      * @return void
      */
-    public function error(Exception $exception)
+    public function error(Exception $exception): void
     {
         $code = $exception->getCode();
         $response = $this->_service->getResponse()

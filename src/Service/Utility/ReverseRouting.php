@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,10 +13,10 @@
 
 namespace CakeDC\Api\Service\Utility;
 
-use CakeDC\Api\Service\Action\Action;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Service\Action\Action;
 
 /**
  * Class ReverseRouting
@@ -23,16 +25,15 @@ use Cake\Utility\Inflector;
  */
 class ReverseRouting
 {
-
     /**
      * Builds link to action.
      *
      * @param string $name Link name
-     * @param string $path Link path.
+     * @param string|null $path Link path.
      * @param string $method Action method.
      * @return array
      */
-    public function link($name, $path, $method = 'GET')
+    public function link(string $name, ?string $path, string $method = 'GET'): array
     {
         $prefix = Configure::read('Api.routeBase') ?: '/api';
         $baseRoute = $prefix . $path;
@@ -49,11 +50,11 @@ class ReverseRouting
     /**
      * Builds path to the index action.
      *
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @param callable $beforeReverse Callback.
      * @return array|string
      */
-    public function indexPath(Action $action, $beforeReverse = null)
+    public function indexPath(Action $action, ?callable $beforeReverse = null): ?string
     {
         $indexRoute = $action->getRoute();
         $parent = $action->getService()->getParentService();
@@ -83,11 +84,11 @@ class ReverseRouting
      * Builds path to the parent view action.
      *
      * @param string $parentName Action name.
-     * @param Action $action An Action instance.
+     * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @param string $type Type of action.
-     * @return array
+     * @return string|null
      */
-    public function parentViewPath($parentName, $action, $type)
+    public function parentViewPath(string $parentName, Action $action, string $type): ?string
     {
         $baseRoute = $action->getRoute();
         $parent = $action->getService()->getParentService();
@@ -117,7 +118,7 @@ class ReverseRouting
      * @param array $routes List of all routes.
      * @return null
      */
-    public function findRoute($route, $routes)
+    public function findRoute(array $route, array $routes)
     {
         foreach ($routes as $item) {
             if ($this->compareDefaults($item->defaults, $route)) {
@@ -135,7 +136,7 @@ class ReverseRouting
      * @param array $route2 Second route description instance.
      * @return bool
      */
-    public function compareDefaults($route1, $route2)
+    public function compareDefaults(array $route1, array $route2): bool
     {
         $result = true;
         $fields = ['controller', 'action', 'plugin'];

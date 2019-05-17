@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,13 +13,13 @@
 
 namespace CakeDC\Api\TestSuite;
 
-use Cake\TestSuite\IntegrationTestTrait;
-use Cake\View\Exception\MissingTemplateException;
-use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
+use Cake\View\Exception\MissingTemplateException;
+use CakeDC\Api\Service\ServiceRegistry;
 
 /**
  * Class IntegrationTestCase
@@ -58,10 +60,10 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     /**
      * Default user api method.
      *
-     * @param string $userId User id.
-     * @return string
+     * @param string|null $userId User id.
+     * @return string|null
      */
-    public function getDefaultUser($userId = null)
+    public function getDefaultUser(?string $userId = null): ?string
     {
         if ($userId === null) {
             $userId = $this->_defaultUserId;
@@ -78,7 +80,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $userId User id.
      * @return mixed|null
      */
-    protected function _userToken($userId = null)
+    protected function _userToken(?string $userId = null)
     {
         if ($userId === null) {
             $userId = $this->getDefaultUser();
@@ -103,7 +105,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @throws \PHPUnit\Exception
      * @throws \Throwable
      */
-    public function sendRequest($url, $method, $data = [], $userId = null)
+    public function sendRequest(string $url, string $method, array $data = [], ?string $userId = null): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         $userToken = $this->_userToken($userId);
@@ -118,14 +120,14 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
         $url = '/api' . $url;
         if (is_string($url)) {
             if ($userToken !== null) {
-                $url = $this->_appendGetParam($url, 'token', $userToken);
+                $url = $this->_appendGetParam($url, 'token', (string)$userToken);
             }
         }
         if ($method == 'GET' && is_string($url)) {
             if (!empty($data)) {
                 foreach ($data as $key => $value) {
                     if (!is_array($value)) {
-                        $url = $this->_appendGetParam($url, $key, $value);
+                        $url = $this->_appendGetParam($url, $key, (string)$value);
                     }
                 }
             }
@@ -136,7 +138,8 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
             TableRegistry::getTableLocator()->clear();
             $this->_sendRequest($url, $method, $data);
         } catch (MissingTemplateException $ex) {
-            throw new MissingTemplateException(sprintf('Possibly related to %s', $this->_exception->getMessage()), [], 500, $ex);
+            $message = sprintf('Possibly related to %s', $this->_exception->getMessage());
+            throw new MissingTemplateException($message, [], 500, $ex);
         }
     }
 
@@ -148,7 +151,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $value Param value.
      * @return string
      */
-    protected function _appendGetParam($url, $key, $value)
+    protected function _appendGetParam(string $url, string $key, string $value): string
     {
         if (strpos($url, '?') !== false) {
             $appendChar = '&';
@@ -162,10 +165,10 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     /**
      * Assert result is success.
      *
-     * @param array $result Response.
+     * @param array|null $result Response.
      * @return void
      */
-    public function assertSuccess($result)
+    public function assertSuccess($result): void
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals($result['status'], 'success');
@@ -183,11 +186,11 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     /**
      * Assert result is error.
      *
-     * @param array $result Response.
+     * @param mixed $result Response.
      * @param int $code Result code.
      * @return void
      */
-    public function assertError($result, $code = null)
+    public function assertError($result, ?int $code = null): void
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals($result['status'], 'error');
@@ -204,7 +207,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $message The error message.
      * @return void
      */
-    public function assertStatus($code, $message = null)
+    public function assertStatus(int $code, ?string $message = null): void
     {
         if ($message === null) {
             $message = "Status code $code does not match";
@@ -219,7 +222,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $expectedMessage Message.
      * @return void
      */
-    public function assertErrorMessage($result, $expectedMessage)
+    public function assertErrorMessage(array $result, string $expectedMessage): void
     {
         $message = Hash::get($result, 'message');
         $this->assertTrue(is_string($message) && strpos($message, $expectedMessage) === 0);

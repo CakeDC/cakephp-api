@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,11 +13,10 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
-use CakeDC\Api\Service\Action\AddAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\TestSuite\TestCase;
 
 class ActionTest extends TestCase
 {
@@ -61,11 +62,11 @@ class ActionTest extends TestCase
                 'service' => 'articles',
                 'pass' => [
                     'tag',
-                    '1'
+                    '1',
                 ],
             ],
             'post' => [
-                'tag_id' => 1
+                'tag_id' => 1,
             ],
         ], 'PUT');
         $service = $this->request->getParam('service');
@@ -74,7 +75,7 @@ class ActionTest extends TestCase
             'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/articles/tag/1'
+            'baseUrl' => '/articles/tag/1',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $action = $Service->buildAction();

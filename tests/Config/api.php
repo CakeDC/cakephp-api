@@ -24,7 +24,7 @@ if (empty($config)) {
 
             'Auth' => [
                 'Crud' => [
-                    'default' => 'auth'
+                    'default' => 'auth',
                 ],
             ],
             'Service' => [
@@ -32,7 +32,7 @@ if (empty($config)) {
 
             'useVersioning' => false,
             'versionPrefix' => 'v',
-        ]
+        ],
     ];
 }
 

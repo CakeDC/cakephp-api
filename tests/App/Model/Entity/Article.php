@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,9 +13,8 @@
 
 namespace CakeDC\Api\Test\App\Model\Entity;
 
-use \Cake\ORM\Entity;
+use Cake\ORM\Entity;
 
 class Article extends Entity
 {
-
 }

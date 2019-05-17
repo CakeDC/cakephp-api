@@ -18,9 +18,9 @@ use Cake\Datasource\EntityInterface;
 use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Controller\Component\UsersAuthComponent;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 use CakeDC\Users\Controller\Traits\RegisterTrait;
+use CakeDC\Users\Plugin;
 
 /**
  * Class RegisterAction
@@ -38,7 +38,7 @@ class RegisterAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
         $this->Auth->allow($this->getName());
@@ -49,7 +49,7 @@ class RegisterAction extends Action
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = $this->getUsersTable()->getRegisterValidators($this->_registerOptions());
 
@@ -72,14 +72,15 @@ class RegisterAction extends Action
         $user = $usersTable->newEntity([]);
         $options = $this->_registerOptions();
         $requestData = $this->getData();
-        $event = $this->dispatchEvent(UsersAuthComponent::EVENT_BEFORE_REGISTER, [
+        $event = $this->dispatchEvent(Plugin::EVENT_BEFORE_REGISTER, [
             'usersTable' => $usersTable,
             'options' => $options,
             'userEntity' => $user,
         ]);
 
         if ($event->getResult() instanceof EntityInterface) {
-            if ($userSaved = $usersTable->register($user, $event->getResult()->toArray(), $options)) {
+            $userSaved = $usersTable->register($user, $event->getResult()->toArray(), $options);
+            if ($userSaved) {
                 return $this->_afterRegister($userSaved);
             }
         }
@@ -88,7 +89,8 @@ class RegisterAction extends Action
         }
         $userSaved = $usersTable->register($user, $requestData, $options);
         if (!$userSaved) {
-            throw new ValidationException(__d('CakeDC/Api', 'The user could not be saved'), 0, null, $user->getErrors());
+            $message = __d('CakeDC/Api', 'The user could not be saved');
+            throw new ValidationException($message, 0, null, $user->getErrors());
         }
 
         return $this->_afterRegister($userSaved);
@@ -107,7 +109,7 @@ class RegisterAction extends Action
         if ($validateEmail) {
             $message = __d('CakeDC/Api', 'Please validate your account before log in');
         }
-        $event = $this->dispatchEvent(UsersAuthComponent::EVENT_AFTER_REGISTER, [
+        $event = $this->dispatchEvent(Plugin::EVENT_BEFORE_REGISTER, [
             'user' => $userSaved,
         ]);
         if ($event->getResult() instanceof EntityInterface) {
@@ -129,7 +131,7 @@ class RegisterAction extends Action
      *
      * @return array
      */
-    protected function _authConfig()
+    protected function _authConfig(): array
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [
@@ -141,7 +143,7 @@ class RegisterAction extends Action
     /**
      * @return array
      */
-    protected function _registerOptions()
+    protected function _registerOptions(): array
     {
         $validateEmail = (bool)Configure::read('Users.Email.validate');
         $useTos = (bool)Configure::read('Users.Tos.required');

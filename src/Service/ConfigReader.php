@@ -25,7 +25,7 @@ class ConfigReader
      * @param int $version Version number.
      * @return array
      */
-    public function serviceOptions($serviceName, $version = null)
+    public function serviceOptions(string $serviceName, ?int $version = null): array
     {
         $defaults = $this->_checkServiceOptions('default.options');
         if (Configure::read('Api.useVersioning') && $version) {
@@ -48,7 +48,7 @@ class ConfigReader
      * @param int $version Version number.
      * @return array
      */
-    public function actionOptions($serviceName, $actionName, $version = null)
+    public function actionOptions(string $serviceName, string $actionName, ?int $version = null): array
     {
         $actionName = Inflector::camelize($actionName);
         $defaults = $this->_checkServiceOptions('default.Action.default');
@@ -82,7 +82,7 @@ class ConfigReader
      * @param string $prefix Path prefix.
      * @return array
      */
-    protected function _checkServiceOptions($prefix)
+    protected function _checkServiceOptions(string $prefix): array
     {
         $data = Configure::read('Api.Service');
         if (is_array($data) && Hash::check($data, $prefix)) {
@@ -100,7 +100,7 @@ class ConfigReader
      * @param bool $overwrite Overwrite flag.
      * @return array
      */
-    protected function _mergeWithDefaults($options, $defaults, $overwrite = false)
+    protected function _mergeWithDefaults(array $options, array $defaults, bool $overwrite = false): array
     {
         if ($overwrite) {
             foreach ($options as $key => $value) {

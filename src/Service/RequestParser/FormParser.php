@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -16,23 +18,22 @@ namespace CakeDC\Api\Service\RequestParser;
  */
 class FormParser extends BaseParser
 {
-
     /**
      * Resolves the request params as a key => value array.
      *
      * @return array
      */
-    public function getParams()
+    public function getParams(): array
     {
         $request = $this->_service->getRequest();
         if ($request == null) {
             stackTrace();
         }
         if ($request->is(['post', 'put'])) {
-            return $request->getData();
+            return (array)$request->getData();
         }
 
-        return $request->getQuery();
+        return (array)$request->getQuery();
     }
 
     /**
@@ -40,7 +41,7 @@ class FormParser extends BaseParser
      *
      * @return bool
      */
-    public function request()
+    public function request(): bool
     {
         return true;
     }

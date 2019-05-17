@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,10 +13,10 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
-use CakeDC\Api\Exception\ValidationException;
-use CakeDC\Api\Service\Action\Result;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
+use CakeDC\Api\Exception\ValidationException;
+use CakeDC\Api\Service\Action\Result;
 use Exception;
 use stdClass;
 
@@ -26,21 +28,20 @@ use stdClass;
  */
 class JSendRenderer extends BaseRenderer
 {
-
     /**
      * Success status.
      */
-    const STATUS_SUCCESS = 'success';
+    public const STATUS_SUCCESS = 'success';
 
     /**
      * Fail status.
      */
-    const STATUS_FAIL = 'fail';
+    public const STATUS_FAIL = 'fail';
 
     /**
      * Error status.
      */
-    const STATUS_ERROR = 'error';
+    public const STATUS_ERROR = 'error';
 
     /**
      * Response status.
@@ -57,34 +58,39 @@ class JSendRenderer extends BaseRenderer
      *
      * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         $request = $this->_service->getRequest();
+        $json = $request->accepts('application/json') || $request->accepts('text/json');
+        $js = $request->accepts('text/javascript');
 
-        return ($request->accepts('application/json') || $request->accepts('text/json') || $request->accepts('text/javascript'));
+        return $json || $js;
     }
 
     /**
      * Builds the HTTP response.
      *
-     * @param Result $result The result object returned by the Service.
+     * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
-    public function response(Result $result = null)
+    public function response(?Result $result = null): bool
     {
         $response = $this->_service->getResponse();
 
         $data = $result->getData();
         $payload = $result->getPayload();
         $return = [
-            'data' => $data
+            'data' => $data,
         ];
         if (is_array($payload)) {
             $return = Hash::merge($return, $payload);
         }
         $this->_mapStatus($result);
 
-        $this->_service->setResponse($response->withStringBody($this->_format($this->status, $return))->withStatus($result->getCode())->withType('application/json'));
+        $response = $response->withStringBody($this->_format($this->status, $return))
+            ->withStatus($result->getCode())
+            ->withType('application/json');
+        $this->_service->setResponse($response);
 
         return true;
     }
@@ -92,10 +98,10 @@ class JSendRenderer extends BaseRenderer
     /**
      * Processes an exception thrown while processing the request.
      *
-     * @param Exception $exception The exception object.
+     * @param \Exception $exception The exception object.
      * @return void
      */
-    public function error(Exception $exception)
+    public function error(Exception $exception): void
     {
         $response = $this->_service->getResponse();
         if ($exception instanceof ValidationException) {
@@ -105,7 +111,10 @@ class JSendRenderer extends BaseRenderer
         }
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
-        $this->_service->setResponse($response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))->withStatus((int)$this->errorCode)->withType('application/json'));
+        $response = $response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))
+            ->withStatus((int)$this->errorCode)
+            ->withType('application/json');
+        $this->_service->setResponse($response);
     }
 
     /**
@@ -115,7 +124,7 @@ class JSendRenderer extends BaseRenderer
      * @param array $response The response properties.
      * @return string
      */
-    protected function _format($status, $response = [])
+    protected function _format(string $status, array $response = []): string
     {
         $object = new stdClass();
         $object->status = $status;
@@ -133,7 +142,7 @@ class JSendRenderer extends BaseRenderer
      * @param array $data The response data object.
      * @return string
      */
-    protected function _success($data = null)
+    protected function _success(?array $data = null): string
     {
         return $this->_format(self::STATUS_SUCCESS, ['data' => $data]);
     }
@@ -144,11 +153,12 @@ class JSendRenderer extends BaseRenderer
      * @param array $data The response data object.
      * @return string
      */
-    protected function _fail($data = null)
+    protected function _fail(?array $data = null): string
     {
         return $this->_format(self::STATUS_FAIL, ['data' => $data]);
     }
 
+// phpcs:disable
     /**
      * Creates an error response.
      *
@@ -158,12 +168,13 @@ class JSendRenderer extends BaseRenderer
      * @param array $trace The exception trace
      * @return string
      */
-    protected function _error($message = 'Unknown error', $code = 0, $data = null, $trace = null)
+    protected function _error(string $message = 'Unknown error', int $code = 0, ?array $data = null, ?array $trace = null): string
     {
+// phpcs:enable
         $response = [
             'message' => $message,
             'code' => $code,
-            'data' => $data
+            'data' => $data,
         ];
         if (Configure::read('debug') > 0) {
             $response['trace'] = $trace;
@@ -175,10 +186,10 @@ class JSendRenderer extends BaseRenderer
     /**
      * Update status based on result code
      *
-     * @param Result $result A result object instance.
+     * @param \CakeDC\Api\Service\Action\Result $result A result object instance.
      * @return void
      */
-    protected function _mapStatus(Result $result)
+    protected function _mapStatus(Result $result): void
     {
         $code = (int)$result->getCode();
         if ($code == 0 || $code >= 200 && $code <= 399) {

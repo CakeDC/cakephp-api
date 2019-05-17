@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,14 +13,14 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action\Collection;
 
+use Cake\ORM\TableRegistry;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Collection\AddEditAction;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\ORM\TableRegistry;
+use CakeDC\Api\TestSuite\TestCase;
 
 class AddEditActionTest extends TestCase
 {
@@ -61,7 +63,7 @@ class AddEditActionTest extends TestCase
         $initialCount = $ArticlesTable->find()->count();
         $this->_initializeAction([
             ['title' => 'Article1'],
-            ['title' => 'Article2']
+            ['title' => 'Article2'],
         ]);
 
         $this->Action->execute();
@@ -112,7 +114,7 @@ class AddEditActionTest extends TestCase
         $initialCount = $ArticlesTable->find()->count();
         $this->_initializeAction([
             ['title' => 'Article1'],
-            ['title' => '']
+            ['title' => ''],
         ]);
 
         $this->Action->execute();
@@ -127,7 +129,7 @@ class AddEditActionTest extends TestCase
     {
         $this->_initializeAction([
             ['title' => 'Article1'],
-            ['title' => 'Article2']
+            ['title' => 'Article2'],
         ]);
 
         $this->assertTrue($this->Action->validates());
@@ -140,7 +142,7 @@ class AddEditActionTest extends TestCase
     {
         $this->_initializeAction([
             ['title' => 'Article1'],
-            ['title' => '']
+            ['title' => ''],
         ]);
 
         try {
@@ -151,9 +153,9 @@ class AddEditActionTest extends TestCase
                 // note the index here is important, first entity (0) is valid
                 1 => [
                     'title' => [
-                        '_empty' => 'This field cannot be left empty'
-                    ]
-                ]
+                        '_empty' => 'This field cannot be left empty',
+                    ],
+                ],
             ], $ex->getValidationErrors());
         }
     }
@@ -164,7 +166,7 @@ class AddEditActionTest extends TestCase
         $initialCount = $ArticlesTable->find()->count();
         $post = [
             ['title' => 'Article1'],
-            ['title' => 'Article2']
+            ['title' => 'Article2'],
         ];
 
         $this->_initializeRequest([
@@ -178,7 +180,7 @@ class AddEditActionTest extends TestCase
             'service' => null,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/articles-collection/collection/add'
+            'baseUrl' => '/articles-collection/collection/add',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
         $this->assertTrue($Service instanceof FallbackService);
@@ -206,7 +208,7 @@ class AddEditActionTest extends TestCase
             'service' => null,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/articles-collection/collection/add'
+            'baseUrl' => '/articles-collection/collection/add',
         ];
         $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
 

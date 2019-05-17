@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -15,13 +17,12 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use CakeDC\Api\Service\Action\CrudViewAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\TestSuite\TestCase;
 
 class CrudViewActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -44,8 +45,8 @@ class CrudViewActionTest extends TestCase
                 'service' => 'articles',
                 'pass' => [
                     '1',
-                ]
-            ]
+                ],
+            ],
         ]);
         $service = $this->request->getParam('service');
         $options = [
@@ -53,7 +54,7 @@ class CrudViewActionTest extends TestCase
             'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/articles/1'
+            'baseUrl' => '/articles/1',
         ];
         $this->Service = ServiceRegistry::getServiceLocator()->get($service, $options);
     }

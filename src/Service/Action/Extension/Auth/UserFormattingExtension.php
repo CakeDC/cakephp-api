@@ -45,9 +45,9 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      * On Login Format.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return array
+     * @return array|null
      */
-    public function onLoginFormat(Event $event)
+    public function onLoginFormat(Event $event): ?array
     {
         return $this->_userCleanup($event->getData('user'));
     }
@@ -58,19 +58,19 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      * @param \Cake\Event\Event $event An Event instance
      * @return array
      */
-    public function onRegisterFormat(Event $event)
+    public function onRegisterFormat(Event $event): array
     {
         return $this->_userCleanup($event->getData('user'));
     }
 
     /**
-     * @param array $user User data
-     * @return array
+     * @param array|\Cake\Datasource\EntityInterface|null $user User data
+     * @return array|null
      */
-    protected function _userCleanup($user)
+    protected function _userCleanup($user): ?array
     {
-        if (empty($user)) {
-            return $user;
+        if ($user === null) {
+            return null;
         }
 
         $currentUser = $this
@@ -78,6 +78,10 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
             ->find()
             ->where([$this->getUsersTable()->aliasField('id') => $user['id']])
             ->first();
+
+        if ($currentUser === null) {
+            return null;
+        }
 
         $user = $currentUser->toArray();
         $user['api_token'] = $currentUser['api_token'];

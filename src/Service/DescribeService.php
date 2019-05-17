@@ -30,7 +30,7 @@ class DescribeService extends Service
      *
      * @return void
      */
-    public function loadRoutes()
+    public function loadRoutes(): void
     {
         ApiRouter::scope('/', function (RouteBuilder $routes) {
             $routes->setExtensions($this->_routeExtensions);

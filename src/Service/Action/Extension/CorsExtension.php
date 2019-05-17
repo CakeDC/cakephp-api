@@ -41,15 +41,16 @@ class CorsExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $Event An Event instance
      * @return void
      */
-    public function onAction(Event $Event)
+    public function onAction(Event $Event): void
     {
         $action = $Event->getSubject();
         $request = $action->getService()->getRequest();
         $response = $action->getService()->getResponse();
+        $defaultMethods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
         $action->getService()->setResponse(
             $response->cors($request)
                  ->allowOrigin($this->getConfig('origin') ?: ['*'])
-                 ->allowMethods($this->getConfig('methods') ?: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'])
+                 ->allowMethods($this->getConfig('methods') ?: $defaultMethods)
                  ->allowHeaders($this->getConfig('headers') ?: [
                      'X-CSRF-Token',
                      'Content-Type',

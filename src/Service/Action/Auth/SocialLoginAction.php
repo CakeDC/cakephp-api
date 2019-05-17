@@ -41,7 +41,7 @@ class SocialLoginAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
         $this->Auth->allow($this->getName());
@@ -52,7 +52,7 @@ class SocialLoginAction extends Action
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = new Validator();
         $validator
@@ -106,7 +106,7 @@ class SocialLoginAction extends Action
      *
      * @return array
      */
-    protected function _authConfig()
+    protected function _authConfig(): array
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [

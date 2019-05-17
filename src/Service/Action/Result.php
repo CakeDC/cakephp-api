@@ -56,7 +56,7 @@ class Result
      * @param array|null $data data to be delivered for the api
      * @param int $code code of the api request
      */
-    public function __construct(?array $data = null, $code = null)
+    public function __construct(?array $data = null, ?int $code = null)
     {
         if ($data !== null) {
             $this->setData($data);
@@ -82,7 +82,7 @@ class Result
      * @param array|mixed $value data to be delivered for the api
      * @return self
      */
-    public function setData($value)
+    public function setData($value): self
     {
         $this->_data = $value;
 
@@ -94,7 +94,7 @@ class Result
      *
      * @return int
      */
-    public function getCode()
+    public function getCode(): int
     {
         return $this->_code;
     }
@@ -105,7 +105,7 @@ class Result
      * @param int $value code to be delivered for the api
      * @return self
      */
-    public function setCode($value)
+    public function setCode(int $value): self
     {
         $this->_code = $value;
 
@@ -128,7 +128,7 @@ class Result
      * @param \Exception $value exception to be delivered for the api
      * @return self
      */
-    public function setException($value)
+    public function setException(\Exception $value): self
     {
         $this->_exception = $value;
 
@@ -153,7 +153,7 @@ class Result
      * @param string $key Payload key.
      * @return array|mixed Payload
      */
-    public function getPayload($key = null)
+    public function getPayload(?string $key = null): ?array
     {
         if ($key === null) {
             return $this->_payload;
@@ -184,7 +184,7 @@ class Result
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $info = [
             'code' => $this->_code,
@@ -205,7 +205,7 @@ class Result
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

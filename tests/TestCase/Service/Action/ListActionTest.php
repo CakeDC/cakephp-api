@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -13,9 +15,9 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\ListAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\TestSuite\TestCase;
 
 /**
  * Class ListActionTest
@@ -24,7 +26,6 @@ use CakeDC\Api\Test\FixturesTrait;
  */
 class ListActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -45,8 +46,8 @@ class ListActionTest extends TestCase
         $this->_initializeRequest([
             'params' => [
                 'service' => 'listing',
-                'pass' => []
-            ]
+                'pass' => [],
+            ],
         ]);
         $service = $this->request->getParam('service');
         $options = [
@@ -54,7 +55,7 @@ class ListActionTest extends TestCase
             'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/listing'
+            'baseUrl' => '/listing',
         ];
         $this->Service = ServiceRegistry::getServiceLocator()->get($service, $options);
     }

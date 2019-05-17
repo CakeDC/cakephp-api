@@ -29,7 +29,7 @@ class ListAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
         $this->Auth->allow($this->getName());

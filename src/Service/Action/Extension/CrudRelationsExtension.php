@@ -50,7 +50,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance.
      * @return \Cake\ORM\Query
      */
-    public function findEntity(Event $event)
+    public function findEntity(Event $event): \Cake\ORM\Query
     {
         return $this->_attachAssociations($event->getSubject(), $event->getData('query'));
     }
@@ -61,7 +61,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance.
      * @return \Cake\ORM\Query
      */
-    public function findEntities(Event $event)
+    public function findEntities(Event $event): \Cake\ORM\Query
     {
         return $this->_attachAssociations($event->getSubject(), $event->getData('query'));
     }
@@ -99,7 +99,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\CrudAction $action An CrudAction instance.
      * @return bool
      */
-    protected function _includeDirectAssociations(CrudAction $action)
+    protected function _includeDirectAssociations(CrudAction $action): bool
     {
         $data = $action->getData();
 

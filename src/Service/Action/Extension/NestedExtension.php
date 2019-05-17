@@ -44,7 +44,7 @@ class NestedExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\ORM\Query
      */
-    public function findEntities(Event $event)
+    public function findEntities(Event $event): \Cake\ORM\Query
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
@@ -64,9 +64,9 @@ class NestedExtension extends Extension implements EventListenerInterface
      * On find entity.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Entity
+     * @return \Cake\ORM\Query
      */
-    public function findEntity(Event $event)
+    public function findEntity(Event $event): \Cake\ORM\Query
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
@@ -88,7 +88,7 @@ class NestedExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\ORM\Entity
      */
-    public function patchEntity(Event $event)
+    public function patchEntity(Event $event): \Cake\ORM\Entity
     {
         $action = $event->getSubject();
         $entity = $event->getData('entity');

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,8 +13,8 @@
 
 namespace CakeDC\Api\TestSuite;
 
-use CakeDC\Api\Service\ServiceRegistry;
 use Cake\TestSuite\TestCase as BaseTestCase;
+use CakeDC\Api\Service\ServiceRegistry;
 
 /**
  * Class TestCase
@@ -21,7 +23,6 @@ use Cake\TestSuite\TestCase as BaseTestCase;
  */
 class TestCase extends BaseTestCase
 {
-
     /**
      * setUp
      *

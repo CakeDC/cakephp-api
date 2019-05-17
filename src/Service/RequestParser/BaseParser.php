@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -18,7 +20,6 @@ use CakeDC\Api\Service\Service;
  */
 abstract class BaseParser
 {
-
     /**
      * Reference to the Service.
      *
@@ -29,7 +30,7 @@ abstract class BaseParser
     /**
      * Constructor
      *
-     * @param Service $service The Service instantiating the Adapter.
+     * @param \CakeDC\Api\Service\Service $service The Service instantiating the Adapter.
      */
     public function __construct(Service $service)
     {
@@ -41,12 +42,12 @@ abstract class BaseParser
      *
      * @return array
      */
-    abstract public function getParams();
+    abstract public function getParams(): array;
 
     /**
      * Processes the HTTP request.
      *
      * @return bool
      */
-    abstract public function request();
+    abstract public function request(): bool;
 }

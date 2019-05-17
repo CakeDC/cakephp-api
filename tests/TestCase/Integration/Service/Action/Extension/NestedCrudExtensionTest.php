@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,16 +13,15 @@
 
 namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Extension;
 
-use CakeDC\Api\TestSuite\IntegrationTestCase;
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\Test\Settings;
-use Cake\Core\Configure;
-use Cake\Utility\Hash;
+use CakeDC\Api\TestSuite\IntegrationTestCase;
 
 class NestedCrudExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -67,7 +68,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
             'author_id' => 1,
             'title' => 'First Article',
             'body' => 'First Article Body',
-            'published' => 'Y'
+            'published' => 'Y',
         ];
         $this->assertEquals($article, $result['data']);
 
@@ -82,7 +83,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $article = [
             'title' => 'New Article',
             'body' => 'New Article Body',
-            'published' => 'Y'
+            'published' => 'Y',
         ];
         $this->sendRequest('/authors/1/articles', 'POST', $article);
         $result = $this->getJsonResponse();
@@ -103,7 +104,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $article = [
             'title' => 'Article 1',
             'body' => 'Article 1 Body',
-            'published' => 'Y'
+            'published' => 'Y',
         ];
         $this->sendRequest('/authors/1/articles/1', 'PUT', $article);
         $result = $this->getJsonResponse();
@@ -124,7 +125,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $article = [
             'title' => 'Article 1',
             'body' => 'Article 1 Body',
-            'published' => 'Y'
+            'published' => 'Y',
         ];
         $this->sendRequest('/authors/1/articles/2', 'PUT', $article);
         $result = $this->getJsonResponse();

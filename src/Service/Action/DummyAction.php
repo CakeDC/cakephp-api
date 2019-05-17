@@ -25,7 +25,7 @@ class DummyAction extends Action
      *
      * @return bool|array
      */
-    public function validates()
+    public function validates(): bool
     {
         return true;
     }

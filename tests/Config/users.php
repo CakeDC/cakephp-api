@@ -11,7 +11,7 @@
 
 $config = [
     'Auth' => [
-    
+
         'AuthenticationComponent' => [
             'load' => true,
             'loginAction' => [
@@ -27,7 +27,7 @@ $config = [
                 'prefix' => false,
             ],
             'loginRedirect' => '/',
-            'requireIdentity' => false
+            'requireIdentity' => false,
         ],
         'Authenticators' => [
             'Session' => [
@@ -43,7 +43,7 @@ $config = [
                     'controller' => 'Users',
                     'action' => 'login',
                     'prefix' => false,
-                ]
+                ],
             ],
             'Token' => [
                 'className' => 'Authentication.Token',
@@ -66,7 +66,7 @@ $config = [
                     'controller' => 'Users',
                     'action' => 'login',
                     'prefix' => false,
-                ]
+                ],
             ],
             'Social' => [
                 'className' => 'CakeDC/Users.Social',
@@ -75,36 +75,36 @@ $config = [
             'SocialPendingEmail' => [
                 'className' => 'CakeDC/Users.SocialPendingEmail',
                 'skipTwoFactorVerify' => true,
-            ]
+            ],
         ],
         'Identifiers' => [
             'Password' => [
                 'className' => 'Authentication.Password',
                 'fields' => [
                     'username' => ['username', 'email'],
-                    'password' => 'password'
+                    'password' => 'password',
                 ],
                 'resolver' => [
                     'className' => 'Authentication.Orm',
-                    'finder' => 'active'
+                    'finder' => 'active',
                 ],
             ],
             "Social" => [
                 'className' => 'CakeDC/Users.Social',
-                'authFinder' => 'active'
+                'authFinder' => 'active',
             ],
             'Token' => [
                 'className' => 'Authentication.Token',
                 'tokenField' => 'api_token',
                 'resolver' => [
                     'className' => 'Authentication.Orm',
-                    'finder' => 'active'
+                    'finder' => 'active',
                 ],
-            ]
+            ],
         ],
         "Authorization" => [
             'enable' => true,
-            'serviceLoader' => \CakeDC\Users\Loader\AuthorizationServiceLoader::class
+            'serviceLoader' => \CakeDC\Users\Loader\AuthorizationServiceLoader::class,
         ],
         'AuthorizationMiddleware' => [
             'unauthorizedHandler' => [
@@ -117,8 +117,8 @@ $config = [
                     'plugin' => 'CakeDC/Users',
                     'controller' => 'Users',
                     'action' => 'login',
-                ]
-            ]
+                ],
+            ],
         ],
         'AuthorizationComponent' => [
             'enabled' => true,

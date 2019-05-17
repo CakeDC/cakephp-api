@@ -15,10 +15,8 @@ namespace CakeDC\Api\Service\Extension;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use CakeDC\Api\Service\Action\Result;
-use Cake\Http\ServerRequest;
 use CakeDC\Api\Service\Action\DummyAction;
-use CakeDC\Api\Service\Service;
+use CakeDC\Api\Service\Action\Result;
 
 /**
  * Class CorsExtension
@@ -48,9 +46,9 @@ class OptionsHandlerExtension extends Extension implements EventListenerInterfac
      */
     public function onDispatch(EventInterface $event): ?Result
     {
-        /** @var Service $service */
+        /** @var \CakeDC\Api\Service\Service $service */
         $service = $event->getData('service');
-        /** @var ServerRequest $request */
+        /** @var \Cake\Http\ServerRequest $request */
         $request = $service->getRequest();
 
         if ($request->is('options')) {

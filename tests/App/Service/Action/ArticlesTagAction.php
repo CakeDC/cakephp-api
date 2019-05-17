@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,15 +13,14 @@
 
 namespace CakeDC\Api\Test\App\Service\Action;
 
-use CakeDC\Api\Exception\ValidationException;
-use CakeDC\Api\Service\Action\CrudAction;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Validation\Validator;
+use CakeDC\Api\Exception\ValidationException;
+use CakeDC\Api\Service\Action\CrudAction;
 
 class ArticlesTagAction extends CrudAction
 {
-
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
         $this->Auth->allow($this->getName());
@@ -30,7 +31,7 @@ class ArticlesTagAction extends CrudAction
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = new Validator();
         $validator

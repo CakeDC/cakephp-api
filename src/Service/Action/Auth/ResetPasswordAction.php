@@ -39,7 +39,7 @@ class ResetPasswordAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
         $this->Auth->allow($this->getName());
@@ -50,7 +50,7 @@ class ResetPasswordAction extends Action
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = new Validator();
         $validator
@@ -100,13 +100,14 @@ class ResetPasswordAction extends Action
      */
     protected function _changePassword($userId)
     {
-        $user = $this->getUsersTable()->newEntity([]);
+        $user = $this->getUsersTable()->newEntity([], ['validate' => false]);
         $user->id = $userId;
         try {
             $validator = $this->getUsersTable()->validationPasswordConfirm(new Validator());
             $user = $this->getUsersTable()->patchEntity($user, $this->getData(), ['validate' => $validator]);
             if ($user->getErrors()) {
-                throw new ValidationException(__d('CakeDC/Api', 'Password could not be changed'), 0, null, $user->getErrors());
+                $message = __d('CakeDC/Api', 'Password could not be changed');
+                throw new ValidationException($message, 0, null, $user->getErrors());
             } else {
                 $user = $this->getUsersTable()->changePassword($user);
                 if ($user) {
@@ -129,7 +130,7 @@ class ResetPasswordAction extends Action
      *
      * @return array
      */
-    protected function _authConfig()
+    protected function _authConfig(): array
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [

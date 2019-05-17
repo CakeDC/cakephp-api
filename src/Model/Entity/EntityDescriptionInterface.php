@@ -20,19 +20,19 @@ interface EntityDescriptionInterface
      *
      * @return array
      */
-    public function describeFields();
+    public function describeFields(): array;
 
     /**
      * Will describe the actions
      *
      * @return array
      */
-    public function describeAction();
+    public function describeAction(): array;
 
     /**
      * Will describe the params
      *
      * @return array
      */
-    public function describeParams();
+    public function describeParams(): array;
 }

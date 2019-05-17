@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -13,9 +15,9 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use CakeDC\Api\Service\Action\DescribeAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\TestSuite\TestCase;
 
 /**
  * Class DescribeActionTest
@@ -24,7 +26,6 @@ use CakeDC\Api\Test\FixturesTrait;
  */
 class DescribeActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -45,11 +46,11 @@ class DescribeActionTest extends TestCase
         $this->_initializeRequest([
             'params' => [
                 'service' => 'describe',
-                'pass' => []
+                'pass' => [],
             ],
             'query' => [
                 'service' => 'articles',
-            ]
+            ],
         ]);
         $service = $this->request->getParam('service');
         $options = [

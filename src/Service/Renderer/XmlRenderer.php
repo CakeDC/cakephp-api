@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,14 +13,14 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
-use CakeDC\Api\Exception\ValidationException;
-use CakeDC\Api\Service\Action\Result;
 use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\I18n\FrozenTime;
 use Cake\Utility\Xml;
+use CakeDC\Api\Exception\ValidationException;
+use CakeDC\Api\Service\Action\Result;
 use Exception;
 
 /**
@@ -29,14 +31,13 @@ use Exception;
  */
 class XmlRenderer extends BaseRenderer
 {
-
     /**
      * Builds the HTTP response.
      *
-     * @param Result $result The result object returned by the Service.
+     * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
-    public function response(Result $result = null)
+    public function response(?Result $result = null): bool
     {
         $response = $this->_service->getResponse();
         $xml = $this->_format($result->getData());
@@ -49,7 +50,7 @@ class XmlRenderer extends BaseRenderer
     /**
      * Processes an exception thrown while processing the request.
      *
-     * @param Exception $exception The exception object.
+     * @param \Exception $exception The exception object.
      * @return void
      */
     public function error(Exception $exception): void
@@ -58,8 +59,8 @@ class XmlRenderer extends BaseRenderer
         $data = [
             'error' => [
                 'code' => $exception->getCode(),
-                'message' => $this->_buildMessage($exception)
-            ]
+                'message' => $this->_buildMessage($exception),
+            ],
         ];
         if (Configure::read('debug') > 0) {
             $data['error']['trace'] = $this->_stackTrace($exception);
@@ -97,7 +98,7 @@ class XmlRenderer extends BaseRenderer
      * @param object $data The object to process.
      * @return array
      */
-    protected function _object($data): array
+    protected function _object(object $data): array
     {
         $xml = [];
         if ($data instanceof EntityInterface) {
@@ -116,7 +117,7 @@ class XmlRenderer extends BaseRenderer
                     $property = $this->_array($value);
             } else {
                 $property = [];
-                $property['@'] = $value !== null ? $value : '';
+                $property['@'] = $value ?? '';
             }
             $property['@name'] = $name;
             $xml['property'][] = $property;
@@ -130,7 +131,7 @@ class XmlRenderer extends BaseRenderer
     /**
      * Formats an array as an XML node.
      *
-     * @param array|Collection $data The array to process.
+     * @param array|\Cake\Collection\Collection $data The array to process.
      * @return array
      */
     protected function _array($data): array
@@ -150,7 +151,7 @@ class XmlRenderer extends BaseRenderer
                     $item = $this->_array($value);
                 } else {
                     $item = [];
-                    $item['@'] = $value !== null ? $value : '';
+                    $item['@'] = $value ?? '';
                 }
             }
             $item['@key'] = $name;

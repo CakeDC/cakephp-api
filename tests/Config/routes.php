@@ -11,7 +11,5 @@
 
 namespace Api\Test\App\Config;
 
-use Cake\Routing\Router;
-
 require ROOT . DS . 'config' . DS . 'routes.php';
 require ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS . 'config' . DS . 'routes.php';

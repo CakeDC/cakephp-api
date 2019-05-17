@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,17 +13,16 @@
 
 namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Extension;
 
-use CakeDC\Api\TestSuite\IntegrationTestCase;
-use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
-use CakeDC\Api\Test\Settings;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use CakeDC\Api\Test\ConfigTrait;
+use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\Test\Settings;
+use CakeDC\Api\TestSuite\IntegrationTestCase;
 
 class CursorPaginationExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -65,8 +66,8 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     {
         $this->_loadDefaultExtensions([
             'CakeDC/Api.CursorPaginate' => [
-                'defaultCount' => 5
-            ]
+                'defaultCount' => 5,
+            ],
         ], true);
 //        Configure::write('Test.Api.Extension', [
 //            'default' => [

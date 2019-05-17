@@ -34,10 +34,10 @@
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
+        "cakephp/cakephp-codesniffer": "dev-next",
         "league/flysystem-vfs": "^1.0",
-        "vlucas/phpdotenv": "^3.3",
-        "cakephp/cakephp-codesniffer": "dev-next"
+        "phpunit/phpunit": "^8.0",
+        "vlucas/phpdotenv": "^3.3"
     },
     "autoload": {
         "psr-4": {
@@ -68,6 +68,7 @@
         "stan": "phpstan analyse src/ && psalm --show-info=false",
         "psalm": "psalm --show-info=false",
         "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^0.11 vimeo/psalm:^3.0 && mv composer.backup composer.json", 
+        "rector": "rector process src/",
         "rector-setup": "cp composer.json composer.backup && composer require --dev rector/rector:^0.4.11 && mv composer.backup composer.json", 
         "coverage-test": "phpunit --stderr --coverage-clover=clover.xml"
     }

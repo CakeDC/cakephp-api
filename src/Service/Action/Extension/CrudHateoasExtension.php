@@ -64,7 +64,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance.
      * @return void
      */
-    public function afterAction(Event $event)
+    public function afterAction(Event $event): void
     {
         $action = $event->getSubject();
         $result = $action->getService()->getResult();
@@ -92,7 +92,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return array
      */
-    protected function _buildIndexLinks(Action $action)
+    protected function _buildIndexLinks(Action $action): array
     {
         $links = [];
         $indexRoute = $action->getRoute();
@@ -117,7 +117,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return array
      */
-    protected function _buildViewLinks(Action $action)
+    protected function _buildViewLinks(Action $action): array
     {
         $links = [];
         $viewRoute = $action->getRoute();

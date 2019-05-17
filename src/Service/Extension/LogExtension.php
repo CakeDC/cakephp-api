@@ -57,7 +57,7 @@ class LogExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event An Event instance.
      * @return void
      */
-    public function beforeProcess(EventInterface $event)
+    public function beforeProcess(EventInterface $event): void
     {
         $this->_service = $event->getData('service');
         $this->_timer = microtime(true);
@@ -69,7 +69,7 @@ class LogExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event An Event instance.
      * @return void
      */
-    public function afterProcess(EventInterface $event)
+    public function afterProcess(EventInterface $event): void
     {
         $duration = round((microtime(true) - $this->_timer) * 1000, 0);
         $url = $this->_service->getBaseUrl();

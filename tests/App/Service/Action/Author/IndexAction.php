@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -15,8 +17,7 @@ use CakeDC\Api\Service\Action\CrudAction;
 
 class IndexAction extends CrudAction
 {
-
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
         $this->Auth->allow($this->getName());
@@ -27,7 +28,7 @@ class IndexAction extends CrudAction
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         return true;
     }

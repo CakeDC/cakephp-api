@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -21,7 +23,6 @@ use Cake\Utility\Inflector;
  */
 abstract class NestedCrudService extends CrudService
 {
-
     /**
      * @var mixed
      */
@@ -46,7 +47,7 @@ abstract class NestedCrudService extends CrudService
      * @param array $route Action route,
      * @return array
      */
-    protected function _actionOptions($route)
+    protected function _actionOptions(array $route): array
     {
         $parent = $this->getParentService();
         if ($this->_parentIdName === null && $parent instanceof Service) {

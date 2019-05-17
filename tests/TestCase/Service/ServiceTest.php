@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,16 +13,15 @@
 
 namespace CakeDC\Api\Test\App\Service;
 
+use Cake\Core\Configure;
 use Cake\Routing\Exception\MissingRouteException;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Controller\Controller;
-use Cake\Core\Configure;
+use CakeDC\Api\TestSuite\TestCase;
 
 class ServiceTest extends TestCase
 {
@@ -61,7 +62,7 @@ class ServiceTest extends TestCase
             'service' => 'authors',
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/authors'
+            'baseUrl' => '/authors',
         ]);
         $this->assertInstanceOf(FallbackService::class, $this->Service);
     }
@@ -79,7 +80,7 @@ class ServiceTest extends TestCase
             'request' => $this->request,
             'response' => $this->response,
             'baseUrl' => '/authors',
-            'rendererClass' => 'CakeDC/Api.Raw'
+            'rendererClass' => 'CakeDC/Api.Raw',
         ]);
         $this->assertInstanceOf(FallbackService::class, $this->Service);
     }
@@ -95,7 +96,7 @@ class ServiceTest extends TestCase
         $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
-            ]
+            ],
         ], 'DELETE');
         $service = $this->request->getParam('service');
         $options = [
@@ -103,7 +104,7 @@ class ServiceTest extends TestCase
             'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/authors'
+            'baseUrl' => '/authors',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
@@ -123,7 +124,7 @@ class ServiceTest extends TestCase
         $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
-            ]
+            ],
         ]);
         $service = $this->request->getParam('service');
         $options = [
@@ -131,7 +132,7 @@ class ServiceTest extends TestCase
             'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/authors'
+            'baseUrl' => '/authors',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
@@ -155,9 +156,9 @@ class ServiceTest extends TestCase
                 'service' => 'authors',
                 'pass' => [
                     '1',
-                    'articles'
-                ]
-            ]
+                    'articles',
+                ],
+            ],
         ]);
         $service = $this->request->getParam('service');
         $options = [
@@ -190,12 +191,12 @@ class ServiceTest extends TestCase
                 'service' => 'articles',
                 'pass' => [
                     'tag',
-                    '1'
+                    '1',
                 ],
                 'post' => [
-                    'tag_id' => 1
-                ]
-            ]
+                    'tag_id' => 1,
+                ],
+            ],
         ], 'PUT');
         $service = $this->request->getParam('service');
         $options = [
@@ -222,16 +223,16 @@ class ServiceTest extends TestCase
         $actionClass = 'CakeDC\Api\Test\App\Service\Action\Author\IndexAction';
         $this->_addSettingByPath('Service.authors.options', [
             'classMap' => [
-                'index' => $actionClass
-            ]
+                'index' => $actionClass,
+            ],
         ]);
-        $config = require(CONFIG . 'api.php');
+        $config = require CONFIG . 'api.php';
         Configure::write($config);
         $this->_initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [],
-            ]
+            ],
         ], 'GET');
         $service = $this->request->getParam('service');
         $version = null;
@@ -240,7 +241,7 @@ class ServiceTest extends TestCase
             'service' => $service,
             'request' => $this->request,
             'response' => $this->response,
-            'baseUrl' => '/authors'
+            'baseUrl' => '/authors',
         ];
         $options += (new ConfigReader())->serviceOptions($service, $version);
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);

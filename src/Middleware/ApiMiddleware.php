@@ -15,25 +15,33 @@ namespace CakeDC\Api\Middleware;
 
 use Cake\Core\Configure;
 use Cake\Http\CallbackStream;
+use Cake\Http\Response;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Applies routing rules to the request and creates the controller
  * instance if possible.
  */
-class ApiMiddleware
+class ApiMiddleware implements MiddlewareInterface
 {
     /**
+     * Process an incoming server request.
+     *
+     * Processes an incoming server request in order to produce a response.
+     * If unable to produce the response itself, it may delegate to the provided
+     * request handler to do so.
+     *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Message\ResponseInterface $response The response.
-     * @param callable $next The next middleware to call.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $prefix = Configure::read('Api.prefix');
         if (empty($prefix)) {
@@ -42,7 +50,8 @@ class ApiMiddleware
         $useVersioning = Configure::read('Api.useVersioning');
         if ($useVersioning) {
             $versionPrefix = Configure::read('Api.versionPrefix');
-            $expr = '#/' . $prefix . '/(?<version>' . $versionPrefix . '\d+)' . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
+            $expr = '#/' . $prefix . '/(?<version>' . $versionPrefix . '\d+)' . '/' .
+                '(?<service>[^/?]+)' . '(?<base>/?.*)#';
         } else {
             $expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
         }
@@ -60,7 +69,6 @@ class ApiMiddleware
                 'service' => $service,
                 'version' => $version,
                 'request' => $request,
-                'response' => $response,
                 'baseUrl' => $url,
             ];
 
@@ -71,15 +79,16 @@ class ApiMiddleware
 
                 $response = $Service->respond($result);
             } catch (Exception $e) {
+                $response = new Response();
                 $response->withStatus(400);
                 $response = $response->withBody(new CallbackStream(function () use ($e) {
-                        echo $e->getMessage();
+                    echo $e->getMessage();
                 }));
             }
 
             return $response;
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

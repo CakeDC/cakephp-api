@@ -70,7 +70,7 @@ abstract class CrudService extends Service
      *
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->_table;
     }
@@ -81,7 +81,7 @@ abstract class CrudService extends Service
      * @param string $table A Table name.
      * @return $this
      */
-    public function setTable($table)
+    public function setTable(string $table)
     {
         $this->_table = $table;
 
@@ -94,7 +94,7 @@ abstract class CrudService extends Service
      * @param array $route Activated route.
      * @return array
      */
-    protected function _actionOptions($route)
+    protected function _actionOptions(array $route): array
     {
         $id = null;
         if (isset($route[$this->_idName])) {

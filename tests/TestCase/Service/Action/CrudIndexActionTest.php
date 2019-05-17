@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,18 +13,17 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
-use CakeDC\Api\Service\Action\CrudIndexAction;
-use CakeDC\Api\Service\FallbackService;
-use CakeDC\Api\TestSuite\TestCase;
-use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\ORM\ResultSet;
+use CakeDC\Api\Service\Action\CrudIndexAction;
+use CakeDC\Api\Service\FallbackService;
+use CakeDC\Api\Test\ConfigTrait;
+use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\TestSuite\TestCase;
 
 class CrudIndexActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -45,13 +46,13 @@ class CrudIndexActionTest extends TestCase
         $service = new FallbackService([
             'request' => $request,
             'response' => $response,
-            'service' => 'articles'
+            'service' => 'articles',
         ]);
 
         $this->Action = new CrudIndexAction([
             'service' => $service,
             'request' => $request,
-            'response' => $response
+            'response' => $response,
         ]);
     }
 

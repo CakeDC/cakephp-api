@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,19 +13,17 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
+use Cake\Core\Configure;
 use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\RawRenderer;
-use CakeDC\Api\Service\Service;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Core\Configure;
+use CakeDC\Api\TestSuite\TestCase;
 
 class RawRendererTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -72,7 +72,7 @@ class RawRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Raw'
+            'rendererClass' => 'CakeDC/Api.Raw',
         ];
         $this->Service = new FallbackService($serviceOptions);
         $renderer = $this->Service->getRenderer();
@@ -96,7 +96,7 @@ class RawRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Raw'
+            'rendererClass' => 'CakeDC/Api.Raw',
         ];
         $this->Service = new FallbackService($serviceOptions);
 
@@ -140,7 +140,7 @@ class RawRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Raw'
+            'rendererClass' => 'CakeDC/Api.Raw',
         ];
         $this->Service = new FallbackService($serviceOptions);
 

@@ -20,5 +20,5 @@ interface EntityLabelsInterface
      *
      * @return array
      */
-    public function labels();
+    public function labels(): array;
 }

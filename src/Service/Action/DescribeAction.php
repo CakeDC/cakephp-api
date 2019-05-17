@@ -30,7 +30,7 @@ class DescribeAction extends Action
      *
      * @return bool|array
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = new Validator();
         $validator

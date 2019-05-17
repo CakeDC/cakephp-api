@@ -44,7 +44,7 @@ class MethodNotAllowedException extends Exception
      * @param string $file file name
      * @return void
      */
-    public function setFile($file = '')
+    public function setFile(string $file = ''): void
     {
         $this->file = $file;
     }
@@ -55,7 +55,7 @@ class MethodNotAllowedException extends Exception
      * @param int $line set the line of the code
      * @return void
      */
-    public function setLine($line = 0)
+    public function setLine(int $line = 0): void
     {
         $this->line = $line;
     }

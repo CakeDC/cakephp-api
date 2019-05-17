@@ -39,7 +39,7 @@ class ValidationException extends ServiceException
         $message = 'Validation errors',
         $code = 0,
         $previous = null,
-        $validationErrors = []
+        array $validationErrors = []
     ) {
         if ($code === 0) {
             $code = $this->_defaultCode;
@@ -54,7 +54,7 @@ class ValidationException extends ServiceException
      * @param array $validationErrors the array with the validations
      * @return void
      */
-    public function setValidationErrors($validationErrors = [])
+    public function setValidationErrors(array $validationErrors = []): void
     {
         $this->_validationErrors = $validationErrors;
     }
@@ -64,7 +64,7 @@ class ValidationException extends ServiceException
      *
      * @return array
      */
-    public function getValidationErrors()
+    public function getValidationErrors(): array
     {
         return $this->_validationErrors;
     }

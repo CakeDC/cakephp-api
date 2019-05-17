@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,18 +13,16 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Action;
 
+use Cake\Datasource\EntityInterface;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAddAction;
 use CakeDC\Api\Service\ServiceRegistry;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-
-use Cake\Datasource\EntityInterface;
+use CakeDC\Api\TestSuite\TestCase;
 
 class CrudAddActionTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -61,7 +61,7 @@ class CrudAddActionTest extends TestCase
     public function testExecuteSuccess()
     {
         $this->_initializeAction([
-            'title' => 'New message'
+            'title' => 'New message',
         ]);
 
         $result = $this->Action->execute();
@@ -78,7 +78,7 @@ class CrudAddActionTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction([
-            'title' => ''
+            'title' => '',
         ]);
 
         $result = $this->Action->execute();

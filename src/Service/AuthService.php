@@ -33,7 +33,7 @@ class AuthService extends Service
      * @inheritdoc
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $methods = ['method' => ['POST'], 'mapCors' => true];
@@ -52,7 +52,7 @@ class AuthService extends Service
      * @param array $route Action route.
      * @return array
      */
-    protected function _actionOptions($route)
+    protected function _actionOptions(array $route): array
     {
         $options['Extension'] = ['CakeDC/Api.Auth/UserFormatting'];
 

@@ -50,7 +50,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\ORM\Entity
      */
-    public function findEntities(Event $event)
+    public function findEntities(Event $event): \Cake\ORM\Query
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
@@ -69,7 +69,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance
      * @return int
      */
-    protected function _page(Action $action)
+    protected function _page(Action $action): int
     {
         $data = $action->getData();
         $pageField = $this->getConfig('pageField');
@@ -109,7 +109,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance
      * @return void
      */
-    public function afterFind(Event $event)
+    public function afterFind(Event $event): void
     {
         $action = $event->getSubject();
         $query = $event->getData('query');

@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\Entity;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\ExtensionRegistry;
 use CakeDC\Api\Service\Utility\ReverseRouting;
@@ -70,9 +72,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * find entities
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Entity
+     * @return \Cake\ORM\Query
      */
-    public function findEntities(Event $event)
+    public function findEntities(Event $event): \Cake\ORM\Query
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
@@ -102,7 +104,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
-    protected function _sinceId(Action $action)
+    protected function _sinceId(Action $action): ?int
     {
         $data = $action->getData();
         $sinceIdField = $this->getConfig('sinceIdField');
@@ -119,7 +121,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
-    protected function _maxId(Action $action)
+    protected function _maxId(Action $action): ?int
     {
         $data = $action->getData();
         $maxIdField = $this->getConfig('maxIdField');
@@ -136,7 +138,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
-    protected function _count(Action $action)
+    protected function _count(Action $action): ?int
     {
         $data = $action->getData();
         $countField = $this->getConfig('countField');
@@ -153,10 +155,10 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     /**
      * after find entities
      *
-     * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Event\EventInterface $event An Event instance.
+     * @return \Cake\ORM\Entity|null
      */
-    public function afterFind(Event $event)
+    public function afterFind(EventInterface $event): ?Entity
     {
         $action = $event->getSubject();
         $records = $event->getData('records');
@@ -211,5 +213,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
             'max_id' => $maxId,
         ];
         $result->appendPayload('pagination', $pagination);
+
+        return null;
     }
 }

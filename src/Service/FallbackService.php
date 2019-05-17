@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service;
 
-use Cake\ORM\Association;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Inflector;
@@ -38,7 +37,7 @@ class FallbackService extends NestedCrudService
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         if (empty($this->_table)) {
@@ -51,7 +50,7 @@ class FallbackService extends NestedCrudService
      *
      * @return void
      */
-    public function loadRoutes()
+    public function loadRoutes(): void
     {
         $table = TableRegistry::getTableLocator()->get($this->_table);
 
@@ -71,7 +70,7 @@ class FallbackService extends NestedCrudService
 
                     foreach ($keys as $type) {
                         foreach ($table->associations()->getByType($type) as $assoc) {
-                            /** @var Association $assoc */
+                            /** @var \Cake\ORM\Association $assoc */
                             $target = $assoc->getTarget();
                             $alias = $target->getAlias();
 

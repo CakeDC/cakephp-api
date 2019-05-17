@@ -44,7 +44,7 @@ class CollectionExtension extends Extension implements EventListenerInterface
      * @param \Cake\Event\Event $event An Event instance.
      * @return void
      */
-    public function beforeProcess(Event $event)
+    public function beforeProcess(Event $event): void
     {
         $this->_service = $event->getData('service');
         $this->_service->mapAction('bulkAdd', AddEditAction::class, [

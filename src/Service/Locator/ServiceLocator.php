@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,10 +13,10 @@
 
 namespace CakeDC\Api\Service\Locator;
 
-use CakeDC\Api\Service\Service;
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Service\Service;
 use RuntimeException;
 
 /**
@@ -22,7 +24,6 @@ use RuntimeException;
  */
 class ServiceLocator implements LocatorInterface
 {
-
     /**
      * Configuration for aliases.
      *
@@ -58,10 +59,10 @@ class ServiceLocator implements LocatorInterface
      *
      * @param string|array $alias Name of the alias or array to completely overwrite current config.
      * @param array|null $options list of options for the alias
-     * @return $this
+     * @return \CakeDC\Api\Service\Locator\LocatorInterface
      * @throws \RuntimeException When you attempt to configure an existing table instance.
      */
-    public function setConfig($alias, $options = null)
+    public function setConfig($alias, ?array $options = null): LocatorInterface
     {
         if (!is_string($alias)) {
             $this->_config = $alias;
@@ -93,7 +94,7 @@ class ServiceLocator implements LocatorInterface
             return $this->_config;
         }
 
-        return isset($this->_config[$alias]) ? $this->_config[$alias] : [];
+        return $this->_config[$alias] ?? [];
     }
 
     /**
@@ -145,7 +146,7 @@ class ServiceLocator implements LocatorInterface
         }
 
         $this->_options[$alias] = $options;
-        list(, $classAlias) = pluginSplit($alias);
+        [, $classAlias] = pluginSplit($alias);
         $options = ['alias' => $classAlias] + $options;
 
         if (isset($this->_config[$alias])) {
@@ -185,7 +186,7 @@ class ServiceLocator implements LocatorInterface
      * @param array $options Method options array.
      * @return string
      */
-    protected function _getClassName($alias, array $options = [])
+    protected function _getClassName(string $alias, array $options = []): ?string
     {
         $useVersions = Configure::read('Api.useVersioning');
         if ($useVersions) {
@@ -213,7 +214,7 @@ class ServiceLocator implements LocatorInterface
      * @param array $options The alias to check for.
      * @return \CakeDC\Api\Service\Service
      */
-    protected function _create(array $options)
+    protected function _create(array $options): \CakeDC\Api\Service\Service
     {
         return new $options['className']($options);
     }
@@ -252,7 +253,7 @@ class ServiceLocator implements LocatorInterface
      *
      * @return array
      */
-    public function genericInstances()
+    public function genericInstances(): array
     {
         return $this->_fallbacked;
     }
@@ -276,7 +277,7 @@ class ServiceLocator implements LocatorInterface
      * @param array $options Options.
      * @return bool
      */
-    protected function _compareOptions($alias, array $options)
+    protected function _compareOptions(string $alias, array $options): bool
     {
         $currentOptions = $this->_options[$alias];
         unset($currentOptions['controller']);

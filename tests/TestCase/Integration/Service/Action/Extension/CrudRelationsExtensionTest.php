@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,12 +13,12 @@
 
 namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Extension;
 
-use CakeDC\Api\TestSuite\IntegrationTestCase;
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\Test\Settings;
-use Cake\Core\Configure;
-use Cake\Utility\Hash;
+use CakeDC\Api\TestSuite\IntegrationTestCase;
 
 /**
  * Class CrudRelationsExtensionTest
@@ -25,7 +27,6 @@ use Cake\Utility\Hash;
  */
 class CrudRelationsExtensionTest extends IntegrationTestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -65,7 +66,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
             'author_id' => 1,
             'title' => 'First Article',
             'body' => 'First Article Body',
-            'published' => 'Y'
+            'published' => 'Y',
         ];
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }
@@ -84,8 +85,8 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
             'author' => [
                 'id' => 1,
                 'first_name' => 'Electra',
-                'last_name' => 'Cronos'
-            ]
+                'last_name' => 'Cronos',
+            ],
         ];
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }
@@ -119,8 +120,8 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
             'author' => [
                 'id' => 1,
                 'first_name' => 'Electra',
-                'last_name' => 'Cronos'
-            ]
+                'last_name' => 'Cronos',
+            ],
         ];
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }

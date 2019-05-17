@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action;
 
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Cake\ORM\Association;
+use Cake\ORM\ResultSet;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
-use Cake\Validation\ValidationRule;
-use Cake\Validation\ValidationSet;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Utility\ReverseRouting;
 
@@ -117,7 +117,7 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\ORM\Table
      */
-    public function getTable()
+    public function getTable(): \Cake\ORM\Table
     {
         return $this->_table;
     }
@@ -148,7 +148,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->_id;
     }
@@ -158,7 +158,7 @@ abstract class CrudAction extends Action
      *
      * @return string
      */
-    public function getIdName()
+    public function getIdName(): string
     {
         return $this->_idName;
     }
@@ -168,7 +168,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function getParentId()
+    public function getParentId(): string
     {
         return $this->_parentId;
     }
@@ -188,7 +188,7 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _newEntity()
+    protected function _newEntity(): \Cake\Datasource\EntityInterface
     {
         $entity = $this->getTable()->newEntity([]);
 
@@ -203,7 +203,7 @@ abstract class CrudAction extends Action
      * @param array $options Patch entity options.
      * @return \Cake\Datasource\EntityInterface|mixed
      */
-    protected function _patchEntity($entity, $data, $options = [])
+    protected function _patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
     {
         $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));
@@ -217,9 +217,9 @@ abstract class CrudAction extends Action
     /**
      * Builds entities list
      *
-     * @return \Cake\Collection\Collection
+     * @return \Cake\ORM\ResultSet
      */
-    protected function _getEntities()
+    protected function _getEntities(): ResultSet
     {
         $query = $this->getTable()->find();
         if ($this->_finder !== null) {
@@ -260,10 +260,10 @@ abstract class CrudAction extends Action
     /**
      * Build condition for get entity method.
      *
-     * @param string $primaryKey Primary key
+     * @param string|int $primaryKey Primary key
      * @return array
      */
-    protected function _buildViewCondition($primaryKey)
+    protected function _buildViewCondition($primaryKey): array
     {
         $table = $this->getTable();
         $key = (array)$table->getPrimaryKey();
@@ -278,7 +278,12 @@ abstract class CrudAction extends Action
                 return var_export($key, true);
             }, $primaryKey);
 
-            throw new InvalidPrimaryKeyException(sprintf('Record not found in table "%s" with primary key [%s]', $table->getTable(), implode($primaryKey, ', ')));
+            $msg = sprintf(
+                'Record not found in table "%s" with primary key [%s]',
+                $table->getTable(),
+                implode($primaryKey, ', ')
+            );
+            throw new InvalidPrimaryKeyException($msg);
         }
         $conditions = array_combine($key, $primaryKey);
 
@@ -291,12 +296,13 @@ abstract class CrudAction extends Action
      * @param \Cake\Datasource\EntityInterface $entity An Entity instance.
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _save($entity)
+    protected function _save(EntityInterface $entity): EntityInterface
     {
         if ($this->getTable()->save($entity)) {
             return $entity;
         } else {
-            throw new ValidationException(__('Validation on {0} failed', $this->getTable()->getAlias()), 0, null, $entity->getErrors());
+            $message = __('Validation on {0} failed', $this->getTable()->getAlias());
+            throw new ValidationException($message, 0, null, $entity->getErrors());
         }
     }
 
@@ -305,7 +311,7 @@ abstract class CrudAction extends Action
      *
      * @return array
      */
-    protected function _describe()
+    protected function _describe(): array
     {
         $table = $this->getTable();
         $schema = $table->getSchema();
@@ -323,14 +329,14 @@ abstract class CrudAction extends Action
         $validators = [];
         foreach ($table->getValidator()
                        ->getIterator() as $name => $field) {
-            /** @var ValidationSet $field */
+            /** @var \Cake\Validation\ValidationSet $field */
             $validators[$name] = [
                 'validatePresence' => $field->isPresenceRequired(),
                 'emptyAllowed' => $field->isEmptyAllowed(),
                 'rules' => [],
             ];
             foreach ($field->getIterator() as $ruleName => $rule) {
-                /** @var ValidationRule $rule */
+                /** @var \Cake\Validation\ValidationRule $rule */
                 $_rule = $rule->get('rule');
                 if (is_callable($_rule)) {
                     continue;

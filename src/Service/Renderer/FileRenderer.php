@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,9 +13,9 @@
 
 namespace CakeDC\Api\Service\Renderer;
 
+use Cake\Core\Configure;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Result;
-use Cake\Core\Configure;
 use Exception;
 
 /**
@@ -23,14 +25,13 @@ use Exception;
  */
 class FileRenderer extends BaseRenderer
 {
-
     /**
      * Builds the HTTP response.
      *
-     * @param Result $result The result object returned by the Service.
+     * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
-    public function response(Result $result = null)
+    public function response(?Result $result = null): bool
     {
         $response = $this->_service
             ->getResponse()
@@ -44,17 +45,17 @@ class FileRenderer extends BaseRenderer
     /**
      * Processes an exception thrown while processing the request.
      *
-     * @param Exception $exception The exception object.
+     * @param \Exception $exception The exception object.
      * @return void
      */
-    public function error(Exception $exception)
+    public function error(Exception $exception): void
     {
         $response = $this->_service->getResponse();
         $data = [
             'error' => [
                 'code' => $exception->getCode(),
-                'message' => $this->_buildMessage($exception)
-            ]
+                'message' => $this->_buildMessage($exception),
+            ],
         ];
         if (Configure::read('debug') > 0) {
             $data['error']['trace'] = $this->_stackTrace($exception);
@@ -71,9 +72,9 @@ class FileRenderer extends BaseRenderer
      * @param mixed $data Encoded data.
      * @return string
      */
-    protected function _encode($data)
+    protected function _encode($data): string
     {
-        $format = (Configure::read('debug') > 0) ? JSON_PRETTY_PRINT : 0;
+        $format = Configure::read('debug') > 0 ? JSON_PRETTY_PRINT : 0;
 
         return json_encode($data, $format);
     }

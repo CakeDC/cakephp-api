@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -12,19 +14,17 @@
 namespace CakeDC\Api\Test\TestCase\Auth\Authenticate;
 
 use Cake\Http\Exception\ForbiddenException;
-use CakeDC\Api\Service\Action\CrudIndexAction;
-use CakeDC\Api\Service\Auth\Authenticate\SocialAuthenticate;
-use CakeDC\Api\Service\Auth\Authenticate\TokenAuthenticate;
-use CakeDC\Api\Service\FallbackService;
-use CakeDC\Api\TestSuite\TestCase;
-use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use CakeDC\Api\Service\Action\CrudIndexAction;
+use CakeDC\Api\Service\Auth\Authenticate\SocialAuthenticate;
+use CakeDC\Api\Service\FallbackService;
+use CakeDC\Api\Test\ConfigTrait;
+use CakeDC\Api\Test\FixturesTrait;
+use CakeDC\Api\TestSuite\TestCase;
 
 class SocialAuthenticateTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -43,12 +43,12 @@ class SocialAuthenticateTest extends TestCase
         $response = new Response();
         $service = new FallbackService([
             'request' => $request,
-            'response' => $response
+            'response' => $response,
         ]);
         $action = new CrudIndexAction([
             'service' => $service,
             'request' => $request,
-            'response' => $response
+            'response' => $response,
         ]);
         $this->social = new SocialAuthenticate($action, ['require_ssl' => false]);
     }

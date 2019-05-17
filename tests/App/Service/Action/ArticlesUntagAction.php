@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,19 +13,16 @@
 
 namespace CakeDC\Api\Test\App\Service\Action;
 
-use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
-use Cake\Validation\Validator;
 
 class ArticlesUntagAction extends Action
 {
-
     /**
      * Apply validation process.
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         return true;
     }

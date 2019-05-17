@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -11,22 +13,20 @@
 
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
+use Cake\Core\Configure;
 use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\FlysystemRenderer;
-use CakeDC\Api\Service\Service;
-use CakeDC\Api\TestSuite\TestCase;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\FixturesTrait;
-use Cake\Core\Configure;
+use CakeDC\Api\TestSuite\TestCase;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Vfs\VfsAdapter;
 use VirtualFileSystem\FileSystem as Vfs;
 
 class FlysystemRendererTest extends TestCase
 {
-
     use ConfigTrait;
     use FixturesTrait;
 
@@ -75,7 +75,7 @@ class FlysystemRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Flysystem'
+            'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
         $this->Service = new FallbackService($serviceOptions);
         $renderer = $this->Service->getRenderer();
@@ -90,6 +90,8 @@ class FlysystemRendererTest extends TestCase
     public function testRendererSuccess()
     {
         Configure::write('debug', 0);
+        Configure::write('Api.Flysystem.expire', '+1 day');
+
         $response = $this
             ->getMockBuilder('Cake\Http\Response')
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
@@ -100,7 +102,7 @@ class FlysystemRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Flysystem'
+            'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
         $this->Service = new FallbackService($serviceOptions);
 
@@ -148,7 +150,7 @@ class FlysystemRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Flysystem'
+            'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
         $this->Service = new FallbackService($serviceOptions);
 
@@ -199,7 +201,7 @@ class FlysystemRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Flysystem'
+            'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
         $this->Service = new FallbackService($serviceOptions);
 
@@ -236,7 +238,7 @@ class FlysystemRendererTest extends TestCase
             'version' => null,
             'request' => $this->request,
             'response' => $response,
-            'rendererClass' => 'CakeDC/Api.Flysystem'
+            'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
         $this->Service = new FallbackService($serviceOptions);
 

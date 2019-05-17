@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -17,24 +19,24 @@ use CakeDC\Api\Service\FallbackService;
 
 class ArticlesCollectionService extends FallbackService
 {
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
         $this->mapAction('collectionAdd', AddEditAction::class, [
             'method' => ['POST'],
             'mapCors' => true,
-            'path' => 'collection/add'
+            'path' => 'collection/add',
         ]);
         $this->mapAction('collectionEdit', AddEditAction::class, [
             'method' => ['POST'],
             'mapCors' => true,
-            'path' => 'collection/edit'
+            'path' => 'collection/edit',
         ]);
         $this->mapAction('collectionDelete', DeleteAction::class, [
             'method' => ['POST'],
             'mapCors' => true,
-            'path' => 'collection/delete'
+            'path' => 'collection/delete',
         ]);
 
         $this->setTable('Articles');

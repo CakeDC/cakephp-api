@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -10,7 +12,6 @@
  */
 
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
 use Cake\Mailer\Email;
 use Cake\Utility\Security;
 
@@ -73,7 +74,7 @@ Configure::write('App', [
     'paths' => [
         'plugins' => [dirname(APP) . DS . 'plugins' . DS],
         // 'templates' => [TEST_APP . 'templates' . DS]
-    ]
+    ],
 ]);
 
 // Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
@@ -116,7 +117,7 @@ Cake\Core\Configure::write('EmailTransport', [
         'password' => 'secret',
         'client' => null,
         'tls' => null,
-        'log' => true
+        'log' => true,
     ],
 ]);
 Cake\Core\Configure::write('Email', [
@@ -127,7 +128,7 @@ Cake\Core\Configure::write('Email', [
     ],
 ]);
 Cake\Core\Configure::write('Session', [
-    'defaults' => 'php'
+    'defaults' => 'php',
 ]);
 Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 
@@ -143,7 +144,7 @@ if (!getenv('db_dsn')) {
 
 Cake\Datasource\ConnectionManager::setConfig('test', [
     'url' => getenv('db_dsn'),
-    'timezone' => 'UTC'
+    'timezone' => 'UTC',
 ]);
 
 class_alias('CakeDC\Api\Test\App\Controller\AppController', 'App\Controller\AppController');

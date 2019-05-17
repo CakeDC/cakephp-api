@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -30,7 +32,7 @@ class ArticlesTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Authors', [
-            'foreignKey' => 'author_id'
+            'foreignKey' => 'author_id',
         ]);
     }
 

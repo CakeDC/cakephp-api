@@ -17,7 +17,6 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Controller\Component\UsersAuthComponent;
 use CakeDC\Users\Controller\Traits\LoginTrait;
 use CakeDC\Users\Exception\UserNotFoundException;
 
@@ -39,7 +38,7 @@ class LoginAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (isset($config['identifiedField'])) {
             $this->_identifiedField = $config['identifiedField'];
@@ -56,7 +55,7 @@ class LoginAction extends Action
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         $validator = new Validator();
         $validator
@@ -122,7 +121,7 @@ class LoginAction extends Action
      *
      * @return array
      */
-    protected function _authConfig()
+    protected function _authConfig(): array
     {
         return Hash::merge(parent::_authConfig(), [
             'authenticate' => [

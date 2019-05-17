@@ -160,6 +160,10 @@ class SocialAuthenticate extends BaseAuthenticate
         $tokenName = $this->getConfig('token_name');
         $tokenSecret = $this->getConfig('token_secret_name');
 
-        return [Hash::get($request->getHeader($providerName), 0), Hash::get($request->getHeader($tokenName), 0), Hash::get($request->getHeader($tokenSecret), 0)];
+        $provider = Hash::get($request->getHeader($providerName), 0);
+        $token = Hash::get($request->getHeader($tokenName), 0);
+        $secret = Hash::get($request->getHeader($tokenSecret), 0);
+
+        return [$provider, $token, $secret];
     }
 }

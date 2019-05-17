@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -25,7 +27,6 @@ use Cake\Controller\Controller;
  */
 class AppController extends Controller
 {
-
     public function initialize(): void
     {
         parent::initialize();

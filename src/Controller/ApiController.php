@@ -57,9 +57,9 @@ class ApiController extends AppController
      *
      * @return void
      */
-    public function listing()
+    public function listing(): void
     {
-        $this->setRequest( $this->getRequest()->withParam('service', 'listing'));
+        $this->setRequest($this->getRequest()->withParam('service', 'listing'));
         $options = [
             'className' => 'CakeDC/Api.Listing',
         ];
@@ -71,9 +71,9 @@ class ApiController extends AppController
      *
      * @return void
      */
-    public function describe()
+    public function describe(): void
     {
-        $this->setRequest( $this->getRequest()->withParam('service', 'describe'));
+        $this->setRequest($this->getRequest()->withParam('service', 'describe'));
         $options = [
             'className' => 'CakeDC/Api.Describe',
         ];
@@ -86,7 +86,7 @@ class ApiController extends AppController
      * @param array $options Options
      * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
      */
-    protected function _process($options = [])
+    protected function _process(array $options = []): \Cake\Http\Response
     {
         $routesInflectorMethod = Configure::read('Api.routesInflectorMethod', 'underscore');
 

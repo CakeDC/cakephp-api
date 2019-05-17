@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -28,10 +30,10 @@ class ArticlesTagsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Articles', [
-            'foreignKey' => 'article_id'
+            'foreignKey' => 'article_id',
         ]);
         $this->belongsTo('Tags', [
-            'foreignKey' => 'tag_id'
+            'foreignKey' => 'tag_id',
         ]);
     }
 }

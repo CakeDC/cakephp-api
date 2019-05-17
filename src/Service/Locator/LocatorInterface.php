@@ -40,7 +40,7 @@ interface LocatorInterface
      * @throws \RuntimeException When you attempt to configure an existing
      *   table instance.
      */
-    public function setConfig($alias, $options = null);
+    public function setConfig($alias, ?array $options = null): self;
 
     /**
      * Get a service instance from the registry.

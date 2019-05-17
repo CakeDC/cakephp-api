@@ -91,7 +91,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Action constructor.
      *
      * @param array $config Configuration options passed to the constructor
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(array $config = [])
     {
@@ -125,7 +125,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->Auth = $this->_initializeAuth();
     }
@@ -133,9 +133,9 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Gets an action name.
      *
-     * @return string
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->_name;
     }
@@ -146,7 +146,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param string $name An action name.
      * @return self
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->_name = $name;
 
@@ -158,7 +158,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return array
      */
-    public function getRoute()
+    public function getRoute(): array
     {
         return $this->_route;
     }
@@ -169,7 +169,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param array $route Route config.
      * @return self
      */
-    public function setRoute(array $route)
+    public function setRoute(array $route): self
     {
         $this->_route = $route;
 
@@ -188,8 +188,9 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Set a service
      *
      * @param \CakeDC\Api\Service\Service $service service
+     * @return void
      */
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->_service = $service;
     }
@@ -199,7 +200,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return bool
      */
-    public function validates()
+    public function validates(): bool
     {
         return true;
     }
@@ -215,7 +216,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Action execution life cycle.
      *
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function process()
     {
@@ -270,7 +271,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @return mixed
      * @throws \Exception
      */
-    protected function _executeAction($methodName = 'action')
+    protected function _executeAction(string $methodName = 'action')
     {
         $parser = $this->getService()->getParser();
         $params = $parser->getParams();
@@ -326,7 +327,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return mixed
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->getService()->getParser()->getParams();
     }
@@ -334,7 +335,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * @return \CakeDC\Api\Service\Action\ExtensionRegistry
      */
-    public function getExtensions()
+    public function getExtensions(): ExtensionRegistry
     {
         return $this->_extensions;
     }
@@ -345,7 +346,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param \CakeDC\Api\Service\Action\ExtensionRegistry|null $extensions Extension registry.
      * @return self
      */
-    public function setExtensions($extensions = null)
+    public function setExtensions(?ExtensionRegistry $extensions = null): self
     {
         if ($extensions === null && $this->_extensions === null) {
             $this->_extensions = new ExtensionRegistry($this);
@@ -360,9 +361,9 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Loads the defined extensions using the Extension factory.
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    protected function _loadExtensions()
+    protected function _loadExtensions(): void
     {
         if (empty($this->extensions)) {
             return;
@@ -380,7 +381,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return \CakeDC\Api\Service\Auth\Auth
      */
-    protected function _initializeAuth()
+    protected function _initializeAuth(): Auth
     {
         $config = $this->_authConfig();
         $auth = new Auth($config);
@@ -398,7 +399,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return array
      */
-    protected function _authConfig()
+    protected function _authConfig(): array
     {
         $defaultConfig = (array)$this->getConfig('Auth');
 

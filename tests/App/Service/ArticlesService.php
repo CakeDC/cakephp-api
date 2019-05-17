@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -13,11 +15,12 @@ namespace CakeDC\Api\Test\App\Service;
 
 //use CakeDC\Api\Service\CrudService;
 //use CakeDC\Api\Service\Service;
+
+
 use CakeDC\Api\Service\FallbackService;
 
 class ArticlesService extends FallbackService
 {
-
     protected $_actions = [
         'tag' => ['method' => ['PUT', 'POST'], 'path' => 'tag/:id'],
         'untag' => ['method' => ['PUT', 'POST'], 'path' => 'untag/:id'],

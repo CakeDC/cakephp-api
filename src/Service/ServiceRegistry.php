@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -15,7 +17,6 @@ use CakeDC\Api\Service\Locator\ServiceLocator;
 
 class ServiceRegistry
 {
-
     /**
      * LocatorInterface implementation instance.
      *
@@ -35,7 +36,7 @@ class ServiceRegistry
      *
      * @return \CakeDC\Api\Service\Locator\LocatorInterface
      */
-    public static function getServiceLocator()
+    public static function getServiceLocator(): \CakeDC\Api\Service\Locator\LocatorInterface
     {
         if (static::$_locator === null) {
             static::$_locator = new static::$_defaultLocatorClass();
@@ -50,9 +51,8 @@ class ServiceRegistry
      * @param \CakeDC\Api\Service\Locator\LocatorInterface $serviceLocator Instance of a locator to use.
      * @return void
      */
-    public static function setServiceLocator(LocatorInterface $serviceLocator)
+    public static function setServiceLocator(LocatorInterface $serviceLocator): void
     {
         static::$_locator = $serviceLocator;
     }
-
 }
