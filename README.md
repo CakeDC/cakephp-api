@@ -15,8 +15,9 @@ Versions and branches
 
 | CakePHP | CakeDC Api Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
-| ^3.6            | [master](https://github.com/cakedc/cakephp-api/tree/master)            | 6.0.1 | stable   |
-| ^3.6            | [develop](https://github.com/cakedc/cakephp-api/tree/develop)          |   -   | unstable |
+| ^3.7            | [master](https://github.com/cakedc/cakephp-api/tree/master)            | 7.0.0 | stable   |
+| ^3.7            | [develop](https://github.com/cakedc/cakephp-api/tree/develop)          |   -   | unstable |
+| 3.6            | [master](https://github.com/cakedc/cakephp-api/tree/6.0.1)              | 6.0.1 | stable   |
 | 3.5             | [5.x](https://github.com/cakedc/cakephp-api/tree/5.0.0)                | 5.0.0 | stable   |
 | 3.4             | [4.x](https://github.com/cakedc/cakephp-api/tree/4.0.0)                | 4.0.0 | stable   |
 | 3.3             | [3.x](https://github.com/cakedc/cakephp-api/tree/3.3)                  | 3.3   | stable   |
