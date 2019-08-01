@@ -230,7 +230,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         $event = new Event('Action.onAuth', $this, ['action' => $this]);
         $this->Auth->authCheck($event);
 
-        $event = $this->dispatchEvent('Action.beforeValidate', compact('data'));
+        $event = $this->dispatchEvent('Action.beforeValidate', []);
 
         if ($event->isStopped()) {
             $this->dispatchEvent('Action.beforeValidateStopped', []);
@@ -243,7 +243,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             throw new ValidationException(__('Validation failed'), 0, null, []);
         }
 
-        $event = $this->dispatchEvent('Action.beforeExecute', compact('data'));
+        $event = $this->dispatchEvent('Action.beforeExecute', []);
 
         if ($event->isStopped()) {
             $this->dispatchEvent('Action.beforeExecuteStopped', []);
