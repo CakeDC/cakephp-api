@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Controller;
 
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
@@ -45,7 +46,7 @@ class ApiController extends AppController
     /**
      * Process api request
      *
-     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function process()
     {
@@ -84,9 +85,9 @@ class ApiController extends AppController
      * Process api request
      *
      * @param array $options Options
-     * @return \Cake\Http\Client\Response|\Cake\Http\Response|null
+     * @return \Cake\Http\Response|null
      */
-    protected function _process(array $options = []): \Cake\Http\Response
+    protected function _process(array $options = []): ?Response
     {
         $routesInflectorMethod = Configure::read('Api.routesInflectorMethod', 'underscore');
 

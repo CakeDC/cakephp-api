@@ -57,9 +57,9 @@ class CrudAuthorize extends BaseAuthorize
      * Authorize.
      *
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
-     * @return bool|null
+     * @return bool
      */
-    protected function _actionAuth(Action $action)
+    protected function _actionAuth(Action $action): bool
     {
         $actionName = $action->getName();
         $serviceName = $action->getService()->getName();
@@ -97,9 +97,9 @@ class CrudAuthorize extends BaseAuthorize
      *
      * @param \CakeDC\Api\Service\Service $service A Service instance.
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
-     * @return bool|null
+     * @return bool
      */
-    protected function _serviceAuth(Service $service, Action $action)
+    protected function _serviceAuth(Service $service, Action $action): bool
     {
         $serviceName = $service->getName();
         $serviceAuth = $this->_permission($service, 'Service.' . $serviceName);
@@ -112,7 +112,7 @@ class CrudAuthorize extends BaseAuthorize
             return $result;
         }
 
-        return null;
+        return false;
     }
 
     /**
@@ -120,9 +120,9 @@ class CrudAuthorize extends BaseAuthorize
      *
      * @param \CakeDC\Api\Service\Service $service A Service instance.
      * @param string $key permission key.
-     * @return string
+     * @return string|null
      */
-    protected function _permission(Service $service, $key)
+    protected function _permission(Service $service, $key): ?string
     {
         $prefix = 'Api.Auth.Crud.';
         $useVersioning = Configure::read('Api.useVersioning');

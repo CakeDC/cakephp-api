@@ -151,9 +151,9 @@ class Result
      * Gets a result payload.
      *
      * @param string $key Payload key.
-     * @return array|mixed Payload
+     * @return array|null|mixed Payload
      */
-    public function getPayload(?string $key = null): ?array
+    public function getPayload(?string $key = null)
     {
         if ($key === null) {
             return $this->_payload;

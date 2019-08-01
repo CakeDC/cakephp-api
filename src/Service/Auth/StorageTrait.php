@@ -36,7 +36,7 @@ trait StorageTrait
     /**
      * Storage object.
      *
-     * @var \Cake\Auth\Storage\StorageInterface
+     * @var \Cake\Auth\Storage\StorageInterface|null
      */
     protected $_storage;
 
@@ -49,13 +49,14 @@ trait StorageTrait
      */
     public function storage(?StorageInterface $storage = null)
     {
+        // @todo split method into set and get
         if ($storage !== null) {
             $this->_storage = $storage;
 
             return null;
         }
 
-        if ($this->_storage) {
+        if ($this->_storage !== null) {
             return $this->_storage;
         }
 

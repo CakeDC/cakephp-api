@@ -42,6 +42,11 @@ abstract class CrudAction extends Action
      */
     protected $_id = null;
 
+    /**
+     * Object Identifier name
+     *
+     * @var string
+     */
     protected $_idName = 'id';
 
     /**
@@ -60,6 +65,11 @@ abstract class CrudAction extends Action
      */
     protected $_parentId = null;
 
+    /**
+     * Parent Object Identifier name
+     *
+     * @var string
+     */
     protected $_parentIdName = null;
 
     /**
@@ -117,7 +127,7 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\ORM\Table
      */
-    public function getTable(): \Cake\ORM\Table
+    public function getTable(): Table
     {
         return $this->_table;
     }
@@ -148,7 +158,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->_id;
     }
@@ -168,7 +178,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function getParentId(): string
+    public function getParentId()
     {
         return $this->_parentId;
     }
@@ -176,9 +186,9 @@ abstract class CrudAction extends Action
     /**
      * Parent model id field name getter.
      *
-     * @return mixed|string
+     * @return string
      */
-    public function getParentIdName()
+    public function getParentIdName(): string
     {
         return $this->_parentIdName;
     }
@@ -188,7 +198,7 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _newEntity(): \Cake\Datasource\EntityInterface
+    protected function _newEntity(): EntityInterface
     {
         $entity = $this->getTable()->newEntity([]);
 
@@ -201,9 +211,9 @@ abstract class CrudAction extends Action
      * @param \Cake\Datasource\EntityInterface $entity An Entity instance.
      * @param array $data Entity data.
      * @param array $options Patch entity options.
-     * @return \Cake\Datasource\EntityInterface|mixed
+     * @return \Cake\Datasource\EntityInterface
      */
-    protected function _patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+    protected function _patchEntity(EntityInterface $entity, array $data, array $options = []): EntityInterface
     {
         $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));

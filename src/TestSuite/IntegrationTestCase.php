@@ -102,8 +102,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param array $data Api parameters.
      * @param string $userId Current user id.
      * @return void
-     * @throws \PHPUnit\Exception
-     * @throws \Throwable
+     * @throws \PHPUnit\Exception|\Throwable
      */
     public function sendRequest(string $url, string $method, array $data = [], ?string $userId = null): void
     {
@@ -132,7 +131,6 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
                 }
             }
         }
-        //$this->useHttpServer(true);
         try {
             ServiceRegistry::getServiceLocator()->clear();
             TableRegistry::getTableLocator()->clear();
@@ -198,21 +196,6 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
         if (!empty($code)) {
             $this->assertEquals($code, $result['code']);
         }
-    }
-
-    /**
-     * Helper method for status assertions.
-     *
-     * @param int $code Status code.
-     * @param string $message The error message.
-     * @return void
-     */
-    public function assertStatus(int $code, ?string $message = null): void
-    {
-        if ($message === null) {
-            $message = "Status code $code does not match";
-        }
-        $this->_assertStatus($code, $code, $message);
     }
 
     /**

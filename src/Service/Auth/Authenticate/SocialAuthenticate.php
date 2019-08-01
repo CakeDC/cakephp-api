@@ -103,7 +103,7 @@ class SocialAuthenticate extends BaseAuthenticate
         $this->_config['fields']['username'] = 'id';
         $this->_config['finder'] = 'all';
 
-        $result = $this->_query($socialAccount->user_id)->first();
+        $result = $this->_query($socialAccount['user_id'])->first();
         if (empty($result)) {
             return false;
         }
@@ -137,7 +137,7 @@ class SocialAuthenticate extends BaseAuthenticate
      * Get the api key from the querystring
      *
      * @param \Cake\Http\ServerRequest $request request
-     * @return string api key
+     * @return array api key
      */
     public function querystring(ServerRequest $request)
     {
@@ -152,7 +152,7 @@ class SocialAuthenticate extends BaseAuthenticate
      * Get the api key from the header
      *
      * @param \Cake\Http\ServerRequest $request request
-     * @return string api key
+     * @return array api key
      */
     public function header(ServerRequest $request)
     {

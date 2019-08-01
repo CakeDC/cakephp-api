@@ -28,7 +28,7 @@ class DescribeAction extends Action
     /**
      * Apply validation process.
      *
-     * @return bool|array
+     * @return bool
      */
     public function validates(): bool
     {

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Routing;
 
+use Cake\Routing\Route\Route;
 use Cake\Routing\Router;
 
 /**
@@ -32,9 +33,9 @@ class ApiRouter extends Router
     /**
      * Default route class.
      *
-     * @var bool
+     * @var string
      */
-    protected static $_defaultRouteClass = 'Cake\Routing\Route\Route';
+    protected static $_defaultRouteClass = Route::class;
 
     /**
      * Contains the base string that will be applied to all generated URLs

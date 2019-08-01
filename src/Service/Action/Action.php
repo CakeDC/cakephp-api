@@ -325,7 +325,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Returns action input params
      *
-     * @return mixed
+     * @return array
      */
     public function getData(): array
     {

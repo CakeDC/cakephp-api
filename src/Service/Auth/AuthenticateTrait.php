@@ -31,6 +31,7 @@ use Cake\Controller\Component\AuthComponent;
 use Cake\Core\App;
 use Cake\Core\Exception\Exception;
 use Cake\Utility\Hash;
+use CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate;
 
 /**
  * Class AuthenticateTrait
@@ -63,7 +64,11 @@ trait AuthenticateTrait
      */
     public function user($key = null)
     {
-        $user = $this->storage()->read();
+        $storage = $this->storage();
+        if ($storage === null) {
+            return null;
+        }
+        $user = $storage->read();
         if (!$user) {
             return null;
         }
@@ -110,6 +115,7 @@ trait AuthenticateTrait
             $this->constructAuthenticate();
         }
         foreach ($this->_authenticateObjects as $auth) {
+            /** @var BaseAuthenticate $auth */
             $result = $auth->getUser($this->request);
             if (!empty($result) && is_array($result)) {
                 $this->_authenticationProvider = $auth;
@@ -143,6 +149,7 @@ trait AuthenticateTrait
             $this->constructAuthenticate();
         }
         foreach ($this->_authenticateObjects as $auth) {
+            /** @var BaseAuthenticate $auth */
             $result = $auth->authenticate($this->request, $this->response);
             if (!empty($result) && is_array($result)) {
                 $this->_authenticationProvider = $auth;
@@ -172,9 +179,9 @@ trait AuthenticateTrait
         $this->_authenticateObjects = [];
         $authenticate = Hash::normalize((array)$this->_config['authenticate']);
         $global = [];
-        if (isset($authenticate[AuthComponent::ALL])) {
-            $global = $authenticate[AuthComponent::ALL];
-            unset($authenticate[AuthComponent::ALL]);
+        if (isset($authenticate[Auth::ALL])) {
+            $global = $authenticate[Auth::ALL];
+            unset($authenticate[Auth::ALL]);
         }
         foreach ($authenticate as $alias => $config) {
             if (!empty($config['className'])) {
@@ -187,12 +194,14 @@ trait AuthenticateTrait
             if (!class_exists($className)) {
                 throw new Exception(sprintf('Authentication adapter "%s" was not found.', $class));
             }
-            if (!method_exists($className, 'authenticate')) {
+            $config = array_merge($global, (array)$config);
+
+            $class = new $className($this->_action, $config);
+            if (!method_exists($class, 'authenticate')) {
                 throw new Exception('Authentication objects must implement an authenticate() method.');
             }
-            $config = array_merge($global, (array)$config);
-            $this->_authenticateObjects[$alias] = new $className($this->_action, $config);
-            $this->getEventManager()->on($this->_authenticateObjects[$alias]);
+            $this->_authenticateObjects[$alias] = $class;
+            $this->getEventManager()->on($class);
         }
 
         return $this->_authenticateObjects;

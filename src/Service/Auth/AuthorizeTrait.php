@@ -117,11 +117,12 @@ trait AuthorizeTrait
             if (!class_exists($className)) {
                 throw new Exception(sprintf('Authorization adapter "%s" was not found.', $class));
             }
-            if (!method_exists($className, 'authorize')) {
+            $config = (array)$config + $global;
+            $class = new $className($this->_action, $config);
+            if (!method_exists($class, 'authorize')) {
                 throw new Exception('Authorization objects must implement an authorize() method.');
             }
-            $config = (array)$config + $global;
-            $this->_authorizeObjects[$alias] = new $className($this->_action, $config);
+            $this->_authorizeObjects[$alias] = $class;
         }
 
         return $this->_authorizeObjects;

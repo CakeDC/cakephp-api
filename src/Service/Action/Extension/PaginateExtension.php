@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Extension;
 
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\Query;
 use CakeDC\Api\Service\Action\Action;
 
 /**
@@ -47,11 +48,12 @@ class PaginateExtension extends Extension implements EventListenerInterface
     /**
      * Find entities
      *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Event\EventInterface $event An Event instance
+     * @return \Cake\ORM\Query
      */
-    public function findEntities(Event $event): \Cake\ORM\Query
+    public function findEntities(EventInterface $event): Query
     {
+        /** @var Action $action */
         $action = $event->getSubject();
         $query = $event->getData('query');
         if ($event->getResult()) {
@@ -106,11 +108,12 @@ class PaginateExtension extends Extension implements EventListenerInterface
     /**
      * after find entities
      *
-     * @param \Cake\Event\Event $event An Event instance
+     * @param \Cake\Event\EventInterface $event An Event instance
      * @return void
      */
-    public function afterFind(Event $event): void
+    public function afterFind(EventInterface $event): void
     {
+        /** @var Action $action */
         $action = $event->getSubject();
         $query = $event->getData('query');
         $result = $action->getService()->getResult();

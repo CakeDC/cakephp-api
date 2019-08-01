@@ -50,6 +50,13 @@ class Auth
     use StorageTrait;
 
     /**
+     * Constant for 'all'
+     *
+     * @var string
+     */
+    public const ALL = 'all';
+
+    /**
      * Actions for which user validation is not required.
      *
      * @var array

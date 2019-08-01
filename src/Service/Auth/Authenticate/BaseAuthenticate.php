@@ -82,7 +82,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
     /**
      * Password hasher instance.
      *
-     * @var \Cake\Auth\AbstractPasswordHasher
+     * @var \Cake\Auth\AbstractPasswordHasher|null
      */
     protected $_passwordHasher;
 
@@ -133,7 +133,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
             }
 
             $this->_needsPasswordRehash = $hasher->needsRehash($hashedPassword);
-            $result->unsetProperty($this->_config['fields']['password']);
+            $result->unset($this->_config['fields']['password']);
         }
 
         return $result->toArray();
@@ -183,7 +183,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
      */
     public function passwordHasher()
     {
-        if ($this->_passwordHasher) {
+        if ($this->_passwordHasher !== null) {
             return $this->_passwordHasher;
         }
 

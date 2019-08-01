@@ -49,7 +49,7 @@ class ExtensionRegistry extends ObjectRegistry
      * Should resolve the classname for a given object type.
      *
      * @param string $class The class to resolve.
-     * @return string|false The resolved name or false for failure.
+     * @return string|null The resolved name or false for failure.
      */
     protected function _resolveClassName($class): ?string
     {

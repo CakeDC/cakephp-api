@@ -28,6 +28,13 @@ abstract class Extension
     protected $_defaultConfig = [];
 
     /**
+     * ExtensionRegistry instance.
+     *
+     * @var ExtensionRegistry
+     */
+    protected $_registry;
+
+    /**
      * Extension constructor.
      *
      * @param \CakeDC\Api\Service\ExtensionRegistry $registry An ExtensionRegistry instance.
@@ -35,6 +42,7 @@ abstract class Extension
      */
     public function __construct(ExtensionRegistry $registry, array $config = [])
     {
+        $this->_registry = $registry;
         $this->setConfig($config);
     }
 }

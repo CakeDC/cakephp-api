@@ -20,7 +20,7 @@ use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Auth\Rules\Rule;
+use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Log\LogLevel;
 
 /**
@@ -142,7 +142,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * Set a default role if no role is provided
      *
      * @param array $user user data
-     * @param \CakeDC\Api\Service\Auth\Authorize\Request $request request
+     * @param ServerRequest $request request
      * @return bool
      */
     public function authorize($user, ServerRequest $request)
@@ -164,7 +164,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      *
      * @param array $user current user array
      * @param string $role effective role for the current user
-     * @param \CakeDC\Api\Service\Auth\Authorize\Request $request request
+     * @param ServerRequest $request request
      * @return bool true if there is a match in permissions
      */
     protected function _checkRules(array $user, $role, ServerRequest $request)
@@ -186,10 +186,10 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param array $permission configuration
      * @param array $user current user
      * @param string $role effective user role
-     * @param \CakeDC\Api\Service\Auth\Authorize\Request $request request
+     * @param ServerRequest $request request
      * @return bool if rule matched, null if rule not matched
      */
-    protected function _matchRule($permission, $user, $role, $request)
+    protected function _matchRule(array $permission, $user, string $role, ServerRequest $request): bool
     {
         $action = $this->_action->getName();
         $service = $this->_action->getService()->getName();
@@ -213,19 +213,19 @@ class SimpleRbacAuthorize extends BaseAuthorize
             }
         }
 
-        return null;
+        return false;
     }
 
     /**
      * Check if rule matched or '*' present in rule matching anything
      *
-     * @param string $permission permission configuration
+     * @param array $permission permission configuration
      * @param string $key key to retrieve and check in permissions configuration
      * @param string $value value to check with (coming from the request) We'll check the DASHERIZED value too
      * @param bool $allowEmpty true if we allow
      * @return bool
      */
-    protected function _matchOrAsterisk($permission, $key, $value, $allowEmpty = false)
+    protected function _matchOrAsterisk(array $permission, string $key, $value, bool $allowEmpty = false): bool
     {
         $possibleValues = (array)Hash::get($permission, $key);
         if ($allowEmpty && empty($possibleValues) && $value === null) {
