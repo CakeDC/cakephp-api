@@ -238,7 +238,7 @@ abstract class CrudAction extends Action
      */
     protected function _getEntities()
     {
-        $query = $this->getTable()->find();
+        $query = $this->_getEntitiesQuery();
         if ($this->_finder !== null) {
             $query = $query->find($this->_finder);
         }
@@ -247,12 +247,28 @@ abstract class CrudAction extends Action
         if ($event->result) {
             $query = $event->result;
         }
+
         $records = $query->all();
+
         $event = $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
+        if ($event->result !== null) {
+            $records = $event->result;
+        }
 
         return $records;
     }
 
+    
+    /**
+     * Returns entiries query object
+     *
+     * @return Query
+     */
+    protected function _getEntitiesQuery()
+    {
+        return $this->getTable()->find();
+    }
+    
     /**
      * Returns single entity by id.
      *
@@ -261,7 +277,7 @@ abstract class CrudAction extends Action
      */
     protected function _getEntity($primaryKey)
     {
-        $query = $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
+        $query = $this->_getEntityQuery($primaryKey);
         if ($this->_finder !== null) {
             $query = $query->find($this->_finder);
         }
@@ -274,6 +290,17 @@ abstract class CrudAction extends Action
         return $entity;
     }
 
+    /**
+     * Returns entiry query object
+     *
+     * @param mixed $primaryKey Primary key.
+     * @return Query
+     */
+    protected function _getEntityQuery($primaryKey)
+    {
+        return $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
+    }
+    
     /**
      * Build condition for get entity method.
      *
