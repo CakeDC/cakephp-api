@@ -16,6 +16,9 @@ use CakeDC\Api\Service\CrudService;
 use CakeDC\Api\Service\Utility\ReverseRouting;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
+use Cake\ORM\Association;
+use Cake\ORM\Query;
+use Cake\ORM\ResultSet;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -249,6 +252,10 @@ abstract class CrudAction extends Action
         }
 
         $records = $query->all();
+        $event = $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
+        if ($event->getResult() !== null) {
+            $records = $event->getResult();
+        }
 
         $event = $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
         if ($event->result !== null) {

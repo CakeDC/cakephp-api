@@ -28,6 +28,7 @@ use Zend\Diactoros\Stream;
 class FlysystemRenderer extends FileRenderer
 {
     use LogTrait;
+
     /**
      * Builds the HTTP response.
      *

@@ -26,6 +26,7 @@
 namespace CakeDC\Api\Service\Auth\Authenticate;
 
 use Authentication\IdentityInterface;
+use Authorization\IdentityDecorator;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -66,7 +67,7 @@ class Psr7Authenticate extends BaseAuthenticate
 
         $result = $request->getAttribute('identity');
 
-        if ($result instanceof IdentityInterface) {
+        if ($result instanceof IdentityInterface || $result instanceof IdentityDecorator) {
             $result = $result->getOriginalData();
         }
         if ($result instanceof EntityInterface) {

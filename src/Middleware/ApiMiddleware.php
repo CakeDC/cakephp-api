@@ -21,6 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Applies routing rules to the request and creates the controller
  * instance if possible.
+ * @deprecated use ParseApiRequestMiddleware and ProcessApiRequestMiddleware instead
  */
 class ApiMiddleware
 {

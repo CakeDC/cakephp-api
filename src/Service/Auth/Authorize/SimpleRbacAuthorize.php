@@ -140,7 +140,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * Set a default role if no role is provided
      *
      * @param array $user user data
-     * @param Request $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return bool
      */
     public function authorize($user, ServerRequest $request)
@@ -162,7 +162,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      *
      * @param array $user current user array
      * @param string $role effective role for the current user
-     * @param Request $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return bool true if there is a match in permissions
      */
     protected function _checkRules(array $user, $role, ServerRequest $request)
@@ -184,7 +184,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param array $permission configuration
      * @param array $user current user
      * @param string $role effective user role
-     * @param Request $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return bool if rule matched, null if rule not matched
      */
     protected function _matchRule($permission, $user, $role, $request)

@@ -44,6 +44,7 @@ class ExtensionRegistry extends ObjectRegistry
             $this->_service = $service;
         }
     }
+
     /**
      * Should resolve the classname for a given object type.
      *
