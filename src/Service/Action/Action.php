@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Event\Event;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
 use Cake\Utility\Hash;
+use Cake\Utility\MergeVariablesTrait;
 use Cake\Validation\ValidatorAwareTrait;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Auth\Auth;
@@ -36,6 +36,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 {
     use EventDispatcherTrait;
     use InstanceConfigTrait;
+    use MergeVariablesTrait;
     use ValidatorAwareTrait;
 
     /**
@@ -227,9 +228,11 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             return $event->getResult();
         }
 
-        $event = new Event('Action.onAuth', $this, ['action' => $this]);
-        $this->Auth->authCheck($event);
-
+        $event = $this->dispatchEvent('Action.onAuth', ['action' => $this]);
+        if ($event->isStopped()) {
+            return $event->getResult();
+        }
+        // $this->_initializeAuth()->authCheck($event);
         $event = $this->dispatchEvent('Action.beforeValidate', []);
 
         if ($event->isStopped()) {
@@ -369,10 +372,15 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             return;
         }
         $registry = $this->getExtensions();
+        $this->_mergeVars(['extensions'], ['associative' => ['extensions']]);
         $extensions = $registry->normalizeArray($this->extensions);
-        foreach ($extensions as $properties) {
+        foreach ($extensions as $name => $properties) {
             $instance = $registry->load($properties['class'], $properties['config']);
             $this->_eventManager->on($instance);
+            if ($instance->attachable()) {
+                [, $prop] = pluginSplit($name);
+                $this->{$prop} = $instance;
+            }
         }
     }
 

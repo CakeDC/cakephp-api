@@ -176,6 +176,21 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     protected $_extensions;
 
     /**
+     * Action instance populated on prepare step.
+     *
+     * @var \CakeDC\Api\Service\Action\Action
+     */
+    protected $_action;
+
+    /**
+     * @return \CakeDC\Api\Service\Action\Action
+     */
+    public function getAction(): Action
+    {
+        return $this->_action;
+    }
+
+    /**
      * Service constructor.
      *
      * @param array $config Service configuration.
@@ -483,25 +498,114 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
+     * Dispatch service call.
+     *
+     * @return \CakeDC\Api\Service\Action\Result
+     */
+    public function dispatchPrepareAction(): ?Result
+    {
+        try {
+            $result = $this->_prepareAction();
+
+            if ($result instanceof Result) {
+                $this->setResult($result);
+            } else {
+                return null;
+            }
+        } catch (RecordNotFoundException $e) {
+            $this->getResult()->setCode(404);
+            $this->getResult()->setException($e);
+        } catch (ValidationException $e) {
+            $this->getResult()->setCode(422);
+            $this->getResult()->setException($e);
+        } catch (Exception $e) {
+            $code = $e->getCode();
+            if (!is_int($code) || $code < 100 || $code >= 600) {
+                $this->getResult()->setCode(500);
+            }
+            $this->getResult()->setException($e);
+        }
+
+        return $this->getResult();
+    }
+
+    /**
+     * Dispatch service call.
+     *
+     * @param \Cake\Http\ServerRequest $request A Request object.
+     * @return \CakeDC\Api\Service\Action\Result
+     */
+    public function dispatchProcessAction($request): Result
+    {
+        try {
+            $this->setRequest($request);
+            $result = $this->_processAction();
+
+            if ($result instanceof Result) {
+                $this->setResult($result);
+            } else {
+                $this->getResult()->setData($result);
+                $this->getResult()->setCode(200);
+            }
+        } catch (RecordNotFoundException $e) {
+            $this->getResult()->setCode(404);
+            $this->getResult()->setException($e);
+        } catch (ValidationException $e) {
+            $this->getResult()->setCode(422);
+            $this->getResult()->setException($e);
+        } catch (Exception $e) {
+            $code = $e->getCode();
+            if (!is_int($code) || $code < 100 || $code >= 600) {
+                $this->getResult()->setCode(500);
+            }
+            $this->getResult()->setException($e);
+        }
+        $this->dispatchEvent('Service.afterDispatch', ['service' => $this]);
+
+        return $this->getResult();
+    }
+
+    /**
      * Dispatch service call through callbacks and action.
      *
-     * @return \CakeDC\Api\Service\Action\Result|mixed
-     * @throws \Exception
+     * @return \CakeDC\Api\Service\Action\Result
+
      */
     protected function _dispatch()
+    {
+        $this->_prepareAction();
+
+        return $this->_processAction();
+    }
+
+    /**
+     * Prepare action for processing.
+     *
+     * @return \CakeDC\Api\Service\Action\Result|null
+     */
+    protected function _prepareAction()
     {
         $event = $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
         if ($event->getResult() instanceof Result) {
             return $event->getResult();
         }
 
-        $action = $this->buildAction();
-        $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
-        if ($event->getResult() instanceof Result) {
-            return $event->getResult();
+        $this->_action = $this->buildAction();
+    }
+
+    /**
+     * Execute action.
+     *
+     * @return \CakeDC\Api\Service\Action\Result|null
+     */
+    protected function _processAction()
+    {
+        $response = $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
+        if ($response->getResult() instanceof Result) {
+            return $response->getResult();
         }
 
-        return $action->process();
+        return $this->getAction()->process();
     }
 
     /**
