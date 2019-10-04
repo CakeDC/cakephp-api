@@ -17,13 +17,11 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use CakeDC\Api\Service\Action\CrudDeleteAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class CrudDeleteActionTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var CrudDeleteAction

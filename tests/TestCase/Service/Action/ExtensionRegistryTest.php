@@ -22,13 +22,11 @@ use CakeDC\Api\Service\Action\ExtensionRegistry;
 use CakeDC\Api\Service\Exception\MissingExtensionException;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class ExtensionRegistryTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * setUp method

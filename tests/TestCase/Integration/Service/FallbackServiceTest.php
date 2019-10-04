@@ -14,12 +14,10 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\TestCase\Integration\Service;
 
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 
 class FallbackServiceTest extends IntegrationTestCase
 {
-    use FixturesTrait;
     use ConfigTrait;
 
     /**

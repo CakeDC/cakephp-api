@@ -19,13 +19,11 @@ use Cake\ORM\ResultSet;
 use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class CrudIndexActionTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var CrudIndexAction

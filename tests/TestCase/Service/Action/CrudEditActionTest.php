@@ -19,13 +19,11 @@ use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudEditAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class CrudEditActionTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var CrudEditAction

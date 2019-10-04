@@ -16,7 +16,6 @@ namespace CakeDC\Api\Test\TestCase\Service;
 use CakeDC\Api\Service\ListingService;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 /**
@@ -27,7 +26,6 @@ use CakeDC\Api\TestSuite\TestCase;
 class ListingServiceTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * setUp method

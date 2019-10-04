@@ -19,13 +19,11 @@ use CakeDC\Api\Service\Action\Collection\AddEditAction;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class AddEditActionTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var AddEditAction

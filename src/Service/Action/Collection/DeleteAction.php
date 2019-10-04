@@ -85,7 +85,7 @@ class DeleteAction extends CollectionAction
             $errors = [];
             foreach ($entities as $index => $entity) {
                 /** @var \Cake\ORM\Entity $entity */
-                $entity->isNew(false);
+                $entity->setNew(false);
                 try {
                     $this->getTable()->deleteOrFail($entity, ['atomic' => false]);
                 } catch (\InvalidArgumentException $ex) {

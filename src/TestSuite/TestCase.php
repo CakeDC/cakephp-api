@@ -23,6 +23,15 @@ use CakeDC\Api\Service\ServiceRegistry;
  */
 class TestCase extends BaseTestCase
 {
+    protected $fixtures = [
+        'plugin.CakeDC/Api.SocialAccounts',
+        'plugin.CakeDC/Api.Users',
+        'plugin.CakeDC/Api.Articles',
+        'plugin.CakeDC/Api.Authors',
+        'plugin.CakeDC/Api.Tags',
+        'plugin.CakeDC/Api.ArticlesTags',
+    ];
+
     /**
      * setUp
      *
