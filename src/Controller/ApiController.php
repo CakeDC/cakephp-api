@@ -118,4 +118,9 @@ class ApiController extends AppController
 
         return $this->response;
     }
+    
+    public function notFound()
+    {
+        return $this->getResponse()->withStatus(404);
+    }
 }
