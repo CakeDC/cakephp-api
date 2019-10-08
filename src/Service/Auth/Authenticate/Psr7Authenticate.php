@@ -46,7 +46,7 @@ class Psr7Authenticate extends BaseAuthenticate
      * @param \Cake\Http\Response $response Unused response object.
      * @return mixed False on login failure.  An array of User data on success.
      */
-    public function authenticate(ServerRequest $request, Response $response)
+    public function authenticate(ServerRequest $request, $response)
     {
         return $this->getUser($request);
     }

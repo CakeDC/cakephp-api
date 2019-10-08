@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -23,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  * Applies routing rules to the request and creates the controller
  * instance if possible.
  */
-class ProcessApiRequestMiddleware implements MiddlewareInterface
+class ProcessApiRequestMiddleware
 {
     /**
      * Process an incoming server request.
@@ -36,7 +34,7 @@ class ProcessApiRequestMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
         /** @var \CakeDC\Api\Service\Service $service */
         $service = $request->getAttribute('service');
@@ -53,6 +51,6 @@ class ProcessApiRequestMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        return $handler->handle($request);
+        return $next($request, $response);
     }
 }

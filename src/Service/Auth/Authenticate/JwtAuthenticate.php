@@ -125,7 +125,7 @@ class JwtAuthenticate extends BaseAuthenticate
      *
      * @return bool|array User record array or false on failure.
      */
-    public function authenticate(ServerRequest $request, Response $response)
+    public function authenticate(ServerRequest $request, $response)
     {
         return $this->getUser($request);
     }

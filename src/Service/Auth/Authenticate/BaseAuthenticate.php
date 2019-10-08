@@ -210,7 +210,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
      * @param \Cake\Http\Response $response A response object that can have headers added.
      * @return mixed Either false on failure, or an array of user data on success.
      */
-    abstract public function authenticate(ServerRequest $request, Response $response);
+    abstract public function authenticate(ServerRequest $request, $response);
 
     /**
      * Get a user based on information in the request. Primarily used by stateless authentication

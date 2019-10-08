@@ -49,7 +49,7 @@ class TokenAuthenticate extends BaseAuthenticate
      * @param Response $response Cake response object.
      * @return mixed
      */
-    public function authenticate(ServerRequest $request, Response $response)
+    public function authenticate(ServerRequest $request, $response)
     {
         return $this->getUser($request);
     }

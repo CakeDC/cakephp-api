@@ -58,8 +58,26 @@ def('CAKE', CORE_PATH . 'src' . DS);
 require ROOT . '/vendor/cakephp/cakephp/src/basics.php';
 require ROOT . '/vendor/autoload.php';
 
-Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
-Cake\Core\Configure::write('App.encoding', 'UTF-8');
+Configure::write('App', [
+    'namespace' => 'CakeDC\Api\Test\App',
+    'encoding' => 'UTF-8',
+    'base' => false,
+    'baseUrl' => false,
+    'dir' => 'src',
+    'webroot' => WEBROOT_DIR,
+    'wwwRoot' => WWW_ROOT,
+    'fullBaseUrl' => 'http://localhost',
+    'imageBaseUrl' => 'img/',
+    'jsBaseUrl' => 'js/',
+    'cssBaseUrl' => 'css/',
+    'paths' => [
+        'plugins' => [dirname(APP) . DS . 'plugins' . DS],
+        // 'templates' => [TEST_APP . 'templates' . DS]
+    ],
+]);
+
+// Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
+// Cake\Core\Configure::write('App.encoding', 'UTF-8');
 Cake\Core\Configure::write('debug', true);
 
 $TMP = new \Cake\Filesystem\Folder(TMP);

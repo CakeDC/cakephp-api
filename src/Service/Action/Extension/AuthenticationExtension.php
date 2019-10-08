@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Copyright 2016 - 2018, Cake Development Corporation (http://cakedc.com)
  *
@@ -63,7 +61,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      *
      * @return array
      */
-    public function implementedEvents(): array
+    public function implementedEvents()
     {
         return [
             'Action.Auth.onAuthentication' => 'onAuthentication',
@@ -80,7 +78,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      * @throws \Authentication\Authenticator\UnauthenticatedException when requireIdentity is true
      *         and request is missing an identity
      */
-    public function onAuthentication(Event $event): void
+    public function onAuthentication(Event $event)
     {
         if (!$this->getConfig('requireIdentity')) {
             return;
@@ -104,7 +102,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      * @return \Authentication\AuthenticationServiceInterface
      * @throws \Exception
      */
-    public function getAuthenticationService(): AuthenticationServiceInterface
+    public function getAuthenticationService()
     {
         $request = $this->getAction()->getService()->getRequest();
         $service = $request->getAttribute('authentication');
@@ -164,7 +162,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      *
      * @return \Authentication\Authenticator\ResultInterface|null Authentication result interface
      */
-    public function getResult(): ?ResultInterface
+    public function getResult()
     {
         return $this->getAuthenticationService()->getResult();
     }
@@ -174,7 +172,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      *
      * @return \Authentication\IdentityInterface|null
      */
-    public function getIdentity(): ?IdentityInterface
+    public function getIdentity()
     {
         $request = $this->getAction()->getService()->getRequest();
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
@@ -203,7 +201,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
     /**
      * @return \CakeDC\Api\Service\Action\Action
      */
-    public function getAction(): Action
+    public function getAction()
     {
         return $this->getConfig('action');
     }

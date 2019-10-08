@@ -18,6 +18,8 @@ namespace CakeDC\Api\Test\App;
 use Authentication\AuthenticationService;
 use Authentication\Middleware\AuthenticationMiddleware;
 use CakeDC\Api\Middleware\ApiMiddleware;
+use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
+use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -68,7 +70,9 @@ class Application extends BaseApplication
             ->add(new ErrorHandlerMiddleware(Configure::read('Error.exceptionRenderer')))
             // ->add($authentication)
             // Apply Api
-            ->add(new ApiMiddleware())
+            // ->add(new ApiMiddleware())
+            ->add(new ParseApiRequestMiddleware())
+            ->add(new ProcessApiRequestMiddleware())
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware())// Apply routing
             ->add(new RoutingMiddleware($this));

@@ -184,7 +184,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * @return \CakeDC\Api\Service\Action\Action
      */
-    public function getAction(): Action
+    public function getAction()
     {
         return $this->_action;
     }
@@ -581,7 +581,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @return \CakeDC\Api\Service\Action\Result
      */
-    public function dispatchPrepareAction(): ?Result
+    public function dispatchPrepareAction()
     {
         try {
             $result = $this->_prepareAction();
@@ -614,7 +614,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param \Cake\Http\ServerRequest $request A Request object.
      * @return \CakeDC\Api\Service\Action\Result
      */
-    public function dispatchProcessAction($request): Result
+    public function dispatchProcessAction($request)
     {
         try {
             $this->setRequest($request);
@@ -1149,7 +1149,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
 
         $class = App::className($this->_parserClass, 'Service/RequestParser', 'Parser');
-        if (!class_exists($class)) {
+        if ($class === null || !class_exists($class)) {
             throw new MissingParserException(['class' => $this->_parserClass]);
         }
         $this->_parser = new $class($this);

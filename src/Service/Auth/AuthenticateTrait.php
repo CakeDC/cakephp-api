@@ -27,6 +27,7 @@ namespace CakeDC\Api\Service\Auth;
 
 use Authentication\IdentityInterface;
 use Authorization\IdentityDecorator;
+use Cake\Controller\Component\AuthComponent;
 use Cake\Core\App;
 use Cake\Core\Exception\Exception;
 use Cake\Utility\Hash;

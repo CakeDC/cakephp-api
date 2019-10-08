@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -27,7 +25,7 @@ class ApiExceptionHandler implements HandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(Exception $exception, ServerRequestInterface $request, array $options = []): ResponseInterface
+    public function handle(Exception $exception, ServerRequestInterface $request, array $options = [])
     {
         $service = $request->getAttribute('service');
         if ($service !== null) {

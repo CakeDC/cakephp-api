@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -22,14 +20,13 @@ use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Applies routing rules to the request and creates the controller
  * instance if possible.
  */
-class ParseApiRequestMiddleware implements MiddlewareInterface
+class ParseApiRequestMiddleware
 {
     /**
      * Process an incoming server request.
@@ -42,9 +39,8 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        $response = null;
         $service = null;
         $prefix = Configure::read('Api.prefix');
         if (empty($prefix)) {
@@ -72,6 +68,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 'service' => $serviceName,
                 'version' => $version,
                 'request' => $request,
+                'response' => $response,
                 'baseUrl' => $url,
             ];
 
@@ -85,7 +82,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 } else {
                     $request = $request->withAttribute('service', $service);
 
-                    return $handler->handle($request);
+                    return $next($request, $response);
                 }
             } catch (UnauthenticatedException $e) {
                 if ($service !== null) {
@@ -107,6 +104,6 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        return $handler->handle($request);
+        return $next($request, $response);
     }
 }
