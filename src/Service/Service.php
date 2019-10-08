@@ -966,7 +966,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
 
         $class = App::className($this->_parserClass, 'Service/RequestParser', 'Parser');
-        if (!class_exists($class)) {
+        if ($class === null || !class_exists($class)) {
             throw new MissingParserException(['class' => $this->_parserClass]);
         }
         $this->_parser = new $class($this);

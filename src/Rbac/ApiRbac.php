@@ -20,6 +20,7 @@ use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\PermissionMatchResult;
+use CakeDC\Auth\Rbac\RbacInterface;
 use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
@@ -29,7 +30,7 @@ use Psr\Log\LogLevel;
  *
  * @package Rbac
  */
-class ApiRbac
+class ApiRbac implements RbacInterface
 {
     use InstanceConfigTrait;
     use LogTrait;

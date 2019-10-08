@@ -1,0 +1,13 @@
+<?php
+
+return [
+    'CakeDC/Auth.api_permissions' => [
+            [
+                'role' => '*',
+                'service' => '*',
+                'action' => '*',
+                'method' => '*',
+                'bypassAuth' => true,
+            ],
+    ]
+];

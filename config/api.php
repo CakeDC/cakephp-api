@@ -1,13 +1,20 @@
 <?php
 /**
- * Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2016 - 2017, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+use Authentication\AuthenticationService;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Middleware\RequestAuthorizationMiddleware;
+use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
+use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
+use CakeDC\Api\ApiInitializer;
 
 return [
     'Api' => [
@@ -29,6 +36,30 @@ return [
         'Auth' => [
             'Crud' => [
                 'default' => 'auth'
+            ],
+        ],
+        
+        'Middleware' => [
+            'authentication' => [
+                'class' => AuthenticationMiddleware::class,
+                'request' => ApiInitializer::class,
+                'method' => 'getAuthenticationService',
+            ],
+            'apiParser' => [
+                'class' => ParseApiRequestMiddleware::class,
+            ],
+            'apiAuthorize' => [
+                'class' => AuthorizationMiddleware::class,
+                'request' => ApiInitializer::class,
+                'params' => [
+                    'unauthorizedHandler' => 'CakeDC/Api.ApiException',
+                ],
+            ],
+            'apiAuthorizeRequest' => [
+                'class' => RequestAuthorizationMiddleware::class,
+            ],
+            'apiProcessor' => [
+                'class' => ProcessApiRequestMiddleware::class,
             ],
         ],
 
