@@ -1,7 +1,7 @@
 
 ## Services 
 
-Service is central part of any API that concentrate all features(operations) realted to some application entity.
+Service is central part of any API that concentrate all features(operations) related to some application entity.
 Service define list of actions (operations) that performed on associated entity.
 For example, for RESTful service there could be described 4 default operations using HTTP verbs for each of CRUD operations.
 
