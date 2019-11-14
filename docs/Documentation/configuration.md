@@ -9,7 +9,7 @@
  Api.ServiceFallback - if defined class name service will loaded using this fallback class if service does not exists.
 
  
-## Services configuration. 
+## Services configuration
 
 Any service, that is loaded as a fallback service or specific service possible to setup using configuration file.
 
@@ -35,7 +35,7 @@ This allow to have common service settings, and overwrite then in bottom level.
 
  * Api.Service.classMap - defines name map, that allows define services action classes with custom location logic.
 
-## Actions configuration. 
+## Actions configuration
 
 Any action, that could be loaded as default action defined in fallback class, or specific action class could be 
 configured using configuration file.
