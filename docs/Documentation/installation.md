@@ -20,7 +20,7 @@ Plugin::load('CakeDC/Api', ['bootstrap' => true, 'routes' => true]);
 ```
 
 ## Configuration
-You can configure the api overwriting the api.php, how?
+You can configure the API overwriting the api.php, how?
 we need to create an **api.php** file in the *config* folder. You can copy the existing configuration file 
 under `vendor/cakedc/cakephp-api/config/api.php` and customize it for your application.
 Remember to load the new configuration file in `bootstrap.php`
