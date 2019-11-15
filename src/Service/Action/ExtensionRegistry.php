@@ -45,6 +45,7 @@ class ExtensionRegistry extends ObjectRegistry
             $this->_action = $action;
         }
     }
+
     /**
      * Should resolve the classname for a given object type.
      *

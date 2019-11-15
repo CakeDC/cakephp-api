@@ -17,14 +17,12 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\Test\Settings;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 
 class CursorPaginationExtensionTest extends IntegrationTestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * setUp

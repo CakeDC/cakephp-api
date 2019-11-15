@@ -25,7 +25,7 @@ trait FixturesTrait
      *
      * @var array
      */
-    public $fixtures = [
+    public $defaultFixtures = [
         'plugin.CakeDC/Api.SocialAccounts',
         'plugin.CakeDC/Api.Users',
         'plugin.CakeDC/Api.Articles',
@@ -33,4 +33,11 @@ trait FixturesTrait
         'plugin.CakeDC/Api.Tags',
         'plugin.CakeDC/Api.ArticlesTags',
     ];
+    
+    public function mergeFixtures()
+    {
+        if (empty($this->fixtures)) {
+            $this->fixtures = $this->defaultFixtures;
+        }
+    }
 }

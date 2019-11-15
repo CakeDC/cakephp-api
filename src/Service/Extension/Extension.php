@@ -30,7 +30,7 @@ abstract class Extension
     /**
      * ExtensionRegistry instance.
      *
-     * @var ExtensionRegistry
+     * @var \CakeDC\Api\Service\ExtensionRegistry
      */
     protected $_registry;
 

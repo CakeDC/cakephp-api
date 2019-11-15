@@ -16,7 +16,6 @@ namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Auth;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\Test\Settings;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 
@@ -28,7 +27,6 @@ use CakeDC\Api\TestSuite\IntegrationTestCase;
 class ResetPasswordActionTest extends IntegrationTestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * setUp

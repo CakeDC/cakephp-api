@@ -27,11 +27,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Auth;
 
-use Cake\Controller\Component\AuthComponent;
+use Authentication\IdentityInterface;
+use Authorization\IdentityDecorator;
 use Cake\Core\App;
 use Cake\Core\Exception\Exception;
 use Cake\Utility\Hash;
-use CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate;
 
 /**
  * Class AuthenticateTrait
@@ -115,9 +115,15 @@ trait AuthenticateTrait
             $this->constructAuthenticate();
         }
         foreach ($this->_authenticateObjects as $auth) {
-            /** @var BaseAuthenticate $auth */
+            /** @var \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate $auth */
             $result = $auth->getUser($this->request);
-            if (!empty($result) && is_array($result)) {
+            if ($result instanceof \ArrayObject) {
+                $result = (array)$result;
+            }
+            if ($result instanceof IdentityInterface || $result instanceof IdentityDecorator) {
+                $result = $result->getOriginalData();
+            }
+            if (!empty($result) && (is_array($result) || $result instanceof \ArrayObject)) {
                 $this->_authenticationProvider = $auth;
                 $event = $this->dispatchEvent('Auth.afterIdentify', [$result, $auth]);
                 if ($event->getResult() !== null) {
@@ -149,7 +155,7 @@ trait AuthenticateTrait
             $this->constructAuthenticate();
         }
         foreach ($this->_authenticateObjects as $auth) {
-            /** @var BaseAuthenticate $auth */
+            /** @var \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate $auth */
             $result = $auth->authenticate($this->request, $this->response);
             if (!empty($result) && is_array($result)) {
                 $this->_authenticationProvider = $auth;

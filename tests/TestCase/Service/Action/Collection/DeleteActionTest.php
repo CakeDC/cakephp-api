@@ -18,13 +18,11 @@ use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class DeleteActionTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var DeleteAction

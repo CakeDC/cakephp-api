@@ -13,10 +13,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Middleware;
 
+use Authentication\Authenticator\UnauthenticatedException;
 use Cake\Core\Configure;
-use Cake\Http\CallbackStream;
 use Cake\Http\Response;
 use CakeDC\Api\Service\ConfigReader;
+use CakeDC\Api\Service\Result;
 use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -27,9 +28,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Applies routing rules to the request and creates the controller
  * instance if possible.
- * @deprecated use ParseApiRequestMiddleware and ProcessApiRequestMiddleware instead
  */
-class ApiMiddleware implements MiddlewareInterface
+class ParseApiRequestMiddleware implements MiddlewareInterface
 {
     /**
      * Process an incoming server request.
@@ -44,6 +44,8 @@ class ApiMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $response = null;
+        $service = null;
         $prefix = Configure::read('Api.prefix');
         if (empty($prefix)) {
             $prefix = 'api';
@@ -60,31 +62,46 @@ class ApiMiddleware implements MiddlewareInterface
         $path = $request->getUri()->getPath();
         if (preg_match($expr, $path, $matches)) {
             $version = $matches['version'] ?? null;
-            $service = $matches['service'];
+            $serviceName = $matches['service'];
 
-            $url = '/' . $service;
+            $url = '/' . $serviceName;
             if (!empty($matches['base'])) {
                 $url .= $matches['base'];
             }
             $options = [
-                'service' => $service,
+                'service' => $serviceName,
                 'version' => $version,
                 'request' => $request,
                 'baseUrl' => $url,
             ];
 
             try {
-                $options += (new ConfigReader())->serviceOptions($service, $version);
-                $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
-                $result = $Service->dispatch();
+                $options += (new ConfigReader())->serviceOptions($serviceName, $version);
+                $service = ServiceRegistry::getServiceLocator()->get($serviceName, $options);
+                $result = $service->dispatchPrepareAction();
 
-                $response = $Service->respond($result);
+                if ($result !== null) {
+                    $response = $service->respond($result);
+                } else {
+                    $request = $request->withAttribute('service', $service);
+
+                    return $handler->handle($request);
+                }
+            } catch (UnauthenticatedException $e) {
+                if ($service !== null) {
+                    $service->getResult()->setCode(401);
+                    $service->getResult()->setException($e);
+                    $response = $service->respond();
+                }
             } catch (Exception $e) {
-                $response = new Response();
-                $response->withStatus(400);
-                $response = $response->withBody(new CallbackStream(function () use ($e) {
-                    echo $e->getMessage();
-                }));
+                if ($service !== null) {
+                    $service->getResult()->setCode(400);
+                    $service->getResult()->setException($e);
+                    $response = $service->respond();
+                }
+            }
+            if ($response === null) {
+                $response = (new Response())->withStatus(400);
             }
 
             return $response;

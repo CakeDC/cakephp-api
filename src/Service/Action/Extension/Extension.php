@@ -30,7 +30,7 @@ abstract class Extension
     /**
      * ExtensionRegistry instance.
      *
-     * @var ExtensionRegistry
+     * @var \CakeDC\Api\Service\Action\ExtensionRegistry
      */
     protected $_registry;
 
@@ -44,5 +44,16 @@ abstract class Extension
     {
         $this->_registry = $registry;
         $this->setConfig($config);
+    }
+
+    /**
+     * Method which used to define if extension need to be used directly from Action class.
+     * By default is extensions is not attachable.
+     *
+     * @return bool
+     */
+    public function attachable(): bool
+    {
+        return $this->getConfig('attachable') === true;
     }
 }

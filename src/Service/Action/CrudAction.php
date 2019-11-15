@@ -16,6 +16,7 @@ namespace CakeDC\Api\Service\Action;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Cake\ORM\Association;
+use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -231,7 +232,7 @@ abstract class CrudAction extends Action
      */
     protected function _getEntities(): ResultSet
     {
-        $query = $this->getTable()->find();
+        $query = $this->_getEntitiesQuery();
         if ($this->_finder !== null) {
             $query = $query->find($this->_finder);
         }
@@ -241,9 +242,22 @@ abstract class CrudAction extends Action
             $query = $event->getResult();
         }
         $records = $query->all();
-        $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
+        $event = $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
+        if ($event->getResult() !== null) {
+            $records = $event->getResult();
+        }
 
         return $records;
+    }
+
+    /**
+     * Returns entiries query object
+     *
+     * @return \Cake\ORM\Query
+     */
+    protected function _getEntitiesQuery(): Query
+    {
+        return $this->getTable()->find();
     }
 
     /**
@@ -254,7 +268,7 @@ abstract class CrudAction extends Action
      */
     protected function _getEntity($primaryKey)
     {
-        $query = $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
+        $query = $this->_getEntityQuery($primaryKey);
         if ($this->_finder !== null) {
             $query = $query->find($this->_finder);
         }
@@ -265,6 +279,17 @@ abstract class CrudAction extends Action
         $entity = $query->firstOrFail();
 
         return $entity;
+    }
+
+    /**
+     * Returns entiry query object
+     *
+     * @param mixed $primaryKey Primary key.
+     * @return \Cake\ORM\Query
+     */
+    protected function _getEntityQuery($primaryKey)
+    {
+        return $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
     }
 
     /**

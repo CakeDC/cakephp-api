@@ -30,6 +30,15 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
 {
     use IntegrationTestTrait;
 
+    protected $fixtures = [
+        'plugin.CakeDC/Api.SocialAccounts',
+        'plugin.CakeDC/Api.Users',
+        'plugin.CakeDC/Api.Articles',
+        'plugin.CakeDC/Api.Authors',
+        'plugin.CakeDC/Api.Tags',
+        'plugin.CakeDC/Api.ArticlesTags',
+    ];
+
     /**
      * @var string|int Current logged in user
      */
@@ -86,9 +95,13 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
             $userId = $this->getDefaultUser();
         }
         $Users = TableRegistry::getTableLocator()->get('CakeDC/Users.Users');
-        $user = $Users->find()->where(['id' => $userId])->first();
-        if ($user instanceof EntityInterface) {
-            return $user['api_token'];
+        if ($userId) {
+            $user = $Users->find()
+                          ->where(['id' => $userId])
+                          ->first();
+            if ($user instanceof EntityInterface) {
+                return $user['api_token'];
+            }
         }
 
         return null;

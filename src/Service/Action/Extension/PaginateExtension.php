@@ -53,7 +53,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(EventInterface $event): Query
     {
-        /** @var Action $action */
+        /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
         $query = $event->getData('query');
         if ($event->getResult()) {
@@ -113,7 +113,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      */
     public function afterFind(EventInterface $event): void
     {
-        /** @var Action $action */
+        /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
         $query = $event->getData('query');
         $result = $action->getService()->getResult();

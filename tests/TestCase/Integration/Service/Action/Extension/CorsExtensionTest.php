@@ -15,7 +15,6 @@ namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Extension;
 
 use Cake\Core\Configure;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\Test\Settings;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 
@@ -27,7 +26,6 @@ use CakeDC\Api\TestSuite\IntegrationTestCase;
 class CorsExtensionTest extends IntegrationTestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * setUp

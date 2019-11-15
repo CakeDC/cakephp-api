@@ -19,13 +19,11 @@ use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\XmlRenderer;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class XmlRendererTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var Service

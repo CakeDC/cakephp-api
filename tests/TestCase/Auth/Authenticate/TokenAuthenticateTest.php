@@ -20,13 +20,11 @@ use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\Auth\Authenticate\TokenAuthenticate;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class TokenAuthenticateTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var TokenAuthenticate

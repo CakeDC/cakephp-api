@@ -18,13 +18,11 @@ use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAddAction;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\FixturesTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
 class CrudAddActionTest extends TestCase
 {
     use ConfigTrait;
-    use FixturesTrait;
 
     /**
      * @var CrudAddAction
