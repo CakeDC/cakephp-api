@@ -11,6 +11,8 @@
 
 namespace CakeDC\Api\Test\Fixture;
 
+use Cake\Database\Driver\Postgres;
+use Cake\Datasource\ConnectionInterface;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -55,4 +57,14 @@ class ArticlesFixture extends TestFixture
         ['id' => 14, 'author_id' => 6, 'title' => 'Article N14', 'body' => 'Article N14 Body', 'published' => 'Y'],
         ['id' => 15, 'author_id' => 1, 'title' => 'Article N15', 'body' => 'Article N15 Body', 'published' => 'Y'],
     ];
+
+    public function insert(ConnectionInterface $db) {
+        parent::insert($db);
+
+        if ($db->getDriver() instanceof Postgres) {
+            foreach (range(1,count($this->records)) as $i) {
+                $db->execute('select nextval(\'articles_id_seq\'::regclass)');
+            }
+        }
+    }
 }
