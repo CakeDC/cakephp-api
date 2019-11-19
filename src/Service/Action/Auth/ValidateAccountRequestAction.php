@@ -74,12 +74,14 @@ class ValidateAccountRequestAction extends Action
         $data = $this->getData();
         $reference = $data['reference'];
         try {
-            if ($this->getUsersTable()->resetToken($reference, [
+            if (
+                $this->getUsersTable()->resetToken($reference, [
                 'expiration' => Configure::read('Users.Token.expiration'),
                 'checkActive' => true,
                 'sendEmail' => true,
                 'emailTemplate' => 'CakeDC/Users.validation',
-            ])) {
+                ])
+            ) {
                 return __d('CakeDC/Api', 'Token has been reset successfully. Please check your email.');
             } else {
                 throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500);

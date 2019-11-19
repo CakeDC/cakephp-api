@@ -24,7 +24,6 @@ use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase
 {
-
     /**
      * @var Service
      */

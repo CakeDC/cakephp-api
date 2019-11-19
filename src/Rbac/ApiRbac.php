@@ -231,7 +231,8 @@ class ApiRbac implements RbacInterface
     {
         $possibleArray = (array)$possibleValues;
 
-        if ($possibleValues === '*' ||
+        if (
+            $possibleValues === '*' ||
             $value === $possibleValues ||
             in_array($value, $possibleArray) ||
             in_array(Inflector::camelize((string)$value, '-'), $possibleArray)

@@ -33,7 +33,7 @@ trait FixturesTrait
         'plugin.CakeDC/Api.Tags',
         'plugin.CakeDC/Api.ArticlesTags',
     ];
-    
+
     public function mergeFixtures()
     {
         if (empty($this->fixtures)) {

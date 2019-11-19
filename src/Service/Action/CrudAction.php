@@ -362,8 +362,10 @@ abstract class CrudAction extends Action
         ];
 
         $validators = [];
-        foreach ($table->getValidator()
-                       ->getIterator() as $name => $field) {
+        foreach (
+            $table->getValidator()
+                       ->getIterator() as $name => $field
+        ) {
             /** @var \Cake\Validation\ValidationSet $field */
             $validators[$name] = [
                 'validatePresence' => $field->isPresenceRequired(),

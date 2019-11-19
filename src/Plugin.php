@@ -13,12 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api;
 
-use Authentication\AuthenticationService;
-use Authentication\Middleware\AuthenticationMiddleware;
-use Authorization\Middleware\AuthorizationMiddleware;
-use Authorization\Middleware\RequestAuthorizationMiddleware;
-use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
-use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 
@@ -27,7 +21,9 @@ use Cake\Core\Configure;
  */
 class Plugin extends BasePlugin
 {
-    
+    /**
+     * {@inheritDoc}
+     */
     public function routes($routes): void
     {
         $middlewares = Configure::read('Api.Middleware');
@@ -51,6 +47,5 @@ class Plugin extends BasePlugin
         }
 
         parent::routes($routes);
-    }    
-    
+    }
 }

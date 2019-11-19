@@ -231,7 +231,8 @@ class Auth
             throw new UnauthenticatedException();
         }
 
-        if (empty($this->_config['authorize']) ||
+        if (
+            empty($this->_config['authorize']) ||
             $this->isAuthorized($this->user())
         ) {
             return null;

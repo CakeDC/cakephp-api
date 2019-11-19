@@ -17,7 +17,6 @@ use Authentication\Authenticator\UnauthenticatedException;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use CakeDC\Api\Service\ConfigReader;
-use CakeDC\Api\Service\Result;
 use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
 use Psr\Http\Message\ResponseInterface;

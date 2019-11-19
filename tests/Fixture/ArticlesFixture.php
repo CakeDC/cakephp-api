@@ -58,11 +58,12 @@ class ArticlesFixture extends TestFixture
         ['id' => 15, 'author_id' => 1, 'title' => 'Article N15', 'body' => 'Article N15 Body', 'published' => 'Y'],
     ];
 
-    public function insert(ConnectionInterface $db) {
+    public function insert(ConnectionInterface $db)
+    {
         parent::insert($db);
 
         if ($db->getDriver() instanceof Postgres) {
-            foreach (range(1,count($this->records)) as $i) {
+            foreach (range(1, count($this->records)) as $i) {
                 $db->execute('select nextval(\'articles_id_seq\'::regclass)');
             }
         }

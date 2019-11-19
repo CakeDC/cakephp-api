@@ -195,10 +195,12 @@ class SimpleRbacAuthorize extends BaseAuthorize
         $service = $this->_action->getService()->getName();
         $version = $this->_action->getService()->getVersion();
 
-        if ($this->_matchOrAsterisk($permission, 'role', $role) &&
+        if (
+            $this->_matchOrAsterisk($permission, 'role', $role) &&
                 $this->_matchOrAsterisk($permission, 'version', $version, true) &&
                 $this->_matchOrAsterisk($permission, 'service', $service) &&
-                $this->_matchOrAsterisk($permission, 'action', $action)) {
+                $this->_matchOrAsterisk($permission, 'action', $action)
+        ) {
             $allowed = Hash::get($permission, 'allowed');
 
             if ($allowed === null) {
@@ -231,9 +233,11 @@ class SimpleRbacAuthorize extends BaseAuthorize
         if ($allowEmpty && empty($possibleValues) && $value === null) {
             return true;
         }
-        if (Hash::get($permission, $key) === '*' ||
+        if (
+            Hash::get($permission, $key) === '*' ||
                 in_array($value, $possibleValues) ||
-                in_array(Inflector::camelize($value, '-'), $possibleValues)) {
+                in_array(Inflector::camelize($value, '-'), $possibleValues)
+        ) {
             return true;
         }
 

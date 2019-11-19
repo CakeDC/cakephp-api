@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 /**
@@ -15,24 +15,22 @@ namespace CakeDC\Api;
 
 use Authentication\AuthenticationService;
 use Authorization\AuthorizationService;
-use Authorization\AuthorizationServiceInterface;
+use Authorization\AuthorizationServiceInterface as ASI;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 use Authorization\Policy\ResolverCollection;
-use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use CakeDC\Api\Rbac\ApiRbac;
-use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
-use CakeDC\Auth\Policy\SuperuserPolicy;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ApiInitializer implements AuthorizationServiceProviderInterface
 {
-
+    /**
+     * @return \Authentication\AuthenticationService
+     */
     public function getAuthenticationService(): AuthenticationService
     {
         $service = new AuthenticationService();
@@ -50,11 +48,15 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
         $service->loadAuthenticator('Authentication.Token', [
             'queryParam' => 'token',
         ]);
-        
+
         return $service;
     }
 
-    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request instance.
+     * @return \Authorization\AuthorizationServiceInterface
+     */
+    public function getAuthorizationService(ServerRequestInterface $request): ASI
     {
         $map = new MapResolver();
         $rbac = new ApiRbac();
@@ -63,8 +65,8 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
             new CollectionPolicy([
                 //SuperuserPolicy::class,
                 new RbacPolicy([
-                    'adapter' => $rbac
-                ])
+                    'adapter' => $rbac,
+                ]),
             ])
         );
 
@@ -72,10 +74,9 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
 
         $resolver = new ResolverCollection([
             $map,
-            $orm
+            $orm,
         ]);
 
         return new AuthorizationService($resolver);
     }
-
 }

@@ -123,7 +123,12 @@ class ApiController extends AppController
 
         return $this->getResponse();
     }
-    
+
+    /**
+     * Not found router fallback method.
+     *
+     * @return \Cake\Http\Response|null
+     */
     public function notFound()
     {
         return $this->getResponse()->withStatus(404);
