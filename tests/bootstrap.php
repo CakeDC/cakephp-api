@@ -58,8 +58,24 @@ def('CAKE', CORE_PATH . 'src' . DS);
 require ROOT . '/vendor/cakephp/cakephp/src/basics.php';
 require ROOT . '/vendor/autoload.php';
 
-Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
-Cake\Core\Configure::write('App.encoding', 'UTF-8');
+
+Configure::write('App', [
+    'namespace' => 'CakeDC\Api\Test\App',
+    'encoding' => 'UTF-8',
+    'base' => false,
+    'baseUrl' => false,
+    'dir' => 'src',
+    'webroot' => WEBROOT_DIR,
+    'wwwRoot' => WWW_ROOT,
+    'fullBaseUrl' => 'http://localhost',
+    'imageBaseUrl' => 'img/',
+    'jsBaseUrl' => 'js/',
+    'cssBaseUrl' => 'css/',
+    'paths' => [
+        'plugins' => [dirname(APP) . DS . 'plugins' . DS],
+        // 'templates' => [TEST_APP . 'templates' . DS]
+    ],
+]);
 Cake\Core\Configure::write('debug', true);
 
 $TMP = new \Cake\Filesystem\Folder(TMP);
@@ -115,17 +131,8 @@ Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5
 
 mb_internal_encoding(Configure::read('App.encoding'));
 Security::setSalt(Configure::read('Security.salt'));
-Email::setConfigTransport(Configure::consume('EmailTransport'));
+\Cake\Mailer\TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Email::setConfig(Configure::consume('Email'));
-
-Cake\Core\Plugin::load('CakeDC/Api', [
-    'path' => ROOT . DS,
-    'autoload' => true,
-    'bootstrap' => true,
-]);
-
-Cake\Routing\DispatcherFactory::add('Routing');
-Cake\Routing\DispatcherFactory::add('ControllerFactory');
 
 // Ensure default test connection is defined
 if (!getenv('db_dsn')) {
@@ -140,8 +147,13 @@ Cake\Datasource\ConnectionManager::setConfig('test', [
 class_alias('CakeDC\Api\Test\App\Controller\AppController', 'App\Controller\AppController');
 
 $isCli = PHP_SAPI === 'cli';
+$conf = (array)Cake\Core\Configure::read('Error');
 if ($isCli) {
-    (new Cake\Console\ConsoleErrorHandler(Cake\Core\Configure::read('Error')))->register();
+    (new Cake\Console\ConsoleErrorHandler($conf))->register();
 } else {
-     (new Cake\Error\ErrorHandler(Cake\Core\Configure::read('Error')))->register();
+     (new Cake\Error\ErrorHandler($conf))->register();
 }
+\Cake\Routing\Router::reload();
+$application = new \CakeDC\Api\Test\App\Application(CONFIG);
+$application->bootstrap();
+$application->pluginBootstrap();

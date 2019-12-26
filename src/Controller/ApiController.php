@@ -88,16 +88,16 @@ class ApiController extends AppController
     {
         $this->autoRender = false;
         try {
-            if (!empty($this->request['service'])) {
-                $service = $this->request['service'];
+            if (!empty($this->getRequest()->getParam('service'))) {
+                $service = $this->getRequest()->getParam('service');
                 $version = null;
-                if (!empty($this->request['version'])) {
-                    $version = $this->request['version'];
+                if (!empty($this->getRequest()->getParam('version'))) {
+                    $version = $this->getRequest()->getParam('version');
                 }
 
                 $url = '/' . $service;
-                if (!empty($this->request->getParam('pass'))) {
-                    $url .= '/' . join('/', $this->request->getParam('pass'));
+                if (!empty($this->getRequest()->getParam('pass'))) {
+                    $url .= '/' . join('/', $this->getRequest()->getParam('pass'));
                 }
                 $options += [
                     'version' => $version,

@@ -17,6 +17,7 @@ namespace CakeDC\Api\Test\App;
 use Authentication\AuthenticationService;
 use Authentication\Middleware\AuthenticationMiddleware;
 use CakeDC\Api\Middleware\ApiMiddleware;
+use CakeDC\Api\Service\ServiceRegistry;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -31,6 +32,28 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  */
 class Application extends BaseApplication
 {
+
+    public function bootstrap(): void
+    {
+        parent::bootstrap();
+        ServiceRegistry::getServiceLocator()->clear();
+
+        $this->addPlugin('CakeDC/Users', [
+            'path' => ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS,
+        ]);
+        $this->addPlugin('CakeDC/Api', [
+            'path' => ROOT . DS,
+        ]);
+    }
+
+    public function pluginBootstrap(): void
+    {
+        parent::pluginBootstrap();
+
+        Configure::load('api');
+        Configure::write('Users.config', ['users']);
+    }
+
     /**
      * Setup the middleware your application will use.
      *
@@ -60,11 +83,11 @@ class Application extends BaseApplication
 
             // ->add($authentication)
             // Apply Api
-             ->add(new ApiMiddleware())
+             ->add(new ApiMiddleware(''))
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware())// Apply routing
-            ->add(new RoutingMiddleware());
+            ->add(new RoutingMiddleware($this));
 
         return $middleware;
     }

@@ -127,7 +127,15 @@ class IntegrationTestCase extends BaseTestCase
             }
         }
         $this->useHttpServer(true);
-        $this->_sendRequest($url, $method, $data);
+        // $this->_sendRequest($url, $method, $data);
+        try {
+            ServiceRegistry::getServiceLocator()->clear();
+            TableRegistry::getTableLocator()->clear();
+            $this->_sendRequest($url, $method, $data);
+        } catch (MissingTemplateException $ex) {
+            $message = sprintf('Possibly related to %s', $this->_exception->getMessage());
+            throw new MissingTemplateException($message, [], 500, $ex);
+        }
     }
 
     /**

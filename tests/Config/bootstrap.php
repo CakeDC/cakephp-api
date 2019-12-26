@@ -18,13 +18,13 @@ use Cake\Utility\Security;
 Configure::load('api');
 Configure::write('Users.config', ['users']);
 
-Cake\Core\Plugin::unload('CakeDC/Users');
-Cake\Core\Plugin::load('CakeDC/Users', [
-    'path' => ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS,
-    'autoload' => true,
-    'bootstrap' => true,
-    'routes' => true,
-]);
+// Cake\Core\Plugin::unload('CakeDC/Users');
+// Cake\Core\Plugin::load('CakeDC/Users', [
+    // 'path' => ROOT . DS . 'vendor' . DS . 'cakedc' . DS . 'users' . DS,
+    // 'autoload' => true,
+    // 'bootstrap' => true,
+    // 'routes' => true,
+// ]);
 
 Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 Security::setSalt(Configure::read('Security.salt'));
