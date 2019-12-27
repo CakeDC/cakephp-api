@@ -23,7 +23,8 @@ use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use CakeDC\Api\Middleware\ApiMiddleware;
+use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
+use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
 use CakeDC\Api\Service\ServiceRegistry;
 
 /**
@@ -66,10 +67,11 @@ class Application extends BaseApplication
         $middleware
             // Catch any exceptions in the lower layers,
             // and make an error page/response
-            ->add(new ErrorHandlerMiddleware(Configure::read('Error.exceptionRenderer')))
+            ->add(new ErrorHandlerMiddleware([]))
             // ->add($authentication)
             // Apply Api
-            ->add(new ApiMiddleware())
+            ->add(new ParseApiRequestMiddleware())
+            ->add(new ProcessApiRequestMiddleware())
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware())// Apply routing
             ->add(new RoutingMiddleware($this));

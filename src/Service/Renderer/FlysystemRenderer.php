@@ -22,6 +22,7 @@ use Exception;
 use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Handler;
 use Zend\Diactoros\Stream;
 
 /**
@@ -65,9 +66,9 @@ class FlysystemRenderer extends FileRenderer
      *
      * @param \League\Flysystem\Filesystem $filesystem custom filesystem
      * @param string $path of file at filesystem
-     * @return \League\Flysystem\File
+     * @return \League\Flysystem\Handler
      */
-    protected function getFile(Filesystem $filesystem, string $path): File
+    protected function getFile(Filesystem $filesystem, string $path): Handler
     {
         return $filesystem->get($path);
     }

@@ -295,7 +295,7 @@ abstract class CrudAction extends Action
     /**
      * Build condition for get entity method.
      *
-     * @param string|int $primaryKey Primary key
+     * @param mixed $primaryKey Primary key
      * @return array
      */
     protected function _buildViewCondition($primaryKey): array

@@ -66,6 +66,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      */
     public function afterAction(Event $event): void
     {
+        /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
         $result = $action->getService()->getResult();
         $actionName = $action->getName();

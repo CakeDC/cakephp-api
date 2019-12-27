@@ -46,7 +46,9 @@ class NestedExtension extends Extension implements EventListenerInterface
      */
     public function findEntities(Event $event): \Cake\ORM\Query
     {
+        /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
+        /** @var \Cake\ORM\Query $query */
         $query = $event->getData('query');
         $foreignKey = $action->getParentId();
         $field = $action->getParentIdName();
@@ -68,7 +70,9 @@ class NestedExtension extends Extension implements EventListenerInterface
      */
     public function findEntity(Event $event): \Cake\ORM\Query
     {
+        /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
+        /** @var \Cake\ORM\Query $query */
         $query = $event->getData('query');
         $foreignKey = $action->getParentId();
         $field = $action->getParentIdName();
@@ -90,8 +94,10 @@ class NestedExtension extends Extension implements EventListenerInterface
      */
     public function patchEntity(Event $event): \Cake\ORM\Entity
     {
+        /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
-        $entity = $event->getData('entity');
+        /** @var \Cake\ORM\Query $query */
+        $query = $event->getData('query');
         if ($event->getResult()) {
             $entity = $event->getResult();
         }

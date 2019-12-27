@@ -52,9 +52,9 @@ class ReverseRouting
      *
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @param callable $beforeReverse Callback.
-     * @return array|string
+     * @return array|string|null
      */
-    public function indexPath(Action $action, ?callable $beforeReverse = null): ?string
+    public function indexPath(Action $action, ?callable $beforeReverse = null)
     {
         $indexRoute = $action->getRoute();
         $parent = $action->getService()->getParentService();
@@ -116,7 +116,7 @@ class ReverseRouting
      *
      * @param array $route Route array.
      * @param array $routes List of all routes.
-     * @return null
+     * @return \Cake\Routing\Route\Route|null
      */
     public function findRoute(array $route, array $routes)
     {

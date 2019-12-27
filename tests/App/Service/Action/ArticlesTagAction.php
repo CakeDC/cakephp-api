@@ -37,7 +37,7 @@ class ArticlesTagAction extends CrudAction
         $validator
             ->requirePresence('tag_id', 'create')
             ->notEmptyString('tag_id');
-        $errors = $validator->errors($this->getData());
+        $errors = $validator->validate($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }

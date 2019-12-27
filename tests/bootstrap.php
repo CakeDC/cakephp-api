@@ -152,7 +152,7 @@ class_alias('CakeDC\Api\Test\App\Controller\AppController', 'App\Controller\AppC
 $isCli = PHP_SAPI === 'cli';
 $conf = (array)Cake\Core\Configure::read('Error');
 if ($isCli) {
-    (new Cake\Console\ConsoleErrorHandler($conf))->register();
+    (new Cake\Error\ConsoleErrorHandler($conf))->register();
 } else {
     (new Cake\Error\ErrorHandler($conf))->register();
 }

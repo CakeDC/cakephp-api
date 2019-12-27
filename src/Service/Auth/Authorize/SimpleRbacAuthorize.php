@@ -223,7 +223,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      *
      * @param array $permission permission configuration
      * @param string $key key to retrieve and check in permissions configuration
-     * @param string $value value to check with (coming from the request) We'll check the DASHERIZED value too
+     * @param string|null $value value to check with (coming from the request) We'll check the DASHERIZED value too
      * @param bool $allowEmpty true if we allow
      * @return bool
      */

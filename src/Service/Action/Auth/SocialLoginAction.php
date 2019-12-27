@@ -59,7 +59,7 @@ class SocialLoginAction extends Action
             ->requirePresence('data', 'create');
         $validator
             ->requirePresence('options', 'create');
-        $errors = $validator->errors($this->getData());
+        $errors = $validator->validate($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }

@@ -76,7 +76,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     public function findEntities(Event $event): \Cake\ORM\Query
     {
+        /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
+        /** @var \Cake\ORM\Query $query */
         $query = $event->getData('query');
         if ($event->getResult()) {
             $query = $event->getResult();
@@ -160,6 +162,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      */
     public function afterFind(EventInterface $event): ?Entity
     {
+        /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
         $records = $event->getData('records');
         $result = $action->getService()->getResult();

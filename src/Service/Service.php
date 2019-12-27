@@ -568,7 +568,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Dispatch service call through callbacks and action.
      *
-     * @return \CakeDC\Api\Service\Action\Result
+     * @return \CakeDC\Api\Service\Action\Result|null
 
      */
     protected function _dispatch()

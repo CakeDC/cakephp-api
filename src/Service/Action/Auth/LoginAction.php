@@ -64,7 +64,7 @@ class LoginAction extends Action
         $validator
             ->requirePresence($this->_passwordField, 'create')
             ->notBlank($this->_passwordField);
-        $errors = $validator->errors($this->getData());
+        $errors = $validator->validate($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }

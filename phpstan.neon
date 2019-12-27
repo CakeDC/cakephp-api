@@ -1,26 +1,10 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 4
     autoload_files:
         - tests/bootstrap.php
     ignoreErrors:
-        -
-            message: '#Call to an undefined method Cake\\ORM\\Table.*#'
-            path: 'src/Service/Action/Auth/RegisterAction.php'
-        -
-            message: '#Call to an undefined method Cake\\ORM\\Table.*#'
-            path: 'src/Service/Action/Auth/ResetPasswordAction.php'
-        -
-            message: '#Call to an undefined method Cake\\ORM\\Table.*#'
-            path: 'src/Service/Action/Auth/ResetPasswordRequestAction.php'
-        -
-            message: '#Call to an undefined method Cake\\ORM\\Table.*#'
-            path: 'src/Service/Action/Auth/SocialLoginAction.php'
-        -
-            message: '#Call to an undefined method Cake\\ORM\\Table.*#'
-            path: 'src/Service/Action/Auth/ValidateAccountAction.php'
-        -
-            message: '#Call to an undefined method Cake\\ORM\\Table.*#'
-            path: 'src/Service/Action/Auth/ValidateAccountRequestAction.php'
-        -
-            message: '#PHPDoc tag @throws with type PHPUnit.*#'
-            path: 'src/TestSuite/IntegrationTestCase.php'
+
+services:

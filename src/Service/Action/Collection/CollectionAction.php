@@ -37,7 +37,7 @@ abstract class CollectionAction extends CrudAction
         $this->_validateDataIsArray($data);
         $index = 0;
         $errors = collection($data)->reduce(function ($errors, $data) use ($validator, &$index) {
-            $error = $validator->errors($data);
+            $error = $validator->validate($data);
             if ($error) {
                 $errors[$index] = $error;
             }
@@ -57,11 +57,11 @@ abstract class CollectionAction extends CrudAction
     /**
      * Save many entities
      *
-     * @param array $entities entities
-     * @return array of entities saved
+     * @param \Cake\Datasource\EntityInterface[]  $entities entities
+     * @return \Cake\Datasource\EntityInterface[]|\Cake\Datasource\ResultSetInterface|array of entities saved
      * @throws \Exception
      */
-    protected function _saveMany(array $entities = []): array
+    protected function _saveMany(iterable $entities)
     {
         if ($this->getTable()->saveMany($entities)) {
             return $entities;
@@ -77,10 +77,10 @@ abstract class CollectionAction extends CrudAction
     /**
      * Create entities from the posted data
      *
-     * @param array $patchOptions options to use un patch
-     * @return array entities
+     * @param array $patchOptions options to use in patch
+     * @return \Cake\Datasource\EntityInterface[] entities
      */
-    protected function _newEntities(array $patchOptions = []): array
+    protected function _newEntities(array $patchOptions = [])
     {
         $data = $this->getData();
         $this->_validateDataIsArray($data);
