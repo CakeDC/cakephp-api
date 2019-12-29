@@ -52,7 +52,7 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
         return $service;
     }
 
-    public function getAuthorizationService(ServerRequestInterface $request)
+    public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
     {
         $map = new MapResolver();
         $rbac = new ApiRbac();

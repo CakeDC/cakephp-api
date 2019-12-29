@@ -25,7 +25,7 @@ class ApiExceptionHandler implements HandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(Exception $exception, ServerRequestInterface $request, array $options = [])
+    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = [])
     {
         $service = $request->getAttribute('service');
         if ($service !== null) {
