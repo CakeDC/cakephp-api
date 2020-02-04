@@ -25,10 +25,10 @@ use Cake\Core\Configure;
  */
 class Plugin extends BasePlugin
 {
-    
+
     public function routes($routes)
     {
-        $middlewares = Configure::read('Api.Middleware');
+        $middlewares = Configure::read('Api.Middleware', []);
         foreach ($middlewares as $alias => $middleware) {
             $class = $middleware['class'];
             if (array_key_exists('request', $middleware)) {
@@ -49,6 +49,5 @@ class Plugin extends BasePlugin
         }
 
         parent::routes($routes);
-    }    
-    
+    }
 }
