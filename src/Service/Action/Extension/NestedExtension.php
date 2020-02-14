@@ -96,6 +96,10 @@ class NestedExtension extends Extension implements EventListenerInterface
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
+
+        /** @var \Cake\ORM\Entity $entity */
+        $entity = $event->getData('entity');
+
         /** @var \Cake\ORM\Query $query */
         $query = $event->getData('query');
         if ($event->getResult()) {
@@ -103,6 +107,7 @@ class NestedExtension extends Extension implements EventListenerInterface
         }
         $foreignKey = $action->getParentId();
         $field = $action->getParentIdName();
+
         if ($field !== null) {
             $entity->set($field, $foreignKey);
         }
