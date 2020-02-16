@@ -80,9 +80,10 @@ class ConfigReader
      * Check options existence by prefix.
      *
      * @param string $prefix Path prefix.
-     * @return array
+     *
+     * @return \ArrayAccess|array
      */
-    protected function _checkServiceOptions(string $prefix): array
+    protected function _checkServiceOptions(string $prefix)
     {
         $data = Configure::read('Api.Service');
         if (is_array($data) && Hash::check($data, $prefix)) {

@@ -56,6 +56,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         $action = $event->getSubject();
         /** @var \Cake\ORM\Query $query */
         $query = $event->getData('query');
+
         return $this->_attachAssociations($action, $query);
     }
 
@@ -71,6 +72,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         $action = $event->getSubject();
         /** @var \Cake\ORM\Query $query */
         $query = $event->getData('query');
+
         return $this->_attachAssociations($action, $query);
     }
 

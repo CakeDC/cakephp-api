@@ -70,9 +70,10 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * Default user api method.
      *
      * @param string|null $userId User id.
-     * @return string|null
+     *
+     * @return int|string
      */
-    public function getDefaultUser(?string $userId = null): ?string
+    public function getDefaultUser(?string $userId = null)
     {
         if ($userId === null) {
             $userId = $this->_defaultUserId;

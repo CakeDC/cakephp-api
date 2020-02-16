@@ -52,7 +52,7 @@ trait AuthenticateTrait
      * successfully logging in the current user after calling `login()`
      * in the same request
      *
-     * @var \Cake\Auth\BaseAuthenticate
+     * @var \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate
      */
     protected $_authenticationProvider;
 
@@ -234,7 +234,7 @@ trait AuthenticateTrait
      * authenticated, this function will return the instance of the authentication
      * object that was used for logging the user in.
      *
-     * @return \Cake\Auth\BaseAuthenticate|null
+     * @return \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate|null
      */
     public function authenticationProvider()
     {

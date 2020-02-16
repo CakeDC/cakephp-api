@@ -95,10 +95,11 @@ class TokenAuthenticate extends BaseAuthenticate
     }
 
     /**
-     * Get the api key from the querystring
+     *  Get the api key from the querystring
      *
      * @param \Cake\Http\ServerRequest $request request
-     * @return string api key
+     *
+     * @return array|null|string api key
      */
     public function querystring(ServerRequest $request)
     {

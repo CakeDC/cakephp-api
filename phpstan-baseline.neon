@@ -3,6 +3,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Instantiated class CakeDC\\\\Api\\\\Rbac\\\\Permissions\\\\AbstractProvider is abstract\\.$#"
+			count: 1
+			path: src\Rbac\ApiRbac.php
+
+		-
 			message: "#^Call to an undefined method Cake\\\\ORM\\\\Table\\:\\:getRegisterValidators\\(\\)\\.$#"
 			count: 1
 			path: src\Service\Action\Auth\RegisterAction.php

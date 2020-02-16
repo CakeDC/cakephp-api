@@ -591,6 +591,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
 
         $this->_action = $this->buildAction();
+
+        return null;
     }
 
     /**
@@ -787,12 +789,13 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     }
 
     /**
-     * Fill up response and stop execution.
+     *  Fill up response and stop execution.
      *
      * @param \CakeDC\Api\Service\Action\Result $result A Result instance.
-     * @return \Cake\Http\Response
+     *
+     * @return \Cake\Http\Response|null
      */
-    public function respond(?Result $result = null): Response
+    public function respond(?Result $result = null): ?Response
     {
         if ($result === null) {
             $result = $this->getResult();
