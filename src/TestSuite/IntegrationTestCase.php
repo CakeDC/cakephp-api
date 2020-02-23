@@ -207,7 +207,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
         if ($message === null) {
             $message = "Status code $code does not match";
         }
-        $this->_assertStatus($code, $code, $message);
+        $this->assertResponseCode($code, $message);
     }
 
     /**
