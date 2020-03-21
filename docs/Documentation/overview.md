@@ -1,17 +1,23 @@
 
-## Services 
+## Services
 
 Service is central part of any API that concentrate all features(operations) realted to some application entity.
 Service define list of actions (operations) that performed on associated entity.
 For example, for RESTful service there could be described 4 default operations using HTTP verbs for each of CRUD operations.
 
-Each Service could be an separate class located in src/Service folder, or request could be passed through default FallbackService that implements default behavior. 
+Each Service could be an separate class located in src/Service folder, or request could be passed through default FallbackService that implements default behavior.
 Fallback service defined by setting Api.ServiceFallback and by default this is \CakeDC\Api\Service\FallbackService.
+
+### Service flow events
+
+* Service.beforeDispatch
+* Service.beforeProcess
+* Service.afterDispatch
+
 
 ### Creating a Service
 
-
-To create a new **Service** first extend the CakeDC\Api\Service\Service class. The name of your service class should be the name of the **Service**, followed by "Service" suffix. 
+To create a new **Service** first extend the CakeDC\Api\Service\Service class. The name of your service class should be the name of the **Service**, followed by "Service" suffix.
 
 ```php
 namespace App\Service;
@@ -85,7 +91,7 @@ There are two ways to action business logic.
 
 First way is define `action` method in user's action class, where argument are named same as input api endpoint parameters. (like in was enterprise plugin).
 
-In other case action logic should located in `execute` method. In this case method does not accept any parameters and user should interact with 
+In other case action logic should located in `execute` method. In this case method does not accept any parameters and user should interact with
 
 
 ### Validation
@@ -96,11 +102,14 @@ Please note, that action validation is not the same as model level validation. T
 
 ### Action flow events
 
-Action.beforeExecute
-Action.beforeProcess
-Action.onAuth
-Action.beforeValidate
-Action.afterProcess
+* Action.beforeProcess
+* Action.onAuth
+* Action.beforeValidate
+* Action.beforeValidateStopped
+* Action.validationFailed
+* Action.beforeExecute
+* Action.beforeExecuteStopped
+* Action.afterProcess
 
 ### Crud and Nested Crud Services. Fallback service.
 
@@ -108,8 +117,14 @@ Crud service defines actions and parameters for RESTful crud API.
 
 Nested Crud service gentting parent params from routing system and if it is presents loads Nested extension for all actions.
 
-Falback service is default implemeention of Nested Crud that defines routes for 1-level deep nesting.
+Fallback service is default implemeention of Nested Crud that defines routes for 1-level deep nesting.
 
+Crud actions define some events that depend on the type of action and more details could be checked in documentation.
+
+* Action.Crud.onPatchEntity (applied for add/edit actions)
+* Action.Crud.onFindEntities (applied for index action)
+* Action.Crud.afterFindEntities (applied for index action)
+* Action.Crud.onFindEntity (applied for view action)
 
 
 ### Listing Service.
@@ -154,7 +169,7 @@ Additionally all metadata appended here too.
 
 ### Exceptions
 
-#### Links 
+#### Links
 
 Links is a information how current api endpoint related with other endpoints.
 
