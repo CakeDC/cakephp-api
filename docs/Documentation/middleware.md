@@ -51,4 +51,4 @@ Defined schema allow user to use Authorization plugin both for request authoriza
 
 Rbac for authrize middlware setup performed by copy file cakephp-api/config/api_permissions.php.default to 
 config/api_permissions.php and defining needed permissions.
-By defaul it is allowed everything for unauthorized users.
+By default it is allowed everything for unauthorized users.
