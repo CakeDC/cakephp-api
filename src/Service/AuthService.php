@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service;
 
 use Cake\Utility\Hash;
+use CakeDC\Api\Service\Action\Auth\JwtLoginAction;
+use CakeDC\Api\Service\Action\Auth\JwtRefreshAction;
+use CakeDC\Api\Service\Action\Auth\JwtSocialLoginAction;
 use CakeDC\Api\Service\Action\Auth\LoginAction;
 use CakeDC\Api\Service\Action\Auth\RegisterAction;
 use CakeDC\Api\Service\Action\Auth\ResetPasswordAction;
@@ -37,6 +40,9 @@ class AuthService extends Service
     {
         parent::initialize();
         $methods = ['method' => ['POST'], 'mapCors' => true];
+        $this->mapAction('jwt_login', JwtLoginAction::class, $methods);
+        $this->mapAction('jwt_refresh', JwtRefreshAction::class, $methods);
+        $this->mapAction('jwt_social_login', JwtSocialLoginAction::class, $methods);
         $this->mapAction('login', LoginAction::class, $methods);
         $this->mapAction('register', RegisterAction::class, $methods);
         $this->mapAction('reset_password_request', ResetPasswordRequestAction::class, $methods);

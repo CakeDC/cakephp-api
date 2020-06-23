@@ -33,6 +33,7 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
      */
     public function getAuthenticationService(): AuthenticationService
     {
+
         $service = new AuthenticationService();
         $service->loadIdentifier('Authentication.JwtSubject', []);
 
@@ -47,6 +48,15 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
         ]);
         $service->loadAuthenticator('Authentication.Token', [
             'queryParam' => 'token',
+        ]);
+
+        $service->loadAuthenticator('Authentication.Jwt', [
+            'header' => 'Authorization',
+            'queryParam' => 'token',
+            'tokenPrefix' => 'bearer',
+            'algorithms' => ['HS256', 'HS512'],
+            'returnPayload' => false,
+            'secretKey' => Configure::read('Api.Jwt.AccessToken.secret'),
         ]);
 
         return $service;

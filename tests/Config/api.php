@@ -22,6 +22,17 @@ if (empty($config)) {
             'parser' => 'CakeDC/Api.Form',
             'ServiceFallback' => '\\CakeDC\\Api\\Service\\FallbackService',
 
+            'Jwt' => [
+                'AccessToken' => [
+                    'lifetime' => 600,
+                    'secret' => 'secret',
+                ],
+                'RefreshToken' => [
+                    'lifetime' => 2 * WEEK,
+                    'secret' => 'secret',
+                ],
+            ],
+
             'Auth' => [
                 'Crud' => [
                     'default' => 'auth',

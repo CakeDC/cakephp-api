@@ -38,7 +38,18 @@ return [
                 'default' => 'auth'
             ],
         ],
-        
+
+        'Jwt' => [
+            'enabled' => false,
+            'AccessToken' => [
+                'lifetime' => 600,
+                'secret' => '',
+            ],
+            'RefreshToken' => [
+                'lifetime' => 2 * WEEK,
+                'secret' => '',
+            ],
+        ],
         'Middleware' => [
             'authentication' => [
                 'class' => AuthenticationMiddleware::class,

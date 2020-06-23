@@ -3,10 +3,9 @@ language: php
 dist: xenial
 
 php:
-  - 7.2
   - 7.3
-  - '7.4snapshot'
- 
+  - 7.4
+
 sudo: false
 
 services:
@@ -16,7 +15,7 @@ services:
 cache:
   directories:
     - vendor
-    - $HOME/.composer/cache 
+    - $HOME/.composer/cache
 
 env:
   matrix:
@@ -55,6 +54,6 @@ script:
 
 after_success:
   - if [[ $COVERAGE = 1 ]]; then bash <(curl -s https://codecov.io/bash); fi
-  
+
 notifications:
   email: false

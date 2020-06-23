@@ -115,15 +115,24 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $method HTTP method.
      * @param array $data Api parameters.
      * @param string $userId Current user id.
+     * @param array $headers Headers list.
+    public function sendRequest($url, $method, $data = [], $userId = null, $headers = [])
      * @return void
      * @throws \PHPUnit\Exception|\Throwable
      */
-    public function sendRequest(string $url, string $method, array $data = [], ?string $userId = null): void
+    public function sendRequest(string $url, string $method, array $data = [], ?string $userId = null, array $headers = []): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         $userToken = $this->_userToken($userId);
 
         Configure::load('api');
+
+        if (!empty($headers)) {
+            $this->configRequest([
+                ' ' => ' ',
+                'headers' => $headers,
+            ]);
+        }
 
         if (!is_string($url)) {
             $this->_sendRequest($url, $method, $data);
@@ -183,7 +192,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function assertSuccess($result): void
     {
         $this->assertTrue(is_array($result));
-        $this->assertEquals($result['status'], 'success');
+        $this->assertEquals('success', $result['status']);
         $this->assertEquals(200, $this->_response->getStatusCode());
     }
 
@@ -205,11 +214,26 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function assertError($result, ?int $code = null): void
     {
         $this->assertTrue(is_array($result));
-        $this->assertEquals($result['status'], 'error');
+        $this->assertEquals('error', $result['status']);
         $this->assertEquals(200, $this->_response->getStatusCode());
         if (!empty($code)) {
             $this->assertEquals($code, $result['code']);
         }
+    }
+
+    /**
+     * Helper method for status assertions.
+     *
+     * @param int $code Status code.
+     * @param string $message The error message.
+     * @return void
+     */
+    public function assertStatus($code, $message = null)
+    {
+        if ($message === null) {
+            $message = "Status code $code does not match";
+        }
+        $this->assertResponseCode($code, $message);
     }
 
     /**

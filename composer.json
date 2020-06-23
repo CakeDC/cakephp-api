@@ -31,6 +31,7 @@
         "ext-json": "*",
         "cakephp/cakephp": "^4.0.0",
         "cakedc/users": "^9.0.0",
+        "lcobucci/jwt": "3.3.x-dev",
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {
@@ -66,7 +67,7 @@
             "@stan",
             "@psalm"
          ],
-         "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "test": "phpunit --stderr",
         "stan": "phpstan analyse src/",
