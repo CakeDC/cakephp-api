@@ -21,6 +21,7 @@ use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 use Authorization\Policy\ResolverCollection;
 use Cake\Http\ServerRequest;
+use Cake\Core\Configure;
 use CakeDC\Api\Rbac\ApiRbac;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;

@@ -12,6 +12,7 @@ use Authentication\AuthenticationService;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Middleware\RequestAuthorizationMiddleware;
+use Cake\Http\Middleware\BodyParserMiddleware;
 use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
 use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
 use CakeDC\Api\ApiInitializer;
@@ -55,6 +56,9 @@ return [
                 'class' => AuthenticationMiddleware::class,
                 'request' => ApiInitializer::class,
                 'method' => 'getAuthenticationService',
+            ],
+            'bodyParser' => [
+                'class' => BodyParserMiddleware::class,
             ],
             'apiParser' => [
                 'class' => ParseApiRequestMiddleware::class,

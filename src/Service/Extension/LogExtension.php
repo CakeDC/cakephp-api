@@ -82,6 +82,6 @@ class LogExtension extends Extension implements EventListenerInterface
             'input' => $data,
             'result' => json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
-        $this->log($log, LogLevel::INFO, ['api']);
+        $this->log(print_r($log, true), LogLevel::INFO, ['api']);
     }
 }
