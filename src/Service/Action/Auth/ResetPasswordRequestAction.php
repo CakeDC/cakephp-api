@@ -78,6 +78,7 @@ class ResetPasswordRequestAction extends Action
                 'expiration' => Configure::read('Users.Token.expiration'),
                 'checkActive' => false,
                 'sendEmail' => true,
+                'type' => 'password',
                 'ensureActive' => Configure::read('Users.Registration.ensureActive'),
             ]);
             if ($resetUser) {

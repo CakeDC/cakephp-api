@@ -50,8 +50,9 @@ class OptionsHandlerExtension extends Extension implements EventListenerInterfac
         $service = $event->getData('service');
         /** @var \Cake\Http\ServerRequest $request */
         $request = $service->getRequest();
+        $force = $event->getData('force');
 
-        if ($request->is('options')) {
+        if ($request->is('options') || $force === true) {
             $action = new DummyAction([
                 'name' => 'options',
                 'service' => $service,

@@ -89,6 +89,7 @@ class JwtRefreshAction extends Action
                 'foreign_key' => $this->user['id'],
             ])->first();
 
+        $authHeader = str_ireplace($options['tokenPrefix'] . ' ', '', $authHeader);
         if (!$entity || $entity['token'] != $authHeader) {
             throw new ValidationException('Invalid token provided', 401);
         }

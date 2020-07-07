@@ -585,7 +585,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     protected function _prepareAction()
     {
-        $event = $this->dispatchEvent('Service.beforeDispatch', ['service' => $this]);
+        $event = $this->triggerBeforeDispatch();
         if ($event->getResult() instanceof Result) {
             return $event->getResult();
         }
@@ -996,5 +996,14 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             throw new MissingRendererException(['class' => $this->_rendererClass]);
         }
         $this->setRenderer(new $class($this));
+    }
+
+    /**
+     * @param bool $forceCors Force cors.
+     * @return \Cake\Event\EventInterface
+     */
+    public function triggerBeforeDispatch($forceCors = false): \Cake\Event\EventInterface
+    {
+        return $this->dispatchEvent('Service.beforeDispatch', ['service' => $this, 'force' => $forceCors]);
     }
 }
