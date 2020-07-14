@@ -373,8 +373,17 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         }
         $registry = $this->getExtensions();
         $this->_mergeVars(['extensions'], ['associative' => ['extensions']]);
+        foreach ($this->extensions as $key => $value) {
+            if (is_string($key) && $value === false) {
+                unset($this->extensions[$key]);
+            }
+        }
+
         $extensions = $registry->normalizeArray($this->extensions);
         foreach ($extensions as $name => $properties) {
+            if ($properties === false) {
+                continue;
+            }
             $instance = $registry->load($properties['class'], $properties['config']);
             $this->_eventManager->on($instance);
             if ($instance->attachable()) {

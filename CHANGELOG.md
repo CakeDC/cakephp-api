@@ -4,6 +4,9 @@ Changelog
 Releases for CakePHP 3
 -------------
 
+* 8.0.3
+ * Abitility to disable extension
+
 * 6.0.1
   * Fix deprecation messages
 
