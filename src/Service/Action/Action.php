@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action;
 
+use Authentication\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -341,6 +342,21 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     public function getExtensions(): ExtensionRegistry
     {
         return $this->_extensions;
+    }
+
+    /**
+     * Returns unpacked identity request attribute. Helper auth method.
+     *
+     * @return mixed
+     */
+    public function getIdentity()
+    {
+        $identity = $this->getService()->getRequest()->getAttribute('identity');
+        if ($identity) {
+            $identity = $identity instanceof IdentityInterface ? $identity->getOriginalData() : $identity;
+        }
+
+        return $identity;
     }
 
     /**
