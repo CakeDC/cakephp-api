@@ -1,8 +1,11 @@
 Changelog
 =========
 
-Releases for CakePHP 3
+Releases for CakePHP 4.0
 -------------
+
+* 8.0.4
+ * Add helper auth method Action::getIdentity
 
 * 8.0.3
  * Abitility to disable extension
