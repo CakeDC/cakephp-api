@@ -76,4 +76,4 @@ So global Auth configuration one should put into  `Api.Service.default.Action.de
   
  ### JWT (Json Web Token Authentication).
  
- * [Example tutorial](Documentation/Auth/jwt.md)
+ * [Example tutorial](/docs/Documentation/Auth/jwt.md)
