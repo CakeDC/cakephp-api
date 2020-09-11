@@ -33,8 +33,11 @@ class ReverseRouting
      * @param string $method Action method.
      * @return array
      */
-    public function link(string $name, ?string $path, string $method = 'GET'): array
+    public function link(string $name, ?string $path, $method = 'GET'): array
     {
+        if (is_array($method)) {
+            $method = array_shift($method);
+        }
         $prefix = Configure::read('Api.routeBase') ?: '/api';
         $baseRoute = $prefix . $path;
         $fullRoute = Router::url($baseRoute, true);
