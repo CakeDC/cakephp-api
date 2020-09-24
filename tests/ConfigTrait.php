@@ -154,6 +154,7 @@ trait ConfigTrait
         if (empty($requestOptions['params']['pass'])) {
             $requestOptions['params']['pass'] = [];
         }
+        $requestOptions['environment']['REQUEST_METHOD'] = $method;
         $this->request = new ServerRequest($requestOptions);
 
         if (empty($options['response'])) {

@@ -665,6 +665,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
                 'url' => $url,
                 'environment' => [
                     'REQUEST_METHOD' => $this->_request->getEnv('REQUEST_METHOD'),
+                    'PATH_INFO' => $url,
                 ],
             ]));
         });
