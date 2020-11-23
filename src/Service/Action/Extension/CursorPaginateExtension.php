@@ -190,6 +190,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         }
 
         $indexRoute = $action->getRoute();
+        $version = $action->getService()->getVersion();
 
         $links = [];
         $path = $this->_reverseRouter->indexPath($action, function ($route) use ($newSinceId) {
@@ -197,7 +198,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
 
             return $route;
         });
-        $link = $this->_reverseRouter->link('prev', $path, $indexRoute['_method']);
+        $link = $this->_reverseRouter->link('prev', $path, $indexRoute['_method'], $version);
         $links[$link['name']] = $link['href'];
 
         $path = $this->_reverseRouter->indexPath($action, function ($route) use ($newMaxId) {
@@ -205,7 +206,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
 
             return $route;
         });
-        $link = $this->_reverseRouter->link('next', $path, $indexRoute['_method']);
+        $link = $this->_reverseRouter->link('next', $path, $indexRoute['_method'], $version);
         $links[$link['name']] = $link['href'];
 
         $count = $this->_count($action);

@@ -15,6 +15,7 @@ namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Auth;
 
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\Settings;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
@@ -53,6 +54,11 @@ class ResetPasswordActionTest extends IntegrationTestCase
 
     public function testSuccessPasswordReset()
     {
+        Router::connect('/users/reset-password/*', [
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'resetPassword',
+        ]);
         $this->sendRequest('/auth/reset_password_request', 'POST', ['reference' => 'user-1']);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);

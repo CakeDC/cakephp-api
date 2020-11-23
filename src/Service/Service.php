@@ -276,9 +276,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Gets service version number.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getVersion(): ?int
+    public function getVersion(): ?string
     {
         return $this->_version;
     }
@@ -286,10 +286,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Sets service version.
      *
-     * @param int $version Version number.
+     * @param string $version Version number.
      * @return void
      */
-    public function setVersion(int $version): void
+    public function setVersion(string $version): void
     {
         $this->_version = $version;
     }

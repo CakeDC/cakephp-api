@@ -354,11 +354,12 @@ abstract class CrudAction extends Action
         $entity = $this->_newEntity();
         $reverseRouter = new ReverseRouting();
         $path = $reverseRouter->indexPath($this);
+        $version = $this->getService()->getVersion();
         $actions = [
-            'index' => $reverseRouter->link('self', $path, 'GET'),
-            'add' => $reverseRouter->link('add', $path, 'POST'),
-            'edit' => $reverseRouter->link('edit', $path . '/{id}', 'PUT'),
-            'delete' => $reverseRouter->link('delete', $path . '/{id}', 'DELETE'),
+            'index' => $reverseRouter->link('self', $path, 'GET', $version),
+            'add' => $reverseRouter->link('add', $path, 'POST', $version),
+            'edit' => $reverseRouter->link('edit', $path . '/{id}', 'PUT', $version),
+            'delete' => $reverseRouter->link('delete', $path . '/{id}', 'DELETE', $version),
         ];
 
         $validators = [];

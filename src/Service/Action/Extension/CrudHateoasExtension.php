@@ -97,16 +97,17 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     {
         $links = [];
         $indexRoute = $action->getRoute();
+        $version = $action->getService()->getVersion();
         $parent = $action->getService()->getParentService();
         $path = $this->_reverseRouter->indexPath($action);
 
-        $links[] = $this->_reverseRouter->link('self', $path, $indexRoute['_method']);
-        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':add', $path, 'POST');
+        $links[] = $this->_reverseRouter->link('self', $path, $indexRoute['_method'], $version);
+        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':add', $path, 'POST', $version);
 
         if ($parent !== null) {
             $parentName = $parent->getName() . ':view';
-            $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
-            $links[] = $this->_reverseRouter->link($parentName, $path, 'GET');
+            $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view', $version);
+            $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);
         }
 
         return $links;
@@ -123,6 +124,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         $links = [];
         $viewRoute = $action->getRoute();
         $service = $action->getService();
+        $version = $service->getVersion();
         $parent = $action->getService()->getParentService();
         $path = null;
         if ($parent !== null) {
@@ -150,11 +152,11 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $indexPath = $service->routeReverse($route->defaults);
         }
 
-        $links[] = $this->_reverseRouter->link('self', $path, $viewRoute['_method']);
-        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':edit', $path, 'PUT');
-        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':delete', $path, 'DELETE');
+        $links[] = $this->_reverseRouter->link('self', $path, $viewRoute['_method'], $version);
+        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':edit', $path, 'PUT', $version);
+        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':delete', $path, 'DELETE', $version);
         if (!empty($indexPath)) {
-            $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':index', $indexPath, 'GET');
+            $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':index', $indexPath, 'GET', $version);
         }
 
         if ($parent === null && $action instanceof CrudAction) {
@@ -187,7 +189,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                     $defaults[$currentId] = $viewRoute['id'];
                     $indexPath = $service->routeReverse($defaults);
 
-                    $links[] = $this->_reverseRouter->link($serviceName . ':index', $indexPath, 'GET');
+                    $links[] = $this->_reverseRouter->link($serviceName . ':index', $indexPath, 'GET', $version);
                 }
             }
         }
@@ -195,7 +197,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         if ($parent !== null) {
             $parentName = $parent->getName() . ':view';
             $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
-            $links[] = $this->_reverseRouter->link($parentName, $path, 'GET');
+            $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);
         }
 
         return $links;

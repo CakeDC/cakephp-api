@@ -54,58 +54,78 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
             $versionPrefix = Configure::read('Api.versionPrefix');
             $expr = '#/' . $prefix . '/(?<version>' . $versionPrefix . '\d+)' . '/' .
                 '(?<service>[^/?]+)' . '(?<base>/?.*)#';
+            $altExpr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
         } else {
             $expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
         }
 
         $path = $request->getUri()->getPath();
         if (preg_match($expr, $path, $matches)) {
-            $version = $matches['version'] ?? null;
-            $serviceName = $matches['service'];
-
-            $url = '/' . $serviceName;
-            if (!empty($matches['base'])) {
-                $url .= $matches['base'];
-            }
-            $options = [
-                'service' => $serviceName,
-                'version' => $version,
-                'request' => $request,
-                'baseUrl' => $url,
-            ];
-
-            try {
-                $options += (new ConfigReader())->serviceOptions($serviceName, $version);
-                $service = ServiceRegistry::getServiceLocator()->get($serviceName, $options);
-                $result = $service->dispatchPrepareAction();
-
-                if ($result !== null) {
-                    $response = $service->respond($result);
-                } else {
-                    $request = $request->withAttribute('service', $service);
-
-                    return $handler->handle($request);
-                }
-            } catch (UnauthenticatedException $e) {
-                if ($service !== null) {
-                    $service->getResult()->setCode(401);
-                    $service->getResult()->setException($e);
-                    $response = $service->respond();
-                }
-            } catch (Exception $e) {
-                if ($service !== null) {
-                    $service->getResult()->setCode(400);
-                    $service->getResult()->setException($e);
-                    $response = $service->respond();
-                }
-            }
-            if ($response === null) {
-                $response = (new Response())->withStatus(400);
-            }
-
-            return $response;
+            return $this->_matchRequest($request, $handler, $matches);
+        }
+        if ($altExpr !== null && preg_match($altExpr, $path, $matches)) {
+            return $this->_matchRequest($request, $handler, $matches);
         }
 
         return $handler->handle($request);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @param $matches
+     * @return Response|ResponseInterface|null
+     */
+    protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, $matches)
+    {
+        $version = $matches['version'] ?? null;
+        $serviceName = $matches['service'];
+
+        $url = '/' . $serviceName;
+        if (!empty($matches['base'])) {
+            $url .= $matches['base'];
+        }
+        $options = [
+            'service' => $serviceName,
+            'version' => $version,
+            'request' => $request,
+            'baseUrl' => $url,
+        ];
+
+        try {
+            $options += (new ConfigReader())->serviceOptions($serviceName, $version);
+            $service = ServiceRegistry::getServiceLocator()
+                                      ->get($serviceName, $options);
+            $result = $service->dispatchPrepareAction();
+
+            if ($result !== null) {
+                $response = $service->respond($result);
+            } else {
+                $request = $request->withAttribute('service', $service);
+
+                return $handler->handle($request);
+            }
+        } catch (UnauthenticatedException $e) {
+            if ($service !== null) {
+                $service->getResult()
+                        ->setCode(401);
+                $service->getResult()
+                        ->setException($e);
+                $response = $service->respond();
+            }
+        } catch (Exception $e) {
+            if ($service !== null) {
+                $service->getResult()
+                        ->setCode(400);
+                $service->getResult()
+                        ->setException($e);
+                $response = $service->respond();
+            }
+        }
+        if ($response === null) {
+            $response = (new Response())->withStatus(400);
+        }
+
+        return $response;
     }
 }

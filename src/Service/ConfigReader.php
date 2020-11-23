@@ -25,11 +25,10 @@ class ConfigReader
      * @param int $version Version number.
      * @return array
      */
-    public function serviceOptions(string $serviceName, ?int $version = null): array
+    public function serviceOptions(string $serviceName, ?string $version = null): array
     {
         $defaults = $this->_checkServiceOptions('default.options');
         if (Configure::read('Api.useVersioning') && $version) {
-            $version = Configure::read('Api.versionPrefix') . $version;
             $versionDefaults = $this->_checkServiceOptions("$version.default.options");
             $options = $this->_checkServiceOptions("$version.$serviceName.options");
             $options = $this->_mergeWithDefaults($options, $versionDefaults, true);
@@ -48,13 +47,12 @@ class ConfigReader
      * @param int $version Version number.
      * @return array
      */
-    public function actionOptions(string $serviceName, string $actionName, ?int $version = null): array
+    public function actionOptions(string $serviceName, string $actionName, ?string $version = null): array
     {
         $actionName = Inflector::camelize($actionName);
         $defaults = $this->_checkServiceOptions('default.Action.default');
         $defaultByName = $this->_checkServiceOptions("default.Action.$actionName");
         if (Configure::read('Api.useVersioning') && $version) {
-            $version = Configure::read('Api.versionPrefix') . $version;
             $versionDefaults = $this->_checkServiceOptions("$version.default.Action.default");
             $versionDefaultsByName = $this->_checkServiceOptions("$version.default.Action.$actionName");
 
