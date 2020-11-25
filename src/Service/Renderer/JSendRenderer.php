@@ -163,12 +163,12 @@ class JSendRenderer extends BaseRenderer
      * Creates an error response.
      *
      * @param string $message The error message.
-     * @param int $code The error code.
+     * @param mixed $code The error code.
      * @param array $data The response data object.
      * @param array $trace The exception trace
      * @return string
      */
-    protected function _error(string $message = 'Unknown error', int $code = 0, ?array $data = null, ?array $trace = null): string
+    protected function _error(string $message = 'Unknown error', $code = 0, ?array $data = null, ?array $trace = null): string
     {
 // phpcs:enable
         $response = [
