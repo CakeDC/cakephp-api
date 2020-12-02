@@ -17,10 +17,14 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Lcobucci\JWT\Builder;
+
+use DateInterval;
+use DateTimeImmutable;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
-use Lcobucci\JWT\Signer\Key;
 
 trait JwtTokenTrait
 {
@@ -32,14 +36,13 @@ trait JwtTokenTrait
      */
     public function generateTokenResponse($user)
     {
-        $timestamp = time();
-
-        $accessTokenLifeTime = Configure::read('Api.Jwt.AccessToken.lifetime');
+        //$timestamp = time();
+        $timestamp = new DateTimeImmutable();
 
         return Hash::merge($user, [
             'access_token' => $this->generateAccessToken($user, $timestamp),
             'refresh_token' => $this->generateRefreshToken($user, $timestamp),
-            'expired' => $timestamp + $accessTokenLifeTime,
+            'expired' => $this->accessTokenLifeTime($timestamp),
         ]);
     }
 
@@ -47,7 +50,7 @@ trait JwtTokenTrait
      * Generates access token.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
-     * @param int $timestamp Timestamp.
+     * @param DateTimeImmutable $timestamp Timestamp.
      * @return bool|string
      */
     public function generateAccessToken($user, $timestamp)
@@ -61,24 +64,25 @@ trait JwtTokenTrait
         $issuer = Router::url('/', true);
         $signer = new Sha256();
         $secret = Configure::read('Api.Jwt.AccessToken.secret');
-        $accessTokenLifeTime = Configure::read('Api.Jwt.AccessToken.lifetime');
 
-        $token = (new Builder())
+        $config = Configuration::forSymmetricSigner($signer, InMemory::plainText($secret));
+
+        $token = $config->builder()
             ->issuedBy($issuer)
             ->issuedAt($timestamp) // Configures the time that the token was issue (iat claim)
             ->permittedFor($audience) // Configures the audience (aud claim)
-            ->expiresAt($timestamp + $accessTokenLifeTime) // Configures the expiration time of the token (nbf claim)
+            ->expiresAt($this->accessTokenLifeTime($timestamp)) // Configures the expiration time of the token (nbf claim)
             ->relatedTo($subject) // Configures a new claim, called "sub"
-            ->getToken($signer, new Key($secret)); // Retrieves the generated token
+            ->getToken($config->signer(), $config->signingKey()); // Retrieves the generated token
 
-        return (string)$token;
+        return $token->toString();
     }
 
     /**
      * Generates refresh token.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
-     * @param int $timestamp Timestamp.
+     * @param DateTimeImmutable $timestamp Timestamp.
      * @return bool|string
      */
     public function generateRefreshToken($user, $timestamp)
@@ -92,18 +96,18 @@ trait JwtTokenTrait
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.RefreshToken.secret');
-        $refreshTokenLifeTime = Configure::read('Api.Jwt.RefreshToken.lifetime');
-        $expireTime = $timestamp + $refreshTokenLifeTime;
 
-        $token = (new Builder())
+        $config = Configuration::forSymmetricSigner($signer, InMemory::plainText($secret));
+
+        $token = $config->builder()
             ->issuedBy($issuer)
             ->issuedAt($timestamp) // Configures the time that the token was issue (iat claim)
             ->permittedFor($audience) // Configures the audience (aud claim)
-            ->expiresAt($expireTime) // Configures the expiration time of the token (nbf claim)
+            ->expiresAt($this->refreshTokenLifeTime($timestamp)) // Configures the expiration time of the token (nbf claim)
             ->relatedTo($subject) // Configures a new claim, called "sub"
-            ->getToken($signer, new Key($secret)); // Retrieves the generated token
+            ->getToken($config->signer(), $config->signingKey()); // Retrieves the generated token
 
-        $rawToken = (string)$token;
+        $rawToken = $token->toString();
 
         $modelAlias = Configure::read('Users.table');
         $UsersTable = TableRegistry::getTableLocator()->get($modelAlias);
@@ -114,19 +118,46 @@ trait JwtTokenTrait
             'model' => $model,
             'foreign_key' => $subject,
         ])->first();
+        $expired = $this->refreshTokenLifeTime($timestamp)->getTimeStamp();
         if ($entity) {
             $entity->token = $rawToken;
-            $entity->expired = $expireTime;
+            $entity->expired = $expired;
         } else {
             $entity = $table->newEntity([
                 'model' => $model,
                 'foreign_key' => $subject,
                 'token' => $rawToken,
-                'expired' => $expireTime,
+                'expired' => $expired,
             ]);
         }
         $table->save($entity);
 
         return $rawToken;
+    }
+
+    /**
+     * Generates access token with life time.
+     *
+     * @param DateTimeImmutable $timestamp Timestamp.
+     * @return DateTimeImmutable
+     */
+    private function accessTokenLifeTime(DateTimeImmutable $timestamp): DateTimeImmutable
+    {
+        $accessTokenLifeTime = Configure::read('Api.Jwt.AccessToken.lifetime');
+
+        return $timestamp->add(new DateInterval("PT" . $accessTokenLifeTime . "S"));
+    }
+
+    /**
+     * Generates refresh token with life time.
+     *
+     * @param DateTimeImmutable $timestamp Timestamp.
+     * @return DateTimeImmutable
+     */
+    private function refreshTokenLifeTime(DateTimeImmutable $timestamp): DateTimeImmutable
+    {
+        $refreshTokenLifeTime = Configure::read('Api.Jwt.RefreshToken.lifetime');
+
+        return $timestamp->add(new DateInterval("PT" . $refreshTokenLifeTime . "S"));
     }
 }

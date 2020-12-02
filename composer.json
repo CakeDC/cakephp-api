@@ -27,11 +27,11 @@
         "source": "https://github.com/CakeDC/cakephp-api"
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
         "cakephp/cakephp": "^4.0.0",
         "cakedc/users": "^9.0.0",
-        "lcobucci/jwt": "3.3.x-dev",
+        "lcobucci/jwt": "^4.0",
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {

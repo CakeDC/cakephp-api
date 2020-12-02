@@ -69,6 +69,7 @@ class JwtRefreshActionTest extends IntegrationTestCase
         $this->assertSuccess($result);
         $this->assertTrue(is_array($result['data']));
         $this->assertTrue(array_key_exists('refresh_token', $result['data']));
+        sleep(1);
 
         ServiceRegistry::getServiceLocator()->clear();
         $this->sendRequest('/auth/jwt_refresh', 'POST', [], null, [
