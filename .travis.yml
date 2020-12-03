@@ -30,13 +30,13 @@ matrix:
   fast_finish: true
 
   include:
-    - php: 7.3
+    - php: 7.4
       env: COVERAGE=1 DB=mysql db_dsn='mysql://travis@0.0.0.0/cakephp_test'
 
-    - php: 7.3
+    - php: 7.4
       env: PHPCS=1 DEFAULT=0
 
-    - php: 7.3
+    - php: 7.4
       env: PHPSTAN=1 DEFAULT=0
 
 before_script:
