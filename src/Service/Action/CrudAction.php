@@ -15,9 +15,9 @@ namespace CakeDC\Api\Service\Action;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
+use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Association;
 use Cake\ORM\Query;
-use Cake\ORM\ResultSet;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -228,9 +228,9 @@ abstract class CrudAction extends Action
     /**
      * Builds entities list
      *
-     * @return \Cake\ORM\ResultSet
+     * @return \Cake\Datasource\ResultSetInterface
      */
-    protected function _getEntities(): ResultSet
+    protected function _getEntities(): ResultSetInterface
     {
         $query = $this->_getEntitiesQuery();
         if ($this->_finder !== null) {
