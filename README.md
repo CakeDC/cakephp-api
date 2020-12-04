@@ -1,7 +1,7 @@
 API Plugin for CakePHP
 ======================
 
-[![Bake Status](https://secure.travis-ci.org/CakeDC/cakephp-api.png?branch=master)](http://travis-ci.org/CakeDC/cakephp-api)
+[![Bake Status](https://secure.travis-ci.com/CakeDC/cakephp-api.png?branch=master)](http://travis-ci.com/CakeDC/cakephp-api)
 [![Downloads](https://poser.pugx.org/CakeDC/cakephp-api/d/total.png)](https://packagist.org/packages/CakeDC/cakephp-api)
 [![Latest Version](https://poser.pugx.org/CakeDC/cakephp-api/v/stable.png)](https://packagist.org/packages/CakeDC/cakephp-api)
 [![License](https://poser.pugx.org/CakeDC/cakephp-api/license.svg)](https://packagist.org/packages/CakeDC/cakephp-api)

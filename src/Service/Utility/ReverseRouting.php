@@ -34,7 +34,7 @@ class ReverseRouting
      * @param string|null $version Version prefix.
      * @return array
      */
-    public function link(string $name, ?string $path, $method = 'GET', ?string $version): array
+    public function link(string $name, ?string $path, $method, ?string $version): array
     {
         if (is_array($method)) {
             $method = array_shift($method);

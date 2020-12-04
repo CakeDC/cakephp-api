@@ -2,11 +2,11 @@ language: php
 
 dist: xenial
 
+os: linux
+
 php:
   - 7.4
   - 8.0
-
-sudo: false
 
 services:
   - postgresql
@@ -18,7 +18,7 @@ cache:
     - $HOME/.composer/cache
 
 env:
-  matrix:
+  jobs:
     - DB=mysql db_dsn='mysql://root@127.0.0.1/cakephp_test?init[]=SET sql_mode = "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
     - DB=pgsql db_dsn='postgres://postgres@127.0.0.1/cakephp_test'
     - DB=sqlite db_dsn='sqlite:///:memory:'
@@ -26,7 +26,7 @@ env:
   global:
     - DEFAULT=1
 
-matrix:
+jobs:
   fast_finish: true
 
   include:
