@@ -49,15 +49,14 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
         if (empty($prefix)) {
             $prefix = 'api';
         }
+        $expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
+        $altExpr = null;
         $useVersioning = Configure::read('Api.useVersioning');
         if ($useVersioning) {
             $versionPrefix = Configure::read('Api.versionPrefix');
             $expr = '#/' . $prefix . '/(?<version>' . $versionPrefix . '\d+)' . '/' .
                 '(?<service>[^/?]+)' . '(?<base>/?.*)#';
             $altExpr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
-        } else {
-            $expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
-            $altExpr = null;
         }
 
         $path = $request->getUri()->getPath();
