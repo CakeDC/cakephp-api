@@ -57,6 +57,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
             $altExpr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
         } else {
             $expr = '#/' . $prefix . '/' . '(?<service>[^/?]+)' . '(?<base>/?.*)#';
+            $altExpr = null;
         }
 
         $path = $request->getUri()->getPath();
