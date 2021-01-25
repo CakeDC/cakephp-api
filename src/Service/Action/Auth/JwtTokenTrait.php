@@ -104,7 +104,7 @@ trait JwtTokenTrait
             ->issuedAt($timestamp) // Configures the time that the token was issue (iat claim)
             ->permittedFor($audience) // Configures the audience (aud claim)
             ->expiresAt($this->refreshTokenLifeTime($timestamp)) // Configures the expiration time of the token (nbf claim)
-            ->relatedTo($subject) // Configures a new claim, called "sub"
+            ->relatedTo((string)$subject) // Configures a new claim, called "sub"
             ->getToken($config->signer(), $config->signingKey()); // Retrieves the generated token
 
         $rawToken = $token->toString();
