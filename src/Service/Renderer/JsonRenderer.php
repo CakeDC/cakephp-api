@@ -56,9 +56,13 @@ class JsonRenderer extends BaseRenderer
     public function error(Exception $exception): void
     {
         $response = $this->_service->getResponse();
+        $code = $exception->getCode();
+        if ($code === 0) {
+            $code = $this->_service->getResponse()->getStatusCode();
+        }
         $data = [
             'error' => [
-                'code' => $exception->getCode(),
+                'code' => $code,
                 'message' => $this->_buildMessage($exception),
             ],
         ];

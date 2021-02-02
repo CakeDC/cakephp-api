@@ -171,6 +171,10 @@ class JSendRenderer extends BaseRenderer
     protected function _error(string $message = 'Unknown error', $code = 0, ?array $data = null, ?array $trace = null): string
     {
 // phpcs:enable
+        $response = $this->_service->getResponse();
+        if ($code === 0) {
+            $code = $response->getStatusCode();
+        }
         $response = [
             'message' => $message,
             'code' => $code,

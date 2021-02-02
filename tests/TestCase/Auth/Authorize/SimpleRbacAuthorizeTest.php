@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\TestCase\Auth\Authorize;
 
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use CakeDC\Api\Service\Action\CrudIndexAction;
@@ -98,6 +99,7 @@ class SimpleRbacAuthorizeTest extends TestCase
         $reflectedClass = new ReflectionClass($this->simpleRbacAuthorize);
         $loadPermissions = $reflectedClass->getMethod('_loadPermissions');
         $loadPermissions->setAccessible(true);
+        $this->expectException(CakeException::class);
         $permissions = $loadPermissions->invoke($this->simpleRbacAuthorize, 'missing');
         $this->assertEquals($this->defaultPermissions, $permissions);
     }
@@ -107,6 +109,7 @@ class SimpleRbacAuthorizeTest extends TestCase
      */
     public function testConstructMissingPermissionsFile()
     {
+        $this->expectException(CakeException::class);
         $this->simpleRbacAuthorize = $this->getMockBuilder('CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize')
             ->setMethods(null)
             ->setConstructorArgs([$this->Action, ['autoload_config' => 'does-not-exist']])
