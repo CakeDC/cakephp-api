@@ -51,6 +51,7 @@ class ApiRbac implements RbacInterface
         'permissions' => null,
         // 'log' will match the value of 'debug' if not set on configuration
         'log' => false,
+        'route_breaking_chars' => ['_', '-'],
     ];
 
     /**
@@ -235,12 +236,28 @@ class ApiRbac implements RbacInterface
             $possibleValues === '*' ||
             $value === $possibleValues ||
             in_array($value, $possibleArray) ||
-            in_array(Inflector::camelize((string)$value, '-'), $possibleArray)
+            in_array($this->_camelizeByChars((string)$value), $possibleArray)
         ) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Camelize by breaking chars.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function _camelizeByChars(string $value)
+    {
+        $result = $value;
+        foreach ($this->getConfig('route_breaking_chars') as $char) {
+            $result = Inflector::camelize($result, $char);
+        }
+
+        return $result;
     }
 
     /**
