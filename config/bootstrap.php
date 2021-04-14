@@ -13,8 +13,12 @@ use Cake\Core\Configure;
 use Cake\Log\Log;
 
 Configure::load('CakeDC/Api.api');
-collection((array)Configure::read('Api.config'))->each(function ($file) {
-    Configure::load($file);
+collection((array)Configure::read('Api.config'))->each(function ($merge, $file) {
+	if (is_int($file)) {
+		$file = $merge;
+		$merge = true;
+	}
+    Configure::load($file, 'default', $merge);
 });
 
 if (!Log::engine('api')) {

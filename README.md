@@ -15,7 +15,7 @@ Versions and branches
 
 | CakePHP | CakeDC Api Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
-| 4.0             | [8.x](https://github.com/cakedc/cakephp-api/tree/8.x)                  | 8.0.13 | unstable |
+| 4.0             | [8.x](https://github.com/cakedc/cakephp-api/tree/8.x)                  | 8.0.14 | unstable |
 | ^3.7            | [master](https://github.com/cakedc/cakephp-api/tree/master)            | 7.0.0 | stable   |
 | ^3.7       <4.0 | [7.x](https://github.com/cakedc/cakephp-api/tree/7.x)                  | 7.1.0 | stable |
 | 3.6             | [6.x](https://github.com/cakedc/cakephp-api/tree/6.x)                  | 6.0.1 | stable   |
