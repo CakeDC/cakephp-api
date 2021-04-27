@@ -1,9 +1,9 @@
 # LIST CURRENT FEATURES
 
-* All api defined as a services containing diferent actions.
+* All api defined as services containing diferent actions.
 * Rest oriented API organization.
 * Versioning support
-* Full range of CRUD operations with autogeneration based on cakephp Table
+* Full range of CRUD operations with autogeneration based on a cakephp Table
 * Plugin fully implemented two level nesting for resources. It is possible to improve system for more deep nesting.
 * Customizable resource endpoints
 * Index query Sorting support (2 extensions provided)
@@ -16,7 +16,7 @@
 * CORS Cross-Origin Resource Sharing (extension provided)
 
 * Any action could be library driven or execute custom user code stored in separate class.
-* Auth done as custom Autenticate+Authorize system based on cakephp AuthComponent but for auth Services and Actions.
+* Auth done as custom Autenticate+Authorize system based on cakephp AuthComponent, but for auth Services and Actions.
 
 
 ## Extensions
