@@ -1,14 +1,14 @@
  ## Json Web Token Authentication tutorial
  
- * I take the JWT auth of [Admad cakephp-jwt-auth](https://github.com/ADmad/cakephp-jwt-auth) JwtAuthenticate.php file
- and modified some lines to adapter for this plugin, The good reason for do this is for to be used in
- Frontend JavaScript Frameworks like, [VueJS](https://vuejs.org/v2/guide/), [Angular](https://angular.io/docs), 
+ * I took the JWT auth of [Admad cakephp-jwt-auth](https://github.com/ADmad/cakephp-jwt-auth) JwtAuthenticate.php file
+ and modified some lines to adapter for this plugin. This change allows it to be used in
+ Frontend JavaScript Frameworks like: [VueJS](https://vuejs.org/v2/guide/), [Angular](https://angular.io/docs), 
  [React](https://reactjs.org/) and others.
  
  ### Configuration
  
-1. First before do this, I hope that you read obout [Installation](../installation.md) and [configuration](../configuration.md).
-The first step is modified the config file in ``config/api.php``
+1. Before performing this action, it is recommended that you read about [Installation](../installation.md) and [configuration](../configuration.md).
+The first step is to modify the config file in ``config/api.php``
  
      ```php
          <?
@@ -122,7 +122,7 @@ The first step is modified the config file in ``config/api.php``
         }
     ````
 
-3. Extend and Rewriting the **LoginAction** in `src/Service/Action/Auth/LoginAction.php`
+3. Extend and Rewrite the **LoginAction** in `src/Service/Action/Auth/LoginAction.php`
     ```php
         <?
         namespace App\Service\Action\Auth;
@@ -177,7 +177,7 @@ The first step is modified the config file in ``config/api.php``
         
         }
     ```
-4. Extend and Rewriting the **RegisterAction** in `src/Service/Action/Auth/RegisterAction.php`
+4. Extend and Rewrite the **RegisterAction** in `src/Service/Action/Auth/RegisterAction.php`
     ```php
        <?
        namespace App\Service\Action\Auth;
