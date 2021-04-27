@@ -1,17 +1,17 @@
 
 ## Services 
 
-Service is central part of any API that concentrate all features(operations) related to some application entity.
-Service define list of actions (operations) that performed on associated entity.
-For example, for RESTful service there could be described 4 default operations using HTTP verbs for each of CRUD operations.
+Service is central part of any API that concentrates on all features (operations) related to some application entity.
+Service define list of actions (operations) that performed on an associated entity.
+For example: for RESTful service, there could be  4 default operations defined using HTTP verbs for each of CRUD operations.
 
-Each Service could be an separate class located in src/Service folder, or request could be passed through default FallbackService that implements default behavior. 
-Fallback service defined by setting Api.ServiceFallback and by default this is \CakeDC\Api\Service\FallbackService.
+Each Service could be a separate class located in the src/Service folder, or the request could be passed through default FallbackService (which implements default behavior). 
+Fallback service is defined by setting Api.ServiceFallback, and by default this is \CakeDC\Api\Service\FallbackService.
 
 ### Creating a Service
 
 
-To create a new **Service** first extend the CakeDC\Api\Service\Service class. The name of your service class should be the name of the **Service**, followed by "Service" suffix. 
+To create a new **Service**: first, extend the CakeDC\Api\Service\Service class. The name of your service class should be the name of the **Service**, followed by "Service" suffix. 
 
 ```php
 namespace App\Service;
@@ -27,19 +27,19 @@ class FooService extends Service {
 
 The filename should follow the same nomenclature. However, the location of the file itself depends upon your *versioning* strategy.
 
-Service layer contemplates a versioned API if it is enabled by settings. Enabling it allow you to scale your **Services** by versioning them as your applications grows. The benefit of this isn't so obvious when developing your application internally, yet becomes very important if you expose your service as an external API.
+Service layer contemplates a versioned API if it is enabled by settings. Enabling it allows you to scale your **Services** by versioning them as your applications grows. The benefit of this isn't so obvious when developing your application internally, but becomes very important if you expose your service as an external API.
 
-The *version* of your **Service** is determined by convention, this being the name of the subdirectory under ```app/Service/```, or in a plugin. For example, if the first version of your ```ExampleService``` were to be "v1", you'd create file ```app/Service/v1/ExampleService.php``` in ```App\Service\v1``` namespace.
+The *version* of your **Service** is determined by convention, this being the name of the subdirectory under ```app/Service/```, or in a plugin. For example, if the first version of your ```ExampleService``` were to be "v1", then you'd create file ```app/Service/v1/ExampleService.php``` in ```App\Service\v1``` namespace.
 
 
 You can then create a new version of your **Service** by simply creating a new class under ```app/Service/v2/ExampleService.php```. **Services** may also be loaded from plugins using dot notation.
 
 ### Routing
 
-Returning back to newly created FooService class. It must have declared ```loadRoutes``` method that defines this service behavior. Inside this method we should not use default Router class, because we should not rewrite current cakephp router states during our service url analyze. Instead api plugin provide ```ApiRouter```.
+Returning back to newly created FooService class. It must have declared ```loadRoutes``` method that defines this service behavior. Inside this method we should not use default Router class, because we should not rewrite the current cakephp router states while we analyze our service url. Instead, api plugin provide ```ApiRouter```.
 
-Imagine we want to have /foo/publish action that should accept HTTP POST requests.
-In this case we define next ```loadRoutes``` function.
+Imagine we want to have a /foo/publish action that accepts HTTP POST requests.
+In this case we would define the ```loadRoutes``` function.
 
 ```php
 
@@ -59,14 +59,14 @@ In this case we define next ```loadRoutes``` function.
 
 ### Action loading and mapping
 
-There provided two strategies to load actions.
+Here, we will provide two strategies to load actions.
 
-First strategy is based on service location namespace.
-In this case all actions supposed to located in Action sub-namespace.
+The first strategy is based on service location namespace.
+In this case, all actions should be located in Action sub-namespace.
 
-So if we have ```App\Service\FooService``` service and want to add ```publish``` action then we should create file ```App\Service\Action\FooPublishAction```, where ```Action``` that belongs to namespace ```App\Service\Action``` and class defined is 3 parts: **Foo** is a camelized service name, **Publish** is a camelized action name, and **Action** is a suffix.
+So if we have ```App\Service\FooService``` service and want to add ```publish``` action, then we should create the file ```App\Service\Action\FooPublishAction```. Here, ```Action```  belongs to namespace ```App\Service\Action``` and class defined is 3 parts: **Foo** is a camelized service name, **Publish** is a camelized action name, and **Action** is a suffix.
 
-Second loading strategy could be achieved used ``` $_actionsClassMap ``` property. It contains map of action names and full class names, eg.
+The second loading strategy could be achieved using ``` $_actionsClassMap ``` property. It contains a map of action names and full class names, eg.
 
 ```php
     protected $_actionsClassMap = [
@@ -83,16 +83,16 @@ Action has execution life cycle.
 
 There are two ways to action business logic.
 
-First way is define `action` method in user's action class, where argument are named same as input api endpoint parameters. (like in was enterprise plugin).
+First way is to define `action` method in user's action class, where arguments are named the same as input api endpoint parameters (similar to what was dones in the enterprise plugin).
 
-In other case action logic should located in `execute` method. In this case method does not accept any parameters and user should interact with 
+Another way is to have action logic located in `execute` method. In this case, method does not accept any parameters the user should interact with. 
 
 
 ### Validation
 
-If action require input data validation it must overload ```validates()``` method that returns boolean result of validation or could throw ```ValidationException```. Such methods like index, or view obviously don't require any validation in it's lifecycle, and returns ```true``` by default.
+If action requires input data validation, then it must overload ```validates()``` method that returns boolean result of validation, or could throw ```ValidationException```.  Methods like index, or view, do not require any validation in their lifecycle, and returns ```true``` by default.
 
-Please note, that action validation is not the same as model level validation. The action validation purpose is to validate action input data and check it correctnes and consistence, and in case it is invalid prevent stop action execution.
+NOTE:  action validation is not the same as model level validation. The purpose of action validation is to validate action input data and check the correctness and consistency. In case it is invalid, it would prevent stop action execution.
 
 ### Action flow events
 
@@ -106,59 +106,59 @@ Action.afterProcess
 
 Crud service defines actions and parameters for RESTful crud API.
 
-Nested Crud service gentting parent params from routing system and if it is presents loads Nested extension for all actions.
+Nested Crud service gentting parent params from routing system. If it is present, Nested extension will be loaded for all actions.
 
-Falback service is default implemeention of Nested Crud that defines routes for 1-level deep nesting.
+Falback service is default implementation of Nested Crud that defines routes for 1-level deep nesting. 
 
 
 
 ### Listing Service.
 
-Listing service returns list of all available in system services.
+Listing service provides list of everything available in system services.
 
 ## Extensions
 
-Any action are decorated by some functionality it is implements during it life flow. Such decorators called extensions and provided with api plugin.
+Actions are decorated by some functionality implemented during its life flow. Such decorators are called extensions and are provided by the api plugin.
 
 
 ## Metadata
 
-Different extension could return additional info that extends returned by API data.
-In this case extension append payload data into Result object that used by renderers to build final output.
+Different extensions can return additional info that extends when it is returned by API data.
+In this case, extensions append payload data into Result object, which is used by renderers to build final output.
 
-This way such extensions like pagination or hateoas inteact with caller.
+This way extensions, like pagination or hateoas, inteact with caller.
 
 ## Request parser
 
-A **Request parser** provides the logic required by a **Service** to resolve requests input data.
+A **Request parser** provides the logic required by a **Service** to resolve requests for input data.
 
-Each **Service** class defines it's **request parser** in the ```parserClass``` options property, and by default populated from Api.parser setting.
+Each **Service** class defines it's **request parser** in the ```parserClass``` options property, and by default is populated from the Api.parser setting.
 
 ## Renderers
 
 A **Renderer** provides the logic required by a **Service** to process the response and handle errors..
 
-Each **Service** class defines it's **renderer** in the ```rendererClass``` options property, , and by default populated from Api.renderer setting.
+Each **Service** class defines it's **renderer** in the ```rendererClass``` options property, and by default is populated from the Api.renderer setting.
 
 Suported next renderers:
 
 * Json - JSON object.
-* JSend JSON object in JSend format. This is default renderer that configured in config/api.php configuration file.
+* JSend JSON object in JSend format. This is a default renderer that is configured in the config/api.php configuration file.
 * Raw - returns data as it is provided.
 * Xml - format result data as xml.
 
 ### JSend Response structure
 
 Each JSend object on top level has result and data items.
-Additionally all metadata appended here too.
+Additionally all metadata is appended here too.
 
 ### Exceptions
 
 #### Links 
 
-Links is a information how current api endpoint related with other endpoints.
+Links is information about how current api endpoint relates to other endpoints.
 
-If we will talk about crud actions there defined next links:
+crud actions are defined by links here:
 * index - have links to add action.
 * add - have links to index action.
 * edit - have links to edit, delete and index actions.
