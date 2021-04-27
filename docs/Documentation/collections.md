@@ -1,8 +1,8 @@
 Collections
 ==========
 
-Collection actions allow to process many entities on the same endpoint call. 
-This feature was created to allow easy integration with bulk actions, allowing to 
+Collection actions allow us to process many entities on the same endpoint call. 
+This feature was created to allow easy integration with bulk actions, as well as the ability to 
 delete/edit/add many entities.
 
 Adding collections to your own service is easy, use the `initialize()` method of your Service class.
