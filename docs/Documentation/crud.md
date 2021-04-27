@@ -1,6 +1,6 @@
 # Database schema
 
-For demo calls we will have this tables created.
+This table is created for demo calls.
 
 ```sql
 CREATE TABLE `blogs` (
