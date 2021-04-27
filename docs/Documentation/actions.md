@@ -2,14 +2,14 @@
 ## Actions
 
 
-There a lot of situations when needed to implement api that is more complex then just CRUD.
-In this case of course we can't use default fallback magic.
+There are many situations where we are required to implement api that is more complex then just CRUD.
+In this case of course, we can't use default fallback magic.
 
-So in this case we should implement custom service.
+Here, we should implement custom service.
 
 ###  Creating custom service and action
 
-The application level service would supposed to be in App\Service namespace.
+The application level service should be in App\Service namespace.
 Plugins service would go to PluginName\Service namespace.
 
 ```php
@@ -22,13 +22,13 @@ class BlogsService extends ApiService {
 }
 ```
 
-Such service based on api plugin configuration will accesible using /api/blogs/... url.
+These services based on api plugin configuration will accesible using /api/blogs/... url.
 
 ###  Regestering custom action in service
 
-Of course needed to define what actions are supported by the service and inject them into the service router.
+It is important to define which actions are supported by the service and inject them into the service router.
 
-One way to do it - use intialize method in service class.
+One way to do it is to use the intialize method in service class.
 
 ```php
     public function initialize()
@@ -40,8 +40,8 @@ One way to do it - use intialize method in service class.
 
 ###  Creating custom action
 
-On previous step we reffer to StatsAction.
-This action available by the /api/blogs/stats GET route.
+On the previous step we reffered to StatsAction.
+This action is available with the /api/blogs/stats GET route.
 
 Let's define it here:
 
