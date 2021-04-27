@@ -14,7 +14,7 @@ Response Types
 
 **GET**
 
-When you use this route */api/list* and you have two controllers "Articles" and "Posts" for example you shall get this result.
+When you use this route */api/list* and you have two controllers "Articles" and "Posts" for example you shall get this result:
 
 ```
 {
@@ -29,7 +29,7 @@ When you use this route */api/list* and you have two controllers "Articles" and 
 
 **POST**
 
-When you use this route */api/describe?token=YOUR_AUTH_TOKEN*. It'll describe your service. Here we are show an example using a service of the plugin.
+When you use this route */api/describe?token=YOUR_AUTH_TOKEN*. It will describe your service. Here, we are shown an example using a service of the plugin.
 
 We need to send three fields in the post to do this request.
 
@@ -39,7 +39,7 @@ password: password
 service: listing
 ```
 
-This will give a response like that:
+This will give a response like this:
 ```
 {
     "status": "success",
