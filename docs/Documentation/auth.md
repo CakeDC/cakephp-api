@@ -1,18 +1,18 @@
 ## Authentication and Authorization.
 
-Auth system was inspired from cakephp framework auth component, and follow ideas that put into this system.
+Auth system was inspired from CakePHP's auth component, and follows ideas put into this system.
 
-IMPORTANT: Auth is configured to ALLOW all API endpoints by default, if you need to enable Auth, please remove
+IMPORTANT: Auth is configured to ALLOW all API endpoints by default. If you need to enable Auth, please remove
 the `allow => '*'` rule from `Auth` configuration key and configure Auth as explained below:
 
 ## Auth Configuration
 
-Auth configuration should be defined as part of current Action configuration module.
-The default strategy for reading Action configuration described in previous step. 
+Auth configuration should be defined as part of the current Action configuration module.
+The default strategy for reading Action configuration is described in previous step. 
 
-So global Auth configuration one should put into  `Api.Service.default.Action.default.Auth`.
+So global Auth configuration one should be put into  `Api.Service.default.Action.default.Auth`.
 
-* `allow` - defines list of allowed for current service actions (could be action name, array of names, or ```'*'```).
+* `allow` - defines list of allowed item for current service actions (could be action name, array of names, or ```'*'```).
 * `authorize` - defines what authorizes should be loaded to Authorize access.
 * `authenticate` - defines authentication strategy.
  
@@ -51,8 +51,8 @@ So global Auth configuration one should put into  `Api.Service.default.Action.de
      ];
  ```
  
- We are using query strings for passing the api_token token. And we require SSL by default.
- Note you can override these options, passing settings in Auth configuration for TokenAuthenticate.
+ We are using query strings for passing the api_token token. Also, we require SSL by default.
+ Note: you can override these options, passing settings in Auth configuration for TokenAuthenticate.
  
  
  ### Simple Rbac Authorize.
