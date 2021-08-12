@@ -24,10 +24,7 @@ class CrudViewActionTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var CrudViewAction
-     */
-    public $Action;
+    public ?\CakeDC\Api\Service\Action\CrudViewAction $Action = null;
 
     /**
      * setUp method

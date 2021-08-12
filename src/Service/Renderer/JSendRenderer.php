@@ -46,12 +46,12 @@ class JSendRenderer extends BaseRenderer
     /**
      * Response status.
      */
-    public $status = self::STATUS_SUCCESS;
+    public string $status = self::STATUS_SUCCESS;
 
     /**
      * HTTP error code.
      */
-    public $errorCode = 200;
+    public int $errorCode = 200;
 
     /**
      * Confirms if the specified content type is acceptable for the response.

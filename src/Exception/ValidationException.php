@@ -22,10 +22,8 @@ class ValidationException extends ServiceException
 
     /**
      * Validation errors
-     *
-     * @var array
      */
-    protected $_validationErrors = [];
+    protected array $_validationErrors = [];
 
     /**
      * Construct method, for fast instantiation

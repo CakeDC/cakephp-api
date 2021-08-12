@@ -22,20 +22,11 @@ class LogExtension extends Extension implements EventListenerInterface
 {
     use LogTrait;
 
-    /**
-     * @var \CakeDC\Api\Service\Service
-     */
-    protected $_service;
+    protected \CakeDC\Api\Service\Service $_service;
 
-    /**
-     * @var \CakeDC\Api\Service\Action\Action
-     */
-    protected $_action;
+    protected \CakeDC\Api\Service\Action\Action $_action;
 
-    /**
-     * @var float
-     */
-    protected $_timer;
+    protected ?float $_timer = null;
 
     /**
      * Returns a list of events this object is implementing. When the class is registered

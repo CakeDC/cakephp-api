@@ -42,24 +42,18 @@ class JwtAuthenticate extends BaseAuthenticate
 {
     /**
      * Parsed token.
-     *
-     * @var string|null
      */
-    protected $_token;
+    protected ?string $_token = null;
 
     /**
      * Payload data.
-     *
-     * @var object|null
      */
-    protected $_payload;
+    protected ?object $_payload = null;
 
     /**
      * Exception.
-     *
-     * @var \Exception
      */
-    protected $_error;
+    protected ?\Exception $_error = null;
 
     /**
      * Constructor.
@@ -148,7 +142,7 @@ class JwtAuthenticate extends BaseAuthenticate
         }
 
         if (!$this->_config['queryDatasource']) {
-            return json_decode(json_encode($payload), true);
+            return json_decode(json_encode($payload, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
         }
 
         if (!isset($payload->sub)) {
@@ -206,7 +200,7 @@ class JwtAuthenticate extends BaseAuthenticate
         }
 
         $header = $request->getHeaderLine($config['header']);
-        if ($header && stripos($header, $config['prefix']) === 0) {
+        if ($header && stripos($header, (string) $config['prefix']) === 0) {
             return $this->_token = str_ireplace($config['prefix'] . ' ', '', $header);
         }
 

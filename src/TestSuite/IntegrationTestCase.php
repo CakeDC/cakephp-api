@@ -42,7 +42,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     /**
      * @var string|int Current logged in user
      */
-    protected $_defaultUserId;
+    protected ?string $_defaultUserId = null;
 
     /**
      * setUp
@@ -201,7 +201,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     public function getJsonResponse()
     {
-        return json_decode((string)$this->_response->getBody(), true);
+        return json_decode((string)$this->_response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

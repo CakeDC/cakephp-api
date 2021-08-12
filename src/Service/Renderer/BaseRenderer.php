@@ -25,10 +25,8 @@ abstract class BaseRenderer
 {
     /**
      * Reference to the Service.
-     *
-     * @var \CakeDC\Api\Service\Service
      */
-    protected $_service = null;
+    protected ?\CakeDC\Api\Service\Service $_service = null;
 
     /**
      * Constructor

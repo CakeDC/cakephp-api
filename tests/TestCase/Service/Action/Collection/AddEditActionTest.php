@@ -25,10 +25,7 @@ class AddEditActionTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var AddEditAction
-     */
-    public $Action;
+    public ?\CakeDC\Api\Service\Action\Collection\AddEditAction $Action = null;
 
     /**
      * setUp method

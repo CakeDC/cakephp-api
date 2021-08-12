@@ -153,7 +153,7 @@ class UsersFixture extends TestFixture
 
     public function __construct()
     {
-        $hasher = PasswordHasherFactory::build('\Cake\Auth\DefaultPasswordHasher');
+        $hasher = PasswordHasherFactory::build(\Cake\Auth\DefaultPasswordHasher::class);
         parent::__construct();
         foreach ($this->records as &$record) {
             $record['password'] = $hasher->hash($record['password']);

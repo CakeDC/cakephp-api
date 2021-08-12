@@ -26,7 +26,7 @@ class ApiConfigProvider extends AbstractProvider
     /**
      * @var array default configuration
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'autoload_config' => 'api_permissions',
     ];
 
@@ -55,6 +55,7 @@ class ApiConfigProvider extends AbstractProvider
      */
     protected function _loadPermissions($key)
     {
+        $permissions = null;
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('CakeDC/Auth.api_permissions');

@@ -60,6 +60,7 @@ class AuthService extends Service
      */
     protected function _actionOptions(array $route): array
     {
+        $options = [];
         $options['Extension'] = ['CakeDC/Api.Auth/UserFormatting'];
 
         return Hash::merge(parent::_actionOptions($route), $options);

@@ -21,12 +21,12 @@ $findRoot = function () {
         return $root;
     }
 
-    $root = dirname(dirname(__DIR__));
+    $root = dirname(__DIR__, 2);
     if (is_dir($root . '/vendor/cakephp/cakephp')) {
         return $root;
     }
 
-    $root = dirname(dirname(dirname(__DIR__)));
+    $root = dirname(__DIR__, 3);
     if (is_dir($root . '/vendor/cakephp/cakephp')) {
         return $root;
     }
@@ -147,7 +147,7 @@ Cake\Datasource\ConnectionManager::setConfig('test', [
     'timezone' => 'UTC',
 ]);
 
-class_alias('CakeDC\Api\Test\App\Controller\AppController', 'App\Controller\AppController');
+class_alias(\CakeDC\Api\Test\App\Controller\AppController::class, 'App\Controller\AppController');
 
 $isCli = PHP_SAPI === 'cli';
 $conf = (array)Cake\Core\Configure::read('Error');

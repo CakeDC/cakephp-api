@@ -24,7 +24,7 @@ use CakeDC\Api\Routing\ApiRouter;
 class ListingService extends Service
 {
     protected $_actionsClassMap = [
-        'list' => '\CakeDC\Api\Service\Action\ListAction',
+        'list' => \CakeDC\Api\Service\Action\ListAction::class,
     ];
 
     /**

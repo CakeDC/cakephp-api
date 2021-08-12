@@ -25,14 +25,12 @@ abstract class Extension
 {
     use InstanceConfigTrait;
 
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * ExtensionRegistry instance.
-     *
-     * @var \CakeDC\Api\Service\ExtensionRegistry
      */
-    protected $_registry;
+    protected \CakeDC\Api\Service\ExtensionRegistry $_registry;
 
     /**
      * Extension constructor.

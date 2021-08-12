@@ -20,10 +20,7 @@ use CakeDC\Api\Service\Action\Collection\DeleteAction;
 
 class CollectionExtension extends Extension implements EventListenerInterface
 {
-    /**
-     * @var \CakeDC\Api\Service\Service
-     */
-    protected $_service;
+    protected \CakeDC\Api\Service\Service $_service;
 
     /**
      * Returns a list of events this object is implementing. When the class is registered

@@ -27,10 +27,7 @@ class DescribeActionTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var DescribeAction
-     */
-    public $Action;
+    public ?\CakeDC\Api\Service\Action\DescribeAction $Action = null;
 
     /**
      * setUp method

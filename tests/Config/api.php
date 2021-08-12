@@ -20,7 +20,7 @@ if (empty($config)) {
         'Api' => [
             'renderer' => 'CakeDC/Api.JSend',
             'parser' => 'CakeDC/Api.Form',
-            'ServiceFallback' => '\\CakeDC\\Api\\Service\\FallbackService',
+            'ServiceFallback' => \CakeDC\Api\Service\FallbackService::class,
 
             'Jwt' => [
                 'AccessToken' => [

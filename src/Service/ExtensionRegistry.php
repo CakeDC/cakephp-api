@@ -29,10 +29,8 @@ class ExtensionRegistry extends ObjectRegistry
 
     /**
      * The Service that this collection was initialized with.
-     *
-     * @var \CakeDC\Api\Service\Service
      */
-    protected $_service = null;
+    protected ?\CakeDC\Api\Service\Service $_service = null;
 
     /**
      * Constructor.

@@ -65,7 +65,7 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
 
     public function testSortById()
     {
-        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['id' => 'asc'])]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['id' => 'asc'], JSON_THROW_ON_ERROR)]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
@@ -73,7 +73,7 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
 
     public function testSortByIdDesc()
     {
-        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['id' => 'desc'])]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['id' => 'desc'], JSON_THROW_ON_ERROR)]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals(array_reverse(range(12, 15)), Hash::extract($result, 'data.{n}.id'));
@@ -81,12 +81,12 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
 
     public function testSortByName()
     {
-        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'asc'])]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'asc'], JSON_THROW_ON_ERROR)]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([7, 5, 11, 15], Hash::extract($result, 'data.{n}.id'));
 
-        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'asc', 'last_name' => 'asc'])]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'asc', 'last_name' => 'asc'], JSON_THROW_ON_ERROR)]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([7, 5, 11, 15], Hash::extract($result, 'data.{n}.id'));
@@ -94,7 +94,7 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
 
     public function testSortByFirstNameDesc()
     {
-        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'desc'])]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode(['first_name' => 'desc'], JSON_THROW_ON_ERROR)]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertEquals([4, 9, 14, 10], Hash::extract($result, 'data.{n}.id'));

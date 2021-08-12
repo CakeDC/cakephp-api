@@ -28,12 +28,12 @@ abstract class CrudService extends Service
      * @var array
      */
     protected $_actionsClassMap = [
-        'describe' => '\CakeDC\Api\Service\Action\CrudDescribeAction',
-        'index' => '\CakeDC\Api\Service\Action\CrudIndexAction',
-        'view' => '\CakeDC\Api\Service\Action\CrudViewAction',
-        'add' => '\CakeDC\Api\Service\Action\CrudAddAction',
-        'edit' => '\CakeDC\Api\Service\Action\CrudEditAction',
-        'delete' => '\CakeDC\Api\Service\Action\CrudDeleteAction',
+        'describe' => \CakeDC\Api\Service\Action\CrudDescribeAction::class,
+        'index' => \CakeDC\Api\Service\Action\CrudIndexAction::class,
+        'view' => \CakeDC\Api\Service\Action\CrudViewAction::class,
+        'add' => \CakeDC\Api\Service\Action\CrudAddAction::class,
+        'edit' => \CakeDC\Api\Service\Action\CrudEditAction::class,
+        'delete' => \CakeDC\Api\Service\Action\CrudDeleteAction::class,
     ];
 
     /**
@@ -45,10 +45,8 @@ abstract class CrudService extends Service
 
     /**
      * Id param name.
-     *
-     * @var string
      */
-    protected $_idName = 'id';
+    protected string $_idName = 'id';
 
     /**
      * CrudService constructor.

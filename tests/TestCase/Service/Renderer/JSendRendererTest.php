@@ -25,10 +25,7 @@ class JSendRendererTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var Service
-     */
-    public $Service;
+    public ?\CakeDC\Api\Service\FallbackService $Service = null;
 
     /**
      * setUp method
@@ -61,7 +58,7 @@ class JSendRendererTest extends TestCase
     public function testRendererInitializeByClassName()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -86,7 +83,7 @@ class JSendRendererTest extends TestCase
     {
         Configure::write('debug', 0);
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -129,7 +126,7 @@ class JSendRendererTest extends TestCase
     public function testRendererError()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 

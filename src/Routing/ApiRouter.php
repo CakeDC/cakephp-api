@@ -25,10 +25,8 @@ class ApiRouter extends Router
 {
     /**
      * Have routes been loaded
-     *
-     * @var bool
      */
-    public static $initialized = false;
+    public static bool $initialized = false;
 
     /**
      * Default route class.
@@ -118,10 +116,8 @@ class ApiRouter extends Router
     /**
      * Maintains the request object stack for the current request.
      * This will contain more than one request object when requestAction is used.
-     *
-     * @var array
      */
-    protected static $_requests = [];
+    protected static array $_requests = [];
 
     /**
      * Initial state is populated the first time reload() is called which is at the bottom

@@ -23,10 +23,7 @@ use Cake\Utility\Inflector;
  */
 abstract class NestedCrudService extends CrudService
 {
-    /**
-     * @var mixed
-     */
-    protected $_parentIdName = null;
+    protected ?string $_parentIdName = null;
 
     /**
      * NestedCrudService constructor.

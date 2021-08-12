@@ -54,9 +54,7 @@ class ListAction extends Action
 
                 return Inflector::underscore($replacedMatch[1]);
             })
-            ->filter(function ($item) {
-                return !empty($item);
-            })
+            ->filter(fn($item) => !empty($item))
             ->toArray();
 
         return $services;

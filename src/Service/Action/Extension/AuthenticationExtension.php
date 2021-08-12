@@ -52,10 +52,8 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
 
     /**
      * List of actions that don't require authentication.
-     *
-     * @var array
      */
-    protected $unauthenticatedActions = [];
+    protected array $unauthenticatedActions = [];
 
     /**
      * Returns a list of events this object is implementing. When the class is registered

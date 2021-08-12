@@ -38,7 +38,7 @@ class ApiRbac implements RbacInterface
     /**
      * @var array default configuration
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         // autoload permissions based on a configuration
         'autoload_config' => 'api_permissions',
         // role field in the Users table
@@ -46,7 +46,7 @@ class ApiRbac implements RbacInterface
         // default role, used in new users registered and also as role matcher when no role is available
         'default_role' => 'user',
         // Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
-        'permissions_provider_class' => '\CakeDC\Api\Rbac\Permissions\ApiConfigProvider',
+        'permissions_provider_class' => \CakeDC\Api\Rbac\Permissions\ApiConfigProvider::class,
         // Used to set permissions array from configuration, ignoring the permissionsProvider
         'permissions' => null,
         // 'log' will match the value of 'debug' if not set on configuration
@@ -59,7 +59,7 @@ class ApiRbac implements RbacInterface
      *
      * @var array[] rules array
      */
-    protected $permissions;
+    protected ?array $permissions = null;
 
     /**
      * Rbac constructor.
@@ -204,8 +204,8 @@ class ApiRbac implements RbacInterface
             if ($key === 'allowed' || $key === 'bypassAuth') {
                 $reason = sprintf(
                     'For %s --> Rule matched %s with result = %s',
-                    json_encode($reserved),
-                    json_encode($permission),
+                    json_encode($reserved, JSON_THROW_ON_ERROR),
+                    json_encode($permission, JSON_THROW_ON_ERROR),
                     $return
                 );
 

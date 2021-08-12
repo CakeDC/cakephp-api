@@ -47,9 +47,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Extensions to load and attach to listener
      *
-     * @var array
      */
-    public $extensions = [];
+    public array $extensions = [];
 
     /**
      * Actions routes description map, indexed by action name.
@@ -68,79 +67,65 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Service url acceptable extensions list.
      *
-     * @var array
      */
-    protected $_routeExtensions = ['json'];
+    protected array $_routeExtensions = ['json'];
 
-    /**
-     *
-     *
-     * @var string
-     */
-    protected $_routePrefix = '';
+    protected string $_routePrefix = '';
 
     /**
      * Service name
      *
-     * @var string
      */
-    protected $_name = null;
+    protected ?string $_name = null;
 
     /**
      * Service version.
      *
-     * @var int
      */
-    protected $_version;
+    protected ?string $_version = null;
 
     /**
      * Parser class to process the HTTP request.
      *
-     * @var \CakeDC\Api\Service\RequestParser\BaseParser
      */
-    protected $_parser;
+    protected ?\CakeDC\Api\Service\RequestParser\BaseParser $_parser = null;
 
     /**
      * Renderer class to build the HTTP response.
      *
-     * @var \CakeDC\Api\Service\Renderer\BaseRenderer
      */
-    protected $_renderer;
+    protected ?\CakeDC\Api\Service\Renderer\BaseRenderer $_renderer = null;
 
     /**
      * The parser class.
      *
-     * @var string
      */
-    protected $_parserClass = null;
+    protected ?string $_parserClass = null;
 
     /**
      * The Renderer class.
      *
-     * @var string
      */
-    protected $_rendererClass = null;
+    protected ?string $_rendererClass = null;
 
     /**
      * Dependent services names list
      *
      * @var array<string>
      */
-    protected $_innerServices = [];
+    protected array $_innerServices = [];
 
     /**
      * Parent service instance.
      *
-     * @var \CakeDC\Api\Service\Service
      */
-    protected $_parentService;
+    protected ?\CakeDC\Api\Service\Service $_parentService = null;
 
     /**
      * Service Action Result object.
      *
-     * @var \CakeDC\Api\Service\Action\Result
      */
-    protected $_result;
+    protected ?\CakeDC\Api\Service\Action\Result $_result = null;
 
     /**
      * Base url for service.
@@ -152,35 +137,28 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Request
      *
-     * @var \Cake\Http\ServerRequest
      */
-    protected $_request;
+    protected ?\Cake\Http\ServerRequest $_request = null;
 
     /**
      * Request
      *
-     * @var \Cake\Http\Response
      */
-    protected $_response;
+    protected ?\Cake\Http\Response $_response = null;
 
-    /**
-     * @var string
-     */
-    protected $_corsSuffix = '_cors';
+    protected string $_corsSuffix = '_cors';
 
     /**
      * Extension registry.
      *
-     * @var \CakeDC\Api\Service\ExtensionRegistry
      */
-    protected $_extensions;
+    protected ?\CakeDC\Api\Service\ExtensionRegistry $_extensions = null;
 
     /**
      * Action instance populated on prepare step.
      *
-     * @var \CakeDC\Api\Service\Action\Action
      */
-    protected $_action;
+    protected ?\CakeDC\Api\Service\Action\Action $_action = null;
 
     /**
      * @return \CakeDC\Api\Service\Action\Action
@@ -345,9 +323,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function routes(): array
     {
-        return $this->_routesWrapper(function () {
-            return ApiRouter::routes();
-        });
+        return $this->_routesWrapper(fn() => ApiRouter::routes());
     }
 
     /**
@@ -440,9 +416,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function routeUrl($route): string
     {
-        return $this->_routesWrapper(function () use ($route) {
-            return ApiRouter::url($route);
-        });
+        return $this->_routesWrapper(fn() => ApiRouter::url($route));
     }
 
     /**
@@ -638,7 +612,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $service->setParentService($this);
         }
         $action = $route['action'];
-        [$namespace, $serviceClass] = namespaceSplit(get_class($service));
+        [$namespace, $serviceClass] = namespaceSplit($service !== null ? get_class($service) : self::class);
         $actionPrefix = substr($serviceClass, 0, -7);
         $actionClass = $namespace . '\\Action\\' . $actionPrefix . Inflector::camelize($action) . 'Action';
         if (class_exists($actionClass)) {
@@ -660,15 +634,13 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function parseRoute(string $url): array
     {
-        return $this->_routesWrapper(function () use ($url) {
-            return ApiRouter::parseRequest(new ServerRequest([
-                'url' => $url,
-                'environment' => [
-                    'REQUEST_METHOD' => $this->_request->getEnv('REQUEST_METHOD'),
-                    'PATH_INFO' => $url,
-                ],
-            ]));
-        });
+        return $this->_routesWrapper(fn() => ApiRouter::parseRequest(new ServerRequest([
+            'url' => $url,
+            'environment' => [
+                'REQUEST_METHOD' => $this->_request->getEnv('REQUEST_METHOD'),
+                'PATH_INFO' => $url,
+            ],
+        ])));
     }
 
     /**

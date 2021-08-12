@@ -79,7 +79,7 @@ class JwtLoginActionTest extends IntegrationTestCase
         $this->assertSuccess($dataResponse);
 
         $this->assertTrue(is_array($dataResponse['data']));
-        $this->assertEquals(15, count($dataResponse['data']));
+        $this->assertEquals(15, is_countable($dataResponse['data']) ? count($dataResponse['data']) : 0);
     }
 
     public function testLoginFail()

@@ -101,9 +101,7 @@ class ReverseRouting
         $parent = $action->getService()->getParentService();
         $parentId = Inflector::singularize(Inflector::underscore($parent->getName())) . '_id';
         $route = collection($parent->routes())
-            ->filter(function ($item) use ($parentName) {
-                return $item->getName() == $parentName;
-            })
+            ->filter(fn($item) => $item->getName() == $parentName)
             ->first();
         $routeDefault = $route->defaults;
         if (array_key_exists($parentId, $baseRoute)) {

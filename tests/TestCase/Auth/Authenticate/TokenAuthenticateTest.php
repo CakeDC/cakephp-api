@@ -26,10 +26,7 @@ class TokenAuthenticateTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var TokenAuthenticate
-     */
-    public $token;
+    public \CakeDC\Api\Service\Auth\Authenticate\TokenAuthenticate $token;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -134,7 +131,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testHeaderHappy()
     {
-        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
+        $request = $this->getMockBuilder(\Cake\Http\ServerRequest::class)
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())
@@ -153,7 +150,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function testAuthenticateHeaderFail()
     {
-        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
+        $request = $this->getMockBuilder(\Cake\Http\ServerRequest::class)
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->once())

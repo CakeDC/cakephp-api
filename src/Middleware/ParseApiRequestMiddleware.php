@@ -78,6 +78,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      */
     protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, $matches)
     {
+        $service = null;
         $version = $matches['version'] ?? null;
         $serviceName = $matches['service'];
 

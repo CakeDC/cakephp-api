@@ -74,25 +74,19 @@ abstract class BaseAuthenticate implements EventListenerInterface
 
     /**
      * An Action
-     *
-     * @var \CakeDC\Api\Service\Action\Action
      */
-    protected $_action;
+    protected \CakeDC\Api\Service\Action\Action $_action;
 
     /**
      * Password hasher instance.
-     *
-     * @var \Cake\Auth\AbstractPasswordHasher|null
      */
-    protected $_passwordHasher;
+    protected ?\Cake\Auth\AbstractPasswordHasher $_passwordHasher = null;
 
     /**
      * Whether or not the user authenticated by this class
      * requires their password to be rehashed with another algorithm.
-     *
-     * @var bool
      */
-    protected $_needsPasswordRehash = false;
+    protected bool $_needsPasswordRehash = false;
 
     /**
      * Constructor

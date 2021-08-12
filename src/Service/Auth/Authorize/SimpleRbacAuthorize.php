@@ -84,10 +84,8 @@ class SimpleRbacAuthorize extends BaseAuthorize
 
     /**
      * Default permissions to be loaded if no provided permissions
-     *
-     * @var array
      */
-    protected $_defaultPermissions = [
+    protected array $_defaultPermissions = [
         [
             'role' => 'admin',
             'version' => '*',
@@ -122,6 +120,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     protected function _loadPermissions($key)
     {
+        $permissions = null;
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('Api.SimpleRbac.permissions');

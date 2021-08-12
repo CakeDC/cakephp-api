@@ -31,24 +31,19 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 abstract class CrudAction extends Action
 {
-    /**
-     * @var \Cake\ORM\Table
-     */
-    protected $_table = null;
+    protected ?\Cake\ORM\Table $_table = null;
 
     /**
      * Object Identifier
      *
-     * @var string
-     */
+     * @var mixed     */
     protected $_id = null;
 
     /**
      * Object Identifier name
      *
-     * @var string
      */
-    protected $_idName = 'id';
+    protected string $_idName = 'id';
 
     /**
      * Crud service.
@@ -62,23 +57,20 @@ abstract class CrudAction extends Action
      *
      * Used for nested services
      *
-     * @var string
-     */
+     * @var mixed     */
     protected $_parentId = null;
 
     /**
      * Parent Object Identifier name
      *
-     * @var string
      */
-    protected $_parentIdName = null;
+    protected ?string $_parentIdName = null;
 
     /**
      * Api table finder method
      *
-     * @var string
      */
-    protected $_finder = null;
+    protected ?string $_finder = null;
 
     /**
      * Action constructor.
@@ -309,9 +301,7 @@ abstract class CrudAction extends Action
         $primaryKey = (array)$primaryKey;
         if (count($key) !== count($primaryKey)) {
             $primaryKey = $primaryKey ?: [null];
-            $primaryKey = array_map(function ($key) {
-                return var_export($key, true);
-            }, $primaryKey);
+            $primaryKey = array_map(fn($key) => var_export($key, true), $primaryKey);
 
             $msg = sprintf(
                 'Record not found in table "%s" with primary key [%s]',
@@ -398,37 +388,29 @@ abstract class CrudAction extends Action
         }
 
         $labels = collection($schema->columns())
-            ->map(function ($column) {
-                return [
-                    'name' => $column,
-                    'label' => __(Inflector::humanize(preg_replace('/_id$/', '', $column))),
-                ];
-            })
+            ->map(fn($column) => [
+                'name' => $column,
+                'label' => __(Inflector::humanize(preg_replace('/_id$/', '', $column))),
+            ])
             ->combine('name', 'label')
             ->toArray();
 
         $associationTypes = ['BelongsTo', 'HasOne', 'HasMany', 'BelongsToMany'];
         $associations = collection($associationTypes)
-            ->map(function (string $type) use ($table) {
-                return [
-                    'type' => $type,
-                    'assocs' => collection($table->associations()->getByType($type))
-                        ->map(function (Association $assoc) {
-                            return $assoc->getTarget()->getTable();
-                        })
-                        ->toArray(),
-                ];
-            })
+            ->map(fn(string $type) => [
+                'type' => $type,
+                'assocs' => collection($table->associations()->getByType($type))
+                    ->map(fn(Association $assoc) => $assoc->getTarget()->getTable())
+                    ->toArray(),
+            ])
             ->combine('type', 'assocs')
             ->toArray();
 
         $fieldTypes = collection($schema->columns())
-            ->map(function (string $column) use ($schema) {
-                return [
-                    'name' => $column,
-                    'column' => $schema->getColumn($column),
-                ];
-            })
+            ->map(fn(string $column) => [
+                'name' => $column,
+                'column' => $schema->getColumn($column),
+            ])
             ->combine('name', 'column')
             ->toArray();
 

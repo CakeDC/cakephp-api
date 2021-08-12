@@ -27,10 +27,7 @@ class ListActionTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var ListAction
-     */
-    public $Action;
+    public ?\CakeDC\Api\Service\Action\ListAction $Action = null;
 
     /**
      * setUp method

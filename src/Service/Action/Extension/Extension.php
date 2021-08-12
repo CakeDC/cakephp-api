@@ -29,10 +29,8 @@ abstract class Extension
 
     /**
      * ExtensionRegistry instance.
-     *
-     * @var \CakeDC\Api\Service\Action\ExtensionRegistry
      */
-    protected $_registry;
+    protected \CakeDC\Api\Service\Action\ExtensionRegistry $_registry;
 
     /**
      * Extension constructor.

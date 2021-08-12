@@ -208,7 +208,7 @@ class ServiceTest extends TestCase
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/articles/tag/1', $Service->getBaseUrl());
         $action = $Service->buildAction();
-        $this->assertEquals('CakeDC\Api\Test\App\Service\Action\ArticlesTagAction', get_class($action));
+        $this->assertEquals(\CakeDC\Api\Test\App\Service\Action\ArticlesTagAction::class, get_class($action));
     }
 
     /**
@@ -218,7 +218,7 @@ class ServiceTest extends TestCase
      */
     public function testInitializeActionByServiceConfigMap()
     {
-        $actionClass = 'CakeDC\Api\Test\App\Service\Action\Author\IndexAction';
+        $actionClass = \CakeDC\Api\Test\App\Service\Action\Author\IndexAction::class;
         $this->_addSettingByPath('Service.authors.options', [
             'classMap' => [
                 'index' => $actionClass,

@@ -25,10 +25,7 @@ class RawRendererTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var Service
-     */
-    public $Service;
+    public ?\CakeDC\Api\Service\FallbackService $Service = null;
 
     /**
      * setUp method
@@ -61,7 +58,7 @@ class RawRendererTest extends TestCase
     public function testRendererInitializeByClassName()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -85,7 +82,7 @@ class RawRendererTest extends TestCase
     public function testRendererSuccess()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -129,7 +126,7 @@ class RawRendererTest extends TestCase
     public function testRendererError()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 

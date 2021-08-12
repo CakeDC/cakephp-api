@@ -49,17 +49,13 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
     /**
      * An Auth instance.
-     *
-     * @var \CakeDC\Api\Service\Auth\Auth
      */
-    public $Auth;
+    public ?\CakeDC\Api\Service\Auth\Auth $Auth = null;
 
     /**
      * Default Action options.
-     *
-     * @var array
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * A Service reference.
@@ -70,24 +66,18 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
     /**
      * Activated route.
-     *
-     * @var array
      */
-    protected $_route = null;
+    protected ?array $_route = null;
 
     /**
      * Extension registry.
-     *
-     * @var \CakeDC\Api\Service\Action\ExtensionRegistry
      */
-    protected $_extensions;
+    protected ?\CakeDC\Api\Service\Action\ExtensionRegistry $_extensions = null;
 
     /**
      * Action name.
-     *
-     * @var string
      */
-    protected $_name;
+    protected ?string $_name = null;
 
     /**
      * Action constructor.

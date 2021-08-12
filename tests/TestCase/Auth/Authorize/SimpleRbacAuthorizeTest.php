@@ -25,22 +25,16 @@ use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase
 {
-    /**
-     * @var Service
-     */
-    public $Service;
+    public \CakeDC\Api\Service\FallbackService $Service;
 
-    /**
-     * @var Action
-     */
-    public $Action;
+    public \CakeDC\Api\Service\Action\CrudIndexAction $Action;
 
     /**
      * @var SimpleRbacAuthorize
      */
     protected $simpleRbacAuthorize;
 
-    protected $defaultPermissions = [
+    protected array $defaultPermissions = [
         [
             'role' => 'admin',
             'version' => '*',
@@ -93,7 +87,7 @@ class SimpleRbacAuthorizeTest extends TestCase
      */
     public function testLoadPermissions()
     {
-        $this->simpleRbacAuthorize = $this->getMockBuilder('CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize')
+        $this->simpleRbacAuthorize = $this->getMockBuilder(\CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize::class)
                 ->disableOriginalConstructor()
                 ->getMock();
         $reflectedClass = new ReflectionClass($this->simpleRbacAuthorize);
@@ -110,7 +104,7 @@ class SimpleRbacAuthorizeTest extends TestCase
     public function testConstructMissingPermissionsFile()
     {
         $this->expectException(CakeException::class);
-        $this->simpleRbacAuthorize = $this->getMockBuilder('CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize')
+        $this->simpleRbacAuthorize = $this->getMockBuilder(\CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize::class)
             ->setMethods(null)
             ->setConstructorArgs([$this->Action, ['autoload_config' => 'does-not-exist']])
             ->getMock();
@@ -138,7 +132,7 @@ class SimpleRbacAuthorizeTest extends TestCase
             'service' => 'Test',
             'action' => 'test',
         ]];
-        $className = 'CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize';
+        $className = \CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize::class;
         $this->simpleRbacAuthorize = $this->getMockBuilder($className)
                 ->setMethods(['_loadPermissions'])
                 ->disableOriginalConstructor()
@@ -153,7 +147,7 @@ class SimpleRbacAuthorizeTest extends TestCase
 
     protected function preparePermissions($permissions)
     {
-        $className = 'CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize';
+        $className = \CakeDC\Api\Service\Auth\Authorize\SimpleRbacAuthorize::class;
         $simpleRbacAuthorize = $this->getMockBuilder($className)
                 ->setMethods(['_loadPermissions'])
                 ->disableOriginalConstructor()
@@ -508,9 +502,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'role' => ['test'],
                     'service' => ['tests'],
                     'action' => ['one', 'two'],
-                    'allowed' => function ($user, $role, $request) {
-                        return $user['id'] === 1 && $role == 'test';
-                    },
+                    'allowed' => fn($user, $role, $request) => $user['id'] === 1 && $role == 'test',
                 ]],
                 //user
                 [
@@ -532,9 +524,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'role' => ['test'],
                     'service' => ['tests'],
                     'action' => ['one', 'two'],
-                    'allowed' => function ($user, $role, $request) {
-                        return false;
-                    },
+                    'allowed' => fn($user, $role, $request) => false,
                 ]],
                 //user
                 [

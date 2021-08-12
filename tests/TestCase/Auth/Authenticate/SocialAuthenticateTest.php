@@ -26,10 +26,7 @@ class SocialAuthenticateTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var SocialAuthenticate
-     */
-    public $social;
+    public \CakeDC\Api\Service\Auth\Authenticate\SocialAuthenticate $social;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -134,7 +131,7 @@ class SocialAuthenticateTest extends TestCase
      */
     public function testHeaderHappy()
     {
-        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
+        $request = $this->getMockBuilder(\Cake\Http\ServerRequest::class)
             ->setMethods(['getHeader'])
             ->getMock();
 
@@ -164,7 +161,7 @@ class SocialAuthenticateTest extends TestCase
      */
     public function testAuthenticateHeaderFail()
     {
-        $request = $this->getMockBuilder('\Cake\Http\ServerRequest')
+        $request = $this->getMockBuilder(\Cake\Http\ServerRequest::class)
             ->setMethods(['getHeader'])
             ->getMock();
         $request->expects($this->at(0))

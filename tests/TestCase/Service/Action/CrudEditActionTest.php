@@ -25,10 +25,7 @@ class CrudEditActionTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var CrudEditAction
-     */
-    public $Action;
+    public ?\CakeDC\Api\Service\Action\CrudEditAction $Action = null;
 
     /**
      * setUp method

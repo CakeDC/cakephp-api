@@ -28,10 +28,7 @@ class FlysystemRendererTest extends TestCase
 {
     use ConfigTrait;
 
-    /**
-     * @var Service
-     */
-    public $Service;
+    public ?\CakeDC\Api\Service\FallbackService $Service = null;
 
     /**
      * setUp method
@@ -64,7 +61,7 @@ class FlysystemRendererTest extends TestCase
     public function testRendererInitializeByClassName()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -91,7 +88,7 @@ class FlysystemRendererTest extends TestCase
         Configure::write('Api.Flysystem.expire', '+1 day');
 
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -139,7 +136,7 @@ class FlysystemRendererTest extends TestCase
     {
         Configure::write('debug', 0);
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -190,7 +187,7 @@ class FlysystemRendererTest extends TestCase
     public function testRendererError()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
@@ -227,7 +224,7 @@ class FlysystemRendererTest extends TestCase
     public function testRendererErrorEmptyExceptionCode()
     {
         $response = $this
-            ->getMockBuilder('Cake\Http\Response')
+            ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 

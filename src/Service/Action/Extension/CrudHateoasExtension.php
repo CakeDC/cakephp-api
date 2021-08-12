@@ -28,10 +28,7 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 class CrudHateoasExtension extends Extension implements EventListenerInterface
 {
-    /**
-     * @var \CakeDC\Api\Service\Utility\ReverseRouting
-     */
-    protected $_reverseRouter;
+    protected \CakeDC\Api\Service\Utility\ReverseRouting $_reverseRouter;
 
     /**
      * CrudHateous Extension constructor.
@@ -106,7 +103,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
         if ($parent !== null) {
             $parentName = $parent->getName() . ':view';
-            $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view', $version);
+            $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
             $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);
         }
 
@@ -145,9 +142,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
             $indexName = $service->getName() . ':index';
             $route = collection($service->routes())
-                ->filter(function ($item) use ($indexName) {
-                    return $item->getName() == $indexName;
-                })
+                ->filter(fn($item) => $item->getName() == $indexName)
                 ->first();
             $indexPath = $service->routeReverse($route->defaults);
         }
@@ -176,9 +171,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
                 $indexName = $serviceName . ':index';
                 $route = collection($service->routes())
-                    ->filter(function ($item) use ($indexName) {
-                        return $item->getName() == $indexName;
-                    })
+                    ->filter(fn($item) => $item->getName() == $indexName)
                     ->first();
 
                 $currentId = Inflector::singularize(Inflector::underscore($service->getName())) . '_id';

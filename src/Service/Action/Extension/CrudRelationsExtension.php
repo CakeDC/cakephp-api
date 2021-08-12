@@ -130,9 +130,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
                 ->associations()
                 ->getByType(['HasOne', 'BelongsTo']);
             $associations = collection($relations)
-                ->map(function (Association $relation) {
-                    return $relation->getTarget()->getTable();
-                })
+                ->map(fn(Association $relation) => $relation->getTarget()->getTable())
                 ->toArray();
         }
         if (empty($associations)) {
@@ -140,9 +138,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         }
 
         $tables = collection($associations)
-            ->map(function ($name) {
-                return Inflector::camelize($name);
-            })
+            ->map(fn($name) => Inflector::camelize($name))
             ->toArray();
 
         collection($tables)->each(function ($name) use ($query, $action) {

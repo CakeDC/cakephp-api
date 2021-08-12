@@ -27,10 +27,8 @@ abstract class AbstractProvider
 
     /**
      * Default permissions to be loaded if no provided permissions
-     *
-     * @var array
      */
-    protected $defaultPermissions;
+    protected array $defaultPermissions;
 
     /**
      * AbstractProvider constructor.

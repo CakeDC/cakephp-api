@@ -22,7 +22,7 @@ class DescribeService extends Service
      * @var array
      */
     protected $_actionsClassMap = [
-        'describe' => '\CakeDC\Api\Service\Action\DescribeAction',
+        'describe' => \CakeDC\Api\Service\Action\DescribeAction::class,
     ];
 
     /**

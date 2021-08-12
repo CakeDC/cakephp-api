@@ -58,10 +58,8 @@ class Auth
 
     /**
      * Actions for which user validation is not required.
-     *
-     * @var array
      */
-    public $allowedActions = [];
+    public array $allowedActions = [];
 
     /**
      * Request object
@@ -81,10 +79,8 @@ class Auth
      * Default config
      *
      * These are merged with user-provided config when the component is used.
-     *
-     * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'storage' => 'Memory',
     ];
 

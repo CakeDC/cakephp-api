@@ -58,7 +58,7 @@ class ExtendedSortExtension extends Extension implements EventListenerInterface
 
         $sortField = $this->getConfig('sortField');
         if (!empty($data[$sortField])) {
-            $sort = json_decode($data[$sortField], true);
+            $sort = json_decode($data[$sortField], true, 512, JSON_THROW_ON_ERROR);
         }
         if (is_array($sort)) {
             $query->order($sort);

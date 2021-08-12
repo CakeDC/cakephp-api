@@ -52,7 +52,7 @@ class CrudExtensionTest extends IntegrationTestCase
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
-        $this->assertEquals(15, count($result['data']));
+        $this->assertEquals(15, is_countable($result['data']) ? count($result['data']) : 0);
     }
 
     public function testView()

@@ -19,17 +19,13 @@ class ServiceRegistry
 {
     /**
      * LocatorInterface implementation instance.
-     *
-     * @var \CakeDC\Api\Service\Locator\LocatorInterface
      */
-    protected static $_locator;
+    protected static ?\CakeDC\Api\Service\Locator\LocatorInterface $_locator = null;
 
     /**
      * Default LocatorInterface implementation class.
-     *
-     * @var string
      */
-    protected static $_defaultLocatorClass = ServiceLocator::class;
+    protected static string $_defaultLocatorClass = ServiceLocator::class;
 
     /**
      * Returns a singleton instance of LocatorInterface implementation.

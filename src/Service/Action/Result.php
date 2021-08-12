@@ -24,10 +24,8 @@ class Result
 {
     /**
      * Response code
-     *
-     * @var int
      */
-    protected $_code = 200;
+    protected int $_code = 200;
 
     /**
      * Response data
@@ -38,17 +36,13 @@ class Result
 
     /**
      * Response payload
-     *
-     * @var array
      */
-    protected $_payload = [];
+    protected array $_payload = [];
 
     /**
      * Exception structure
-     *
-     * @var \Exception|null
      */
-    protected $_exception = null;
+    protected ?\Exception $_exception = null;
 
     /**
      * Result constructor.

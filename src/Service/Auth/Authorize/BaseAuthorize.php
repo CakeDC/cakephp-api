@@ -40,10 +40,8 @@ abstract class BaseAuthorize
 
     /**
      * ComponentRegistry instance for getting more components.
-     *
-     * @var \CakeDC\Api\Service\Action\Action
      */
-    protected $_action;
+    protected ?\CakeDC\Api\Service\Action\Action $_action = null;
 
     /**
      * Default config for authorize objects.

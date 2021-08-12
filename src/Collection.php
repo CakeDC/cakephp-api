@@ -24,10 +24,8 @@ abstract class Collection extends ObjectRegistry implements IteratorAggregate
 
     /**
      * Config array.
-     *
-     * @var array
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * Constructor

@@ -109,8 +109,8 @@ $config = [
         'AuthorizationMiddleware' => [
             'unauthorizedHandler' => [
                 'exceptions' => [
-                    'MissingIdentityException' => 'Authorization\Exception\MissingIdentityException',
-                    'ForbiddenException' => 'Authorization\Exception\ForbiddenException',
+                    'MissingIdentityException' => \Authorization\Exception\MissingIdentityException::class,
+                    'ForbiddenException' => \Authorization\Exception\ForbiddenException::class,
                 ],
                 'className' => 'Authorization.CakeRedirect',
                 'url' => [

@@ -26,32 +26,24 @@ class ServiceLocator implements LocatorInterface
 {
     /**
      * Configuration for aliases.
-     *
-     * @var array
      */
-    protected $_config = [];
+    protected array $_config = [];
 
     /**
      * Instances that belong to the registry.
-     *
-     * @var array
      */
-    protected $_instances = [];
+    protected array $_instances = [];
 
     /**
      * Contains a list of Method objects that were created out of the
      * built-in Method class. The list is indexed by method names
-     *
-     * @var array
      */
-    protected $_fallbacked = [];
+    protected array $_fallbacked = [];
 
     /**
      * Contains a list of options that were passed to get() method.
-     *
-     * @var array
      */
-    protected $_options = [];
+    protected array $_options = [];
 
     /**
      * Stores a list of options to be used when instantiating an object

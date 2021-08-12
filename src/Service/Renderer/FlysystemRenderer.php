@@ -112,7 +112,7 @@ class FlysystemRenderer extends FileRenderer
     {
         $code = $exception->getCode();
         $response = $this->_service->getResponse()
-            ->withStatus($code ? $code : 500);
+            ->withStatus($code ?: 500);
 
         $this->log($exception->getMessage());
         $this->log($exception->getTraceAsString());

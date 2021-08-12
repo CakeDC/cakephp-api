@@ -27,7 +27,7 @@ class TokenAuthenticate extends BaseAuthenticate
     public const TYPE_QUERYSTRING = 'querystring';
     public const TYPE_HEADER = 'header';
 
-    public $types = [self::TYPE_QUERYSTRING, self::TYPE_HEADER];
+    public array $types = [self::TYPE_QUERYSTRING, self::TYPE_HEADER];
 
     protected $_defaultConfig = [
         //type, can be either querystring or header

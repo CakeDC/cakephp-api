@@ -29,10 +29,8 @@ class ExtensionRegistry extends ObjectRegistry
 
     /**
      * The Action that this collection was initialized with.
-     *
-     * @var \CakeDC\Api\Service\Action\Action
      */
-    protected $_action = null;
+    protected ?\CakeDC\Api\Service\Action\Action $_action = null;
 
     /**
      * Constructor.

@@ -76,12 +76,8 @@ class CrudAuthorize extends BaseAuthorize
 
         $actionAuth = $this->_permission($service, $actionName);
         if ($actionAuth !== null) {
-            $serviceAllow = function ($s) {
-                return $s === null || is_string($s) && $s === 'allow';
-            };
-            $serviceAuthenticated = function ($s) {
-                return $s === null || is_string($s) && in_array($s, ['auth', 'allow']);
-            };
+            $serviceAllow = fn($s) => $s === null || is_string($s) && $s === 'allow';
+            $serviceAuthenticated = fn($s) => $s === null || is_string($s) && in_array($s, ['auth', 'allow']);
             $allow = $actionAuth === 'allow' && $serviceAllow($serviceAuth);
             $user = $action->Auth->user();
             $authenticated = $actionAuth === 'auth' && $serviceAuthenticated($serviceAuth) && !empty($user);

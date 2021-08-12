@@ -36,10 +36,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         'sinceIdField' => 'since_id',
     ];
 
-    /**
-     * @var \CakeDC\Api\Service\Utility\ReverseRouting
-     */
-    protected $_reverseRouter;
+    protected \CakeDC\Api\Service\Utility\ReverseRouting $_reverseRouter;
 
     /**
      * CursorPaginateExtension constructor.
