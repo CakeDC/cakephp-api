@@ -20,7 +20,7 @@ use Cake\Core\Exception\Exception;
  *
  * @package CakeDC\Api\Exception
  */
-class UnauthorizedException extends Exception
+class UnauthorizedException extends \Cake\Core\Exception\CakeException
 {
     /**
      * UnauthorizedException constructor.

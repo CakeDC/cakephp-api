@@ -21,7 +21,7 @@ use Cake\Core\Exception\Exception;
  *
  * @package CakeDC\Api\Exception
  */
-class UnauthenticatedException extends Exception
+class UnauthenticatedException extends \Cake\Core\Exception\CakeException
 {
     /**
      * UnauthenticatedException constructor.

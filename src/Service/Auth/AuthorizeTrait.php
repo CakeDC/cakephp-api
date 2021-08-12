@@ -92,7 +92,7 @@ trait AuthorizeTrait
      * Loads the authorization objects configured.
      *
      * @return array|null The loaded authorization objects, or null when authorize is empty.
-     * @throws \Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\CakeException
      */
     public function constructAuthorize()
     {
@@ -115,12 +115,12 @@ trait AuthorizeTrait
             }
             $className = App::className($class, 'Service/Auth/Authorize', 'Authorize');
             if (!class_exists($className)) {
-                throw new Exception(sprintf('Authorization adapter "%s" was not found.', $class));
+                throw new \Cake\Core\Exception\CakeException(sprintf('Authorization adapter "%s" was not found.', $class));
             }
             $config = (array)$config + $global;
             $class = new $className($this->_action, $config);
             if (!method_exists($class, 'authorize')) {
-                throw new Exception('Authorization objects must implement an authorize() method.');
+                throw new \Cake\Core\Exception\CakeException('Authorization objects must implement an authorize() method.');
             }
             $this->_authorizeObjects[$alias] = $class;
         }

@@ -412,7 +412,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *   elements or query string parameters. If string it can be name any valid url
      *   string.
      * @return string Full translated URL with base path.
-     * @throws \Cake\Core\Exception\Exception When the route name is not found
+     * @throws \Cake\Core\Exception\CakeException When the route name is not found
      */
     public function routeUrl($route): string
     {

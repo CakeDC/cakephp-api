@@ -70,7 +70,7 @@ trait StorageTrait
         }
         $className = App::className($class, 'Auth/Storage', 'Storage');
         if (!class_exists($className)) {
-            throw new Exception(sprintf('Auth storage adapter "%s" was not found.', $class));
+            throw new \Cake\Core\Exception\CakeException(sprintf('Auth storage adapter "%s" was not found.', $class));
         }
         $this->_storage = new $className($this->request, $this->response, $config);
 

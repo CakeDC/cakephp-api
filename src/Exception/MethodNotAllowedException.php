@@ -21,7 +21,7 @@ use Cake\Core\Exception\Exception;
  *
  * @package CakeDC\Api\Exception
  */
-class MethodNotAllowedException extends Exception
+class MethodNotAllowedException extends \Cake\Core\Exception\CakeException
 {
     /**
      * MethodNotAllowedException constructor.

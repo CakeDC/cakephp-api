@@ -30,8 +30,6 @@ class AuthorsTable extends Table
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('Articles', [
-            'foreignKey' => 'author_id',
-        ]);
+        $this->hasMany('Articles')->setForeignKey('author_id');
     }
 }

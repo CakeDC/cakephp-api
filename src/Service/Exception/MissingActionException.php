@@ -15,7 +15,7 @@ namespace CakeDC\Api\Service\Exception;
 
 use Cake\Core\Exception\Exception;
 
-class MissingActionException extends Exception
+class MissingActionException extends \Cake\Core\Exception\CakeException
 {
     protected $_messageTemplate = 'Action class %s could not be found.';
 }

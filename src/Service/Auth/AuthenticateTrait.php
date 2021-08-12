@@ -175,7 +175,7 @@ trait AuthenticateTrait
      * Loads the configured authentication objects.
      *
      * @return array|null The loaded authorization objects, or null on empty authenticate value.
-     * @throws \Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\CakeException
      */
     public function constructAuthenticate()
     {
@@ -198,13 +198,13 @@ trait AuthenticateTrait
             }
             $className = App::className($class, 'Service/Auth/Authenticate', 'Authenticate');
             if (!class_exists($className)) {
-                throw new Exception(sprintf('Authentication adapter "%s" was not found.', $class));
+                throw new \Cake\Core\Exception\CakeException(sprintf('Authentication adapter "%s" was not found.', $class));
             }
             $config = array_merge($global, (array)$config);
 
             $class = new $className($this->_action, $config);
             if (!method_exists($class, 'authenticate')) {
-                throw new Exception('Authentication objects must implement an authenticate() method.');
+                throw new \Cake\Core\Exception\CakeException('Authentication objects must implement an authenticate() method.');
             }
             $this->_authenticateObjects[$alias] = $class;
             $this->getEventManager()->on($class);

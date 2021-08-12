@@ -21,7 +21,7 @@ use Cake\Core\Exception\Exception;
  *
  * @package CakeDC\Api\Exception
  */
-class ServiceException extends Exception
+class ServiceException extends \Cake\Core\Exception\CakeException
 {
     /**
      * ServiceException constructor.

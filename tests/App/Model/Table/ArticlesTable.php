@@ -31,9 +31,7 @@ class ArticlesTable extends Table
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Authors', [
-            'foreignKey' => 'author_id',
-        ]);
+        $this->belongsTo('Authors')->setForeignKey('author_id');
     }
 
     /**
