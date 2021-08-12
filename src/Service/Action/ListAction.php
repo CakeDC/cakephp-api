@@ -45,7 +45,8 @@ class ListAction extends Action
         $path = APP . 'Model' . DS . 'Table';
         $folder = new Folder($path);
         $tables = $folder->find('.*\.php');
-        $services = collection($tables)
+
+        return collection($tables)
             ->map(function ($item) {
                 preg_match('/^(.*)Table\.php/', $item, $replacedMatch);
                 if (empty($replacedMatch[1])) {
@@ -56,7 +57,5 @@ class ListAction extends Action
             })
             ->filter(fn($item) => !empty($item))
             ->toArray();
-
-        return $services;
     }
 }

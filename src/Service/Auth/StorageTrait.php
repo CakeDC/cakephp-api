@@ -29,7 +29,6 @@ namespace CakeDC\Api\Service\Auth;
 
 use Cake\Auth\Storage\StorageInterface;
 use Cake\Core\App;
-use Cake\Core\Exception\Exception;
 
 trait StorageTrait
 {

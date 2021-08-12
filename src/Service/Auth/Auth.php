@@ -138,8 +138,8 @@ class Auth
     protected function _setDefaults()
     {
         $defaults = [
-            'authenticate' => ['CakeDC/Api.Token'],
-            'authError' => __d('CakeDC/Api', 'You are not authorized to access that location.'),
+        'authenticate' => ['CakeDC/Api.Token'],
+        'authError' => __d('CakeDC/Api', 'You are not authorized to access that location.'),
         ];
 
         $config = $this->getConfig();
@@ -248,7 +248,7 @@ class Auth
         $action = strtolower($action->getName());
 
         return in_array($action, array_map('strtolower', $this->allowedActions)) ||
-            in_array('*', $this->allowedActions);
+        in_array('*', $this->allowedActions);
     }
 
     /**

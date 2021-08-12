@@ -26,6 +26,8 @@ class SocialAuthenticateTest extends TestCase
 {
     use ConfigTrait;
 
+    public $controller;
+
     public \CakeDC\Api\Service\Auth\Authenticate\SocialAuthenticate $social;
 
     /**
@@ -115,7 +117,6 @@ class SocialAuthenticateTest extends TestCase
 
     /**
      * test
-     *
      */
     public function testAuthenticateRequireSSLNoKey()
     {

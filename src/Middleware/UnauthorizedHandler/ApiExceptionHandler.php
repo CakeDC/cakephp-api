@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class ApiExceptionHandler implements HandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(Exception $exception, Request $request, array $options = []): Response
     {

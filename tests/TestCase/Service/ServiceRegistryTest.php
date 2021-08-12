@@ -22,6 +22,10 @@ class ServiceRegistryTest extends TestCase
 {
     use ConfigTrait;
 
+    public $request;
+
+    public $response;
+
     /**
      * setUp method
      *

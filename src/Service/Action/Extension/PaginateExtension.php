@@ -97,9 +97,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
             $maxLimit = $this->getConfig('defaultLimit');
         }
         if (!empty($limitField) && !empty($data[$limitField]) && is_numeric($data[$limitField])) {
-            $limit = min((int)$data[$limitField], $maxLimit);
-
-            return $limit;
+            return min((int)$data[$limitField], $maxLimit);
         } else {
             return $maxLimit;
         }

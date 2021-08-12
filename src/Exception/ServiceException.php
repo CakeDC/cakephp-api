@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Exception;
 
-use Cake\Core\Exception\Exception;
-
 /**
  * Class ServiceException
  * Used to configure an exception for a service error.

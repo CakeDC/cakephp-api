@@ -39,7 +39,7 @@ class ExtensionRegistry extends ObjectRegistry
      */
     public function __construct(?Action $action = null)
     {
-        if ($action) {
+        if ($action !== null) {
             $this->_action = $action;
         }
     }

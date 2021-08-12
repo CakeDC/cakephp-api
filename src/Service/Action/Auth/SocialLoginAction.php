@@ -87,17 +87,17 @@ class SocialLoginAction extends Action
 
             return $result;
         } catch (UserNotActiveException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'User account has not validated yet'), 501);
+            throw new Exception(__d('CakeDC/Api', 'User account has not validated yet'), 501, $ex);
         } catch (UserAlreadyActiveException $ex) {
-            throw new Exception($ex->getMessage(), 502);
+            throw new Exception($ex->getMessage(), 502, $ex);
         } catch (UserNotFoundException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 503);
+            throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 503, $ex);
         } catch (TokenExpiredException $ex) {
-            throw new Exception($ex->getMessage(), 504);
+            throw new Exception($ex->getMessage(), 504, $ex);
         } catch (MissingEmailException $ex) {
-            throw new Exception($ex->getMessage(), 505);
+            throw new Exception($ex->getMessage(), 505, $ex);
         } catch (\Exception $ex) {
-            throw new Exception($ex->getMessage(), 500);
+            throw new Exception($ex->getMessage(), 500, $ex);
         }
     }
 

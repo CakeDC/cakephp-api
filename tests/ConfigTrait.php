@@ -157,11 +157,7 @@ trait ConfigTrait
         $requestOptions['environment']['REQUEST_METHOD'] = $method;
         $this->request = new ServerRequest($requestOptions);
 
-        if (empty($options['response'])) {
-            $this->response = new Response();
-        } else {
-            $this->response = $options['response'];
-        }
+        $this->response = empty($options['response']) ? new Response() : $options['response'];
         $this->Controller = $this->createMock(\Cake\Controller\Controller::class);
         $this->Controller->request = $this->request;
         $this->Controller->response = $this->response;

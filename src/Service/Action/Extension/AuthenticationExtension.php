@@ -175,9 +175,8 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
     public function getIdentity(): ?IdentityInterface
     {
         $request = $this->getAction()->getService()->getRequest();
-        $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        return $identity;
+        return $request->getAttribute($this->getConfig('identityAttribute'));
     }
 
     /**

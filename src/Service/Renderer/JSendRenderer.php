@@ -104,11 +104,7 @@ class JSendRenderer extends BaseRenderer
     public function error(Exception $exception): void
     {
         $response = $this->_service->getResponse();
-        if ($exception instanceof ValidationException) {
-            $data = $exception->getValidationErrors();
-        } else {
-            $data = null;
-        }
+        $data = $exception instanceof ValidationException ? $exception->getValidationErrors() : null;
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
         $response = $response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))
@@ -196,10 +192,6 @@ class JSendRenderer extends BaseRenderer
     protected function _mapStatus(Result $result): void
     {
         $code = (int)$result->getCode();
-        if ($code == 0 || $code >= 200 && $code <= 399) {
-            $this->status = self::STATUS_SUCCESS;
-        } else {
-            $this->status = self::STATUS_ERROR;
-        }
+        $this->status = $code == 0 || $code >= 200 && $code <= 399 ? self::STATUS_SUCCESS : self::STATUS_ERROR;
     }
 }

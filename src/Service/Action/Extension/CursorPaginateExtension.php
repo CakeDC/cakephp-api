@@ -143,9 +143,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $countField = $this->getConfig('countField');
         $maxCount = $this->getConfig('defaultCount');
         if (!empty($countField) && !empty($data[$countField]) && is_numeric($data[$countField])) {
-            $count = min((int)$data[$countField], $maxCount);
-
-            return $count;
+            return min((int)$data[$countField], $maxCount);
         } else {
             return $maxCount;
         }

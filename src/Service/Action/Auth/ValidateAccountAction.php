@@ -82,11 +82,11 @@ class ValidateAccountAction extends Action
                 throw new Exception(__d('CakeDC/Api', 'User account could not be validated'), 500);
             }
         } catch (UserAlreadyActiveException $exception) {
-            throw new Exception(__d('CakeDC/Api', 'User already active'), 500);
+            throw new Exception(__d('CakeDC/Api', 'User already active'), 500, $exception);
         } catch (UserNotFoundException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 500, $ex);
         } catch (TokenExpiredException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'Token already expired'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Token already expired'), 500, $ex);
         }
     }
 

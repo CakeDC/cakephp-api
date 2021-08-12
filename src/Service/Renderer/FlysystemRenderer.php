@@ -105,7 +105,6 @@ class FlysystemRenderer extends FileRenderer
      * Handle error setting a response status
      *
      * @param \Exception $exception thrown at service or action
-     *
      * @return void
      */
     public function error(Exception $exception): void

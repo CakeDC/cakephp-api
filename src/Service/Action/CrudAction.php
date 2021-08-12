@@ -41,7 +41,6 @@ abstract class CrudAction extends Action
 
     /**
      * Object Identifier name
-     *
      */
     protected string $_idName = 'id';
 
@@ -62,13 +61,11 @@ abstract class CrudAction extends Action
 
     /**
      * Parent Object Identifier name
-     *
      */
     protected ?string $_parentIdName = null;
 
     /**
      * Api table finder method
-     *
      */
     protected ?string $_finder = null;
 
@@ -83,11 +80,7 @@ abstract class CrudAction extends Action
         if (!empty($config['service'])) {
             $this->setService($config['service']);
         }
-        if (!empty($config['table'])) {
-            $tableName = $config['table'];
-        } else {
-            $tableName = $this->getService()->getTable();
-        }
+        $tableName = empty($config['table']) ? $this->getService()->getTable() : $config['table'];
         if ($tableName instanceof Table) {
             $this->setTable($tableName);
         } else {
@@ -193,9 +186,7 @@ abstract class CrudAction extends Action
      */
     protected function _newEntity(): EntityInterface
     {
-        $entity = $this->getTable()->newEntity([]);
-
-        return $entity;
+        return $this->getTable()->newEntity([]);
     }
 
     /**
@@ -209,7 +200,7 @@ abstract class CrudAction extends Action
     protected function _patchEntity(EntityInterface $entity, array $data, array $options = []): EntityInterface
     {
         $entity = $this->getTable()->patchEntity($entity, $data, $options);
-        $event = $this->dispatchEvent('Action.Crud.onPatchEntity', compact('entity'));
+        $event = $this->dispatchEvent('Action.Crud.onPatchEntity', ['entity' => $entity]);
         if ($event->getResult()) {
             $entity = $event->getResult();
         }
@@ -229,12 +220,12 @@ abstract class CrudAction extends Action
             $query = $query->find($this->_finder);
         }
 
-        $event = $this->dispatchEvent('Action.Crud.onFindEntities', compact('query'));
+        $event = $this->dispatchEvent('Action.Crud.onFindEntities', ['query' => $query]);
         if ($event->getResult()) {
             $query = $event->getResult();
         }
         $records = $query->all();
-        $event = $this->dispatchEvent('Action.Crud.afterFindEntities', compact('query', 'records'));
+        $event = $this->dispatchEvent('Action.Crud.afterFindEntities', ['query' => $query, 'records' => $records]);
         if ($event->getResult() !== null) {
             $records = $event->getResult();
         }
@@ -264,13 +255,12 @@ abstract class CrudAction extends Action
         if ($this->_finder !== null) {
             $query = $query->find($this->_finder);
         }
-        $event = $this->dispatchEvent('Action.Crud.onFindEntity', compact('query'));
+        $event = $this->dispatchEvent('Action.Crud.onFindEntity', ['query' => $query]);
         if ($event->getResult()) {
             $query = $event->getResult();
         }
-        $entity = $query->firstOrFail();
 
-        return $entity;
+        return $query->firstOrFail();
     }
 
     /**
@@ -310,9 +300,8 @@ abstract class CrudAction extends Action
             );
             throw new InvalidPrimaryKeyException($msg);
         }
-        $conditions = array_combine($key, $primaryKey);
 
-        return $conditions;
+        return array_combine($key, $primaryKey);
     }
 
     /**

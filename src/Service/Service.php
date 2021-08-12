@@ -46,7 +46,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
     /**
      * Extensions to load and attach to listener
-     *
      */
     public array $extensions = [];
 
@@ -66,7 +65,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
     /**
      * Service url acceptable extensions list.
-     *
      */
     protected array $_routeExtensions = ['json'];
 
@@ -74,37 +72,31 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
     /**
      * Service name
-     *
      */
     protected ?string $_name = null;
 
     /**
      * Service version.
-     *
      */
     protected ?string $_version = null;
 
     /**
      * Parser class to process the HTTP request.
-     *
      */
     protected ?\CakeDC\Api\Service\RequestParser\BaseParser $_parser = null;
 
     /**
      * Renderer class to build the HTTP response.
-     *
      */
     protected ?\CakeDC\Api\Service\Renderer\BaseRenderer $_renderer = null;
 
     /**
      * The parser class.
-     *
      */
     protected ?string $_parserClass = null;
 
     /**
      * The Renderer class.
-     *
      */
     protected ?string $_rendererClass = null;
 
@@ -117,13 +109,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
     /**
      * Parent service instance.
-     *
      */
     protected ?\CakeDC\Api\Service\Service $_parentService = null;
 
     /**
      * Service Action Result object.
-     *
      */
     protected ?\CakeDC\Api\Service\Action\Result $_result = null;
 
@@ -136,13 +126,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
     /**
      * Request
-     *
      */
     protected ?\Cake\Http\ServerRequest $_request = null;
 
     /**
      * Request
-     *
      */
     protected ?\Cake\Http\Response $_response = null;
 
@@ -150,13 +138,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
     /**
      * Extension registry.
-     *
      */
     protected ?\CakeDC\Api\Service\ExtensionRegistry $_extensions = null;
 
     /**
      * Action instance populated on prepare step.
-     *
      */
     protected ?\CakeDC\Api\Service\Action\Action $_action = null;
 
@@ -543,7 +529,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * Dispatch service call through callbacks and action.
      *
      * @return \CakeDC\Api\Service\Action\Result|null
-
      */
     protected function _dispatch()
     {
@@ -598,7 +583,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
         $service = null;
         $serviceName = Inflector::underscore($route['controller']);
-        if ($serviceName == $this->getName()) {
+        if ($serviceName === $this->getName()) {
             $service = $this;
         }
         if (in_array($serviceName, $this->_innerServices)) {
@@ -664,9 +649,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             return $this->_baseUrl;
         }
 
-        $result = '/' . $this->getName();
-
-        return $result;
+        return '/' . $this->getName();
     }
 
     /**
@@ -701,9 +684,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function buildActionClass(string $class, array $route)
     {
-        $instance = new $class($this->_actionOptions($route));
-
-        return $instance;
+        return new $class($this->_actionOptions($route));
     }
 
     /**
@@ -721,9 +702,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             'service' => $this,
             'route' => $route,
         ];
-        $options += (new ConfigReader())->actionOptions($this->getName(), $actionName, $this->getVersion());
 
-        return $options;
+        return $options + (new ConfigReader())->actionOptions($this->getName(), $actionName, $this->getVersion());
     }
 
     /**
@@ -765,7 +745,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *  Fill up response and stop execution.
      *
      * @param \CakeDC\Api\Service\Action\Result $result A Result instance.
-     *
      * @return \Cake\Http\Response|null
      */
     public function respond(?Result $result = null): ?Response

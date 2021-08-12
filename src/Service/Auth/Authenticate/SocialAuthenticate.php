@@ -128,9 +128,8 @@ class SocialAuthenticate extends BaseAuthenticate
             $table->aliasField($this->getConfig('token_field')) => $token,
             $table->aliasField($this->getConfig('token_secret_field')) . ' IS' => $tokenSecret,
         ];
-        $query = $table->find($this->getConfig('finder'))->where($conditions);
 
-        return $query;
+        return $table->find($this->getConfig('finder'))->where($conditions);
     }
 
     /**

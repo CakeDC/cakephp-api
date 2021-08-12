@@ -108,7 +108,7 @@ class LoginAction extends Action
 //            $this->dispatchEvent(UsersAuthComponent::EVENT_AFTER_LOGIN, ['user' => $user]);
         }
 
-        $event = $this->dispatchEvent('Action.Auth.onLoginFormat', compact('user'));
+        $event = $this->dispatchEvent('Action.Auth.onLoginFormat', ['user' => $user]);
         if ($event->getResult()) {
             $user = $event->getResult();
         }

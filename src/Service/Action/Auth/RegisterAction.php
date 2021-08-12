@@ -148,12 +148,11 @@ class RegisterAction extends Action
         $validateEmail = (bool)Configure::read('Users.Email.validate');
         $useTos = (bool)Configure::read('Users.Tos.required');
         $tokenExpiration = Configure::read('Users.Token.expiration');
-        $options = [
+
+        return [
             'token_expiration' => $tokenExpiration,
             'validate_email' => $validateEmail,
             'use_tos' => $useTos,
         ];
-
-        return $options;
     }
 }

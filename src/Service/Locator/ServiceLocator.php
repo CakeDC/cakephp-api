@@ -212,7 +212,7 @@ class ServiceLocator implements LocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function exists(string $alias): bool
     {
@@ -220,7 +220,7 @@ class ServiceLocator implements LocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function set(string $alias, Service $object): Service
     {
@@ -228,7 +228,7 @@ class ServiceLocator implements LocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function clear(): void
     {
@@ -251,7 +251,7 @@ class ServiceLocator implements LocatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function remove(string $alias): void
     {

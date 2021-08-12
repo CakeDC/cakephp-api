@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\App\Controller;
 
-require ROOT . DS . 'tests' . DS . 'Config' . DS . 'bootstrap.php';
+// require ROOT . DS . 'tests' . DS . 'Config' . DS . 'bootstrap.php';
 
 use Cake\Controller\Controller;
 
@@ -23,7 +23,6 @@ use Cake\Controller\Controller;
  *
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
- *
  */
 class AppController extends Controller
 {

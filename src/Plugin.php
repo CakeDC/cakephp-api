@@ -22,7 +22,7 @@ use Cake\Core\Configure;
 class Plugin extends BasePlugin
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function routes($routes): void
     {

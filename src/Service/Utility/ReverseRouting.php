@@ -148,11 +148,10 @@ class ReverseRouting
         foreach ($fields as $field) {
             $result = $result && $route1[$field] === $route2[$field];
         }
-        $result = $result && (
+
+        return $result && (
                 is_string($route1['_method']) && $route1['_method'] === $route2['_method'] ||
                 is_array($route1['_method']) && in_array($route2['_method'], $route1['_method'])
             );
-
-        return $result;
     }
 }

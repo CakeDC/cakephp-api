@@ -66,7 +66,10 @@ abstract class CollectionAction extends CrudAction
         if ($this->getTable()->saveMany($entities)) {
             return $entities;
         } else {
-            $errors = collection($entities)->reduce(fn($errors, EntityInterface $entity) => array_merge($errors, $entity->getErrors()), []);
+            $errors = collection($entities)->reduce(
+                fn($errors, EntityInterface $entity) => array_merge($errors, $entity->getErrors()),
+                []
+            );
             $message = __('Validation on {0} failed', $this->getTable()->getAlias());
             throw new ValidationException($message, 0, null, $errors);
         }

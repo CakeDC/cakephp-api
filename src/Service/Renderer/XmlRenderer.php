@@ -146,13 +146,11 @@ class XmlRenderer extends BaseRenderer
             $item['@key'] = $name;
             if (is_object($value)) {
                 $item = $this->_object($value);
+            } elseif (is_array($value)) {
+                $item = $this->_array($value);
             } else {
-                if (is_array($value)) {
-                    $item = $this->_array($value);
-                } else {
-                    $item = [];
-                    $item['@'] = $value ?? '';
-                }
+                $item = [];
+                $item['@'] = $value ?? '';
             }
             $item['@key'] = $name;
             $items[] = $item;

@@ -82,19 +82,17 @@ class ResetPasswordRequestAction extends Action
                 'ensureActive' => Configure::read('Users.Registration.ensureActive'),
             ]);
             if ($resetUser) {
-                $message = __d('CakeDC/Api', 'Please check your email to continue with password reset process');
-
-                return $message;
+                return __d('CakeDC/Api', 'Please check your email to continue with password reset process');
             } else {
                 $message = __d('CakeDC/Api', 'The password token could not be generated. Please try again');
                 throw new Exception($message, 500);
             }
         } catch (UserNotFoundException $exception) {
-            throw new Exception(__d('CakeDC/Api', 'User {0} was not found', $reference), 404);
+            throw new Exception(__d('CakeDC/Api', 'User {0} was not found', $reference), 404, $exception);
         } catch (UserNotActiveException $exception) {
-            throw new Exception(__d('CakeDC/Api', 'The user is not active'), 404);
+            throw new Exception(__d('CakeDC/Api', 'The user is not active'), 404, $exception);
         } catch (Exception $exception) {
-            throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500, $exception);
         }
     }
 

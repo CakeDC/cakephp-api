@@ -67,9 +67,7 @@ class CrudAuthorize extends BaseAuthorize
 
         $serviceActionAuth = $this->_permission($service, $serviceName . '.' . $actionName);
         if ($serviceActionAuth !== null) {
-            $result = $serviceActionAuth === 'allow' || $serviceActionAuth == 'auth' && !empty($action->Auth->user());
-
-            return $result;
+            return $serviceActionAuth === 'allow' || $serviceActionAuth == 'auth' && !empty($action->Auth->user());
         }
 
         $serviceAuth = $this->_permission($service, 'Service.' . $serviceName);
@@ -103,9 +101,7 @@ class CrudAuthorize extends BaseAuthorize
             $serviceAuth = $this->_permission($service, 'default');
         }
         if ($serviceAuth !== null && is_string($serviceAuth)) {
-            $result = $serviceAuth === 'allow' || $serviceAuth == 'auth' && !empty($action->Auth->user());
-
-            return $result;
+            return $serviceAuth === 'allow' || $serviceAuth == 'auth' && !empty($action->Auth->user());
         }
 
         return false;

@@ -39,7 +39,7 @@ class ExtensionRegistry extends ObjectRegistry
      */
     public function __construct(?Service $service = null)
     {
-        if ($service) {
+        if ($service !== null) {
             $this->_service = $service;
         }
     }

@@ -18,6 +18,7 @@ use Cake\Http\Middleware\BodyParserMiddleware;
 /**
  * Applies routing rules to the request and creates the controller
  * instance if possible.
+ *
  * @deprecated
  */
 class RequestHandlerMiddleware extends BodyParserMiddleware

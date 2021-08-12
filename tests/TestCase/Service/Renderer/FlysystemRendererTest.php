@@ -28,6 +28,10 @@ class FlysystemRendererTest extends TestCase
 {
     use ConfigTrait;
 
+    public $Action;
+
+    public $request;
+
     public ?\CakeDC\Api\Service\FallbackService $Service = null;
 
     /**
@@ -106,11 +110,11 @@ class FlysystemRendererTest extends TestCase
         $result->setCode($statusCode);
 
         $vfs = new Vfs();
-        $path = "/my-file.zip";
+        $path = '/my-file.zip';
         $vfs->createFile($path, 'content-for-download');
 
         $filesystem = new Filesystem(new VfsAdapter($vfs));
-        $data = compact('filesystem', 'path');
+        $data = ['filesystem' => $filesystem, 'path' => $path];
         $result->setData($data);
         $renderer = $this->Service->getRenderer();
 
@@ -154,10 +158,10 @@ class FlysystemRendererTest extends TestCase
         $result->setCode($statusCode);
 
         $vfs = new Vfs();
-        $path = "/my-file-not-found.zip";
+        $path = '/my-file-not-found.zip';
 
         $filesystem = new Filesystem(new VfsAdapter($vfs));
-        $data = compact('filesystem', 'path');
+        $data = ['filesystem' => $filesystem, 'path' => $path];
         $result->setData($data);
         $renderer = $this->Service->getRenderer();
         $response->expects($this->once())

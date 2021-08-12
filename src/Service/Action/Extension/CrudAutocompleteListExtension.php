@@ -65,11 +65,10 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
         if (!(is_array($data) && !empty($data['autocomplete_list']))) {
             return $query;
         }
-        $query = $query->select([
+
+        return $query->select([
             $action->getTable()->getPrimaryKey(),
             $action->getTable()->getDisplayField(),
         ]);
-
-        return $query;
     }
 }

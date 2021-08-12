@@ -78,7 +78,6 @@ class ConfigReader
      * Check options existence by prefix.
      *
      * @param string $prefix Path prefix.
-     *
      * @return \ArrayAccess|array
      */
     protected function _checkServiceOptions(string $prefix)

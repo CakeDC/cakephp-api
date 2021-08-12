@@ -17,14 +17,12 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-
 use DateInterval;
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Signer\Key\InMemory;
 
 trait JwtTokenTrait
 {
@@ -50,7 +48,7 @@ trait JwtTokenTrait
      * Generates access token.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
-     * @param DateTimeImmutable $timestamp Timestamp.
+     * @param \DateTimeImmutable $timestamp Timestamp.
      * @return bool|string
      */
     public function generateAccessToken($user, $timestamp)
@@ -82,7 +80,7 @@ trait JwtTokenTrait
      * Generates refresh token.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
-     * @param DateTimeImmutable $timestamp Timestamp.
+     * @param \DateTimeImmutable $timestamp Timestamp.
      * @return bool|string
      */
     public function generateRefreshToken($user, $timestamp)
@@ -138,26 +136,26 @@ trait JwtTokenTrait
     /**
      * Generates access token with life time.
      *
-     * @param DateTimeImmutable $timestamp Timestamp.
-     * @return DateTimeImmutable
+     * @param \DateTimeImmutable $timestamp Timestamp.
+     * @return \DateTimeImmutable
      */
     private function accessTokenLifeTime(DateTimeImmutable $timestamp): DateTimeImmutable
     {
         $accessTokenLifeTime = Configure::read('Api.Jwt.AccessToken.lifetime');
 
-        return $timestamp->add(new DateInterval("PT" . $accessTokenLifeTime . "S"));
+        return $timestamp->add(new DateInterval('PT' . $accessTokenLifeTime . 'S'));
     }
 
     /**
      * Generates refresh token with life time.
      *
-     * @param DateTimeImmutable $timestamp Timestamp.
-     * @return DateTimeImmutable
+     * @param \DateTimeImmutable $timestamp Timestamp.
+     * @return \DateTimeImmutable
      */
     private function refreshTokenLifeTime(DateTimeImmutable $timestamp): DateTimeImmutable
     {
         $refreshTokenLifeTime = Configure::read('Api.Jwt.RefreshToken.lifetime');
 
-        return $timestamp->add(new DateInterval("PT" . $refreshTokenLifeTime . "S"));
+        return $timestamp->add(new DateInterval('PT' . $refreshTokenLifeTime . 'S'));
     }
 }

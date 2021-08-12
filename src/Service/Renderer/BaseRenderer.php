@@ -94,7 +94,7 @@ abstract class BaseRenderer
         $trace = $exception->getTrace();
         $count = count($trace);
         for ($i = 0; $i < $count; $i++) {
-            foreach ($trace[$i] as $key => $value) {
+            foreach (array_keys($trace[$i]) as $key) {
                 if ($key === 'object' || $key === 'type' || $key === 'args') {
                     unset($trace[$i][$key]);
                 }

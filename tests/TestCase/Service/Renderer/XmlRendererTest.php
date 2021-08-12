@@ -25,6 +25,10 @@ class XmlRendererTest extends TestCase
 {
     use ConfigTrait;
 
+    public $Action;
+
+    public $request;
+
     public ?\CakeDC\Api\Service\FallbackService $Service = null;
 
     /**

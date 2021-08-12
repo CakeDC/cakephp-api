@@ -20,8 +20,8 @@ use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 use Authorization\Policy\ResolverCollection;
-use Cake\Http\ServerRequest;
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use CakeDC\Api\Rbac\ApiRbac;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
@@ -34,7 +34,6 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
      */
     public function getAuthenticationService(): AuthenticationService
     {
-
         $service = new AuthenticationService();
         $service->loadIdentifier('Authentication.JwtSubject', []);
 

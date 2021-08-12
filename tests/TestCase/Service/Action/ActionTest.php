@@ -21,6 +21,12 @@ class ActionTest extends TestCase
 {
     use ConfigTrait;
 
+    public $Service;
+
+    public $request;
+
+    public $response;
+
     /**
      * @var AddAction
      */

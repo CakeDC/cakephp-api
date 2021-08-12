@@ -24,6 +24,15 @@ class DeleteActionTest extends TestCase
 {
     use ConfigTrait;
 
+    /**
+     * @var mixed|\CakeDC\Api\Service\Service
+     */
+    public $Service;
+
+    public $request;
+
+    public $response;
+
     public ?\CakeDC\Api\Service\Action\Collection\DeleteAction $Action = null;
 
     /**

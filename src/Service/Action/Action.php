@@ -245,13 +245,8 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             return $event->getResult();
         }
 
-        // thrown before execute action event (with stop on false)
-        if (method_exists($this, 'action')) {
-            $result = $this->_executeAction();
-        } else {
-            $result = $this->execute();
-        }
-        $this->dispatchEvent('Action.afterProcess', compact('result'));
+        $result = method_exists($this, 'action') ? $this->_executeAction() : $this->execute();
+        $this->dispatchEvent('Action.afterProcess', ['result' => $result]);
 
         return $result;
     }
@@ -279,18 +274,15 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
                 } else {
                     throw new Exception('Missing required param: ' . $paramName, 409);
                 }
+            } elseif ($params[$paramName] === '' && $param->isOptional()) {
+                $arguments[] = $param->getDefaultValue();
             } else {
-                if ($params[$paramName] === '' && $param->isOptional()) {
-                    $arguments[] = $param->getDefaultValue();
-                } else {
-                    $value = $params[$paramName];
-                    $arguments[] = is_numeric($value) ? 0 + $value : $value;
-                }
+                $value = $params[$paramName];
+                $arguments[] = is_numeric($value) ? 0 + $value : $value;
             }
         }
-        $result = call_user_func_array([$this, $methodName], $arguments);
 
-        return $result;
+        return call_user_func_array([$this, $methodName], $arguments);
     }
 
     /**

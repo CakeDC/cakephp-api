@@ -37,7 +37,6 @@ use CakeDC\Api\Service\Action\Action;
 
 /**
  * Base Authentication class with common methods and properties.
- *
  */
 abstract class BaseAuthenticate implements EventListenerInterface
 {
@@ -163,9 +162,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
             $finder = key($finder);
         }
 
-        $query = $table->find($finder, $options);
-
-        return $query;
+        return $table->find($finder, $options);
     }
 
     /**

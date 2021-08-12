@@ -32,6 +32,7 @@ abstract class AbstractProvider
 
     /**
      * AbstractProvider constructor.
+     *
      * @param array $config config
      */
     public function __construct($config = [])

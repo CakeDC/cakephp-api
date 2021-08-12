@@ -29,6 +29,16 @@ class ExtensionRegistryTest extends TestCase
     use ConfigTrait;
 
     /**
+     * @var \CakeDC\Api\Service\Action\CrudIndexAction|mixed
+     */
+    public $Action;
+
+    /**
+     * @var \CakeDC\Api\Service\Action\ExtensionRegistry|mixed
+     */
+    public $ExtensionRegistry;
+
+    /**
      * setUp method
      *
      * @return void

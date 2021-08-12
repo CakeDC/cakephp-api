@@ -70,7 +70,6 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * Default user api method.
      *
      * @param string|null $userId User id.
-     *
      * @return int|string
      */
     public function getDefaultUser(?string $userId = null)
@@ -116,12 +115,16 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param array $data Api parameters.
      * @param string $userId Current user id.
      * @param array $headers Headers list.
-    public function sendRequest($url, $method, $data = [], $userId = null, $headers = [])
      * @return void
      * @throws \PHPUnit\Exception|\Throwable
      */
-    public function sendRequest(string $url, string $method, array $data = [], ?string $userId = null, array $headers = []): void
-    {
+    public function sendRequest(
+        string $url,
+        string $method,
+        array $data = [],
+        ?string $userId = null,
+        array $headers = []
+    ): void {
         ServiceRegistry::getServiceLocator()->clear();
         $userToken = $this->_userToken($userId);
 
@@ -140,17 +143,13 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
             return;
         }
         $url = '/api' . $url;
-        if (is_string($url)) {
-            if ($userToken !== null) {
-                $url = $this->_appendGetParam($url, 'token', (string)$userToken);
-            }
+        if (is_string($url) && $userToken !== null) {
+            $url = $this->_appendGetParam($url, 'token', (string)$userToken);
         }
-        if ($method == 'GET' && is_string($url)) {
-            if (!empty($data)) {
-                foreach ($data as $key => $value) {
-                    if (!is_array($value)) {
-                        $url = $this->_appendGetParam($url, $key, (string)$value);
-                    }
+        if ($method == 'GET' && is_string($url) && !empty($data)) {
+            foreach ($data as $key => $value) {
+                if (!is_array($value)) {
+                    $url = $this->_appendGetParam($url, $key, (string)$value);
                 }
             }
         }
@@ -174,11 +173,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     protected function _appendGetParam(string $url, string $key, string $value): string
     {
-        if (strpos($url, '?') !== false) {
-            $appendChar = '&';
-        } else {
-            $appendChar = '?';
-        }
+        $appendChar = strpos($url, '?') !== false ? '&' : '?';
 
         return $url . $appendChar . urlencode($key) . '=' . urlencode($value);
     }

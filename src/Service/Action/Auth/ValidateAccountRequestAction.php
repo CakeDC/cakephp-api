@@ -87,11 +87,11 @@ class ValidateAccountRequestAction extends Action
                 throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500);
             }
         } catch (UserNotFoundException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'User {0} was not found', $reference), 404);
+            throw new Exception(__d('CakeDC/Api', 'User {0} was not found', $reference), 404, $ex);
         } catch (UserAlreadyActiveException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'User {0} is already active', $reference), 404);
+            throw new Exception(__d('CakeDC/Api', 'User {0} is already active', $reference), 404, $ex);
         } catch (Exception $ex) {
-            throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500, $ex);
         }
     }
 

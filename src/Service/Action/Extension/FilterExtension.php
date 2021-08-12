@@ -101,7 +101,7 @@ class FilterExtension extends Extension implements EventListenerInterface
                                 $value = '%' . $value;
                             }
                             if ($postfix == 'rlike' || $postfix == 'like') {
-                                $value = $value . '%';
+                                $value .= '%';
                             }
                         }
                         $query->where([$field => $value]);

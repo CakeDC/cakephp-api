@@ -152,9 +152,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
             $role = Hash::get($user, $roleField);
         }
 
-        $allowed = $this->_checkRules($user, $role, $request);
-
-        return $allowed;
+        return $this->_checkRules($user, $role, $request);
     }
 
     /**
@@ -196,9 +194,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
 
         if (
             $this->_matchOrAsterisk($permission, 'role', $role) &&
-                $this->_matchOrAsterisk($permission, 'version', $version, true) &&
-                $this->_matchOrAsterisk($permission, 'service', $service) &&
-                $this->_matchOrAsterisk($permission, 'action', $action)
+            $this->_matchOrAsterisk($permission, 'version', $version, true) &&
+            $this->_matchOrAsterisk($permission, 'service', $service) &&
+            $this->_matchOrAsterisk($permission, 'action', $action)
         ) {
             $allowed = Hash::get($permission, 'allowed');
 
@@ -232,14 +230,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
         if ($allowEmpty && empty($possibleValues) && $value === null) {
             return true;
         }
-        if (
-            Hash::get($permission, $key) === '*' ||
-                in_array($value, $possibleValues) ||
-                in_array(Inflector::camelize($value, '-'), $possibleValues)
-        ) {
-            return true;
-        }
 
-        return false;
+        return Hash::get($permission, $key) === '*' ||
+        in_array($value, $possibleValues) ||
+        in_array(Inflector::camelize($value, '-'), $possibleValues);
     }
 }

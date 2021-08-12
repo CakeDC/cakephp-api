@@ -26,6 +26,8 @@ class TokenAuthenticateTest extends TestCase
 {
     use ConfigTrait;
 
+    public $controller;
+
     public \CakeDC\Api\Service\Auth\Authenticate\TokenAuthenticate $token;
 
     /**
@@ -115,7 +117,6 @@ class TokenAuthenticateTest extends TestCase
 
     /**
      * test
-     *
      */
     public function testAuthenticateRequireSSLNoKey()
     {

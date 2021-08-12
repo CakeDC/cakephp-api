@@ -151,7 +151,8 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':edit', $path, 'PUT', $version);
         $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':delete', $path, 'DELETE', $version);
         if (!empty($indexPath)) {
-            $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':index', $indexPath, 'GET', $version);
+            $routeName = $action->getService()->getName() . ':index';
+            $links[] = $this->_reverseRouter->link($routeName, $indexPath, 'GET', $version);
         }
 
         if ($parent === null && $action instanceof CrudAction) {
@@ -175,7 +176,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                     ->first();
 
                 $currentId = Inflector::singularize(Inflector::underscore($service->getName())) . '_id';
-                $defaults = !empty($route->defaults) ? $route->defaults : [];
+                $defaults = empty($route->defaults) ? [] : $route->defaults;
 
                 if (isset($route)) {
                     $viewRoute = $action->getRoute();

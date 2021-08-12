@@ -30,7 +30,7 @@ namespace CakeDC\Api\Service\Auth;
 use Authentication\IdentityInterface;
 use Authorization\IdentityDecorator;
 use Cake\Core\App;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 
 /**
@@ -198,13 +198,13 @@ trait AuthenticateTrait
             }
             $className = App::className($class, 'Service/Auth/Authenticate', 'Authenticate');
             if (!class_exists($className)) {
-                throw new \Cake\Core\Exception\CakeException(sprintf('Authentication adapter "%s" was not found.', $class));
+                throw new CakeException(sprintf('Authentication adapter "%s" was not found.', $class));
             }
             $config = array_merge($global, (array)$config);
 
             $class = new $className($this->_action, $config);
             if (!method_exists($class, 'authenticate')) {
-                throw new \Cake\Core\Exception\CakeException('Authentication objects must implement an authenticate() method.');
+                throw new CakeException('Authentication objects must implement an authenticate() method.');
             }
             $this->_authenticateObjects[$alias] = $class;
             $this->getEventManager()->on($class);
@@ -217,7 +217,6 @@ trait AuthenticateTrait
      * Getter for authenticate objects. Will return a particular authenticate object.
      *
      * @param string $alias Alias for the authenticate object
-     *
      * @return \Cake\Auth\BaseAuthenticate|null
      */
     public function getAuthenticate($alias)

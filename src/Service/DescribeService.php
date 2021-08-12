@@ -26,9 +26,7 @@ class DescribeService extends Service
     ];
 
     /**
-     * @inheritdoc
-     *
-     * @return void
+     * @inheritDoc
      */
     public function loadRoutes(): void
     {

@@ -83,11 +83,11 @@ class ResetPasswordAction extends Action
                 throw new Exception(__d('CakeDC/Api', 'Reset password token could not be validated'));
             }
         } catch (UserAlreadyActiveException $exception) {
-            throw new Exception(__d('CakeDC/Api', 'User already active'), 500);
+            throw new Exception(__d('CakeDC/Api', 'User already active'), 500, $exception);
         } catch (UserNotFoundException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Invalid token or user account already validated'), 500, $ex);
         } catch (TokenExpiredException $ex) {
-            throw new Exception(__d('CakeDC/Api', 'Token already expired'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Token already expired'), 500, $ex);
         }
     }
 
@@ -117,11 +117,11 @@ class ResetPasswordAction extends Action
                 }
             }
         } catch (UserNotFoundException $exception) {
-            throw new Exception(__d('CakeDC/Api', 'User was not found'), 404);
+            throw new Exception(__d('CakeDC/Api', 'User was not found'), 404, $exception);
         } catch (WrongPasswordException $wpe) {
-            throw new Exception(__d('CakeDC/Api', '{0}', $wpe->getMessage()), 500);
+            throw new Exception(__d('CakeDC/Api', '{0}', $wpe->getMessage()), 500, $wpe);
         } catch (Exception $exception) {
-            throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500);
+            throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500, $exception);
         }
     }
 

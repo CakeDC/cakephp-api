@@ -56,7 +56,6 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      * On Register Format.
      *
      * @param \Cake\Event\Event $event An Event instance
-     *
      * @return array|null
      */
     public function onRegisterFormat(Event $event): ?array

@@ -89,7 +89,7 @@ $config = [
                     'finder' => 'active',
                 ],
             ],
-            "Social" => [
+            'Social' => [
                 'className' => 'CakeDC/Users.Social',
                 'authFinder' => 'active',
             ],
@@ -102,7 +102,7 @@ $config = [
                 ],
             ],
         ],
-        "Authorization" => [
+        'Authorization' => [
             'enable' => true,
             'serviceLoader' => \CakeDC\Users\Loader\AuthorizationServiceLoader::class,
         ],

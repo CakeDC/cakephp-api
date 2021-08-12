@@ -24,7 +24,7 @@ use CakeDC\Api\Exception\ValidationException;
 class DeleteAction extends CollectionAction
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function validates(): bool
     {

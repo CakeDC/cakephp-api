@@ -27,6 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Applies routing rules to the request and creates the controller
  * instance if possible.
+ *
  * @deprecated use ParseApiRequestMiddleware and ProcessApiRequestMiddleware instead
  */
 class ApiMiddleware implements MiddlewareInterface
@@ -40,7 +41,6 @@ class ApiMiddleware implements MiddlewareInterface
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
-     *
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

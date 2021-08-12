@@ -27,8 +27,6 @@ class CrudViewAction extends CrudAction
      */
     public function execute()
     {
-        $record = $this->_getEntity($this->_id);
-
-        return $record;
+        return $this->_getEntity($this->_id);
     }
 }

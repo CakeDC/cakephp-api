@@ -27,6 +27,15 @@ class ServiceTest extends TestCase
     use ConfigTrait;
 
     /**
+     * @var \CakeDC\Api\Service\FallbackService|mixed
+     */
+    public $Service;
+
+    public $request;
+
+    public $response;
+
+    /**
      * setUp method
      *
      * @return void

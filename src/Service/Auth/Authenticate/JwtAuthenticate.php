@@ -34,7 +34,6 @@ use Firebase\JWT\JWT;
  * @license MIT
  *
  * This Auth adapter was modified and adapted for this App
- *
  * @see http://jwt.io
  * @see http://tools.ietf.org/html/draft-ietf-oauth-json-web-token
  */
@@ -114,9 +113,7 @@ class JwtAuthenticate extends BaseAuthenticate
      *
      * @param \Cake\Http\ServerRequest $request The request object.
      * @param \Cake\Http\Response $response Response object.
-     *
      * @throws \Exception
-     *
      * @return bool|array User record array or false on failure.
      */
     public function authenticate(ServerRequest $request, Response $response)
@@ -128,9 +125,7 @@ class JwtAuthenticate extends BaseAuthenticate
      * Get user record based on info available in JWT.
      *
      * @param \Cake\Http\ServerRequest $request Request object.
-     *
      * @throws \Exception
-     *
      * @return bool|array User record array or false on failure.
      */
     public function getUser(ServerRequest $request)
@@ -145,7 +140,7 @@ class JwtAuthenticate extends BaseAuthenticate
             return json_decode(json_encode($payload, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
         }
 
-        if (!isset($payload->sub)) {
+        if (!(property_exists($payload, 'sub') && $payload->sub !== null)) {
             return false;
         }
 
@@ -163,14 +158,12 @@ class JwtAuthenticate extends BaseAuthenticate
      * Get payload data.
      *
      * @param \Cake\Http\ServerRequest|null $request Request instance or null
-     *
      * @throws \Exception
-     *
      * @return object|null Payload object on success, null on failures.
      */
     public function getPayload($request = null)
     {
-        if (!$request) {
+        if ($request === null) {
             return $this->_payload;
         }
 
@@ -188,7 +181,6 @@ class JwtAuthenticate extends BaseAuthenticate
      * Get token from header or query string.
      *
      * @param \Cake\Http\ServerRequest|null $request Request object.
-     *
      * @return string|null Token string if found else null.
      */
     public function getToken($request = null)
@@ -200,7 +192,7 @@ class JwtAuthenticate extends BaseAuthenticate
         }
 
         $header = $request->getHeaderLine($config['header']);
-        if ($header && stripos($header, (string) $config['prefix']) === 0) {
+        if ($header && stripos($header, (string)$config['prefix']) === 0) {
             return $this->_token = str_ireplace($config['prefix'] . ' ', '', $header);
         }
 
@@ -220,22 +212,18 @@ class JwtAuthenticate extends BaseAuthenticate
      * Decode JWT token.
      *
      * @param string $token JWT token to decode.
-     *
      * @throws \Exception
-     *
      * @return object|null The JWT's payload as a PHP object, null on failure.
      */
     protected function _decode(string $token)
     {
         $config = $this->_config;
         try {
-            $payload = JWT::decode(
+            return JWT::decode(
                 $token,
                 $config['key'] ?: Security::getSalt(),
                 $config['allowedAlgs']
             );
-
-            return $payload;
         } catch (Exception $e) {
             if (Configure::read('debug')) {
                 throw $e;
@@ -253,10 +241,8 @@ class JwtAuthenticate extends BaseAuthenticate
      *
      * @param \Cake\Http\ServerRequest $request A request object.
      * @param \Cake\Http\Response $response A response object.
-     *
      * @throws \Cake\Http\Exception\UnauthorizedException Or any other
      *   configured exception.
-     *
      * @return void
      */
     public function unauthenticated(ServerRequest $request, Response $response): void

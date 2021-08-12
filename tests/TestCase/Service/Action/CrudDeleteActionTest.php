@@ -23,6 +23,10 @@ class CrudDeleteActionTest extends TestCase
 {
     use ConfigTrait;
 
+    public $request;
+
+    public $response;
+
     public ?\CakeDC\Api\Service\Action\CrudDeleteAction $Action = null;
 
     protected ?\CakeDC\Api\Service\Service $Service = null;

@@ -33,8 +33,7 @@ use CakeDC\Api\Service\Action\Auth\ValidateAccountRequestAction;
 class AuthService extends Service
 {
     /**
-     * @inheritdoc
-     * @return void
+     * @inheritDoc
      */
     public function initialize(): void
     {

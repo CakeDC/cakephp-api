@@ -29,7 +29,7 @@ namespace CakeDC\Api\Service\Auth;
 
 use Cake\Controller\Component\AuthComponent;
 use Cake\Core\App;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 
@@ -115,12 +115,12 @@ trait AuthorizeTrait
             }
             $className = App::className($class, 'Service/Auth/Authorize', 'Authorize');
             if (!class_exists($className)) {
-                throw new \Cake\Core\Exception\CakeException(sprintf('Authorization adapter "%s" was not found.', $class));
+                throw new CakeException(sprintf('Authorization adapter "%s" was not found.', $class));
             }
             $config = (array)$config + $global;
             $class = new $className($this->_action, $config);
             if (!method_exists($class, 'authorize')) {
-                throw new \Cake\Core\Exception\CakeException('Authorization objects must implement an authorize() method.');
+                throw new CakeException('Authorization objects must implement an authorize() method.');
             }
             $this->_authorizeObjects[$alias] = $class;
         }
