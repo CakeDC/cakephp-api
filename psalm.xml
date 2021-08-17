@@ -42,7 +42,6 @@
 
         <MoreSpecificReturnType errorLevel="info" />
         <LessSpecificReturnStatement errorLevel="info" />
-        <TypeCoercion errorLevel="info" />
 
         <PossiblyInvalidArrayAccess errorLevel="info" />
         <PossiblyInvalidArrayOffset errorLevel="info" />

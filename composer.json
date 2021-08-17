@@ -35,9 +35,10 @@
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {
+        "brianium/paratest": "^6.3",
         "cakephp/cakephp-codesniffer": "^4.0",
         "league/flysystem-vfs": "^1.0",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^9.4",
         "vlucas/phpdotenv": "^3.3"
     },
     "autoload": {

@@ -136,20 +136,19 @@ class SocialAuthenticateTest extends TestCase
             ->setMethods(['getHeader'])
             ->getMock();
 
-        $request->expects($this->at(0))
-            ->method('getHeader')
-            ->with('provider')
-            ->will($this->returnValue(['Facebook']));
+        $request->expects($this->exactly(3))
+                 ->method('getHeader')
+                 ->withConsecutive(
+                     ['provider'],
+                     ['token'],
+                     ['token_secret'],
+                 )
+                 ->willReturnOnConsecutiveCalls(
+                    $this->returnValue(['Facebook']),
+                    $this->returnValue(['token-1234']),
+                    $this->returnValue(['token-secret']),
+                 );
 
-        $request->expects($this->at(1))
-            ->method('getHeader')
-            ->with('token')
-            ->will($this->returnValue(['token-1234']));
-
-        $request->expects($this->at(2))
-            ->method('getHeader')
-            ->with('token_secret')
-            ->will($this->returnValue(['token-secret']));
         $this->social->setConfig('type', 'header');
         $result = $this->social->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
@@ -165,20 +164,19 @@ class SocialAuthenticateTest extends TestCase
         $request = $this->getMockBuilder(\Cake\Http\ServerRequest::class)
             ->setMethods(['getHeader'])
             ->getMock();
-        $request->expects($this->at(0))
-            ->method('getHeader')
-            ->with('provider')
-            ->will($this->returnValue(['wrong']));
+        $request->expects($this->exactly(3))
+                 ->method('getHeader')
+                 ->withConsecutive(
+                     [$this->equalTo('provider')],
+                     [$this->equalTo('token')],
+                     [$this->equalTo('token_secret')],
+                 )
+                 ->willReturnOnConsecutiveCalls(
+                    $this->returnValue(['wrong']),
+                    $this->returnValue(['wrong']),
+                    $this->returnValue(['wrong']),
+                 );
 
-        $request->expects($this->at(1))
-            ->method('getHeader')
-            ->with('token')
-            ->will($this->returnValue(['wrong']));
-
-        $request->expects($this->at(2))
-            ->method('getHeader')
-            ->with('token_secret')
-            ->will($this->returnValue(['wrong']));
         $this->social->setConfig('type', 'header');
         $result = $this->social->authenticate($request, new Response());
         $this->assertFalse($result);
