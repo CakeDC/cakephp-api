@@ -311,11 +311,22 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Returns action input params
      *
-     * @return array
+     * @param string|null $name Dot separated name of the value to read. Or null to read all data.
+     * @param mixed $default The default data.
+     * @return mixed The value being read.
      */
-    public function getData(): array
+    public function getData($name = null, $default = null)
     {
-        return $this->getService()->getParser()->getParams();
+        $data = $this->getService()->getParser()->getParams();
+        if ($name === null) {
+            return $data;
+        }
+        if (!is_array($data) && $name) {
+            return $default;
+        }
+
+        /** @psalm-suppress PossiblyNullArgument */
+        return Hash::get($data, $name, $default);
     }
 
     /**
