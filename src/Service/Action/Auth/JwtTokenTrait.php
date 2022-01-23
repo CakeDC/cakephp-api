@@ -20,7 +20,6 @@ use Cake\Utility\Hash;
 use DateInterval;
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key\InMemory;
 
@@ -60,7 +59,7 @@ trait JwtTokenTrait
         $subject = $user['id'];
         $audience = Router::url('/', true);
         $issuer = Router::url('/', true);
-        $signer = new Sha256();
+        $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.AccessToken.secret');
 
         $config = Configuration::forSymmetricSigner($signer, InMemory::plainText($secret));

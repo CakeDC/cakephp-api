@@ -18,7 +18,7 @@ use CakeDC\Api\Service\FallbackService;
 class ArticlesService extends FallbackService
 {
     protected $_actions = [
-        'tag' => ['method' => ['PUT', 'POST'], 'path' => 'tag/:id'],
-        'untag' => ['method' => ['PUT', 'POST'], 'path' => 'untag/:id'],
+        'tag' => ['method' => ['PUT', 'POST'], 'path' => 'tag/{id}'],
+        'untag' => ['method' => ['PUT', 'POST'], 'path' => 'untag/{id}'],
     ];
 }

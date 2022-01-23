@@ -147,6 +147,11 @@ Cake\Datasource\ConnectionManager::setConfig('test', [
     'timezone' => 'UTC',
 ]);
 
+if (env('FIXTURE_SCHEMA_METADATA')) {
+    $loader = new \Cake\TestSuite\Fixture\SchemaLoader();
+    $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
+}
+
 class_alias(\CakeDC\Api\Test\App\Controller\AppController::class, 'App\Controller\AppController');
 
 $isCli = PHP_SAPI === 'cli';

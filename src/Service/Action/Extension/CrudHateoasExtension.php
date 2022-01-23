@@ -128,7 +128,6 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $parentRoutes = $parent->routes();
             $currentRoute = $this->_reverseRouter->findRoute($viewRoute, $parentRoutes);
             if ($currentRoute !== null) {
-                unset($viewRoute['id']);
                 $path = $parent->routeReverse($viewRoute);
                 array_pop($viewRoute['pass']);
 
@@ -136,7 +135,6 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                 $indexPath = $this->_reverseRouter->parentViewPath($indexName, $action, 'index');
             }
         } else {
-            unset($viewRoute['id']);
             $path = $service->routeReverse($viewRoute);
             array_pop($viewRoute['pass']);
 

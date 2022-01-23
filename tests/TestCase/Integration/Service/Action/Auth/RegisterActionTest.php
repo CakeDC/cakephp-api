@@ -37,7 +37,8 @@ class RegisterActionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        Router::connect('/users/validate-email/*', [
+        $builder = Router::createRouteBuilder('/', []);
+        $builder->connect('/users/validate-email/*', [
              'plugin' => 'CakeDC/Users',
              'controller' => 'Users',
              'action' => 'validateEmail',

@@ -8,6 +8,7 @@
     <php>
         <ini name="memory_limit" value="-1"/>
         <ini name="apc.enable_cli" value="1"/>
+        <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
     </php>
 
     <!-- Add any additional test suites you want to run here -->
@@ -18,15 +19,9 @@
     </testsuites>
 
     <!-- Setup a listener for fixtures -->
-    <listeners>
-        <listener
-        class="\Cake\TestSuite\Fixture\FixtureInjector"
-        file="./vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
-            <arguments>
-                <object class="\Cake\TestSuite\Fixture\FixtureManager" />
-            </arguments>
-        </listener>
-    </listeners>
+    <extensions>
+      <extension class="\Cake\TestSuite\Fixture\PHPUnitExtension" />
+    </extensions>
 
     <!-- Prevent coverage reports from looking in tests and vendors -->
     <filter>

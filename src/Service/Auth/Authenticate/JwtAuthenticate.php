@@ -66,7 +66,7 @@ class JwtAuthenticate extends BaseAuthenticate
      *   Its value should be of form "Bearer <token>". If empty this query string
      *   paramater is checked.
      * - `allowedAlgs` - List of supported verification algorithms.
-     *   Defaults to ['HS256']. See API of JWT::decode() for more info.
+     *   Defaults to ['HS512']. See API of JWT::decode() for more info.
      * - `queryDatasource` - Boolean indicating whether the `sub` claim of JWT
      *   token should be used to query the user model and get user record. If
      *   set to `false` JWT's payload is directly retured. Defaults to `true`.
@@ -102,7 +102,7 @@ class JwtAuthenticate extends BaseAuthenticate
         $this->setConfig($config);
 
         if (empty($config['allowedAlgs'])) {
-            $config['allowedAlgs'] = ['HS256'];
+            $config['allowedAlgs'] = ['HS512'];
         }
 
         parent::__construct($action, $config);

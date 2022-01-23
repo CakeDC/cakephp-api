@@ -55,12 +55,13 @@ class FallbackService extends NestedCrudService
         $table = TableRegistry::getTableLocator()->get($this->_table);
 
         $defaultOptions = $this->routerDefaultOptions();
-        ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions) {
+        $builder = ApiRouter::createRouteBuilder('/', []);
+        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions) {
             $routes->setExtensions($this->_routeExtensions);
             $options = $defaultOptions;
             $options['map'] = array_merge($options['map'], [
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
-                'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ':id'],
+                'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
             ]);
             $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table) {
                 if (is_array($this->_routeExtensions)) {
@@ -84,7 +85,7 @@ class FallbackService extends NestedCrudService
                             $options = [
                                 'map' => [
                                     'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
-                                    'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ':id'],
+                                    'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
                                 ],
                             ];
                             $routes->resources($className, $options);

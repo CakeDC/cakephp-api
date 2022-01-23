@@ -34,7 +34,8 @@ class ListingService extends Service
      */
     public function loadRoutes(): void
     {
-        ApiRouter::scope('/', function (RouteBuilder $routes) {
+        $builder = ApiRouter::createRouteBuilder('/', []);
+        $builder->scope('/', function (RouteBuilder $routes) {
             $routes->setExtensions($this->_routeExtensions);
             $routes->connect('/listing/', ['controller' => 'listing', 'action' => 'list']);
         });

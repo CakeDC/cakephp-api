@@ -36,6 +36,7 @@ class SocialAuthenticateTest extends TestCase
      */
     public function setUp(): void
     {
+        parent::setUp();
         $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
@@ -57,6 +58,7 @@ class SocialAuthenticateTest extends TestCase
     public function tearDown(): void
     {
         unset($this->social, $this->controller);
+        parent::tearDown();
     }
 
     /**
@@ -144,9 +146,9 @@ class SocialAuthenticateTest extends TestCase
                      ['token_secret'],
                  )
                  ->willReturnOnConsecutiveCalls(
-                    $this->returnValue(['Facebook']),
-                    $this->returnValue(['token-1234']),
-                    $this->returnValue(['token-secret']),
+                     $this->returnValue(['Facebook']),
+                     $this->returnValue(['token-1234']),
+                     $this->returnValue(['token-secret']),
                  );
 
         $this->social->setConfig('type', 'header');
@@ -172,9 +174,9 @@ class SocialAuthenticateTest extends TestCase
                      [$this->equalTo('token_secret')],
                  )
                  ->willReturnOnConsecutiveCalls(
-                    $this->returnValue(['wrong']),
-                    $this->returnValue(['wrong']),
-                    $this->returnValue(['wrong']),
+                     $this->returnValue(['wrong']),
+                     $this->returnValue(['wrong']),
+                     $this->returnValue(['wrong']),
                  );
 
         $this->social->setConfig('type', 'header');

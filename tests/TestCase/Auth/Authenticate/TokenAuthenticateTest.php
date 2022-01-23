@@ -36,6 +36,7 @@ class TokenAuthenticateTest extends TestCase
      */
     public function setUp(): void
     {
+        parent::setUp();
         $request = new ServerRequest();
         $response = new Response();
         $service = new FallbackService([
@@ -57,6 +58,7 @@ class TokenAuthenticateTest extends TestCase
     public function tearDown(): void
     {
         unset($this->token, $this->controller);
+        parent::tearDown();
     }
 
     /**

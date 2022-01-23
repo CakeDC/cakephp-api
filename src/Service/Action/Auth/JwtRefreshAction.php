@@ -63,7 +63,7 @@ class JwtRefreshAction extends Action
             'header' => 'Authorization',
             'queryParam' => 'token',
             'tokenPrefix' => 'bearer',
-            'algorithms' => ['HS256', 'HS512'],
+            'algorithm' => 'HS512',
             'returnPayload' => false,
             'secretKey' => Configure::read('Api.Jwt.RefreshToken.secret'),
         ];

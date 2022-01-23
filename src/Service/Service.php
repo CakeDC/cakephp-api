@@ -345,7 +345,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function loadRoutes(): void
     {
         $defaultOptions = $this->routerDefaultOptions();
-        ApiRouter::scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions) {
+        $builder = ApiRouter::createRouteBuilder('/', []);
+        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions) {
             if (is_array($this->_routeExtensions)) {
                 $routes->setExtensions($this->_routeExtensions);
             }

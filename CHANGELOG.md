@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Releases for CakePHP 4.3
+-------------
+
+* 9.0.0
+    Initial version that support CakePHP 4.3
+
+
 Releases for CakePHP 4.0
 -------------
 

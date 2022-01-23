@@ -19,18 +19,6 @@ use Cake\TestSuite\Fixture\TestFixture;
 class AuthorsFixture extends TestFixture
 {
     /**
-     * fields property
-     *
-     * @var array
-     */
-    public $fields = [
-        'id' => ['type' => 'integer'],
-        'first_name' => ['type' => 'string', 'default' => null],
-        'last_name' => ['type' => 'string', 'default' => null],
-        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
-    ];
-
-    /**
      * records property
      *
      * @var array

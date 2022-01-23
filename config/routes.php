@@ -25,12 +25,12 @@ Router::plugin('CakeDC/Api', ['path' => '/api'], function ($routes) {
         $versionPrefix = 'v';
     }
     if ($useVersioning) {
-        $routes->connect('/:version/describe/*', [
+        $routes->connect('/{version}/describe/*', [
                 'plugin' => 'CakeDC/Api',
                 'controller' => 'Api',
                 'action' => 'describe'
             ], ['version' => $versionPrefix . '\d+', 'pass' => []]);
-        $routes->connect('/:version/list/*', [
+        $routes->connect('/{version}/list/*', [
                 'plugin' => 'CakeDC/Api',
                 'controller' => 'Api',
                 'action' => 'listing'

@@ -104,7 +104,8 @@ class ResetPasswordAction extends Action
         $user->id = $userId;
         try {
             $validator = $this->getUsersTable()->validationPasswordConfirm(new Validator());
-            $user = $this->getUsersTable()->patchEntity($user, $this->getData(), ['validate' => $validator]);
+            $this->getUsersTable()->setValidator('changePassV', $validator);
+            $user = $this->getUsersTable()->patchEntity($user, $this->getData(), ['validate' => 'changePassV']);
             if ($user->getErrors()) {
                 $message = __d('CakeDC/Api', 'Password could not be changed');
                 throw new ValidationException($message, 0, null, $user->getErrors());

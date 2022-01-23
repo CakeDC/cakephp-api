@@ -54,7 +54,8 @@ class ResetPasswordRequestActionTest extends IntegrationTestCase
 
     public function testSuccessResetPasswordRequest()
     {
-        Router::connect('/users/reset-password/*', [
+        $builder = Router::createRouteBuilder('/', []);
+        $builder->connect('/users/reset-password/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'resetPassword',
