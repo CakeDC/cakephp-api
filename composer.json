@@ -29,16 +29,15 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "cakephp/cakephp": "^4.2",
+        "cakephp/cakephp": "4.2.*",
         "cakedc/users": "^9.1",
         "lcobucci/jwt": "~4.0.0",
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {
-        "brianium/paratest": "^6.3",
         "cakephp/cakephp-codesniffer": "^4.0",
         "league/flysystem-vfs": "^1.0",
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "^8.5",
         "vlucas/phpdotenv": "^3.3"
     },
     "autoload": {
@@ -56,7 +55,10 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        }
     },
     "scripts": {
         "check": [
