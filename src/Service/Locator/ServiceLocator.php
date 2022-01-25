@@ -150,19 +150,44 @@ class ServiceLocator implements LocatorInterface
         }
 
         $className = $this->_getClassName($alias, $options);
+        $lookupPlugins = Configure::read('Api.serviceLookupPlugins');
+        $lookupMode = Configure::read('Api.lookupMode', 'underscore');
+        if ($lookupPlugins === null) {
+            $lookupPlugins = ['CakeDC/Api'];
+        }
         if (!$className && strpos($options['className'], '.') === false) {
-            $_options = $options;
-            $_options['className'] = 'CakeDC/Api.' . $_options['className'];
-            $className = $this->_getClassName($alias, $_options);
+            foreach ($lookupPlugins as $candidate) {
+                $_options = $options;
+                if ($lookupMode === 'dasherize') {
+                    $_options['className'] = Inflector::camelize(Inflector::underscore($_options['className']));
+                }
+
+                $_options['className'] = $candidate . '.' . $_options['className'];
+                $className = $this->_getClassName($alias, $_options);
+                if ($className) {
+                    break;
+                }
+            }
         }
         if ($className) {
+            if ($lookupMode === 'dasherize') {
+                $options['className'] = Inflector::camelize(Inflector::underscore($className));
+                $options['service'] = Inflector::dasherize($alias);
+            } else {
             $options['className'] = $className;
-            $options['service'] = Inflector::underscore($alias);
+                $options['className'] = $className;
+                $options['service'] = Inflector::underscore($alias);
+            }
         } else {
             $fallbackClass = Configure::read('Api.ServiceFallback');
             if ($fallbackClass) {
                 $options['className'] = $fallbackClass;
-                $options['service'] = Inflector::underscore($alias);
+
+                if ($lookupMode === 'dasherize') {
+                    $options['service'] = Inflector::dasherize($alias);
+                } else {
+                    $options['service'] = Inflector::underscore($alias);
+                }
             }
         }
 
