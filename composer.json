@@ -30,7 +30,7 @@
         "php": ">=7.4",
         "ext-json": "*",
         "cakephp/cakephp": "^4.3",
-        "cakedc/users": "dev-11.next-cake4",
+        "cakedc/users": "^11.0",
         "lcobucci/jwt": "~4.0.0",
         "firebase/php-jwt": "^5.0"
     },
