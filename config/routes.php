@@ -13,7 +13,10 @@ use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Routing\RouteBuilder;
 
-Router::plugin('CakeDC/Api', ['path' => '/api'], function ($routes) {
+/**
+ * @var \Cake\Routing\RouteBuilder $routes
+ */
+$routes->plugin('CakeDC/Api', ['path' => '/api'], function ($routes) {
     $useVersioning = Configure::read('Api.useVersioning');
     $versionPrefix = Configure::read('Api.versionPrefix');
     $middlewares = Configure::read('Api.Middleware');
