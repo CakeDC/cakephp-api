@@ -112,7 +112,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      *
      * @param string $url Url.
      * @param string $method HTTP method.
-     * @param array $data Api parameters.
+     * @param mixed $data Api parameters.
      * @param string $userId Current user id.
      * @param array $headers Headers list.
      * @return void
@@ -121,7 +121,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function sendRequest(
         string $url,
         string $method,
-        array $data = [],
+        $data = [],
         ?string $userId = null,
         array $headers = []
     ): void {
