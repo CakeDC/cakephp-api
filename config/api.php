@@ -32,6 +32,8 @@ return [
         // version is not used
         'useVersioning' => false,
         'versionPrefix' => 'v',
+        'serviceLookupPlugins' => null,
+        'lookupMode' => 'underscore',
 
         // auth permission uses require auth strategy
         'Auth' => [

@@ -42,7 +42,12 @@ class Plugin extends BasePlugin
                     $routes->registerMiddleware($alias, new $class($request));
                 }
             } else {
-                $routes->registerMiddleware($alias, new $class());
+                if (array_key_exists('params', $middleware)) {
+                    $options = $middleware['params'];
+                    $routes->registerMiddleware($alias, new $class($options));
+                } else {
+                    $routes->registerMiddleware($alias, new $class());
+                }
             }
         }
 
