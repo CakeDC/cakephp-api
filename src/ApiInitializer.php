@@ -54,7 +54,7 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
             'header' => 'Authorization',
             'queryParam' => 'token',
             'tokenPrefix' => 'bearer',
-            'algorithm' => 'HS512',
+            'algorithms' => 'HS512',
             'returnPayload' => false,
             'secretKey' => Configure::read('Api.Jwt.AccessToken.secret'),
         ]);

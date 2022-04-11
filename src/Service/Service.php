@@ -583,7 +583,12 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             throw new MissingActionException('Invalid Action Route:' . $this->getBaseUrl()); // InvalidActionException
         }
         $service = null;
-        $serviceName = Inflector::underscore($route['controller']);
+        $lookupMode = Configure::read('Api.lookupMode', 'underscore');
+        if ($lookupMode === 'dasherize') {
+            $serviceName = Inflector::dasherize($route['controller']);
+        } else {
+            $serviceName = Inflector::underscore($route['controller']);
+        }
         if ($serviceName === $this->getName()) {
             $service = $this;
         }
