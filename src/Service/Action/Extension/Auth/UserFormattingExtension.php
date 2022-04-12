@@ -73,11 +73,15 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
             return null;
         }
 
+
         $currentUser = $this
             ->getUsersTable()
             ->find()
             ->where([$this->getUsersTable()->aliasField('id') => $user['id']])
             ->first();
+        if ($currentUser === null) {
+            return null;
+        }
 
         if ($currentUser === null) {
             return null;
@@ -86,7 +90,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
         $user = $currentUser->toArray();
         $user['api_token'] = $currentUser['api_token'];
 
-        $cleanup = ['created', 'modified', 'is_superuser', 'role'];
+        $cleanup = ['created', 'modified', 'is_superuser'];
         foreach ($cleanup as $field) {
             unset($user[$field]);
         }

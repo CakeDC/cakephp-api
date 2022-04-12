@@ -80,13 +80,8 @@ class LoginAction extends Action
     public function execute()
     {
         $socialLogin = false;
-        //$event = $this->dispatchEvent(UsersAuthComponent::EVENT_BEFORE_LOGIN);
-//        if (is_array($event->getResult())) {
-//            $user = $this->_afterIdentifyUser($event->getResult());
-//        } else {
-            $user = $this->Auth->identify();
-            $user = $this->_afterIdentifyUser($user, $socialLogin);
-//        }
+        $user = $this->Auth->identify();
+        $user = $this->_afterIdentifyUser($user, $socialLogin);
         if (empty($user)) {
             throw new UserNotFoundException(__d('CakeDC/Api', 'User not found'), 401);
         } else {
@@ -105,7 +100,6 @@ class LoginAction extends Action
     {
         if (!empty($user)) {
             $this->Auth->setUser($user);
-//            $this->dispatchEvent(UsersAuthComponent::EVENT_AFTER_LOGIN, ['user' => $user]);
         }
 
         $event = $this->dispatchEvent('Action.Auth.onLoginFormat', ['user' => $user]);
