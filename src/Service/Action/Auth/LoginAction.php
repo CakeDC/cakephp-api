@@ -124,6 +124,7 @@ class LoginAction extends Action
                         'username' => $this->_identifiedField,
                         'password' => $this->_passwordField,
                     ],
+                    'finder' => 'active',
                 ],
             ],
         ]);

@@ -22,7 +22,7 @@ trait BaseTraitTest
     /**
      * Sets up the session as a logged in user for an user with id $id
      *
-     * @param $id
+     * @param mixed $id
      * @return void
      */
     protected function loginAsUserId($id)

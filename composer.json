@@ -35,7 +35,7 @@
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^4.0",
+        "cakephp/cakephp-codesniffer": "~4.4.0",
         "league/flysystem-vfs": "^1.0",
         "phpunit/phpunit": "^9.5",
         "vlucas/phpdotenv": "^3.3"

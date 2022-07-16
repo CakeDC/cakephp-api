@@ -78,6 +78,7 @@ class RegisterActionTest extends IntegrationTestCase
             'active' => false,
             'api_token' => null,
             'message' => 'Please validate your account before log in',
+            'role' => 'user',
         ];
         $data = $result['data'];
         unset($data['id'], $data['tos_date']);

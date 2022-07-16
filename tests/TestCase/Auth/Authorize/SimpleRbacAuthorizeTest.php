@@ -156,10 +156,10 @@ class SimpleRbacAuthorizeTest extends TestCase
 
     /**
      * @dataProvider providerAuthorize
-     * @param $permissions
-     * @param $user
-     * @param $requestParams
-     * @param $expected
+     * @param mixed $permissions
+     * @param mixed $user
+     * @param mixed $requestParams
+     * @param mixed $expected
      * @param string|null $msg
      */
     public function testAuthorize($permissions, $user, $requestParams, $expected, $msg = null)

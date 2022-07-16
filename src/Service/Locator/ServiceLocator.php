@@ -174,7 +174,6 @@ class ServiceLocator implements LocatorInterface
                 $options['className'] = Inflector::camelize(Inflector::underscore($className));
                 $options['service'] = Inflector::dasherize($alias);
             } else {
-            $options['className'] = $className;
                 $options['className'] = $className;
                 $options['service'] = Inflector::underscore($alias);
             }

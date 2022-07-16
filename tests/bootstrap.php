@@ -12,6 +12,8 @@ declare(strict_types=1);
  */
 
 use Cake\Core\Configure;
+use Cake\Error\ErrorTrap;
+use Cake\Error\ExceptionTrap;
 use Cake\Mailer\Email;
 use Cake\Utility\Security;
 
@@ -156,11 +158,8 @@ class_alias(\CakeDC\Api\Test\App\Controller\AppController::class, 'App\Controlle
 
 $isCli = PHP_SAPI === 'cli';
 $conf = (array)Cake\Core\Configure::read('Error');
-if ($isCli) {
-    (new Cake\Error\ConsoleErrorHandler($conf))->register();
-} else {
-    (new Cake\Error\ErrorHandler($conf))->register();
-}
+(new ErrorTrap($conf))->register();
+(new ExceptionTrap($conf))->register();
 \Cake\Routing\Router::reload();
 $application = new \CakeDC\Api\Test\App\Application(CONFIG);
 $application->bootstrap();
