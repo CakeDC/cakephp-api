@@ -27,7 +27,7 @@ abstract class CrudService extends Service
      *
      * @var array
      */
-    protected $_actionsClassMap = [
+    protected array $_actionsClassMap = [
         'describe' => \CakeDC\Api\Service\Action\CrudDescribeAction::class,
         'index' => \CakeDC\Api\Service\Action\CrudIndexAction::class,
         'view' => \CakeDC\Api\Service\Action\CrudViewAction::class,

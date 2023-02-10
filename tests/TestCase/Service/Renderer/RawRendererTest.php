@@ -143,7 +143,7 @@ class RawRendererTest extends TestCase
         ];
         $this->Service = new FallbackService($serviceOptions);
 
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         $error = new UnauthenticatedException();
         $renderer = $this->Service->getRenderer();
 

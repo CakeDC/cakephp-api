@@ -23,7 +23,7 @@ class TagsFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         ['id' => 1, 'name' => 'tag1'],
         ['id' => 2, 'name' => 'tag2'],
         ['id' => 3, 'name' => 'tag3'],

@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Routing;
 
+use Cake\Http\ServerRequest;
 use Cake\Routing\Route\Route;
+use Cake\Routing\RouteCollection;
 use Cake\Routing\Router;
 
 /**
@@ -33,7 +35,7 @@ class ApiRouter extends Router
      *
      * @var string
      */
-    protected static $_defaultRouteClass = Route::class;
+    protected static string $_defaultRouteClass = Route::class;
 
     /**
      * Contains the base string that will be applied to all generated URLs
@@ -41,7 +43,7 @@ class ApiRouter extends Router
      *
      * @var string
      */
-    protected static $_fullBaseUrl;
+    protected static ?string $_fullBaseUrl;
 
     /**
      * Regular expression for action names
@@ -90,21 +92,21 @@ class ApiRouter extends Router
      *
      * @var \Cake\Routing\RouteCollection
      */
-    protected static $_collection;
+    protected static RouteCollection $_collection;
 
     /**
      * A hash of request context data.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected static $_requestContext = [];
+    protected static array $_requestContext = [];
 
     /**
      * Named expressions
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected static $_namedExpressions = [
+    protected static array $_namedExpressions = [
         'Action' => Router::ACTION,
         'Year' => Router::YEAR,
         'Month' => Router::MONTH,
@@ -117,7 +119,7 @@ class ApiRouter extends Router
      * Maintains the request object stack for the current request.
      * This will contain more than one request object when requestAction is used.
      */
-    protected static array $_requests = [];
+    protected static ?ServerRequest $_request = null;
 
     /**
      * Initial state is populated the first time reload() is called which is at the bottom
@@ -126,20 +128,20 @@ class ApiRouter extends Router
      *
      * @var array
      */
-    protected static $_initialState = [];
+    protected static array $_initialState = [];
 
     /**
      * The stack of URL filters to apply against routing URLs before passing the
      * parameters to the route collection.
      *
-     * @var array
+     * @var array<\Closure>
      */
-    protected static $_urlFilters = [];
+    protected static array $_urlFilters = [];
 
     /**
      * Default extensions defined with Router::extensions()
      *
-     * @var array
+     * @var array<string>
      */
-    protected static $_defaultExtensions = [];
+    protected static array $_defaultExtensions = [];
 }

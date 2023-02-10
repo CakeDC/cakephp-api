@@ -18,14 +18,15 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\App;
 
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
-use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
+use CakeDC\Api\Middleware\ContainerInjectorMiddleware;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\Test\App\DI\Service\TestService;
 
 /**
  * Application setup class.
@@ -70,12 +71,46 @@ class Application extends BaseApplication
             ->add(new ErrorHandlerMiddleware([]))
             // ->add($authentication)
             // Apply Api
-            ->add(new ParseApiRequestMiddleware())
-            ->add(new ProcessApiRequestMiddleware())
+            ->add(new ContainerInjectorMiddleware($this->getContainer()))
+            // ->add(new ParseApiRequestMiddleware())
+            // ->add(new ProcessApiRequestMiddleware())
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware())// Apply routing
             ->add(new RoutingMiddleware($this));
 
         return $middleware;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function routes($routes): void
+    {
+        $middlewares = Configure::read('Api.Middleware');
+        foreach ($middlewares as $alias => $middleware) {
+            $class = $middleware['class'];
+            if (array_key_exists('request', $middleware)) {
+                $requestClass = $middleware['request'];
+                $request = new $requestClass();
+                if (array_key_exists('method', $middleware)) {
+                    $request = $request->{$middleware['method']}();
+                }
+                if (array_key_exists('params', $middleware)) {
+                    $options = $middleware['params'];
+                    $routes->registerMiddleware($alias, new $class($request, $options));
+                } else {
+                    $routes->registerMiddleware($alias, new $class($request));
+                }
+            } else {
+                $routes->registerMiddleware($alias, new $class());
+            }
+        }
+
+        parent::routes($routes);
+    }
+
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(TestService::class);
     }
 }

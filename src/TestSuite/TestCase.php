@@ -23,7 +23,10 @@ use CakeDC\Api\Service\ServiceRegistry;
  */
 class TestCase extends BaseTestCase
 {
-    protected $fixtures = [
+    /**
+     * @var array<array-key, string> Fixtures.
+     */
+    protected array $fixtures = [
         'plugin.CakeDC/Api.SocialAccounts',
         'plugin.CakeDC/Api.Users',
         'plugin.CakeDC/Api.Articles',

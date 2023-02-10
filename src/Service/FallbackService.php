@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service;
 
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Routing\ApiRouter;
@@ -25,6 +25,8 @@ use CakeDC\Api\Routing\ApiRouter;
  */
 class FallbackService extends NestedCrudService
 {
+    use LocatorAwareTrait;
+
     /**
      * Table name.
      *
@@ -52,7 +54,7 @@ class FallbackService extends NestedCrudService
      */
     public function loadRoutes(): void
     {
-        $table = TableRegistry::getTableLocator()->get($this->_table);
+        $table = $this->fetchTable($this->_table);
 
         $defaultOptions = $this->routerDefaultOptions();
         $builder = ApiRouter::createRouteBuilder('/', []);

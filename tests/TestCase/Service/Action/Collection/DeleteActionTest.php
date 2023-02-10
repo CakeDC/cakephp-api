@@ -62,7 +62,7 @@ class DeleteActionTest extends TestCase
      */
     public function testExecuteSuccess()
     {
-        $ArticlesTable = TableRegistry::get('Articles');
+        $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
         $this->_initializeAction([
             ['id' => 1],
@@ -102,7 +102,7 @@ class DeleteActionTest extends TestCase
     public function testValidationPostString()
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction('something');
+        $this->_initializeAction(['something' => 'value']);
         $this->Action->execute();
     }
 

@@ -25,5 +25,5 @@ class JwtRefreshTokensFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [];
+    public array $records = [];
 }

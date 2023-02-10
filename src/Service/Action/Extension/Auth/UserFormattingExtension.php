@@ -73,15 +73,11 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
             return null;
         }
 
-
         $currentUser = $this
             ->getUsersTable()
             ->find()
             ->where([$this->getUsersTable()->aliasField('id') => $user['id']])
             ->first();
-        if ($currentUser === null) {
-            return null;
-        }
 
         if ($currentUser === null) {
             return null;

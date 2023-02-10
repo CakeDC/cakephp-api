@@ -17,7 +17,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Association;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -111,9 +111,9 @@ abstract class CrudAction extends Action
     /**
      * Gets a Table instance.
      *
-     * @return \Cake\ORM\Table
+     * @return ?\Cake\ORM\Table
      */
-    public function getTable(): Table
+    public function getTable(): ?Table
     {
         return $this->_table;
     }
@@ -172,9 +172,9 @@ abstract class CrudAction extends Action
     /**
      * Parent model id field name getter.
      *
-     * @return string
+     * @return ?string
      */
-    public function getParentIdName(): string
+    public function getParentIdName(): ?string
     {
         return $this->_parentIdName;
     }
@@ -236,9 +236,9 @@ abstract class CrudAction extends Action
     /**
      * Returns entiries query object
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _getEntitiesQuery(): Query
+    protected function _getEntitiesQuery(): SelectQuery
     {
         return $this->getTable()->find();
     }
@@ -267,7 +267,7 @@ abstract class CrudAction extends Action
      * Returns entiry query object
      *
      * @param mixed $primaryKey Primary key.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     protected function _getEntityQuery($primaryKey)
     {

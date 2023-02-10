@@ -63,7 +63,7 @@ class AddEditActionTest extends TestCase
      */
     public function testExecuteSuccess()
     {
-        $ArticlesTable = TableRegistry::get('Articles');
+        $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
         $this->_initializeAction([
             ['title' => 'Article1'],
@@ -103,7 +103,7 @@ class AddEditActionTest extends TestCase
     public function testValidationPostString()
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction('something');
+        $this->_initializeAction(['something' => 'value']);
         $this->Action->execute();
     }
 
@@ -114,7 +114,7 @@ class AddEditActionTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Validation on Articles failed');
-        $ArticlesTable = TableRegistry::get('Articles');
+        $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
         $this->_initializeAction([
             ['title' => 'Article1'],
@@ -166,7 +166,7 @@ class AddEditActionTest extends TestCase
 
     public function testIntegrationArticlesCollection()
     {
-        $ArticlesTable = TableRegistry::get('Articles');
+        $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
         $post = [
             ['title' => 'Article1'],
@@ -219,6 +219,6 @@ class AddEditActionTest extends TestCase
         $this->Action = new AddEditAction([
             'service' => $this->Service,
         ]);
-        $this->Action->setTable(TableRegistry::get('Articles'));
+        $this->Action->setTable(TableRegistry::getTableLocator()->get('Articles'));
     }
 }

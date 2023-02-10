@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action;
 
-use Cake\Filesystem\Folder;
+// use Shim\Filesystem\Folder;
 use Cake\Utility\Inflector;
 
 /**
@@ -42,9 +42,19 @@ class ListAction extends Action
      */
     public function execute()
     {
-        $path = APP . 'Model' . DS . 'Table';
-        $folder = new Folder($path);
-        $tables = $folder->find('.*\.php');
+        $path = APP . 'Model' . DS . 'Table' . DS;
+        // $folder = new Folder($path);
+        // $tables = $folder->find('.*\.php');
+        $tables = [];
+        foreach (glob($path . '*.php') as $file) {
+            $name = str_replace($path, '', $file);
+            if ($name !== null) {
+                $tables[] = $name;
+            }
+            // $tables[] = str_replace($path, '', $file);
+        }
+        // print_r($tables);
+
 
         return collection($tables)
             ->map(function ($item) {

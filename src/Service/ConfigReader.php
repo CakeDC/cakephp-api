@@ -22,7 +22,7 @@ class ConfigReader
      * Builds service options.
      *
      * @param string $serviceName Service name.
-     * @param int $version Version number.
+     * @param ?string $version Version number.
      * @return array
      */
     public function serviceOptions(string $serviceName, ?string $version = null): array
@@ -44,7 +44,7 @@ class ConfigReader
      *
      * @param string $serviceName A Service name.
      * @param string $actionName An Action name.
-     * @param int $version Version number.
+     * @param ?string $version Version number.
      * @return array
      */
     public function actionOptions(string $serviceName, string $actionName, ?string $version = null): array

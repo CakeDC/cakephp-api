@@ -9,8 +9,15 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+use Authentication\Middleware\AuthenticationMiddleware;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Middleware\RequestAuthorizationMiddleware;
 use Cake\Core\Configure;
+use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Utility\Hash;
+use CakeDC\Api\ApiInitializer;
+use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
+use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
 
 Configure::write('Api', []);
 $config = Configure::read('Test.Api.Config');
@@ -30,6 +37,33 @@ if (empty($config)) {
                 'RefreshToken' => [
                     'lifetime' => 2 * WEEK,
                     'secret' => 'secret',
+                ],
+            ],
+
+            'Middleware' => [
+                'authentication' => [
+                    'class' => AuthenticationMiddleware::class,
+                    'request' => ApiInitializer::class,
+                    'method' => 'getAuthenticationService',
+                ],
+                'bodyParser' => [
+                    'class' => BodyParserMiddleware::class,
+                ],
+                'apiParser' => [
+                    'class' => ParseApiRequestMiddleware::class,
+                ],
+                'apiAuthorize' => [
+                    'class' => AuthorizationMiddleware::class,
+                    'request' => ApiInitializer::class,
+                    'params' => [
+                        'unauthorizedHandler' => 'CakeDC/Api.ApiException',
+                    ],
+                ],
+                'apiAuthorizeRequest' => [
+                    'class' => RequestAuthorizationMiddleware::class,
+                ],
+                'apiProcessor' => [
+                    'class' => ProcessApiRequestMiddleware::class,
                 ],
             ],
 

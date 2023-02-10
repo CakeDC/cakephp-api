@@ -14,11 +14,31 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\App\Service;
 
 use CakeDC\Api\Service\FallbackService;
+use CakeDC\Api\Test\App\DI\Service\TestService;
 
 class ArticlesService extends FallbackService
 {
-    protected $_actions = [
+    protected array $_actions = [
         'tag' => ['method' => ['PUT', 'POST'], 'path' => 'tag/{id}'],
         'untag' => ['method' => ['PUT', 'POST'], 'path' => 'untag/{id}'],
+        'data' => ['method' => ['GET'], 'path' => 'data'],
     ];
+
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->mapAction('data', DataAction::class, [
+            'method' => ['GET'],
+            'mapCors' => true,
+            'path' => 'data',
+        ]);
+
+        $this->setTable('Articles');
+
+        if ($this->container !== null) {
+            $testS = $this->container->get(TestService::class);
+            assert($testS instanceof TestService);
+        }
+    }
 }

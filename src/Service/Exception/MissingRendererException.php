@@ -15,5 +15,5 @@ namespace CakeDC\Api\Service\Exception;
 
 class MissingRendererException extends \Cake\Core\Exception\CakeException
 {
-    protected $_messageTemplate = 'Renderer class %s could not be found.';
+    protected string $_messageTemplate = 'Renderer class %s could not be found.';
 }

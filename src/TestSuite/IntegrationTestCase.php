@@ -30,7 +30,10 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
 {
     use IntegrationTestTrait;
 
-    protected $fixtures = [
+    /**
+     * @var array<array-key, string> Fixtures.
+     */
+    protected array $fixtures = [
         'plugin.CakeDC/Api.SocialAccounts',
         'plugin.CakeDC/Api.Users',
         'plugin.CakeDC/Api.Articles',
@@ -40,7 +43,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     ];
 
     /**
-     * @var string|int Current logged in user
+     * @var string|null Current logged in user
      */
     protected ?string $_defaultUserId = null;
 
@@ -70,7 +73,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * Default user api method.
      *
      * @param string|null $userId User id.
-     * @return int|string
+     * @return string|null
      */
     public function getDefaultUser(?string $userId = null)
     {
@@ -143,10 +146,10 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
             return;
         }
         $url = '/api' . $url;
-        if (is_string($url) && $userToken !== null) {
+        if ($userToken !== null) {
             $url = $this->_appendGetParam($url, 'token', (string)$userToken);
         }
-        if ($method == 'GET' && is_string($url) && !empty($data)) {
+        if ($method == 'GET' && !empty($data)) {
             foreach ($data as $key => $value) {
                 if (!is_array($value)) {
                     $url = $this->_appendGetParam($url, $key, (string)$value);
@@ -196,6 +199,8 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     public function getJsonResponse()
     {
+        $body = (string)$this->_response->getBody();
+
         return json_decode((string)$this->_response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 

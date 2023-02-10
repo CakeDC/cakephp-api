@@ -3,7 +3,7 @@ includes:
 
 parameters:
     level: 4
-    autoload_files:
+    bootstrapFiles:
         - tests/bootstrap.php
     ignoreErrors:
 

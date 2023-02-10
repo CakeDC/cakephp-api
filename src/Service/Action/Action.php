@@ -148,9 +148,9 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Returns activated route.
      *
-     * @return array
+     * @return ?array
      */
-    public function getRoute(): array
+    public function getRoute(): ?array
     {
         return $this->_route;
     }
@@ -223,7 +223,6 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if ($event->isStopped()) {
             return $event->getResult();
         }
-        // $this->_initializeAuth()->authCheck($event);
         $event = $this->dispatchEvent('Action.beforeValidate', []);
 
         if ($event->isStopped()) {
@@ -321,18 +320,15 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if ($name === null) {
             return $data;
         }
-        if (!is_array($data) && $name) {
-            return $default;
-        }
 
         /** @psalm-suppress PossiblyNullArgument */
         return Hash::get($data, $name, $default);
     }
 
     /**
-     * @return \CakeDC\Api\Service\Action\ExtensionRegistry
+     * @return ?\CakeDC\Api\Service\Action\ExtensionRegistry
      */
-    public function getExtensions(): ExtensionRegistry
+    public function getExtensions(): ?ExtensionRegistry
     {
         return $this->_extensions;
     }
@@ -390,10 +386,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
         $extensions = $registry->normalizeArray($this->extensions);
         foreach ($extensions as $name => $properties) {
-            if ($properties === false) {
-                continue;
-            }
-            $instance = $registry->load($properties['class'], $properties['config']);
+            $instance = $registry->load($properties['className'], $properties);
             $this->_eventManager->on($instance);
             if ($instance->attachable()) {
                 [, $prop] = pluginSplit($name);

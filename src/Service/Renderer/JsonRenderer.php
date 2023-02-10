@@ -66,7 +66,7 @@ class JsonRenderer extends BaseRenderer
                 'message' => $this->_buildMessage($exception),
             ],
         ];
-        if (Configure::read('debug') > 0) {
+        if (Configure::read('debug')) {
             $data['error']['trace'] = $this->_stackTrace($exception);
         }
         if ($exception instanceof ValidationException) {
@@ -83,7 +83,7 @@ class JsonRenderer extends BaseRenderer
      */
     protected function _encode($data): string
     {
-        $format = Configure::read('debug') > 0 ? JSON_PRETTY_PRINT : 0;
+        $format = Configure::read('debug') ? JSON_PRETTY_PRINT : 0;
 
         return json_encode($data, $format);
     }

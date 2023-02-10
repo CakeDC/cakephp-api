@@ -85,7 +85,7 @@ class JsonRendererTest extends TestCase
      */
     public function testRendererSuccess()
     {
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
@@ -144,7 +144,7 @@ class JsonRendererTest extends TestCase
         ];
         $this->Service = new FallbackService($serviceOptions);
 
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         $error = new UnauthenticatedException();
         $renderer = $this->Service->getRenderer();
 

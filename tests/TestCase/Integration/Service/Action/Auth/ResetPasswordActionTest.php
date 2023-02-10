@@ -65,7 +65,7 @@ class ResetPasswordActionTest extends IntegrationTestCase
         $this->assertSuccess($result);
         $this->assertTextEquals('Please check your email to continue with password reset process', $result['data']);
 
-        $Users = TableRegistry::get('CakeDC/Users.Users');
+        $Users = TableRegistry::getTableLocator()->get('CakeDC/Users.Users');
         $user = $Users->find()->where(['id' => Settings::USER1])->enableHydration(false)->first();
 
         $this->sendRequest('/auth/reset_password', 'POST', [

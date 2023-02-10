@@ -24,6 +24,7 @@ use CakeDC\Users\Exception\UserNotFoundException;
  * Class LoginAction
  *
  * @package CakeDC\Api\Service\Action
+ * @property \CakeDC\Api\Service\Auth\Auth $Auth
  */
 class LoginAction extends Action
 {
@@ -80,7 +81,7 @@ class LoginAction extends Action
     public function execute()
     {
         $socialLogin = false;
-        $user = $this->Auth->identify();
+        $user = $this->Auth->getIdentity();
         $user = $this->_afterIdentifyUser($user, $socialLogin);
         if (empty($user)) {
             throw new UserNotFoundException(__d('CakeDC/Api', 'User not found'), 401);
@@ -99,7 +100,7 @@ class LoginAction extends Action
     protected function _afterIdentifyUser($user, $socialLogin = false)
     {
         if (!empty($user)) {
-            $this->Auth->setUser($user);
+//???            $this->Auth->setUser($user);
         }
 
         $event = $this->dispatchEvent('Action.Auth.onLoginFormat', ['user' => $user]);

@@ -52,11 +52,11 @@ class RawRenderer extends BaseRenderer
     {
         $response = $this->_service->getResponse();
         $message = $exception->getMessage();
-        if (Configure::read('debug') > 0) {
+        if (Configure::read('debug')) {
             $message .= ' on line ' . $exception->getLine() . ' in ' . $exception->getFile();
         }
         $trace = $exception->getTrace();
-        $debug = Configure::read('debug') > 0 ? "\n" . print_r($trace, true) : '';
+        $debug = Configure::read('debug') ? "\n" . print_r($trace, true) : '';
         $this->_service->setResponse($response->withStringBody($message . $debug)->withType('text/plain'));
     }
 }

@@ -15,6 +15,7 @@ namespace CakeDC\Api\Service\Action;
 
 use Cake\Core\App;
 use Cake\Core\ObjectRegistry;
+use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use CakeDC\Api\Service\Exception\MissingExtensionException;
 
@@ -22,9 +23,15 @@ use CakeDC\Api\Service\Exception\MissingExtensionException;
  * Class ExtensionRegistry
  *
  * @package CakeDC\Api\Service\Action
+ *
+ * @template TSubject of object
+ * @implements \Cake\Event\EventDispatcherInterface<TSubject>
  */
-class ExtensionRegistry extends ObjectRegistry
+class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterface
 {
+    /**
+     * @use \Cake\Event\EventDispatcherTrait<TSubject>
+     */
     use EventDispatcherTrait;
 
     /**
@@ -85,9 +92,9 @@ class ExtensionRegistry extends ObjectRegistry
      * @param string $class The class to build.
      * @param string $alias The alias of the object.
      * @param array $config The Configuration settings for construction
-     * @return mixed
+     * @return object
      */
-    protected function _create($class, $alias, $config)
+    protected function _create(object|string $class, string $alias, array $config): object
     {
         if (empty($config['action'])) {
             $config['action'] = $this->_action;

@@ -1,8 +1,13 @@
 Changelog
 =========
 
-Releases for CakePHP 4.3
+Releases for CakePHP 5.0
 -------------
+
+* 10.0.0
+    * Remove deprecates
+    * Only middleware initialization allowed since 10.0
+    * Cleanup auth layer. Remove inbuilt authentication and authorization. Using cakephp/authentication and cakephp/authorization plugins middlewares.
 
 * 9.0.0
     Initial version that support CakePHP 4.3

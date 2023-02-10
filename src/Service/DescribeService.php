@@ -21,7 +21,7 @@ class DescribeService extends Service
     /**
      * @var array
      */
-    protected $_actionsClassMap = [
+    protected array $_actionsClassMap = [
         'describe' => \CakeDC\Api\Service\Action\DescribeAction::class,
     ];
 
@@ -30,7 +30,8 @@ class DescribeService extends Service
      */
     public function loadRoutes(): void
     {
-        ApiRouter::scope('/', function (RouteBuilder $routes) {
+        $builder = ApiRouter::createRouteBuilder('/', []);
+        $builder->scope('/', function (RouteBuilder $routes): void {
             $routes->setExtensions($this->_routeExtensions);
             $routes->connect('/describe/', ['controller' => 'describe', 'action' => 'describe']);
         });

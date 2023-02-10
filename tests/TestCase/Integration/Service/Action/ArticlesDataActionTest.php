@@ -11,20 +11,19 @@ declare(strict_types=1);
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Api\Test\TestCase\Integration\Service\Action\Auth;
+namespace CakeDC\Api\Test\TestCase\Integration\Service\Action;
 
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use CakeDC\Api\Test\ConfigTrait;
-use CakeDC\Api\Test\Settings;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
 
 /**
- * Class ValidateAccountRequestActionTest
+ * Class LoginActionTest
  *
  * @package CakeDC\Api\Test\TestCase\Integration\Service\Action\Auth
  */
-class ValidateAccountRequestActionTest extends IntegrationTestCase
+class ArticlesDataActionTest extends IntegrationTestCase
 {
     use ConfigTrait;
 
@@ -36,6 +35,7 @@ class ValidateAccountRequestActionTest extends IntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->_authAccess();
         Configure::write('App.fullBaseUrl', 'http://example.com');
     }
 
@@ -50,15 +50,16 @@ class ValidateAccountRequestActionTest extends IntegrationTestCase
         Configure::write('Test.Api.Extension', null);
     }
 
-    public function testSuccessValidateAccountRequest()
+    public function testData()
     {
-        $this->sendRequest('/auth/validate_account_request', 'POST', ['reference' => 'user-6']);
+        $this->sendRequest('/articles/data', 'GET', []);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
-        $this->assertTextEquals('Token has been reset successfully. Please check your email.', $result['data']);
-
-        $Users = TableRegistry::getTableLocator()->get('CakeDC/Users.Users');
-        $user = $Users->find()->where(['id' => Settings::USER6])->enableHydration(false)->first();
-        $this->assertNotEmpty($user['token']);
+        $expected = [
+            'a' => 1,
+            'b' => 2,
+        ];
+        $data = Hash::get($result, 'data');
+        $this->assertEquals($expected, $data);
     }
 }

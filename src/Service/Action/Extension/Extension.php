@@ -25,7 +25,7 @@ abstract class Extension
 {
     use InstanceConfigTrait;
 
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * ExtensionRegistry instance.

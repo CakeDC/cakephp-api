@@ -44,7 +44,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'logoutRedirect' => false,
         'requireIdentity' => true,
         'identityAttribute' => 'identity',

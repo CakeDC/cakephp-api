@@ -23,8 +23,8 @@ use Cake\ORM\Entity;
  * @property string $foreign_key
  * @property string $token
  * @property int $expired
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  */
 class JwtRefreshToken extends Entity
 {
@@ -35,9 +35,9 @@ class JwtRefreshToken extends Entity
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         '*' => true,
         'id' => false,
     ];
@@ -45,9 +45,9 @@ class JwtRefreshToken extends Entity
     /**
      * Fields that are excluded from JSON versions of the entity.
      *
-     * @var array
+     * @var array<string>
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         'token',
     ];
 }

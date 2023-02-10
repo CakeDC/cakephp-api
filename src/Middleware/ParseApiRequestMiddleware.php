@@ -15,6 +15,7 @@ namespace CakeDC\Api\Middleware;
 
 use Authentication\Authenticator\UnauthenticatedException;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 use Cake\Http\Response;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
@@ -31,6 +32,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ParseApiRequestMiddleware implements MiddlewareInterface
 {
     /**
+     * Container
+     *
+     * @var \Cake\Core\ContainerInterface|null
+     */
+    protected ?ContainerInterface $container;
+
+    /**
+     * Constructor.
+     *
+     * @param \Cake\Core\ContainerInterface|null $container Application DI container.
+     */
+    public function __construct(?ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * Process an incoming server request.
      *
      * Processes an incoming server request in order to produce a response.
@@ -43,6 +61,9 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        if ($this->container === null) {
+            $this->container = $request->getAttribute('container');
+        }
         $response = null;
         $service = null;
         $prefix = Configure::read('Api.prefix');
@@ -79,6 +100,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
     protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, $matches)
     {
         $service = null;
+        $response = null;
         $version = $matches['version'] ?? null;
         $serviceName = $matches['service'];
 
@@ -91,6 +113,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
             'version' => $version,
             'request' => $request,
             'baseUrl' => $url,
+            'container' => $this->container,
         ];
 
         try {
@@ -128,5 +151,16 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Sets the service parser.
+     *
+     * @param \Cake\Core\ContainerInterface $container A ContainerInterface instance.
+     * @return void
+     */
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
     }
 }

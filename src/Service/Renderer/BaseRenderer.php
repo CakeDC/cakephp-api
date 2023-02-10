@@ -73,7 +73,7 @@ abstract class BaseRenderer
     protected function _buildMessage(Exception $exception): string
     {
         $message = $exception->getMessage();
-        if (Configure::read('debug') > 0) {
+        if (Configure::read('debug')) {
             $message .= ' on line ' . $exception->getLine() . ' in ' . $exception->getFile();
         }
 
@@ -88,7 +88,7 @@ abstract class BaseRenderer
      */
     protected function _stackTrace(Exception $exception): ?array
     {
-        if (Configure::read('debug') == 0) {
+        if (!Configure::read('debug')) {
             return null;
         }
         $trace = $exception->getTrace();

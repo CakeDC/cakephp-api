@@ -25,7 +25,7 @@ class ArticlesFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         ['id' => 1, 'author_id' => 1, 'title' => 'First Article', 'body' => 'First Article Body', 'published' => 'Y'],
         ['id' => 2, 'author_id' => 3, 'title' => 'Second Article', 'body' => 'Second Article Body', 'published' => 'Y'],
         ['id' => 3, 'author_id' => 2, 'title' => 'Third Article', 'body' => 'Third Article Body', 'published' => 'Y'],
@@ -43,14 +43,16 @@ class ArticlesFixture extends TestFixture
         ['id' => 15, 'author_id' => 1, 'title' => 'Article N15', 'body' => 'Article N15 Body', 'published' => 'Y'],
     ];
 
-    public function insert(ConnectionInterface $db)
+    public function insert(ConnectionInterface $db): bool
     {
-        parent::insert($db);
+        $result = parent::insert($db);
 
         if ($db->getDriver() instanceof Postgres) {
             foreach (range(1, count($this->records)) as $i) {
                 $db->execute('select nextval(\'articles_id_seq\'::regclass)');
             }
         }
+
+        return $result;
     }
 }

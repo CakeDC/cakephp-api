@@ -27,7 +27,7 @@ class JwtLoginActionTest extends IntegrationTestCase
 {
     use ConfigTrait;
 
-    public $fixtures = [
+    protected array $fixtures = [
         'plugin.CakeDC/Api.SocialAccounts',
         'plugin.CakeDC/Api.Users',
         'plugin.CakeDC/Api.Articles',

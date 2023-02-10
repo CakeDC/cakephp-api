@@ -11,7 +11,8 @@
 
 namespace CakeDC\Api\Test\Fixture;
 
-use Cake\Auth\PasswordHasherFactory;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
+use Authentication\PasswordHasher\PasswordHasherFactory;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -24,7 +25,7 @@ class UsersFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         [
             'id' => '00000000-0000-0000-0000-000000000001',
             'username' => 'user-1',
@@ -119,7 +120,7 @@ class UsersFixture extends TestFixture
 
     public function __construct()
     {
-        $hasher = PasswordHasherFactory::build(\Cake\Auth\DefaultPasswordHasher::class);
+        $hasher = PasswordHasherFactory::build(DefaultPasswordHasher::class);
         parent::__construct();
         foreach ($this->records as &$record) {
             $record['password'] = $hasher->hash($record['password']);

@@ -28,11 +28,10 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Auth;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
-use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
-use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Action;
 
 /**
@@ -43,11 +42,9 @@ use CakeDC\Api\Service\Action\Action;
 class Auth
 {
     use AuthenticateTrait;
-    use AuthorizeTrait;
     use EventDispatcherTrait;
     use InstanceConfigTrait;
     use LogTrait;
-    use StorageTrait;
 
     /**
      * Constant for 'all'
@@ -66,14 +63,14 @@ class Auth
      *
      * @var \Cake\Http\ServerRequest
      */
-    public $request;
+    public ?ServerRequest $request;
 
     /**
      * Response object
      *
      * @var \Cake\Http\Response
      */
-    public $response;
+    public ?Response $response;
 
     /**
      * Default config
@@ -82,6 +79,7 @@ class Auth
      */
     protected array $_defaultConfig = [
         'storage' => 'Memory',
+        'identityAttribute' => 'identity',
     ];
 
     protected $_registry = null;
@@ -204,40 +202,6 @@ class Auth
     }
 
     /**
-     * Main execution method, handles initial authentication check and redirection
-     * of invalid users.
-     *
-     * The auth check is done when event name is same as the one configured in
-     * `checkAuthIn` config.
-     *
-     * @param \Cake\Event\Event $event Event instance.
-     * @return \Cake\Http\Response|null
-     */
-    public function authCheck(Event $event)
-    {
-        $action = $this->_action;
-
-        $this->_setDefaults();
-
-        if ($this->_isAllowed($action)) {
-            return null;
-        }
-
-        if (!$this->_getUser()) {
-            throw new UnauthenticatedException();
-        }
-
-        if (
-            empty($this->_config['authorize']) ||
-            $this->isAuthorized($this->user())
-        ) {
-            return null;
-        }
-
-        throw new ForbiddenException($this->_config['authError']);
-    }
-
-    /**
      * Checks whether current action is accessible without authentication.
      *
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
@@ -276,5 +240,47 @@ class Auth
     public function __set($name, $value)
     {
         $this->{$name} = $value;
+    }
+
+    /**
+     * Returns Request
+     *
+     * @return ?\Cake\Http\ServerRequest
+     */
+    public function getRequest(): ?ServerRequest
+    {
+        return $this->request;
+    }
+
+    /**
+     * Returns Response
+     *
+     * @return ?\Cake\Http\Response
+     */
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+
+    /**
+     * Sets request object.
+     *
+     * @param ?\Cake\Http\ServerRequest $request ServerRequest object.
+     * @return void
+     */
+    public function setRequest(?ServerRequest $request): void
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * Sets response object.
+     *
+     * @param ?\Cake\Http\Response $response Response object.
+     * @return void
+     */
+    public function setResponse(?Response $response): void
+    {
+        $this->response = $response;
     }
 }

@@ -15,7 +15,7 @@ namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use CakeDC\Api\Service\Action\CrudAction;
 
 /**
@@ -42,13 +42,13 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
      * On find entities.
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findEntities(Event $event): \Cake\ORM\Query
+    public function findEntities(Event $event): SelectQuery
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
-        /** @var \Cake\ORM\Query $query */
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
         return $this->_autocompleteList($action, $query);
@@ -56,10 +56,10 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
 
     /**
      * @param \CakeDC\Api\Service\Action\CrudAction $action An Action instance.
-     * @param \Cake\ORM\Query $query A Query instance.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query A Query instance.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _autocompleteList(CrudAction $action, Query $query): \Cake\ORM\Query
+    protected function _autocompleteList(CrudAction $action, SelectQuery $query): SelectQuery
     {
         $data = $action->getData();
         if (!(is_array($data) && !empty($data['autocomplete_list']))) {

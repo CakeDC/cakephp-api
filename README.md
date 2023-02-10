@@ -15,6 +15,7 @@ Versions and branches
 
 | CakePHP | CakeDC Api Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
+| 5.0             | [10.x-cake5.0](https://github.com/cakedc/cakephp-api/tree/10.x-cake5.0)                  | 10.0.0 | unstable |
 | 4.3             | [9.x-cake4.3](https://github.com/cakedc/cakephp-api/tree/9.x-cake4.3)                  | 9.0.1 | unstable |
 | 4.0             | [8.x](https://github.com/cakedc/cakephp-api/tree/8.x)                  | 8.0.14 | unstable |
 | ^3.7            | [master](https://github.com/cakedc/cakephp-api/tree/master)            | 7.0.0 | stable   |
@@ -44,6 +45,6 @@ This repository follows the [CakeDC Plugin Standard](http://cakedc.com/plugin-st
 License
 -------
 
-Copyright 2016-2022 Cake Development Corporation (CakeDC). All rights reserved.
+Copyright 2016-2023 Cake Development Corporation (CakeDC). All rights reserved.
 
 Licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) License. Redistributions of the source code included in this repository must retain the copyright notice found in each file.

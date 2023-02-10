@@ -10,28 +10,19 @@ declare(strict_types=1);
  * @copyright Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
-/**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
 namespace CakeDC\Api\Service\Auth;
 
+use ArrayAccess;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\Authenticator\ImpersonationInterface;
+use Authentication\Authenticator\ResultInterface;
+use Authentication\Authenticator\UnauthenticatedException;
 use Authentication\IdentityInterface;
-use Authorization\IdentityDecorator;
-use Cake\Core\App;
-use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Class AuthenticateTrait
@@ -41,202 +32,276 @@ use Cake\Utility\Hash;
 trait AuthenticateTrait
 {
     /**
-     * Objects that will be used for authentication checks.
+     * List of actions that don't require authentication.
      *
-     * @var array
+     * @var array<string>
      */
-    protected $_authenticateObjects = [];
+    protected array $unauthenticatedActions = [];
 
     /**
-     * The instance of the Authenticate provider that was used for
-     * successfully logging in the current user after calling `login()`
-     * in the same request
+     * Authentication service instance.
      *
-     * @var \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate
+     * @var \Authentication\AuthenticationServiceInterface|null
      */
-    protected $_authenticationProvider;
+    protected ?AuthenticationServiceInterface $_authentication = null;
 
     /**
-     * Get the current user from storage.
+     * Returns authentication service.
      *
-     * @param string|null $key Field to retrieve. Leave null to get entire User record.
-     * @return mixed|null Either User record or null if no user is logged in, or retrieved field if key is specified.
+     * @return \Authentication\AuthenticationServiceInterface
+     * @throws \Exception
      */
-    public function user($key = null)
+    public function getAuthenticationService(): AuthenticationServiceInterface
     {
-        $storage = $this->storage();
-        if ($storage === null) {
-            return null;
-        }
-        $user = $storage->read();
-        if (!$user) {
-            return null;
+        if ($this->_authentication !== null) {
+            return $this->_authentication;
         }
 
-        if ($key === null) {
-            return $user;
+        $service = $this->getRequest()->getAttribute('authentication');
+        if ($service === null) {
+            throw new Exception(
+                'The request object does not contain the required `authentication` attribute. Verify the ' .
+                'AuthenticationMiddleware has been added.'
+            );
         }
 
-        return Hash::get($user, $key);
+        if (!($service instanceof AuthenticationServiceInterface)) {
+            throw new Exception('Authentication service does not implement ' . AuthenticationServiceInterface::class);
+        }
+
+        $this->_authentication = $service;
+
+        return $service;
     }
 
     /**
-     * Set provided user info to storage as logged in user.
+     * Check if the identity presence is required.
      *
-     * The storage class is configured using `storage` config key or passing
-     * instance to AuthComponent::storage().
+     * Also checks if the current action is accessible without authentication.
      *
-     * @param array $user Array of user data.
      * @return void
+     * @throws \Exception when request is missing or has an invalid AuthenticationService
+     * @throws \Authentication\Authenticator\UnauthenticatedException when requireIdentity is true and request is missing an identity
      */
-    public function setUser(array $user)
+    protected function doIdentityCheck(): void
     {
-        $this->storage()->write($user);
+        if (!$this->getConfig('requireIdentity')) {
+            return;
+        }
+
+        $request = $this->getRequest();
+        $action = $request->getParam('action');
+        if (in_array($action, $this->unauthenticatedActions, true)) {
+            return;
+        }
+
+        $identity = $request->getAttribute($this->getConfig('identityAttribute'));
+        if (!$identity) {
+            throw new UnauthenticatedException($this->getConfig('unauthenticatedMessage', ''));
+        }
     }
 
     /**
-     * connected authentication objects will have their
-     * getUser() methods called.
+     * Set the list of actions that don't require an authentication identity to be present.
      *
-     * This lets stateless authentication methods function correctly.
+     * Actions not in this list will require an identity to be present. Any
+     * valid identity will pass this constraint.
      *
-     * @return bool true If a user can be found, false if one cannot.
+     * @param array<string> $actions The action list.
+     * @return $this
      */
-    protected function _getUser()
+    public function allowUnauthenticated(array $actions)
     {
-        $user = $this->user();
-        if ($user) {
-            $this->storage()->redirectUrl(false);
+        $this->unauthenticatedActions = $actions;
 
-            return true;
-        }
-
-        if (empty($this->_authenticateObjects)) {
-            $this->constructAuthenticate();
-        }
-        foreach ($this->_authenticateObjects as $auth) {
-            /** @var \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate $auth */
-            $result = $auth->getUser($this->request);
-            if ($result instanceof \ArrayObject) {
-                $result = (array)$result;
-            }
-            if ($result instanceof IdentityInterface || $result instanceof IdentityDecorator) {
-                $result = $result->getOriginalData();
-            }
-            if (!empty($result) && (is_array($result) || $result instanceof \ArrayObject)) {
-                $this->_authenticationProvider = $auth;
-                $event = $this->dispatchEvent('Auth.afterIdentify', [$result, $auth]);
-                if ($event->getResult() !== null) {
-                    $result = $event->getResult();
-                }
-                $this->storage()->write($result);
-
-                return true;
-            }
-        }
-
-        return false;
+        return $this;
     }
 
     /**
-     * Use the configured authentication adapters, and attempt to identify the user
-     * by credentials contained in $request.
+     * Add to the list of actions that don't require an authentication identity to be present.
      *
-     * Triggers `Auth.afterIdentify` event which the authenticate classes can listen
-     * to.
-     *
-     * @return \Cake\Datasource\EntityInterface|array|null User record data, or false, if the user could not be identified.
+     * @param array<string> $actions The action or actions to append.
+     * @return $this
      */
-    public function identify()
+    public function addUnauthenticatedActions(array $actions)
     {
-//        $this->_setDefaults();
+        $this->unauthenticatedActions = array_merge($this->unauthenticatedActions, $actions);
+        $this->unauthenticatedActions = array_values(array_unique($this->unauthenticatedActions));
 
-        if (empty($this->_authenticateObjects)) {
-            $this->constructAuthenticate();
-        }
-        foreach ($this->_authenticateObjects as $auth) {
-            /** @var \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate $auth */
-            $result = $auth->authenticate($this->request, $this->response);
-            if (!empty($result) && is_array($result)) {
-                $this->_authenticationProvider = $auth;
-                $event = $this->dispatchEvent('Auth.afterIdentify', [$result, $auth]);
-                if ($event->getResult() !== null) {
-                    return $event->getResult();
-                }
-
-                return $result;
-            }
-        }
-
-        return null;
+        return $this;
     }
 
     /**
-     * Loads the configured authentication objects.
+     * Get the current list of actions that don't require authentication.
      *
-     * @return array|null The loaded authorization objects, or null on empty authenticate value.
-     * @throws \Cake\Core\Exception\CakeException
+     * @return array<string>
      */
-    public function constructAuthenticate()
+    public function getUnauthenticatedActions(): array
     {
-        if (empty($this->_config['authenticate'])) {
-            return null;
-        }
-        $this->_authenticateObjects = [];
-        $authenticate = Hash::normalize((array)$this->_config['authenticate']);
-        $global = [];
-        if (isset($authenticate[Auth::ALL])) {
-            $global = $authenticate[Auth::ALL];
-            unset($authenticate[Auth::ALL]);
-        }
-        foreach ($authenticate as $alias => $config) {
-            if (!empty($config['className'])) {
-                $class = $config['className'];
-                unset($config['className']);
-            } else {
-                $class = $alias;
-            }
-            $className = App::className($class, 'Service/Auth/Authenticate', 'Authenticate');
-            if (!class_exists($className)) {
-                throw new CakeException(sprintf('Authentication adapter "%s" was not found.', $class));
-            }
-            $config = array_merge($global, (array)$config);
-
-            $class = new $className($this->_action, $config);
-            if (!method_exists($class, 'authenticate')) {
-                throw new CakeException('Authentication objects must implement an authenticate() method.');
-            }
-            $this->_authenticateObjects[$alias] = $class;
-            $this->getEventManager()->on($class);
-        }
-
-        return $this->_authenticateObjects;
+        return $this->unauthenticatedActions;
     }
 
     /**
-     * Getter for authenticate objects. Will return a particular authenticate object.
+     * Gets the result of the last authenticate() call.
      *
-     * @param string $alias Alias for the authenticate object
-     * @return \Cake\Auth\BaseAuthenticate|null
+     * @return \Authentication\Authenticator\ResultInterface|null Authentication result interface
      */
-    public function getAuthenticate($alias)
+    public function getResult(): ?ResultInterface
     {
-        if (empty($this->_authenticateObjects)) {
-            $this->constructAuthenticate();
-        }
-
-        return $this->_authenticateObjects[$alias] ?? null;
+        return $this->getAuthenticationService()->getResult();
     }
 
     /**
-     * If login was called during this request and the user was successfully
-     * authenticated, this function will return the instance of the authentication
-     * object that was used for logging the user in.
+     * Returns the identity used in the authentication attempt.
      *
-     * @return \CakeDC\Api\Service\Auth\Authenticate\BaseAuthenticate|null
+     * @return \Authentication\IdentityInterface|null
      */
-    public function authenticationProvider()
+    public function getIdentity(): ?IdentityInterface
     {
-        return $this->_authenticationProvider;
+        $identity = $this->getRequest()->getAttribute($this->getConfig('identityAttribute'));
+
+        return $identity;
+    }
+
+    /**
+     * Returns the identity used in the authentication attempt.
+     *
+     * @param string $path Path to return from the data.
+     * @return mixed
+     * @throws \RuntimeException If the identity has not been found.
+     */
+    public function getIdentityData(string $path): mixed
+    {
+        $identity = $this->getIdentity();
+
+        if ($identity === null) {
+            throw new RuntimeException('The identity has not been found.');
+        }
+
+        return Hash::get($identity, $path);
+    }
+
+    /**
+     * Replace the current identity
+     *
+     * Clear and replace identity data in all authenticators
+     * that are loaded and support persistence. The identity
+     * is cleared and then set to ensure that privilege escalation
+     * and de-escalation include side effects like session rotation.
+     *
+     * @param \ArrayAccess $identity Identity data to persist.
+     * @return $this
+     */
+    public function setIdentity(ArrayAccess $identity)
+    {
+        $service = $this->getAuthenticationService();
+
+        $service->clearIdentity($this->getRequest(), $this->getResponse());
+
+        /** @psalm-var array{request: \Cake\Http\ServerRequest, response: \Cake\Http\Response} $result */
+        $result = $service->persistIdentity(
+            $this->getRequest(),
+            $this->getResponse(),
+            $identity
+        );
+
+        $this->setRequest($result['request']);
+        $this->setResponse($result['response']);
+
+        return $this;
+    }
+
+    /**
+     * Impersonates a user
+     *
+     * @param \ArrayAccess $impersonated User impersonated
+     * @return $this
+     * @throws \Exception
+     */
+    public function impersonate(ArrayAccess $impersonated)
+    {
+        $service = $this->getImpersonationAuthenticationService();
+
+        $identity = $this->getIdentity();
+        if (!$identity) {
+            throw new UnauthenticatedException('You must be logged in before impersonating a user.');
+        }
+
+        /** @psalm-var array{request: \Cake\Http\ServerRequest, response: \Cake\Http\Response} $result */
+        $result = $service->impersonate(
+            $this->getRequest(),
+            $this->getResponse(),
+            $identity,
+            $impersonated
+        );
+
+        if (!$service->isImpersonating($this->getRequest())) {
+            throw new UnexpectedValueException('An error has occurred impersonating user.');
+        }
+
+        $this->setRequest($result['request']);
+        $this->setResponse($result['response']);
+
+        return $this;
+    }
+
+    /**
+     * Stops impersonation
+     *
+     * @return $this
+     * @throws \Exception
+     */
+    public function stopImpersonating()
+    {
+        $service = $this->getImpersonationAuthenticationService();
+
+        /** @psalm-var array{request: \Cake\Http\ServerRequest, response: \Cake\Http\Response} $result */
+        $result = $service->stopImpersonating(
+            $this->getRequest(),
+            $this->getResponse()
+        );
+
+        if ($service->isImpersonating($this->getRequest())) {
+            throw new UnexpectedValueException('An error has occurred stopping impersonation.');
+        }
+
+        $this->setRequest($result['request']);
+        $this->setResponse($result['response']);
+
+        return $this;
+    }
+
+    /**
+     * Returns true if impersonation is being done
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function isImpersonating(): bool
+    {
+        $service = $this->getImpersonationAuthenticationService();
+
+        return $service->isImpersonating(
+            $this->getRequest()
+        );
+    }
+
+    /**
+     * Get impersonation authentication service
+     *
+     * @return \Authentication\Authenticator\ImpersonationInterface
+     * @throws \Exception
+     */
+    protected function getImpersonationAuthenticationService(): ImpersonationInterface
+    {
+        $service = $this->getAuthenticationService();
+        if (!($service instanceof ImpersonationInterface)) {
+            $className = get_class($service);
+            throw new InvalidArgumentException(
+                "The {$className} must implement ImpersonationInterface in order to use impersonation."
+            );
+        }
+
+        return $service;
     }
 }

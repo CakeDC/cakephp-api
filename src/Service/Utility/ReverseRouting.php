@@ -30,7 +30,7 @@ class ReverseRouting
      *
      * @param string $name Link name
      * @param string|null $path Link path.
-     * @param string $method Action method.
+     * @param mixed $method Action method.
      * @param string|null $version Version prefix.
      * @return array
      */

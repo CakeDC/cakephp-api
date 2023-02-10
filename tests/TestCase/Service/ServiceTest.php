@@ -14,11 +14,14 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\App\Service;
 
 use Cake\Core\Configure;
+use Cake\Core\Container;
+use Cake\Http\ServerRequest;
 use Cake\Routing\Exception\MissingRouteException;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\Test\App\DI\Service\TestService;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
@@ -36,13 +39,17 @@ class ServiceTest extends TestCase
     public $response;
 
     /**
-     * setUp method
-     *
-     * @return void
+     * @var \Cake\Core\Container
+     */
+    protected $container;
+
+    /**
+     * Setup
      */
     public function setUp(): void
     {
         parent::setUp();
+        $this->container = new Container();
     }
 
     /**
@@ -257,5 +264,46 @@ class ServiceTest extends TestCase
         $action = $Service->buildAction();
         $this->assertEquals($actionClass, get_class($action));
         $this->assertTextEquals('custom action applied', $action->process());
+    }
+
+    /**
+     * Test load value method
+     *
+     * @return void
+     */
+    public function testActionInitializeContainer()
+    {
+        $this->_initializeRequest([
+            'params' => [
+                'service' => 'articles',
+            ],
+        ]);
+        $testService = new TestService();
+
+        $this->container->add(stdClass::class, json_decode('{"key":"value"}'));
+        $this->container->add(ServerRequest::class, $this->request);
+        $this->container->add(TestService::class, $testService);
+
+        $service = $this->request->getParam('service');
+        $options = [
+            'version' => null,
+            'service' => $service,
+            'request' => $this->request,
+            'response' => $this->response,
+            'baseUrl' => '/articles/data',
+            'className' => \CakeDC\Api\Test\App\Service\ArticlesService::class,
+            'container' => $this->container,
+        ];
+
+        $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
+        $this->assertTrue($Service instanceof Service);
+        $this->assertEquals('articles', $Service->getName());
+
+        $this->assertTextEquals('/articles/data', $Service->getBaseUrl());
+        $action = $Service->buildAction();
+        $this->assertEquals('articles', $action->getService()->getName());
+        $this->assertEquals('articles', $action->getTable()->getTable());
+        $this->assertSame($action->getTestService(), $testService);
+        $this->assertSame($action->getTestService(), $this->container->get(TestService::class));
     }
 }

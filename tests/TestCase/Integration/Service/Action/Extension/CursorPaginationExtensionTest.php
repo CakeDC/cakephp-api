@@ -162,7 +162,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
 
     protected function _addData($count)
     {
-        $Article = TableRegistry::get('Articles');
+        $Article = TableRegistry::getTableLocator()->get('Articles');
         $Article->createRecords($count, 1);
     }
 }

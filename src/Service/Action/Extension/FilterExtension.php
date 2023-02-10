@@ -40,9 +40,9 @@ class FilterExtension extends Extension implements EventListenerInterface
      * find entities
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findEntities(Event $event): \Cake\ORM\Query
+    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
     {
         $action = $event->getSubject();
         $query = $event->getData('query');

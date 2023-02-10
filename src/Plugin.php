@@ -15,12 +15,15 @@ namespace CakeDC\Api;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 
 /**
  * Api plugin
  */
 class Plugin extends BasePlugin
 {
+    protected array $middlewares = [];
+
     /**
      * @inheritDoc
      */
@@ -37,20 +40,47 @@ class Plugin extends BasePlugin
                 }
                 if (array_key_exists('params', $middleware)) {
                     $options = $middleware['params'];
-                    $routes->registerMiddleware($alias, new $class($request, $options));
+                    $this->registerMiddleware($routes, $alias, new $class($request, $options));
                 } else {
-                    $routes->registerMiddleware($alias, new $class($request));
+                    $this->registerMiddleware($routes, $alias, new $class($request));
                 }
             } else {
                 if (array_key_exists('params', $middleware)) {
                     $options = $middleware['params'];
-                    $routes->registerMiddleware($alias, new $class($options));
+                    $this->registerMiddleware($routes, $alias, new $class($options));
                 } else {
-                    $routes->registerMiddleware($alias, new $class());
+                    $this->registerMiddleware($routes, $alias, new $class());
                 }
             }
         }
 
         parent::routes($routes);
+    }
+
+    /**
+     * Middleware registrator and holder.
+     *
+     * @param \Cake\Routing\RouteBuilder $routes Routes.
+     * @param string $alias Middleware alias.
+     * @param string $class Middleware class instance.
+     * @return void
+     */
+    protected function registerMiddleware($routes, $alias, $class)
+    {
+        $routes->registerMiddleware($alias, $class);
+        $this->middlewares[$alias] = $class;
+    }
+
+    /**
+     * Register container services for this plugin.
+     *
+     * @param \Cake\Core\ContainerInterface $container The container to add services to.
+     * @return void
+     */
+    public function services(ContainerInterface $container): void
+    {
+        if (array_key_exists('apiParser', $this->middlewares)) {
+            $this->middlewares['apiParser']->setContainer($container);
+        }
     }
 }

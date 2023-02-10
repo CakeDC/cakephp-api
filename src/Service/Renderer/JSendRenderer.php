@@ -176,7 +176,7 @@ class JSendRenderer extends BaseRenderer
             'code' => $code,
             'data' => $data,
         ];
-        if (Configure::read('debug') > 0) {
+        if (Configure::read('debug')) {
             $response['trace'] = $trace;
         }
 

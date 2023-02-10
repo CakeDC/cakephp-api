@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Rbac;
 
+use ArrayAccess;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
@@ -91,16 +92,16 @@ class ApiRbac implements RbacInterface
     /**
      * @return array
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
-        return $this->permissions;
+        return (array)$this->permissions;
     }
 
     /**
      * @param array $permissions permissions
      * @return void
      */
-    public function setPermissions($permissions)
+    public function setPermissions(array $permissions): void
     {
         $this->permissions = $permissions;
     }
@@ -113,11 +114,15 @@ class ApiRbac implements RbacInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    public function checkPermissions($user, ServerRequestInterface $request)
+    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): bool
     {
         $roleField = $this->getConfig('role_field');
         $defaultRole = $this->getConfig('default_role');
         $role = Hash::get($user, $roleField, $defaultRole);
+
+        if ($this->permissions === null) {
+            return false;
+        }
 
         foreach ($this->permissions as $permission) {
             $matchResult = $this->_matchPermission($permission, $user, $role, $request);
@@ -190,11 +195,11 @@ class ApiRbac implements RbacInterface
             } elseif (array_key_exists($key, $reserved)) {
                 $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
             } else {
-                if (!$this->_startsWith((string)$key, 'user.')) {
+                if (!$this->_startsWith($key, 'user.')) {
                     $key = 'user.' . $key;
                 }
 
-                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, (string)$key));
+                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, $key));
             }
 
             if ($inverse) {

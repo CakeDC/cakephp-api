@@ -15,7 +15,7 @@ namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use CakeDC\Api\Service\Action\Action;
 
 /**
@@ -25,7 +25,7 @@ use CakeDC\Api\Service\Action\Action;
  */
 class PaginateExtension extends Extension implements EventListenerInterface
 {
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'defaultLimit' => 20,
         'limitField' => 'limit',
         'pageField' => 'page',
@@ -49,9 +49,9 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * Find entities
      *
      * @param \Cake\Event\EventInterface $event An Event instance
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findEntities(EventInterface $event): Query
+    public function findEntities(EventInterface $event): SelectQuery
     {
         /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();

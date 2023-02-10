@@ -17,7 +17,7 @@ use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetInterface;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Utility\Xml;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Result;
@@ -62,7 +62,7 @@ class XmlRenderer extends BaseRenderer
                 'message' => $this->_buildMessage($exception),
             ],
         ];
-        if (Configure::read('debug') > 0) {
+        if (Configure::read('debug')) {
             $data['error']['trace'] = $this->_stackTrace($exception);
         }
         if ($exception instanceof ValidationException) {
@@ -108,7 +108,7 @@ class XmlRenderer extends BaseRenderer
             if (is_object($value) && $value instanceof \DateTime) {
                 $property = [];
                 $property['@'] = $value->format(\DateTime::ISO8601);
-            } elseif (is_object($value) && $value instanceof FrozenTime) {
+            } elseif (is_object($value) && $value instanceof DateTime) {
                 $property = [];
                 $property['@'] = $value->toIso8601String();
             } elseif (is_object($value)) {

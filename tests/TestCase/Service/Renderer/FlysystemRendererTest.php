@@ -88,7 +88,7 @@ class FlysystemRendererTest extends TestCase
      */
     public function testRendererSuccess()
     {
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         Configure::write('Api.Flysystem.expire', '+1 day');
 
         $response = $this
@@ -138,7 +138,7 @@ class FlysystemRendererTest extends TestCase
      */
     public function testRendereFileNotFound()
     {
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
             ->setMethods(['withStatus', 'withType', 'withStringBody'])
@@ -204,7 +204,7 @@ class FlysystemRendererTest extends TestCase
         ];
         $this->Service = new FallbackService($serviceOptions);
 
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         $error = new UnauthenticatedException();
         $renderer = $this->Service->getRenderer();
 
@@ -241,7 +241,7 @@ class FlysystemRendererTest extends TestCase
         ];
         $this->Service = new FallbackService($serviceOptions);
 
-        Configure::write('debug', 0);
+        Configure::write('debug', false);
         $error = new \Exception();
         $renderer = $this->Service->getRenderer();
 

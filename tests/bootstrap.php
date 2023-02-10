@@ -14,7 +14,7 @@ declare(strict_types=1);
 use Cake\Core\Configure;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Utility\Security;
 
 $findRoot = function () {
@@ -83,10 +83,9 @@ Configure::write('App', [
 // Cake\Core\Configure::write('App.encoding', 'UTF-8');
 Cake\Core\Configure::write('debug', true);
 
-$TMP = new \Cake\Filesystem\Folder(TMP);
-$TMP->create(TMP . 'cache/models', 0777);
-$TMP->create(TMP . 'cache/persistent', 0777);
-$TMP->create(TMP . 'cache/views', 0777);
+@mkdir(TMP . 'cache/models', 0777);
+@mkdir(TMP . 'cache/persistent', 0777);
+@mkdir(TMP . 'cache/views', 0777);
 
 $cache = [
     'default' => [
@@ -137,7 +136,7 @@ Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5
 mb_internal_encoding(Configure::read('App.encoding'));
 Security::setSalt(Configure::read('Security.salt'));
 \Cake\Mailer\TransportFactory::setConfig(Configure::consume('EmailTransport'));
-Email::setConfig(Configure::consume('Email'));
+Mailer::setConfig(Configure::consume('Email'));
 
 // Ensure default test connection is defined
 if (!getenv('db_dsn')) {

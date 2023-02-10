@@ -27,17 +27,17 @@
         "source": "https://github.com/CakeDC/cakephp-api"
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "ext-json": "*",
-        "cakephp/cakephp": "^4.3",
-        "cakedc/users": "^11.0",
+        "cakephp/cakephp": "5.x-dev",
+        "cakedc/users": "12.next-cake5-dev",
         "lcobucci/jwt": "~4.0.0",
-        "firebase/php-jwt": "^5.0"
+        "firebase/php-jwt": "^6.3"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "~4.4.0",
         "league/flysystem-vfs": "^1.0",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^9.5.16",
         "vlucas/phpdotenv": "^3.3"
     },
     "autoload": {
@@ -75,7 +75,7 @@
         "test": "phpunit --stderr",
         "stan": "phpstan analyse src/",
         "psalm": "php vendor/psalm/phar/psalm.phar --show-info=false src/ ",
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:0.12.94 psalm/phar:~4.9.2 && mv composer.backup composer.json",
+        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.9.0 psalm/phar:^5.1.0 && mv composer.backup composer.json",
         "stan-rebuild-baseline": "phpstan analyse --configuration phpstan.neon --error-format baselineNeon src/ > phpstan-baseline.neon",
         "psalm-rebuild-baseline": "php vendor/psalm/phar/psalm.phar --show-info=false  --set-baseline=psalm-baseline.xml  src/",
         "rector": "rector process src/",

@@ -28,7 +28,7 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 class CursorPaginateExtension extends Extension implements EventListenerInterface
 {
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'cursorField' => 'id',
         'countField' => 'count',
         'defaultCount' => 20,
@@ -69,13 +69,13 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * find entities
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findEntities(Event $event): \Cake\ORM\Query
+    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
     {
         /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
-        /** @var \Cake\ORM\Query $query */
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
         if ($event->getResult()) {
             $query = $event->getResult();
@@ -92,7 +92,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
             $orderDirection = 'asc';
             $query->where([$cursorField . ' >' => $sinceId]);
         }
-        $query->order([$cursorField => $orderDirection]);
+        $query->orderBy([$cursorField => $orderDirection]);
 
         return $query;
     }

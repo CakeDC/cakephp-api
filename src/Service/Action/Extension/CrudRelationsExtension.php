@@ -16,7 +16,7 @@ namespace CakeDC\Api\Service\Action\Extension;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Association;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Service\Action\CrudAction;
 
@@ -48,13 +48,13 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * On find entity
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findEntity(Event $event): \Cake\ORM\Query
+    public function findEntity(Event $event): \Cake\ORM\Query\SelectQuery
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
-        /** @var \Cake\ORM\Query $query */
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
         return $this->_attachAssociations($action, $query);
@@ -64,13 +64,13 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * On find entities.
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findEntities(Event $event): \Cake\ORM\Query
+    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
-        /** @var \Cake\ORM\Query $query */
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
         return $this->_attachAssociations($action, $query);
@@ -118,10 +118,10 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
 
     /**
      * @param \CakeDC\Api\Service\Action\CrudAction $action An Action instance.
-     * @param \Cake\ORM\Query $query A Query instance.
+     * @param \Cake\ORM\Query\SelectQuery $query A Query instance.
      * @return mixed
      */
-    protected function _attachAssociations(CrudAction $action, Query $query)
+    protected function _attachAssociations(CrudAction $action, SelectQuery $query)
     {
         $associations = $this->_includeAssociations($action);
         if (empty($associations) && $this->_includeDirectAssociations($action)) {

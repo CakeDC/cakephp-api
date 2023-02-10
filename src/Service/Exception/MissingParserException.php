@@ -15,5 +15,5 @@ namespace CakeDC\Api\Service\Exception;
 
 class MissingParserException extends \Cake\Core\Exception\CakeException
 {
-    protected $_messageTemplate = 'Request Parser class %s could not be found.';
+    protected string $_messageTemplate = 'Request Parser class %s could not be found.';
 }

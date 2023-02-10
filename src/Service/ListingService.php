@@ -23,7 +23,7 @@ use CakeDC\Api\Routing\ApiRouter;
  */
 class ListingService extends Service
 {
-    protected $_actionsClassMap = [
+    protected array $_actionsClassMap = [
         'list' => \CakeDC\Api\Service\Action\ListAction::class,
     ];
 
@@ -35,7 +35,7 @@ class ListingService extends Service
     public function loadRoutes(): void
     {
         $builder = ApiRouter::createRouteBuilder('/', []);
-        $builder->scope('/', function (RouteBuilder $routes) {
+        $builder->scope('/', function (RouteBuilder $routes): void {
             $routes->setExtensions($this->_routeExtensions);
             $routes->connect('/listing/', ['controller' => 'listing', 'action' => 'list']);
         });

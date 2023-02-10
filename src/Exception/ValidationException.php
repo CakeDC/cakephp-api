@@ -18,7 +18,7 @@ namespace CakeDC\Api\Exception;
  */
 class ValidationException extends ServiceException
 {
-    protected $_defaultCode = 422;
+    protected int $_defaultCode = 422;
 
     /**
      * Validation errors

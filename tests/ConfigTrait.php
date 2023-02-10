@@ -159,7 +159,7 @@ trait ConfigTrait
 
         $this->response = empty($options['response']) ? new Response() : $options['response'];
         $this->Controller = $this->createMock(\Cake\Controller\Controller::class);
-        $this->Controller->request = $this->request;
-        $this->Controller->response = $this->response;
+        $this->Controller->setRequest($this->request);
+        $this->Controller->setResponse($this->response);
     }
 }

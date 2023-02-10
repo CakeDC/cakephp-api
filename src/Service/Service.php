@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service;
 
+use Cake\Controller\Exception\InvalidParameterException;
 use Cake\Core\App;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -36,6 +38,8 @@ use CakeDC\Api\Service\Exception\MissingRendererException;
 use CakeDC\Api\Service\Renderer\BaseRenderer;
 use CakeDC\Api\Service\RequestParser\BaseParser;
 use Exception;
+use ReflectionClass;
+use ReflectionNamedType;
 
 /**
  * Class Service
@@ -54,14 +58,14 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @var array
      */
-    protected $_actions = [];
+    protected array $_actions = [];
 
     /**
      * Actions classes map, indexed by action name.
      *
      * @var array
      */
-    protected $_actionsClassMap = [];
+    protected array $_actionsClassMap = [];
 
     /**
      * Service url acceptable extensions list.
@@ -147,12 +151,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     protected ?\CakeDC\Api\Service\Action\Action $_action = null;
 
     /**
-     * @return \CakeDC\Api\Service\Action\Action
+     * Container
+     *
+     * @var \Cake\Core\ContainerInterface|null
      */
-    public function getAction(): Action
-    {
-        return $this->_action;
-    }
+    protected $container;
 
     /**
      * Service constructor.
@@ -186,6 +189,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         if (!empty($config['Extension'])) {
             $this->extensions = Hash::merge($this->extensions, $config['Extension']);
         }
+        if (!empty($config['container'])) {
+            $this->container = $config['container'];
+            $this->container->add(ServerRequest::class, $this->getRequest());
+        }
         $extensionRegistry = $eventManager = null;
         if (!empty($config['eventManager'])) {
             $eventManager = $config['eventManager'];
@@ -217,9 +224,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Gets service name.
      *
-     * @return string
+     * @return ?string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->_name;
     }
@@ -261,9 +268,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Gets the service parser.
      *
-     * @return \CakeDC\Api\Service\RequestParser\BaseParser
+     * @return ?\CakeDC\Api\Service\RequestParser\BaseParser
      */
-    public function getParser(): BaseParser
+    public function getParser(): ?BaseParser
     {
         return $this->_parser;
     }
@@ -607,11 +614,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $actionPrefix = substr($serviceClass, 0, -7);
         $actionClass = $namespace . '\\Action\\' . $actionPrefix . Inflector::camelize($action) . 'Action';
         if (class_exists($actionClass)) {
-            return $service->buildActionClass($actionClass, $route);
+            return $service->buildActionClass($actionClass, $route, $action);
         }
         $actionsClassMap = $service->getActionsClassMap();
         if (array_key_exists($action, $actionsClassMap)) {
-            return $service->buildActionClass($actionsClassMap[$action], $route);
+            return $service->buildActionClass($actionsClassMap[$action], $route, $action);
         }
         throw new MissingActionException(['class' => $actionClass]);
     }
@@ -684,13 +691,21 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Build action class
      *
-     * @param string $class Class name.
+     * @param class-string $class Class name.
      * @param array $route Activated route.
+     * @param array $actionName Action name.
      * @return mixed
      */
-    public function buildActionClass(string $class, array $route)
+    public function buildActionClass(string $class, array $route, $actionName = null)
     {
-        return new $class($this->_actionOptions($route));
+        if ($this->container !== null) {
+            $reflectedClass = new ReflectionClass($class);
+            $args = $this->getActionArgs($reflectedClass, [$this->_actionOptions($route)], $actionName);
+
+            return $reflectedClass->newInstanceArgs($args);
+        } else {
+            return new $class($this->_actionOptions($route));
+        }
     }
 
     /**
@@ -796,9 +811,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Gets the service renderer.
      *
-     * @return \CakeDC\Api\Service\Renderer\BaseRenderer
+     * @return ?\CakeDC\Api\Service\Renderer\BaseRenderer
      */
-    public function getRenderer(): BaseRenderer
+    public function getRenderer(): ?BaseRenderer
     {
         return $this->_renderer;
     }
@@ -926,6 +941,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $this->_parserClass = $parserClass;
         }
 
+        /** @var \CakeDC\Api\Service\RequestParser\BaseParser|null $class */
         $class = App::className($this->_parserClass, 'Service/RequestParser', 'Parser');
         if ($class === null || !class_exists($class)) {
             throw new MissingParserException(['class' => $this->_parserClass]);
@@ -963,5 +979,137 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function triggerBeforeDispatch($forceCors = false): \Cake\Event\EventInterface
     {
         return $this->dispatchEvent('Service.beforeDispatch', ['service' => $this, 'force' => $forceCors]);
+    }
+
+    /**
+     * Get the arguments for the action invocation.
+     *
+     * @param \ReflectionClass $action Action instance.
+     * @param array $passedParams Params passed by the router.
+     * @param string $actionName Action name.
+     * @return array
+     */
+    protected function getActionArgs($action, array $passedParams, $actionName): array
+    {
+        $resolved = [];
+        $constructor = $action->getConstructor();
+        foreach ($constructor->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            if ($type && !$type instanceof ReflectionNamedType) {
+                throw new InvalidParameterException([
+                    'template' => 'unsupported_type',
+                    'parameter' => $parameter->getName(),
+                    'service' => $this->getName(),
+                    'action' => $actionName,
+                ]);
+            }
+
+            if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                $typeName = $type->getName();
+                if ($this->container->has($typeName)) {
+                    $resolved[] = $this->container->get($typeName);
+                    continue;
+                }
+
+                if ($passedParams && is_object($passedParams[0]) && $passedParams[0] instanceof $typeName) {
+                    $resolved[] = array_shift($passedParams);
+                    continue;
+                }
+
+                if ($parameter->isDefaultValueAvailable()) {
+                    $resolved[] = $parameter->getDefaultValue();
+                    continue;
+                }
+
+                throw new InvalidParameterException([
+                    'template' => 'missing_dependency',
+                    'parameter' => $parameter->getName(),
+                    'type' => $typeName,
+                    'service' => $this->getName(),
+                    'action' => $actionName,
+                ]);
+            }
+
+            if ($passedParams) {
+                $argument = array_shift($passedParams);
+                if (is_string($argument) && $type instanceof ReflectionNamedType) {
+                    $typedArgument = $this->coerceStringToType($argument, $type);
+
+                    if ($typedArgument === null) {
+                        throw new InvalidParameterException([
+                            'template' => 'failed_coercion',
+                            'passed' => $argument,
+                            'type' => $type->getName(),
+                            'parameter' => $parameter->getName(),
+                            'service' => $this->getName(),
+                            'action' => $actionName,
+                        ]);
+                    }
+                    $argument = $typedArgument;
+                }
+
+                $resolved[] = $argument;
+                continue;
+            }
+
+            if ($parameter->isDefaultValueAvailable()) {
+                $resolved[] = $parameter->getDefaultValue();
+                continue;
+            }
+
+            if ($parameter->isVariadic()) {
+                continue;
+            }
+
+            throw new InvalidParameterException([
+                'template' => 'missing_parameter',
+                'parameter' => $parameter->getName(),
+                'service' => $this->getName(),
+                'action' => $actionName,
+            ]);
+        }
+
+        return array_merge($resolved, $passedParams);
+    }
+
+    /**
+     * Coerces string argument to primitive type.
+     *
+     * @param string $argument Argument to coerce
+     * @param \ReflectionNamedType $type Parameter type
+     * @return array|string|float|int|bool|null
+     */
+    protected function coerceStringToType(string $argument, ReflectionNamedType $type)
+    {
+        switch ($type->getName()) {
+            case 'string':
+                return $argument;
+            case 'float':
+                return is_numeric($argument) ? (float)$argument : null;
+            case 'int':
+                return filter_var($argument, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+            case 'bool':
+                return $argument === '0' ? false : ($argument === '1' ? true : null);
+            case 'array':
+                return $argument === '' ? [] : explode(',', $argument);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return ?\CakeDC\Api\Service\Action\Action
+     */
+    public function getAction(): ?Action
+    {
+        return $this->_action;
+    }
+
+    /**
+     * @return ?\Cake\Core\ContainerInterface
+     */
+    public function getContainer(): ?ContainerInterface
+    {
+        return $this->container;
     }
 }

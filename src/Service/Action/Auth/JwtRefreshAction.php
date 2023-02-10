@@ -31,7 +31,7 @@ class JwtRefreshAction extends Action
     use JwtTokenTrait;
 
     /**
-     * @var array $user
+     * @var array<array-key, mixed>|null $user
      */
     protected $user;
 
