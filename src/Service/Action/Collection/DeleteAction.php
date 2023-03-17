@@ -33,13 +33,14 @@ class DeleteAction extends CollectionAction
         $index = 0;
         $pkKey = $this->getTable()->getPrimaryKey();
         $errors = collection($data)->reduce(function ($errors, $data) use ($pkKey, &$index) {
-            $error = null;
-            if (empty(Hash::get($data, $pkKey))) {
-                $error = [
-                    $pkKey => ['_empty' => 'Missing id'],
-                ];
+            $pkKey = (array)$pkKey;
+            $error = [];
+            foreach ($pkKey as $key) {
+                if (empty(Hash::get($data, $key))) {
+                    $error[$key] = ['_empty' => 'Missing id'];
+                }
             }
-            if ($error) {
+            if (!empty($error)) {
                 $errors[$index] = $error;
             }
 
@@ -64,9 +65,16 @@ class DeleteAction extends CollectionAction
      */
     public function execute()
     {
-        $entities = $this->_newEntities([
-            'accessibleFields' => [$this->getTable()->getPrimaryKey() => true,
-            ]]);
+        $keys = $this->getTable()->getPrimaryKey();
+        $accessibleFields = [];
+        if (is_array($keys)) {
+            foreach ($keys as $key) {
+                $accessibleFields[$key] = true;
+            }
+        } else {
+            $accessibleFields = [$keys => true];
+        }
+        $entities = $this->_newEntities(['accessibleFields' => $accessibleFields]);
 
         return $this->_deleteMany($entities);
     }

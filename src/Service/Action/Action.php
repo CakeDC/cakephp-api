@@ -32,9 +32,13 @@ use ReflectionMethod;
  * Class Action
  *
  * @package CakeDC\Api\Service\Action
+ * @implements \Cake\Event\EventDispatcherInterface<\CakeDC\Api\Service\Action\Action>
  */
 abstract class Action implements EventListenerInterface, EventDispatcherInterface
 {
+    /**
+     * @use \Cake\Event\EventDispatcherTrait<\CakeDC\Api\Service\Action\Action>
+     */
     use EventDispatcherTrait;
     use InstanceConfigTrait;
     use MergeVariablesTrait;

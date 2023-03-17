@@ -21,6 +21,7 @@ use App\Controller\AppController as BaseController;
  * Class AppController
  *
  * @package CakeDC\Api\Controller
+ * @psalm-suppress: BaseController
  */
 class AppController extends BaseController
 {

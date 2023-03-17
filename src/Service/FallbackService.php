@@ -66,32 +66,30 @@ class FallbackService extends NestedCrudService
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
             ]);
             $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table) {
-                if (is_array($this->_routeExtensions)) {
-                    $routes->setExtensions($this->_routeExtensions);
+                $routes->setExtensions($this->_routeExtensions);
 
-                    $keys = ['HasMany'/*, 'HasOne'*/];
+                $keys = ['HasMany'/*, 'HasOne'*/];
 
-                    foreach ($keys as $type) {
-                        foreach ($table->associations()->getByType($type) as $assoc) {
-                            /** @var \Cake\ORM\Association $assoc */
-                            $target = $assoc->getTarget();
-                            $alias = $target->getAlias();
+                foreach ($keys as $type) {
+                    foreach ($table->associations()->getByType($type) as $assoc) {
+                        /** @var \Cake\ORM\Association $assoc */
+                        $target = $assoc->getTarget();
+                        $alias = $target->getAlias();
 
-                            $targetClass = get_class($target);
-                            [, $className] = namespaceSplit($targetClass);
-                            $className = preg_replace('/(.*)Table$/', '\1', $className);
-                            if ($className === '') {
-                                $className = $alias;
-                            }
-                            $this->_innerServices[] = Inflector::underscore($className);
-                            $options = [
-                                'map' => [
-                                    'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
-                                    'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
-                                ],
-                            ];
-                            $routes->resources($className, $options);
+                        $targetClass = get_class($target);
+                        [, $className] = namespaceSplit($targetClass);
+                        $className = preg_replace('/(.*)Table$/', '\1', $className);
+                        if ($className === '') {
+                            $className = $alias;
                         }
+                        $this->_innerServices[] = Inflector::underscore($className);
+                        $options = [
+                            'map' => [
+                                'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
+                                'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
+                            ],
+                        ];
+                        $routes->resources($className, $options);
                     }
                 }
             });

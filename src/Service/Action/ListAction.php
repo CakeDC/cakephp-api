@@ -43,18 +43,13 @@ class ListAction extends Action
     public function execute()
     {
         $path = APP . 'Model' . DS . 'Table' . DS;
-        // $folder = new Folder($path);
-        // $tables = $folder->find('.*\.php');
         $tables = [];
         foreach (glob($path . '*.php') as $file) {
             $name = str_replace($path, '', $file);
-            if ($name !== null) {
+            if (!empty($name)) {
                 $tables[] = $name;
             }
-            // $tables[] = str_replace($path, '', $file);
         }
-        // print_r($tables);
-
 
         return collection($tables)
             ->map(function ($item) {

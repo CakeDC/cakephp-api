@@ -49,7 +49,7 @@ return [
                 'secret' => '',
             ],
             'RefreshToken' => [
-                'lifetime' => 2 * WEEK,
+                'lifetime' => 14 * 86400,
                 'secret' => '',
             ],
         ],

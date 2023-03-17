@@ -42,6 +42,9 @@ use CakeDC\Api\Service\Action\Action;
 class Auth
 {
     use AuthenticateTrait;
+    /**
+     * @use \Cake\Event\EventDispatcherTrait<\CakeDC\Api\Service\Auth\Auth>
+     */
     use EventDispatcherTrait;
     use InstanceConfigTrait;
     use LogTrait;

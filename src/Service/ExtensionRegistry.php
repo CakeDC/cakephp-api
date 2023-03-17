@@ -24,6 +24,7 @@ use CakeDC\Api\Service\Exception\MissingExtensionException;
  *
  * @package CakeDC\Api\Service
  * @template TSubject of object
+ * @extends \Cake\Core\ObjectRegistry<\CakeDC\Api\Service\Extension\Extension>
  * @implements \Cake\Event\EventDispatcherInterface<TSubject>
  */
 class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterface
@@ -98,6 +99,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
         if (empty($config['service'])) {
             $config['service'] = $this->_service;
         }
+        /** @var \Cake\Event\EventListenerInterface $instance */
         $instance = new $class($this, $config);
         $this->getEventManager()->on($instance);
 

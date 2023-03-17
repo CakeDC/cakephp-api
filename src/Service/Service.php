@@ -43,9 +43,14 @@ use ReflectionNamedType;
 
 /**
  * Class Service
+ *
+ * @implements \Cake\Event\EventDispatcherInterface<\CakeDC\Api\Service\Service>
  */
 abstract class Service implements EventListenerInterface, EventDispatcherInterface
 {
+    /**
+     * @use \Cake\Event\EventDispatcherTrait<\CakeDC\Api\Service\Service>
+     */
     use EventDispatcherTrait;
 
     /**
@@ -136,7 +141,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Request
      */
-    protected ?\Cake\Http\Response $_response = null;
+    protected \Cake\Http\Response $_response;
 
     protected string $_corsSuffix = '_cors';
 
@@ -354,9 +359,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         $defaultOptions = $this->routerDefaultOptions();
         $builder = ApiRouter::createRouteBuilder('/', []);
         $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions) {
-            if (is_array($this->_routeExtensions)) {
-                $routes->setExtensions($this->_routeExtensions);
-            }
+            $routes->setExtensions($this->_routeExtensions);
             if (!empty($defaultOptions['map'])) {
                 $routes->resources($this->getName(), $defaultOptions);
             }
@@ -500,7 +503,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Dispatch service call.
      *
-     * @param \Cake\Http\ServerRequest $request A Request object.
+     * @param \Cake\Http\ServerRequest|\Psr\Http\Message\ServerRequestInterface $request A Request object.
      * @return \CakeDC\Api\Service\Action\Result
      */
     public function dispatchProcessAction($request): Result
@@ -766,9 +769,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *  Fill up response and stop execution.
      *
      * @param \CakeDC\Api\Service\Action\Result $result A Result instance.
-     * @return \Cake\Http\Response|null
+     * @return \Cake\Http\Response
      */
-    public function respond(?Result $result = null): ?Response
+    public function respond(?Result $result = null): Response
     {
         if ($result === null) {
             $result = $this->getResult();
@@ -788,9 +791,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Gets the response.
      *
-     * @return \Cake\Http\Response|null
+     * @return \Cake\Http\Response
      */
-    public function getResponse(): ?Response
+    public function getResponse(): Response
     {
         return $this->_response;
     }

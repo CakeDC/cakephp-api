@@ -108,7 +108,7 @@ class JSendRenderer extends BaseRenderer
         $message = $this->_buildMessage($exception);
         $trace = $this->_stackTrace($exception);
         $response = $response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))
-            ->withStatus((int)$this->errorCode)
+            ->withStatus($this->errorCode)
             ->withType('application/json');
         $this->_service->setResponse($response);
     }
@@ -191,7 +191,7 @@ class JSendRenderer extends BaseRenderer
      */
     protected function _mapStatus(Result $result): void
     {
-        $code = (int)$result->getCode();
+        $code = $result->getCode();
         $this->status = $code == 0 || $code >= 200 && $code <= 399 ? self::STATUS_SUCCESS : self::STATUS_ERROR;
     }
 }

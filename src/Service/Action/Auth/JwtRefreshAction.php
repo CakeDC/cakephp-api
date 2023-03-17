@@ -54,7 +54,7 @@ class JwtRefreshAction extends Action
     public function validates(): bool
     {
         $authHeader = $this->getService()->getRequest()->getHeader('Authorization');
-        if (is_array($authHeader)) {
+        if (!empty($authHeader)) {
             $authHeader = array_pop($authHeader);
         }
 

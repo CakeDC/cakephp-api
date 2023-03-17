@@ -96,7 +96,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         if (!is_array($associations)) {
             return explode(',', $associations);
         }
-        if (is_array($associations) && count($associations) > 0) {
+        if (count($associations) > 0) {
             return $associations;
         }
 
@@ -143,9 +143,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
 
         collection($tables)->each(function ($name) use ($query, $action) {
             $assoc = $action->getTable()->getAssociation($name);
-            if ($assoc !== null) {
-                $query->select($assoc);
-            }
+            $query->select($assoc);
         });
         $query->select($action->getTable());
         $query->contain($tables);

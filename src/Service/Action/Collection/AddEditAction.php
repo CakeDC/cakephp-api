@@ -47,9 +47,16 @@ class AddEditAction extends CollectionAction
      */
     public function execute()
     {
-        $entities = $this->_newEntities([
-            'accessibleFields' => [$this->getTable()->getPrimaryKey() => true,
-            ]]);
+        $keys = $this->getTable()->getPrimaryKey();
+        $accessibleFields = [];
+        if (is_array($keys)) {
+            foreach ($keys as $key) {
+                $accessibleFields[$key] = true;
+            }
+        } else {
+            $accessibleFields = [$keys => true];
+        }
+        $entities = $this->_newEntities(['accessibleFields' => $accessibleFields]);
 
         return $this->_saveMany($entities);
     }

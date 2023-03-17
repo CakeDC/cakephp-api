@@ -95,7 +95,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler Request handler.
      * @param mixed $matches Matches definition.
-     * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface|null
+     * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface
      */
     protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, $matches)
     {

@@ -47,6 +47,7 @@ abstract class CrudAction extends Action
     /**
      * Crud service.
      *
+     * @psalm-suppress: NonInvariantDocblockPropertyType
      * @var \CakeDC\Api\Service\CrudService
      */
     protected $_service;
