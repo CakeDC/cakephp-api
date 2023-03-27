@@ -76,8 +76,8 @@ class ResetPasswordRequestAction extends Action
             $resetUser = $this->getUsersTable()->resetToken($reference, [
                 'expiration' => Configure::read('Users.Token.expiration'),
                 'checkActive' => false,
-                'sendEmail' => true,
-                'ensureActive' => Configure::read('Users.Registration.ensureActive')
+                'type' => 'password',
+                'ensureActive' => Configure::read('Users.Registration.ensureActive'),
             ]);
             if ($resetUser) {
                 $message = __d('CakeDC/Api', 'Please check your email to continue with password reset process');
