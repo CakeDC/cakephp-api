@@ -32,7 +32,7 @@
         "cakephp/cakephp": "^4.3",
         "cakedc/users": "^11.0",
         "lcobucci/jwt": "~4.0.0",
-        "firebase/php-jwt": "^5.0"
+        "firebase/php-jwt": "^6.2"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^4.0",
