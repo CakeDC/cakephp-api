@@ -38,7 +38,7 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
         $service->loadIdentifier('Authentication.JwtSubject', []);
         $service->loadIdentifier('Authentication.Password', [
             'resolver' => [
-                'className' => 'Authentication.ORM',
+                'className' => 'Authentication.Orm',
                 'userModel' => 'CakeDC/Users.Users',
                 'finder' => 'active',
             ],
