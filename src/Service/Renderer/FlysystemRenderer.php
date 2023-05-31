@@ -19,11 +19,11 @@ use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use CakeDC\Api\Service\Action\Result;
 use Exception;
+use Laminas\Diactoros\Stream;
 use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Handler;
-use Zend\Diactoros\Stream;
 
 /**
  * Class FlysystemRenderer to render file using Flysystem library
