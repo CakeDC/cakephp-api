@@ -66,7 +66,7 @@ class FlysystemRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
-            ->setMethods(['withStatus', 'withType', 'withStringBody'])
+            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -93,7 +93,7 @@ class FlysystemRendererTest extends TestCase
 
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
-            ->setMethods(['withStatus', 'withType', 'withStringBody'])
+            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -141,7 +141,7 @@ class FlysystemRendererTest extends TestCase
         Configure::write('debug', false);
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
-            ->setMethods(['withStatus', 'withType', 'withStringBody'])
+            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -192,7 +192,7 @@ class FlysystemRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
-            ->setMethods(['withStatus', 'withType', 'withStringBody'])
+            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
@@ -229,7 +229,7 @@ class FlysystemRendererTest extends TestCase
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
-            ->setMethods(['withStatus', 'withType', 'withStringBody'])
+            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);

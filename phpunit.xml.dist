@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./src</directory>
-    </include>
-  </coverage>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd">
+  <coverage includeUncoveredFiles="true"/>
   <php>
     <ini name="memory_limit" value="-1"/>
     <ini name="apc.enable_cli" value="1"/>
+    <env name="db_dsn" value="mysql://root2:root2@localhost/cake_test_db"/>
     <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
   </php>
   <!-- Add any additional test suites you want to run here -->
@@ -18,7 +15,12 @@
   </testsuites>
   <!-- Setup a listener for fixtures -->
   <extensions>
-    <extension class="\Cake\TestSuite\Fixture\PHPUnitExtension"/>
+    <bootstrap class="Cake\TestSuite\Fixture\Extension\PHPUnitExtension"/>
   </extensions>
   <!-- Prevent coverage reports from looking in tests and vendors -->
+  <source>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </source>
 </phpunit>

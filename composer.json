@@ -37,7 +37,7 @@
     "require-dev": {
         "cakephp/cakephp-codesniffer": "~4.4.0",
         "league/flysystem-vfs": "^1.0",
-        "phpunit/phpunit": "^9.5.16",
+        "phpunit/phpunit": "^10.0",
         "vlucas/phpdotenv": "^3.3"
     },
     "autoload": {
