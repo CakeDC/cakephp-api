@@ -39,6 +39,6 @@ class JwtLoginAction extends Action
             return false;
         }
 
-        return $this->generateTokenResponse($user);
+        return $this->generateTokenResponse($user, 'login');
     }
 }

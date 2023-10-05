@@ -25,20 +25,32 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 
 trait JwtTokenTrait
 {
+
     /**
      * Generates token response.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @return array
      */
-    public function generateTokenResponse($user)
+    public function generateTokenResponse($user, $type)
     {
-        //$timestamp = time();
+        $timestamp = new DateTimeImmutable('-1 second');
+        unset($user['additional_data'], $user['secret'], $user['secret_verified']);
+
+        return Hash::merge($user, [
+            'access_token' => $this->generateAccessToken($user, $timestamp, $type),
+            'refresh_token' => $this->generateRefreshToken($user, $timestamp, $type),
+            'expired' => $this->accessTokenLifeTime($timestamp),
+        ]);
+    }
+
+    public function generateRefreshTokenResponse($user, $payload)
+    {
         $timestamp = new DateTimeImmutable();
 
         return Hash::merge($user, [
-            'access_token' => $this->generateAccessToken($user, $timestamp),
-            'refresh_token' => $this->generateRefreshToken($user, $timestamp),
+            'access_token' => $this->generateAccessToken($user, $timestamp, null, $payload),
+            'refresh_token' => $this->generateRefreshToken($user, $timestamp, null, $payload),
             'expired' => $this->accessTokenLifeTime($timestamp),
         ]);
     }
@@ -50,14 +62,14 @@ trait JwtTokenTrait
      * @param \DateTimeImmutable $timestamp Timestamp.
      * @return bool|string
      */
-    public function generateAccessToken($user, $timestamp)
+    public function generateAccessToken($user, $timestamp, $type, $payload = null)
     {
         if (empty($user)) {
             return false;
         }
 
         $subject = $user['id'];
-        $audience = Router::url('/', true);
+        $audience = $this->getAudience($type, $payload);
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.AccessToken.secret');
@@ -75,6 +87,20 @@ trait JwtTokenTrait
         return $token->toString();
     }
 
+    public function getAudience($type, $payload)
+    {
+        if ($type === null && is_array($payload) && isset($payload['aud'])) {
+            return $payload['aud'];
+        }
+        if ($type == 'login' && Configure::read('Api.2fa.enabled')) {
+            $audience = Router::url('/2fa', true);
+        } else {
+            $audience = Router::url('/', true);
+        }
+
+        return $audience;
+    }
+
     /**
      * Generates refresh token.
      *
@@ -82,14 +108,14 @@ trait JwtTokenTrait
      * @param \DateTimeImmutable $timestamp Timestamp.
      * @return bool|string
      */
-    public function generateRefreshToken($user, $timestamp)
+    public function generateRefreshToken($user, $timestamp, $type, $payload = null)
     {
         if (empty($user)) {
             return false;
         }
 
         $subject = $user['id'];
-        $audience = Router::url('/', true);
+        $audience = $this->getAudience($type, $payload);
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.RefreshToken.secret');
