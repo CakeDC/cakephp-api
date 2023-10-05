@@ -35,6 +35,8 @@ class JwtRefreshAction extends Action
      */
     protected $user;
 
+    protected $payload;
+
     /**
      * Initialize an action instance
      *
@@ -94,7 +96,7 @@ class JwtRefreshAction extends Action
             throw new ValidationException('Invalid token provided', 401);
         }
 
-        $payload = $auth->getPayload();
+        $this->payload = $auth->getPayload();
 
         return true;
     }
@@ -110,6 +112,6 @@ class JwtRefreshAction extends Action
             return false;
         }
 
-        return $this->generateTokenResponse($this->user);
+        return $this->generateRefreshTokenResponse($this->user, $this->payload);
     }
 }
