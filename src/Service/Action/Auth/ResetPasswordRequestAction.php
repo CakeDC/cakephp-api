@@ -73,14 +73,22 @@ class ResetPasswordRequestAction extends Action
     {
         $data = $this->getData();
         $reference = $data['reference'];
+        $baseUrl = $data['baseUrl'];
         try {
-            $resetUser = $this->getUsersTable()->resetToken($reference, [
+            $options = [
                 'expiration' => Configure::read('Users.Token.expiration'),
                 'checkActive' => false,
                 'sendEmail' => true,
                 'type' => 'password',
                 'ensureActive' => Configure::read('Users.Registration.ensureActive'),
-            ]);
+            ];
+            if (!empty($baseUrl)) {
+                $options['linkGenerator'] = function($token) use ($baseUrl) {
+                    return $baseUrl . '?token=' . $token;
+                }
+            }
+
+            $resetUser = $this->getUsersTable()->resetToken($reference, $options);
             if ($resetUser) {
                 return __d('CakeDC/Api', 'Please check your email to continue with password reset process');
             } else {
