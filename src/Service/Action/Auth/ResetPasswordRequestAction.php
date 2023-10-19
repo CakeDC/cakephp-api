@@ -73,7 +73,7 @@ class ResetPasswordRequestAction extends Action
     {
         $data = $this->getData();
         $reference = $data['reference'];
-        $baseUrl = $data['baseUrl'];
+        $baseUrl = $data['base_url'] ?? null;
         try {
             $options = [
                 'expiration' => Configure::read('Users.Token.expiration'),
@@ -85,7 +85,7 @@ class ResetPasswordRequestAction extends Action
             if (!empty($baseUrl)) {
                 $options['linkGenerator'] = function($token) use ($baseUrl) {
                     return $baseUrl . '?token=' . $token;
-                }
+                };
             }
 
             $resetUser = $this->getUsersTable()->resetToken($reference, $options);
