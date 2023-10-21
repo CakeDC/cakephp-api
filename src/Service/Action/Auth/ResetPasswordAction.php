@@ -56,6 +56,24 @@ class ResetPasswordAction extends Action
         $validator
             ->requirePresence('token', 'create')
             ->notBlank('token');
+
+        $validator
+            ->requirePresence('password_confirm', 'create')
+            ->notBlank('password_confirm');
+
+        $validator
+            ->requirePresence('password', 'create')
+            ->notBlank('password')
+            ->add('password', [
+                'password_confirm_check' => [
+                    'rule' => ['compareWith', 'password_confirm'],
+                    'message' => __d(
+                        'cake_d_c/users',
+                        'Your password does not match your confirm password. Please try again'
+                    ),
+                    'allowEmpty' => false,
+                ]]);
+
         $errors = $validator->validate($this->getData());
         if (!empty($errors)) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
@@ -103,19 +121,13 @@ class ResetPasswordAction extends Action
         $user = $this->getUsersTable()->newEntity([], ['validate' => false]);
         $user->id = $userId;
         try {
-            $validator = $this->getUsersTable()->validationPasswordConfirm(new Validator());
-            $this->getUsersTable()->setValidator('changePassV', $validator);
-            $user = $this->getUsersTable()->patchEntity($user, $this->getData(), ['validate' => 'changePassV']);
-            if ($user->getErrors()) {
-                $message = __d('CakeDC/Api', 'Password could not be changed');
-                throw new ValidationException($message, 0, null, $user->getErrors());
+            $data = $this->getData();
+            $user->password = $data['password'];
+            $user = $this->getUsersTable()->changePassword($user);
+            if ($user) {
+                return __d('CakeDC/Api', 'Password has been changed successfully');
             } else {
-                $user = $this->getUsersTable()->changePassword($user);
-                if ($user) {
-                    return __d('CakeDC/Api', 'Password has been changed successfully');
-                } else {
-                    throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500);
-                }
+                throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500);
             }
         } catch (UserNotFoundException $exception) {
             throw new Exception(__d('CakeDC/Api', 'User was not found'), 404, $exception);
