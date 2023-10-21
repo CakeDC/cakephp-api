@@ -22,6 +22,23 @@ if (empty($config)) {
             'parser' => 'CakeDC/Api.Form',
             'ServiceFallback' => \CakeDC\Api\Service\FallbackService::class,
 
+            '2fa' => [
+                'enabled' => false,
+            ],
+
+            'OneTimePasswordAuthenticator' => [
+                'login' => false,
+                'checker' => \CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultOneTimePasswordAuthenticationChecker::class,
+            ],
+            'Webauthn2fa' => [
+                'checker' => \CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultWebauthn2fAuthenticationChecker::class,
+                'localhost' => [
+                    'enabled' => false,
+                    'appName' => 'apilocal',
+                    'id' => 'localhost',
+                ],
+            ],
+
             'Jwt' => [
                 'AccessToken' => [
                     'lifetime' => 600,

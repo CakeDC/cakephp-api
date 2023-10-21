@@ -17,6 +17,8 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerFactory;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2fAuthenticationCheckerFactory;
 use DateInterval;
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
@@ -41,6 +43,9 @@ trait JwtTokenTrait
             'access_token' => $this->generateAccessToken($user, $timestamp, $type),
             'refresh_token' => $this->generateRefreshToken($user, $timestamp, $type),
             'expired' => $this->accessTokenLifeTime($timestamp),
+            'enabled2FA' => $this->is2FAEnabled($user),
+            'enabledWebauthn' => $this->isEnabledWebauthn2faAuthentication($user),
+            'enabledOtp' => $this->isEnabledOneTimePasswordAuthentication($user),
         ]);
     }
 
@@ -69,7 +74,7 @@ trait JwtTokenTrait
         }
 
         $subject = $user['id'];
-        $audience = $this->getAudience($type, $payload);
+        $audience = $this->getAudience($user, $type, $payload);
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.AccessToken.secret');
@@ -87,18 +92,60 @@ trait JwtTokenTrait
         return $token->toString();
     }
 
-    public function getAudience($type, $payload)
+    public function getAudience($user, $type, $payload)
     {
         if ($type === null && is_array($payload) && isset($payload['aud'])) {
             return $payload['aud'];
         }
-        if ($type == 'login' && Configure::read('Api.2fa.enabled')) {
+        if ($type == 'login' && $this->is2FAEnabled($user)) {
             $audience = Router::url('/2fa', true);
         } else {
             $audience = Router::url('/', true);
         }
 
         return $audience;
+    }
+
+    protected function is2FAEnabled($user)
+    {
+        return $this->isEnabledWebauthn2faAuthentication($user) || $this->isEnabledOneTimePasswordAuthentication($user);
+    }
+
+    public function isEnabledWebauthn2faAuthentication($user)
+    {
+        $enabledTwoFactorVerify = Configure::read('Api.2fa.enabled');
+        $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
+        if ($enabledTwoFactorVerify && $webauthn2faChecker->isRequired((array)$user)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isEnabledOneTimePasswordAuthentication($user)
+    {
+        $enabledTwoFactorVerify = Configure::read('Api.2fa.enabled');
+        $otpChecker = $this->getOneTimePasswordAuthenticationChecker();
+        if ($enabledTwoFactorVerify && $otpChecker->isRequired((array)$user)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getOneTimePasswordAuthenticationChecker()
+    {
+        return (new OneTimePasswordAuthenticationCheckerFactory())->build();
+    }
+
+    /**
+     * Get the configured u2f authentication checker
+     *
+     * @return \CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface
+     */
+    protected function getWebauthn2fAuthenticationChecker()
+    {
+        return (new Webauthn2fAuthenticationCheckerFactory())->build();
     }
 
     /**
@@ -115,7 +162,7 @@ trait JwtTokenTrait
         }
 
         $subject = $user['id'];
-        $audience = $this->getAudience($type, $payload);
+        $audience = $this->getAudience($user, $type, $payload);
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.RefreshToken.secret');

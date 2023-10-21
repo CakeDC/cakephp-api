@@ -35,6 +35,23 @@ return [
         'serviceLookupPlugins' => null,
         'lookupMode' => 'underscore',
 
+        '2fa' => [
+            'enabled' => false,
+        ],
+
+        'OneTimePasswordAuthenticator' => [
+            'login' => false,
+            'checker' => \CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultOneTimePasswordAuthenticationChecker::class,
+        ],
+        'Webauthn2fa' => [
+            'checker' => \CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultWebauthn2fAuthenticationChecker::class,
+            'localhost' => [
+                'enabled' => false,
+                'appName' => 'apilocal',
+                'id' => 'localhost',
+            ],
+        ],
+
         // auth permission uses require auth strategy
         'Auth' => [
             'Crud' => [
