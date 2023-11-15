@@ -7,6 +7,7 @@ use Base64Url\Base64Url;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
+use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Users\Model\Table\UsersTable;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
@@ -104,17 +105,7 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
 
     public function getDomain()
     {
-        $domain = null;
-        if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
-            $domain = parse_url($_SERVER['HTTP_REFERER']);
-        }
-        if ($domain !==null && $domain['host']) {
-            $host = $domain['host'];
-        } else {
-            $host = $this->request->domain();
-        }
-
-        return str_replace('.', '$', $host);
+        return RequestParser::getDomain($this->request);
     }
 
 }

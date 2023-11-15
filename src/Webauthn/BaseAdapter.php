@@ -18,6 +18,7 @@ use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use CakeDC\Users\Model\Table\UsersTable;
+use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -167,20 +168,6 @@ class BaseAdapter
 
     public function getDomain($replace = true)
     {
-        $domain = null;
-        if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
-            $domain = parse_url($_SERVER['HTTP_REFERER']);
-        }
-        if ($domain !==null && $domain['host']) {
-            $host = $domain['host'];
-        } else {
-            $host = $this->request->domain();
-        }
-
-        if ($replace) {
-            return str_replace('.', '$', $host);
-        } else {
-            return $host;
-        }
+        return RequestParser::getDomain($this->request, $replace);
     }
 }
