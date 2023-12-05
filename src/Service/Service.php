@@ -601,8 +601,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
         if ($serviceName === $this->getName()) {
             $service = $this;
-        }
-        if (in_array($serviceName, $this->_innerServices)) {
+        } elseif (in_array($serviceName, $this->_innerServices)) {
             $options = [
                 'version' => $this->getVersion(),
                 'request' => $this->getRequest(),
