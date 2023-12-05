@@ -77,7 +77,7 @@ class TokenAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        if ($this->getConfig('require_ssl') && !$request->is('ssl')) {
+        if ($this->getConfig('require_ssl') && !$request->is('https')) {
             throw new ForbiddenException(__d('CakeDC/Api', 'SSL is required for ApiKey Authentication', $type));
         }
 
