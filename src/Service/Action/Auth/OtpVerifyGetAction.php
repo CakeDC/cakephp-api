@@ -41,7 +41,11 @@ class OtpVerifyGetAction extends OtpVerifyAction
                 throw new \Exception('Secret generation issue, please try again');
             } else {
                 $secretDataUri = $this->getQRCodeImageAsDataUri($user['email'], $secret);
-                $result = ['secretDataUri' => $secretDataUri, 'verified' => false];
+                $result = [
+                    'secretDataUri' => $secretDataUri,
+                    'secret' => $secret,
+                    'verified' => false,
+                ];
             }
         } else {
             $result = ['verified' => true];
