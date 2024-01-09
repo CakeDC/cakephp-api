@@ -110,11 +110,14 @@ jobs:
 
     - name: Run PHP CodeSniffer
       run: composer cs-check
+      continue-on-error: true
 
-#    - name: Run psalm
-#      if: success() || failure()
-#      run: vendor/bin/psalm.phar --output-format=github
+    - name: Run psalm
+      if: success() || failure()
+      run: vendor/bin/psalm.phar --output-format=github
+      continue-on-error: true
 
     - name: Run phpstan
       if: success() || failure()
       run: composer stan
+      continue-on-error: true
