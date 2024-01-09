@@ -3,7 +3,10 @@ name: CI
 
 on:
   push:
+  
   pull_request:
+    branches:
+      - '*'
 
 jobs:
   testsuite:
@@ -65,8 +68,8 @@ jobs:
           if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
           if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp?encoding=utf8'; fi
           if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
-          if [[ ${{ matrix.php-version }} == '7.4' ]]; then
-            export CODECOVERAGE=1 && vendor/bin/phpunit --verbose --coverage-clover=coverage.xml
+          if [[ ${{ matrix.php-version }} == '8.1' ]]; then
+            export CODECOVERAGE=1 && vendor/bin/phpunit --display-deprecations --display-incomplete --display-skipped --coverage-clover=coverage.xml
           else
             vendor/bin/phpunit
           fi
@@ -109,14 +112,11 @@ jobs:
 
       - name: Run PHP CodeSniffer
         run: composer cs-check
-        continue-on-error: true
 
       - name: Run psalm
         if: success() || failure()
         run: composer psalm
-        continue-on-error: true
 
       - name: Run phpstan
         if: success() || failure()
         run: composer stan
-        continue-on-error: true
