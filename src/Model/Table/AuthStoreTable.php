@@ -63,16 +63,17 @@ class AuthStoreTable extends Table
     }
 
 
+
     /**
-     * Field additional_data is json
+     * Initialize schema
      *
-     * @param \Cake\Database\Schema\TableSchemaInterface $schema The table definition fetched from database.
-     * @return \Cake\Database\Schema\TableSchemaInterface the altered schema
+     * @return \Cake\Database\Schema\TableSchemaInterface
      */
-    protected function _initializeSchema(TableSchemaInterface $schema): TableSchemaInterface
+    public function getSchema(): TableSchemaInterface
     {
+        $schema = parent::getSchema();
         $schema->setColumnType('store', 'json');
 
-        return parent::_initializeSchema($schema);
+        return $schema;
     }
 }
