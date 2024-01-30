@@ -86,14 +86,18 @@ class CrudViewActionTest extends TestCase
             'id' => 1,
         ]);
 
-        $onFindEntity = false;
+        $onFindEntity = $afterFindEntity = false;
         $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
             $onFindEntity = true;
+        });
+        $this->Action->getEventManager()->on('Action.Crud.afterFindEntity', function () use (&$afterFindEntity) {
+            $afterFindEntity = true;
         });
 
         $result = $this->Action->execute();
         $this->assertTrue($result instanceof EntityInterface);
         $this->assertTrue($onFindEntity);
+        $this->assertTrue($afterFindEntity);
     }
 
     /**
