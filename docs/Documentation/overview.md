@@ -125,6 +125,7 @@ Crud actions define some events that depend on the type of action and more detai
 * Action.Crud.onFindEntities (applied for index action)
 * Action.Crud.afterFindEntities (applied for index action)
 * Action.Crud.onFindEntity (applied for view action)
+* Action.Crud.afterFindEntity (applied for view action)
 
 
 ### Listing Service.
