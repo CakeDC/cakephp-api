@@ -261,7 +261,13 @@ abstract class CrudAction extends Action
             $query = $event->getResult();
         }
 
-        return $query->firstOrFail();
+        $record = $query->firstOrFail();
+        $event = $this->dispatchEvent('Action.Crud.afterFindEntity', ['query' => $query, 'record' => $record]);
+        if ($event->getResult() !== null) {
+            $record = $event->getResult();
+        }
+
+        return $record;
     }
 
     /**
