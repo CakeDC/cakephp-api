@@ -115,9 +115,9 @@ Please note, that action validation is not the same as model level validation. T
 
 Crud service defines actions and parameters for RESTful crud API.
 
-Nested Crud service gentting parent params from routing system and if it is presents loads Nested extension for all actions.
+Nested Crud service getting parent params from routing system and if it is presents loads Nested extension for all actions.
 
-Fallback service is default implemeention of Nested Crud that defines routes for 1-level deep nesting.
+Fallback service is default the implementation of Nested Crud that defines routes for 1-level deep nesting.
 
 Crud actions define some events that depend on the type of action and more details could be checked in documentation.
 
@@ -125,6 +125,7 @@ Crud actions define some events that depend on the type of action and more detai
 * Action.Crud.onFindEntities (applied for index action)
 * Action.Crud.afterFindEntities (applied for index action)
 * Action.Crud.onFindEntity (applied for view action)
+* Action.Crud.afterFindEntity (applied for view action)
 
 
 ### Listing Service.
@@ -141,7 +142,7 @@ Any action are decorated by some functionality it is implements during it life f
 Different extension could return additional info that extends returned by API data.
 In this case extension append payload data into Result object that used by renderers to build final output.
 
-This way such extensions like pagination or hateoas inteact with caller.
+This way such extensions like pagination or hateoas interact with caller.
 
 ## Request parser
 
