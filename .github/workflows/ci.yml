@@ -1,9 +1,11 @@
-# CI workflow adapted from https://github.com/cakephp/cakephp/blob/master/.github/workflows/ci.yml
 name: CI
 
 on:
   push:
+
   pull_request:
+    branches:
+      - '*'
 
 jobs:
   testsuite:
@@ -11,112 +13,111 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.1', '8.2']
+        php-version: ['8.1', '8.2', '8.3']
         db-type: [sqlite, mysql, pgsql]
         prefer-lowest: ['']
 
     steps:
-      - name: Setup MySQL latest
-        if: matrix.db-type == 'mysql'
-        run: docker run --rm --name=mysqld -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=cakephp -p 3306:3306 -d mysql --default-authentication-plugin=mysql_native_password --disable-log-bin
+    - name: Setup MySQL latest
+      if: matrix.db-type == 'mysql'
+      run: docker run --rm --name=mysqld -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=cakephp -p 3306:3306 -d mysql --default-authentication-plugin=mysql_native_password --disable-log-bin
 
-      - name: Setup PostgreSQL latest
-        if: matrix.db-type == 'pgsql'
-        run: docker run --rm --name=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=cakephp -p 5432:5432 -d postgres
+    - name: Setup PostgreSQL latest
+      if: matrix.db-type == 'pgsql'
+      run: docker run --rm --name=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=cakephp -p 5432:5432 -d postgres
 
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl, apcu, memcached, redis, pdo_${{ matrix.db-type }}
-          ini-values: apc.enable_cli = 1
-          coverage: pcov
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, intl, apcu, sqlite, pdo_sqlite, pdo_${{ matrix.db-type }}, ${{ matrix.db-type }}
+        ini-values: apc.enable_cli = 1
+        coverage: pcov
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Get date part for cache key
-        id: key-date
-        run: echo "::set-output name=date::$(date +'%Y-%m')"
+    - name: Get date part for cache key
+      id: key-date
+      run: echo "::set-output name=date::$(date +'%Y-%m')"
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+    - name: Cache composer dependencies
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
 
-      - name: Composer install
-        run: |
-          if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then
-            composer update --prefer-lowest --prefer-stable
-          else
-            composer update
-          fi
+    - name: composer install
+      run: |
+        if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then
+          composer update --prefer-lowest --prefer-stable
+        else
+          composer update
+        fi
 
-      - name: Setup problem matchers for PHPUnit
-        if: matrix.php-version == '8.1' && matrix.db-type == 'mysql'
-        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+    - name: Setup problem matchers for PHPUnit
+      if: matrix.php-version == '8.1' && matrix.db-type == 'mysql'
+      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Run PHPUnit
-        run: |
-          if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
-          if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp'; fi
-          if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
-          if [[ ${{ matrix.php-version }} == '8.1' ]]; then
-            export CODECOVERAGE=1 && vendor/bin/phpunit --stderr --verbose --coverage-clover=coverage.xml
-          else
-            vendor/bin/phpunit --stderr
-          fi
+    - name: Run PHPUnit
+      run: |
+        if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
+        if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp?encoding=utf8'; fi
+        if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
+        if [[ ${{ matrix.php-version }} == '8.1' ]]; then
+          export CODECOVERAGE=1 && vendor/bin/phpunit --display-deprecations --display-incomplete --display-skipped --coverage-clover=coverage.xml
+        else
+          vendor/bin/phpunit
+        fi
 
-      - name: Submit code coverage
-        if: matrix.php-version == '8.1'
-        uses: codecov/codecov-action@v1
+    - name: Submit code coverage
+      if: matrix.php-version == '8.1'
+      uses: codecov/codecov-action@v1
 
   cs-stan:
     name: Coding Standard & Static Analysis
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          extensions: mbstring, intl, apcu, memcached, redis
-          tools: cs2pr
-          coverage: none
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, intl, apcu
+        coverage: none
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Get date part for cache key
-        id: key-date
-        run: echo "::set-output name=date::$(date +'%Y-%m')"
+    - name: Get date part for cache key
+      id: key-date
+      run: echo "::set-output name=date::$(date +'%Y-%m')"
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+    - name: Cache composer dependencies
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
 
-      - name: composer install
-        run: composer stan-setup
+    - name: composer install
+      run: composer stan-setup
 
-      - name: Run PHP CodeSniffer
-        run: composer cs-check
-        continue-on-error: true
+    - name: Run PHP CodeSniffer
+      run: composer cs-check
+      continue-on-error: true
 
-      - name: Run psalm
-        if: success() || failure()
-        run: composer psalm
-        continue-on-error: true
+    - name: Run psalm
+      if: success() || failure()
+      run: vendor/bin/psalm.phar --output-format=github
+      continue-on-error: true
 
-      - name: Run phpstan
-        if: success() || failure()
-        run: composer stan
-        continue-on-error: true
+    - name: Run phpstan
+      if: success() || failure()
+      run: composer stan
+      continue-on-error: true
