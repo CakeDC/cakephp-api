@@ -42,11 +42,11 @@ if (empty($config)) {
             'Jwt' => [
                 'AccessToken' => [
                     'lifetime' => 600,
-                    'secret' => 'secret',
+                    'secret' => 'f574112f6c8fc3ecc55e5d296f25b55c4b0ca861d7c1e7a33a47ec08d3cf4251',
                 ],
                 'RefreshToken' => [
                     'lifetime' => 2 * WEEK,
-                    'secret' => 'secret',
+                    'secret' => 'f574112f6c8fc3ecc55e5d296f25b55c4b0ca861d7c1e7a33a47ec08d3cf4251',
                 ],
             ],
 
