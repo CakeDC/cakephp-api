@@ -29,8 +29,9 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
     private $usersTable;
 
     /**
+     * @param \Cake\Http\ServerRequest $request The request.
      * @param \Cake\Datasource\EntityInterface $user The user.
-     * @param \CakeDC\Users\Model\Table\UsersTable|null $usersTable The table.
+     * @param \CakeDC\Users\Model\Table\UsersTable|null $usersTable The users table.
      */
     public function __construct(ServerRequest $request, EntityInterface $user, ?UsersTable $usersTable = null)
     {
@@ -76,6 +77,7 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
 
     /**
      * @param \Webauthn\PublicKeyCredentialSource $publicKeyCredentialSource Public key credential source
+     * @return void
      */
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
@@ -86,16 +88,30 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
         $res = $this->usersTable->saveOrFail($this->user);
     }
 
+    /**
+     * Patch user data with webauthn credentials.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The user entity
+     * @param array $options The webauthn credentials
+     * @return \Cake\Datasource\EntityInterface
+     */
     public function patchUserData($entity, $options)
     {
         $entity['additional_data'] = $entity['additional_data'] ?? [];
-        $entity['additional_data']['api'] = $entity['additional_data']['api'] ?? [];
-        $entity['additional_data']['api'][$this->getDomain()] = $entity['additional_data']['api'][$this->getDomain()] ?? [];
-        $entity['additional_data']['api'][$this->getDomain()]['webauthn_credentials'] = $options;
+        $apiData = $entity['additional_data']['api'] ?? [];
+        $apiData[$this->getDomain()] = $apiData[$this->getDomain()] ?? [];
+        $apiData[$this->getDomain()]['webauthn_credentials'] = $options;
+        $entity['additional_data']['api'] = $apiData;
 
         return $entity;
     }
 
+    /**
+     * Get user data for webauthn credentials.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The user entity
+     * @return array
+     */
     public function getUserData($entity)
     {
         $path = 'additional_data.api.' . $this->getDomain() . '.webauthn_credentials';
@@ -103,9 +119,13 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
         return Hash::get($entity, $path, []);
     }
 
+    /**
+     * Get the current domain.
+     *
+     * @return string
+     */
     public function getDomain()
     {
         return RequestParser::getDomain($this->request);
     }
-
 }

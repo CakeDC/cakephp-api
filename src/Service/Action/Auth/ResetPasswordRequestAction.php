@@ -83,7 +83,7 @@ class ResetPasswordRequestAction extends Action
                 'ensureActive' => Configure::read('Users.Registration.ensureActive'),
             ];
             if (!empty($baseUrl)) {
-                $options['linkGenerator'] = function($token) use ($baseUrl) {
+                $options['linkGenerator'] = function ($token) use ($baseUrl) {
                     return $baseUrl . '?token=' . $token;
                 };
             }

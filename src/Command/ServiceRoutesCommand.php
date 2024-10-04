@@ -68,6 +68,7 @@ class ServiceRoutesCommand extends Command
         $service = ServiceRegistry::getServiceLocator()->get($serviceName);
         if ($service === null) {
             $io->error(__('Service "{0}" not found', $serviceName));
+
             return Command::CODE_ERROR;
         }
 

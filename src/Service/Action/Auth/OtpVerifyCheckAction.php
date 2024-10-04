@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
-use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
@@ -57,5 +56,4 @@ class OtpVerifyCheckAction extends OtpVerifyAction
 
         return $this->generateTokenResponse($user->toArray(), '2fa');
     }
-
 }

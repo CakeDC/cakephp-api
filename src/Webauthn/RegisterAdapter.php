@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Webauthn;
 
-use Cake\Utility\Hash;
 use Webauthn\PublicKeyCredentialCreationOptions;
 
 class RegisterAdapter extends BaseAdapter

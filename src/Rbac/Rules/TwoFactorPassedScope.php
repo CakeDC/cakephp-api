@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace CakeDC\Api\Rbac\Rules;
 
 use Authentication\Authenticator\JwtAuthenticator;
-use CakeDC\Auth\Rbac\Rules\AbstractRule;
-use Cake\Utility\Hash;
 use Cake\Routing\Router;
-use OutOfBoundsException;
+use CakeDC\Auth\Rbac\Rules\AbstractRule;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -24,7 +22,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class TwoFactorPassedScope extends AbstractRule
 {
-
     protected $_defaultConfig = [
     ];
 

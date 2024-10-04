@@ -16,8 +16,6 @@ namespace CakeDC\Api\Service\Action\Auth;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\AuthenticateAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Core\Configure;
-use Cake\Http\Exception\BadRequestException;
 
 /**
  * Class LoginAction
@@ -35,8 +33,9 @@ class Webauthn2faAuthOptionsAction extends Action
      */
     public function execute()
     {
-        $adapter = new AuthenticateAdapter($this->getService()->getRequest(), $this->getUsersTable(), $this->getIdentity());
+        $request = $this->getService()->getRequest();
+        $adapter = new AuthenticateAdapter($request, $this->getUsersTable(), $this->getIdentity());
 
         return $adapter->getOptions();
-   }
+    }
 }

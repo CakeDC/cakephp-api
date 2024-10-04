@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Core\Configure;
 use CakeDC\Api\Webauthn\RegisterAdapter;
+use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
  * Class LoginAction
@@ -49,6 +48,5 @@ class TwoFactorAuthAction extends Action
             'enabledWebauthn' => $this->isEnabledWebauthn2faAuthentication((array)$user),
             'enabledOtp' => $this->isEnabledOneTimePasswordAuthentication((array)$user),
         ];
-   }
-
+    }
 }

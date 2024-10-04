@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Core\Configure;
 use CakeDC\Api\Webauthn\RegisterAdapter;
+use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
  * Class LoginAction
@@ -35,11 +34,12 @@ class Webauthn2faAction extends Action
     public function execute()
     {
         $user = $this->getIdentity();
-        $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);
+        $request = $this->getService()->getRequest();
+        $adapter = new RegisterAdapter($request, $this->getUsersTable(), $user);
 
         return [
             'isRegister' => !$adapter->hasCredential(),
             'username' => $user->webauthn_username ?? $user->username,
         ];
-   }
+    }
 }

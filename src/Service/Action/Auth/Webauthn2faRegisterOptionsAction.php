@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Http\Exception\BadRequestException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\RegisterAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Core\Configure;
-use Cake\Http\Exception\BadRequestException;
 
 /**
  * Class LoginAction
@@ -44,6 +43,5 @@ class Webauthn2faRegisterOptionsAction extends Action
         throw new BadRequestException(
             __d('cake_d_c/api', 'User already has configured webauthn2fa')
         );
-
-   }
+    }
 }

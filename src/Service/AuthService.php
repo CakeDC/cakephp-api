@@ -17,21 +17,21 @@ use Cake\Utility\Hash;
 use CakeDC\Api\Service\Action\Auth\JwtLoginAction;
 use CakeDC\Api\Service\Action\Auth\JwtRefreshAction;
 use CakeDC\Api\Service\Action\Auth\JwtSocialLoginAction;
-use CakeDC\Api\Service\Action\Auth\OtpVerifyGetAction;
-use CakeDC\Api\Service\Action\Auth\OtpVerifyCheckAction;
 use CakeDC\Api\Service\Action\Auth\LoginAction;
+use CakeDC\Api\Service\Action\Auth\OtpVerifyCheckAction;
+use CakeDC\Api\Service\Action\Auth\OtpVerifyGetAction;
 use CakeDC\Api\Service\Action\Auth\RegisterAction;
 use CakeDC\Api\Service\Action\Auth\ResetPasswordAction;
 use CakeDC\Api\Service\Action\Auth\ResetPasswordRequestAction;
 use CakeDC\Api\Service\Action\Auth\SocialLoginAction;
+use CakeDC\Api\Service\Action\Auth\TwoFactorAuthAction;
 use CakeDC\Api\Service\Action\Auth\ValidateAccountAction;
 use CakeDC\Api\Service\Action\Auth\ValidateAccountRequestAction;
-use CakeDC\Api\Service\Action\Auth\TwoFactorAuthAction;
 use CakeDC\Api\Service\Action\Auth\Webauthn2faAction;
-use CakeDC\Api\Service\Action\Auth\Webauthn2faRegisterOptionsAction;
-use CakeDC\Api\Service\Action\Auth\Webauthn2faRegisterAction;
-use CakeDC\Api\Service\Action\Auth\Webauthn2faAuthOptionsAction;
 use CakeDC\Api\Service\Action\Auth\Webauthn2faAuthAction;
+use CakeDC\Api\Service\Action\Auth\Webauthn2faAuthOptionsAction;
+use CakeDC\Api\Service\Action\Auth\Webauthn2faRegisterAction;
+use CakeDC\Api\Service\Action\Auth\Webauthn2faRegisterOptionsAction;
 
 /**
  * Class AuthService

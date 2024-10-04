@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Core\Configure;
 use CakeDC\Api\Webauthn\AuthenticateAdapter;
+use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
  * Class LoginAction
@@ -44,8 +43,9 @@ class Webauthn2faAuthAction extends Action
             return $this->generateTokenResponse($user->toArray(), '2fa');
         } catch (\Throwable $e) {
             $user = $this->getIdentity();
-            \Cake\Log\Log::debug(__d('cake_d_c/api', 'Register error with webauthn for user id: {0}', $user['id'] ?? 'empty'));
+            $message = __d('cake_d_c/api', 'Register error with webauthn for user id: {0}', $user['id'] ?? 'empty');
+            Log::debug($message);
             throw $e;
         }
-   }
+    }
 }
