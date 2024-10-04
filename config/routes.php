@@ -19,7 +19,7 @@ use Cake\Routing\RouteBuilder;
 $routes->plugin('CakeDC/Api', ['path' => '/api'], function ($routes) {
     $useVersioning = Configure::read('Api.useVersioning');
     $versionPrefix = Configure::read('Api.versionPrefix');
-    $middlewares = Configure::read('Api.Middleware');
+    $middlewares = Configure::read('Api.Middleware', []);
     $middlewareNames = array_keys($middlewares);
 
     $routes->applyMiddleware(...$middlewareNames);
