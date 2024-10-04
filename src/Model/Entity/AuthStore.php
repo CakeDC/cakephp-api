@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * AuthStore Entity
  *
  * @property string $id
- * @property string|null $store
+ * @property array|null $store
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  */

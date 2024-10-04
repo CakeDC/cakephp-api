@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Core\Configure;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
-use Cake\Core\Configure;
 use RobThree\Auth\TwoFactorAuth;
 
 /**
@@ -32,6 +32,12 @@ abstract class OtpVerifyAction extends Action
      */
     public $tfa;
 
+    /**
+     * initialize
+     *
+     * @param array $config Configuration.
+     * @return void
+     */
     public function initialize(array $config): void
     {
         $this->tfa = new TwoFactorAuth(
@@ -78,5 +84,4 @@ abstract class OtpVerifyAction extends Action
     {
         return $this->tfa->getQRCodeImageAsDataUri($issuer, $secret);
     }
-
 }

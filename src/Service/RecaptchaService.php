@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service;
 
-use Cake\Utility\Hash;
 use CakeDC\Api\Service\Action\Recaptcha\ValidateAction;
 
 /**

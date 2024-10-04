@@ -35,9 +35,12 @@
         "firebase/php-jwt": "^6.2"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "~4.4.0",
+        "cakephp/cakephp-codesniffer": "^4.5",
         "league/flysystem-vfs": "^1.0",
+        "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9.5",
+        "robthree/twofactorauth": "^1.6",
+        "web-auth/webauthn-lib": "^3.3.11",
         "vlucas/phpdotenv": "^3.3"
     },
     "autoload": {

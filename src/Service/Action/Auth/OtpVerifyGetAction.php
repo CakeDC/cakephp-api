@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
-use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
@@ -54,6 +53,12 @@ class OtpVerifyGetAction extends OtpVerifyAction
         return $result;
     }
 
+    /**
+     * onVerifyGetSecret
+     *
+     * @param array $user User.
+     * @return string
+     */
     protected function onVerifyGetSecret($user)
     {
         if (isset($user['secret']) && $user['secret']) {

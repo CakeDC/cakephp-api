@@ -35,6 +35,8 @@ class OneTimePasswordAuthenticationCheckerFactory
         if (in_array($required, $interfaces)) {
             return new $className();
         }
-        throw new \InvalidArgumentException("Invalid config for 'OneTimePasswordAuthenticator.checker', '$className' does not implement '$required'");
+        $message = "Invalid config for 'OneTimePasswordAuthenticator.checker', " .
+         "'$className' does not implement '$required'";
+        throw new \InvalidArgumentException($message);
     }
 }

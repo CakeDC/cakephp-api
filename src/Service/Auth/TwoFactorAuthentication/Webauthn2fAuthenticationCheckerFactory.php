@@ -19,7 +19,7 @@ use Cake\Core\Configure;
  *
  * @package CakeDC\Auth\Auth
  */
-class Webauthn2fAuthenticationCheckerFactory
+class Webauthn2FAuthenticationCheckerFactory
 {
     /**
      * Get the two factor authentication checker
@@ -35,6 +35,8 @@ class Webauthn2fAuthenticationCheckerFactory
         if (in_array($required, $interfaces)) {
             return new $className();
         }
-        throw new \InvalidArgumentException("Invalid config for 'Webauthn2fa.checker', '$className' does not implement '$required'");
+        $message = "Invalid config for 'Webauthn2fa.checker', " .
+         "'$className' does not implement '$required'";
+        throw new \InvalidArgumentException($message);
     }
 }

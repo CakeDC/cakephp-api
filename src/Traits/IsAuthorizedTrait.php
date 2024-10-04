@@ -13,21 +13,16 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Traits;
 
+use Authentication\Authenticator\UnauthenticatedException;
 use Authorization\AuthorizationServiceInterface;
+use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
-use Laminas\Diactoros\Uri;
-
-use Authentication\Authenticator\UnauthenticatedException;
-use Cake\Core\Configure;
-use Cake\Http\Response;
 use CakeDC\Api\Service\ConfigReader;
 use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
-use Psr\Http\Message\ResponseInterface;
+use Laminas\Diactoros\Uri;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 trait IsAuthorizedTrait
 {
@@ -119,9 +114,10 @@ trait IsAuthorizedTrait
      * Returns service by the url
      *
      * @param string $url The target url.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface|null
      */
-    public function _getRequestWithService($url, ServerRequestInterface $request)
+    protected function _getRequestWithService($url, ServerRequestInterface $request)
     {
         $response = null;
         $service = null;
@@ -148,7 +144,6 @@ trait IsAuthorizedTrait
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
-     * @param \Psr\Http\Server\RequestHandlerInterface $handler Request handler.
      * @param mixed $matches Matches definition.
      * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface|null
      */
@@ -187,5 +182,4 @@ trait IsAuthorizedTrait
 
         return $response;
     }
-
 }

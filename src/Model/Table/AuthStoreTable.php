@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace CakeDC\Api\Model\Table;
 
 use Cake\Database\Schema\TableSchemaInterface;
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -25,7 +23,6 @@ use Cake\Validation\Validator;
  * @method \CakeDC\Api\Model\Entity\AuthStore[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \CakeDC\Api\Model\Entity\AuthStore[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \CakeDC\Api\Model\Entity\AuthStore[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AuthStoreTable extends Table
@@ -61,8 +58,6 @@ class AuthStoreTable extends Table
 
         return $validator;
     }
-
-
 
     /**
      * Initialize schema

@@ -73,7 +73,6 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
             return null;
         }
 
-
         $currentUser = $this
             ->getUsersTable()
             ->find()

@@ -15,18 +15,28 @@ namespace CakeDC\Api\Utility;
 
 use Cake\Http\ServerRequest;
 
+/**
+ * RequestParser class.
+ */
 class RequestParser
 {
+    /**
+     * Get the domain from the request.
+     *
+     * @param \Cake\Http\ServerRequest $request The request object.
+     * @param bool $replace Whether to replace the domain.
+     * @return string
+     */
     public static function getDomain(ServerRequest $request, $replace = true)
     {
         $domain = null;
         if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
             $domain = parse_url($_SERVER['HTTP_REFERER']);
         }
-        if ($domain !==null && $domain['host']) {
+        if ($domain !== null && $domain['host']) {
             $host = $domain['host'];
         } else {
-            $host = $this->request->domain();
+            $host = $request->domain();
         }
 
         if ($replace) {

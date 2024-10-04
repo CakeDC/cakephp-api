@@ -15,7 +15,6 @@ namespace CakeDC\Api\Service\Action\Recaptcha;
 
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\Traits\ReCaptchaTrait;
-use CakeDC\Api\Utility\RequestParser;
 
 /**
  * Class SocialLoginAction
@@ -36,5 +35,4 @@ class ValidateAction extends Action
     {
         return $this->validateReCaptcha();
     }
-
 }

@@ -15,7 +15,6 @@ namespace CakeDC\Api\Service\Action\Traits;
 
 use Cake\Core\Configure;
 use CakeDC\Api\Utility\RequestParser;
-use ReCaptcha\ReCaptcha;
 
 /**
  * Covers registration features and email token validation
@@ -55,7 +54,7 @@ trait ReCaptchaTrait
     protected function _getReCaptchaInstance()
     {
         $domain = RequestParser::getDomain($this->getService()->getRequest());
-        $reCaptchaSecret = Configure::read('Api.reCaptcha.' . $domain. '.secret');
+        $reCaptchaSecret = Configure::read('Api.reCaptcha.' . $domain . '.secret');
         if (!empty($reCaptchaSecret)) {
             return new \ReCaptcha\ReCaptcha($reCaptchaSecret);
         }

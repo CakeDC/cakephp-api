@@ -28,7 +28,7 @@ class JwtSocialLoginAction extends Action
      * Execute action.
      *
      * @return mixed
-     * @throws \CakeDC\Api\Service\Action\Exception
+     * @throws \Exception
      */
     public function execute()
     {
@@ -38,6 +38,6 @@ class JwtSocialLoginAction extends Action
             return false;
         }
 
-        return $this->generateTokenResponse($user);
+        return $this->generateTokenResponse($user, 'login');
     }
 }

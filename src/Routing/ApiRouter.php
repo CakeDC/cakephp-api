@@ -95,14 +95,14 @@ class ApiRouter extends Router
     /**
      * A hash of request context data.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected static $_requestContext = [];
 
     /**
      * Named expressions
      *
-     * @var array
+     * @var array<string, string>
      */
     protected static $_namedExpressions = [
         'Action' => Router::ACTION,
@@ -132,14 +132,14 @@ class ApiRouter extends Router
      * The stack of URL filters to apply against routing URLs before passing the
      * parameters to the route collection.
      *
-     * @var array
+     * @var array<callable(): mixed>
      */
     protected static $_urlFilters = [];
 
     /**
      * Default extensions defined with Router::extensions()
      *
-     * @var array
+     * @var array<string>
      */
     protected static $_defaultExtensions = [];
 }
