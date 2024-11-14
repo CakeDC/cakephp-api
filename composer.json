@@ -31,7 +31,7 @@
         "ext-json": "*",
         "cakephp/cakephp": "^4.3",
         "cakedc/users": "^11.0",
-        "lcobucci/jwt": "~4.0.0",
+        "lcobucci/jwt": "^4.0",
         "firebase/php-jwt": "^5.0"
     },
     "require-dev": {
