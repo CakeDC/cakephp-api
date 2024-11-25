@@ -81,7 +81,7 @@ class RegisterActionTest extends IntegrationTestCase
             'role' => 'user',
         ];
         $data = $result['data'];
-        unset($data['id'], $data['tos_date']);
+        unset($data['id'], $data['tos_date'], $data['last_login'], $data['secret_verified']);
         $this->assertEquals($expected, $data);
     }
 
