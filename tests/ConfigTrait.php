@@ -25,6 +25,10 @@ use Cake\Utility\Hash;
  */
 trait ConfigTrait
 {
+    
+    public $response;
+    public $Controller;
+
     /**
      * Configure public auth access
      */
