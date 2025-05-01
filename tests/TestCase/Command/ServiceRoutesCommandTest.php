@@ -21,7 +21,6 @@ class ServiceRoutesCommandTest extends TestCase
     {
         $this->_publicAccess();
         parent::setUp();
-        $this->useCommandRunner();
     }
 
     /**
