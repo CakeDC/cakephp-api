@@ -60,7 +60,6 @@ class Plugin extends BasePlugin
     }
 
     /**
-<<<<<<< HEAD
      * Middleware registrator and holder.
      *
      * @param \Cake\Routing\RouteBuilder $routes Routes.
