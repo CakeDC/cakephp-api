@@ -15,14 +15,12 @@ namespace CakeDC\Api\Test\Fixture;
 use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Authentication\PasswordHasher\PasswordHasherFactory;
 use Cake\TestSuite\Fixture\TestFixture;
-use CakeDC\Users\Webauthn\Base64Utility;
 
 /**
  * UsersFixture
  */
 class UsersFixture extends TestFixture
 {
-
     /**
      * records property
      *

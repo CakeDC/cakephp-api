@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Api\Service\Auth\TwoFactorAuthentication;
 
-interface Webauthn2FAuthenticationCheckerInterface
+interface Webauthn2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled

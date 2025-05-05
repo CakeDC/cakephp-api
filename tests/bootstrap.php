@@ -83,9 +83,9 @@ Configure::write('App', [
 // Cake\Core\Configure::write('App.encoding', 'UTF-8');
 Cake\Core\Configure::write('debug', true);
 
-@mkdir(TMP . 'cache/models', 0777);
-@mkdir(TMP . 'cache/persistent', 0777);
-@mkdir(TMP . 'cache/views', 0777);
+mkdir(TMP . 'cache/models', 0777);
+mkdir(TMP . 'cache/persistent', 0777);
+mkdir(TMP . 'cache/views', 0777);
 
 $cache = [
     'default' => [

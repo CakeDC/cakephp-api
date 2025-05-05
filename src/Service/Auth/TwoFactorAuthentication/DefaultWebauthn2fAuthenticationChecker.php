@@ -19,7 +19,7 @@ use Cake\Core\Configure;
  *
  * @package CakeDC\Auth\Auth
  */
-class DefaultWebauthn2fAuthenticationChecker implements Webauthn2FAuthenticationCheckerInterface
+class DefaultWebauthn2fAuthenticationChecker implements Webauthn2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled

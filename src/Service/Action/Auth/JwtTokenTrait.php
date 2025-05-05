@@ -18,7 +18,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerFactory;
-use CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2FAuthenticationCheckerFactory;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2fAuthenticationCheckerFactory;
 use DateInterval;
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
@@ -184,7 +184,7 @@ trait JwtTokenTrait
     /**
      * Get the configured u2f authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface
+     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
      */
     protected function getWebauthn2fAuthenticationChecker()
     {
