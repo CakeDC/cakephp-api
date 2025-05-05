@@ -118,6 +118,7 @@ class ResetPasswordAction extends Action
      */
     protected function _changePassword($userId)
     {
+        /** @var \CakeDC\Users\Model\Entity\User $user */
         $user = $this->getUsersTable()->newEntity([], ['validate' => false]);
         $user->id = $userId;
         try {

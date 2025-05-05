@@ -22,13 +22,13 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class TwoFactorScope extends AbstractRule
 {
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
     ];
 
     /**
      * @inheritDoc
      */
-    public function allowed($user, $role, ServerRequestInterface $request)
+    public function allowed(array|\ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
         $authentication = $request->getAttribute('authentication');
         if ($authentication === null) {

@@ -48,7 +48,7 @@ class OtpVerifyCheckAction extends OtpVerifyAction
         unset($user['secret']);
 
         if (!$user['secret_verified']) {
-            $this->getUsersTable()->query()->update()
+            $this->getUsersTable()->updateQuery()
                 ->set(['secret_verified' => true])
                 ->where(['id' => $user['id']])
                 ->execute();

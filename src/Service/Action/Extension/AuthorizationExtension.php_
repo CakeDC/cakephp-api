@@ -37,7 +37,7 @@ class AuthorizationExtension extends Extension implements EventListenerInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'identityAttribute' => 'identity',
         'serviceAttribute' => 'authorization',
         'authorizationEvent' => 'Action.Auth.onAuthorization',

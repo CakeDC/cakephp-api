@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Log\Log;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\AuthenticateAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
@@ -31,6 +32,7 @@ class Webauthn2faAuthAction extends Action
      * Execute action.
      *
      * @return mixed
+     * @throws \Throwable
      */
     public function execute()
     {

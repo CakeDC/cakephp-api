@@ -67,8 +67,8 @@ class OtpVerifyGetAction extends OtpVerifyAction
 
         $secret = $this->createSecret();
         try {
-            $query = $this->getUsersTable()->query();
-            $query->update()
+            $query = $this->getUsersTable()->updateQuery();
+            $query
                 ->set(['secret' => $secret])
                 ->where(['id' => $user['id']]);
             $query->execute();

@@ -29,7 +29,6 @@ class ValidateAction extends Action
      * Execute action.
      *
      * @return mixed
-     * @throws \CakeDC\Api\Service\Action\Exception
      */
     public function execute()
     {

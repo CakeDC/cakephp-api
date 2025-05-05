@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Http\Exception\BadRequestException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\RegisterAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
