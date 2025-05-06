@@ -35,10 +35,15 @@
         "firebase/php-jwt": "^6.3"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "~4.4.0",
+        "cakephp/cakephp-codesniffer": "^4.5",
+        "google/recaptcha": "@stable",
         "league/flysystem-vfs": "^1.0",
+        "laminas/laminas-diactoros": "^3.0",
         "phpunit/phpunit": "^10.0",
-        "vlucas/phpdotenv": "^3.3"
+        "phpstan/phpstan": "^1.8",
+        "robthree/twofactorauth": "^1.6",
+        "vlucas/phpdotenv": "^3.3",
+        "web-auth/webauthn-lib": "^5.0"
     },
     "autoload": {
         "psr-4": {

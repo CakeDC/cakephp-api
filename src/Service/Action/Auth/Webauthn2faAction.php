@@ -13,31 +13,33 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
-use CakeDC\Api\Service\Action\Auth\SocialLoginAction as Action;
+use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Webauthn\RegisterAdapter;
+use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
- * Class SocialLoginAction
+ * Class LoginAction
  *
  * @package CakeDC\Api\Service\Action
  */
-class JwtSocialLoginAction extends Action
+class Webauthn2faAction extends Action
 {
-    use JwtTokenTrait;
+    use CustomUsersTableTrait;
 
     /**
      * Execute action.
      *
      * @return mixed
-     * @throws \Exception
      */
     public function execute()
     {
-        $user = parent::execute();
+        $user = $this->getIdentity();
+        $request = $this->getService()->getRequest();
+        $adapter = new RegisterAdapter($request, $this->getUsersTable(), $user);
 
-        if (empty($user)) {
-            return false;
-        }
-
-        return $this->generateTokenResponse($user, 'login');
+        return [
+            'isRegister' => !$adapter->hasCredential(),
+            'username' => $user->webauthn_username ?? $user->username,
+        ];
     }
 }

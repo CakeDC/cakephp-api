@@ -9,3 +9,4 @@ tmp
 pmip
 webroot/coverage
 .php_cs.cache
+.phpunit.cache/

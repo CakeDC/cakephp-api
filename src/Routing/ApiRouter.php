@@ -134,7 +134,7 @@ class ApiRouter extends Router
      * The stack of URL filters to apply against routing URLs before passing the
      * parameters to the route collection.
      *
-     * @var array<\Closure>
+     * @var array<callable(): mixed>
      */
     protected static array $_urlFilters = [];
 

@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Api;
 
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
+use CakeDC\Api\Command\ServiceRoutesCommand;
 
 /**
  * Api plugin
@@ -29,7 +31,7 @@ class Plugin extends BasePlugin
      */
     public function routes($routes): void
     {
-        $middlewares = Configure::read('Api.Middleware');
+        $middlewares = Configure::read('Api.Middleware', []);
         foreach ($middlewares as $alias => $middleware) {
             $class = $middleware['class'];
             if (array_key_exists('request', $middleware)) {
@@ -82,5 +84,16 @@ class Plugin extends BasePlugin
         if (array_key_exists('apiParser', $this->middlewares)) {
             $this->middlewares['apiParser']->setContainer($container);
         }
+    }
+
+    /**
+     * Add console commands for the plugin.
+     *
+     * @param \Cake\Console\CommandCollection $commands The command collection to update
+     * @return \Cake\Console\CommandCollection
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        return $commands->add('service routes', ServiceRoutesCommand::class);
     }
 }

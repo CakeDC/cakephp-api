@@ -11,33 +11,27 @@ declare(strict_types=1);
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Api\Service\Action\Auth;
+namespace CakeDC\Api\Service\Action\Recaptcha;
 
-use CakeDC\Api\Service\Action\Auth\SocialLoginAction as Action;
+use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Action\Traits\ReCaptchaTrait;
 
 /**
  * Class SocialLoginAction
  *
  * @package CakeDC\Api\Service\Action
  */
-class JwtSocialLoginAction extends Action
+class ValidateAction extends Action
 {
-    use JwtTokenTrait;
+    use ReCaptchaTrait;
 
     /**
      * Execute action.
      *
      * @return mixed
-     * @throws \Exception
      */
     public function execute()
     {
-        $user = parent::execute();
-
-        if (empty($user)) {
-            return false;
-        }
-
-        return $this->generateTokenResponse($user, 'login');
+        return $this->validateReCaptcha();
     }
 }

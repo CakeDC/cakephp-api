@@ -18,11 +18,6 @@ parameters:
 			path: src\Service\Action\Auth\ResetPasswordAction.php
 
 		-
-			message: "#^Call to an undefined method Cake\\\\ORM\\\\Table\\:\\:validationPasswordConfirm\\(\\)\\.$#"
-			count: 1
-			path: src\Service\Action\Auth\ResetPasswordAction.php
-
-		-
 			message: "#^Call to an undefined method Cake\\\\ORM\\\\Table\\:\\:changePassword\\(\\)\\.$#"
 			count: 1
 			path: src\Service\Action\Auth\ResetPasswordAction.php
@@ -46,5 +41,3 @@ parameters:
 			message: "#^Call to an undefined method Cake\\\\ORM\\\\Table\\:\\:resetToken\\(\\)\\.$#"
 			count: 1
 			path: src\Service\Action\Auth\ValidateAccountRequestAction.php
-
-

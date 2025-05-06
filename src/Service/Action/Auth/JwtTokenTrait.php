@@ -17,28 +17,55 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerFactory;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2fAuthenticationCheckerFactory;
 use DateInterval;
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key\InMemory;
 
+/**
+ * JwtTokenTrait
+ */
 trait JwtTokenTrait
 {
     /**
      * Generates token response.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
+     * @param string|null $type The type of token being generated.
      * @return array
      */
-    public function generateTokenResponse($user)
+    public function generateTokenResponse($user, $type)
     {
-        //$timestamp = time();
+        $timestamp = new DateTimeImmutable('-1 second');
+        unset($user['additional_data'], $user['secret'], $user['secret_verified']);
+
+        return Hash::merge($user, [
+            'access_token' => $this->generateAccessToken($user, $timestamp, $type),
+            'refresh_token' => $this->generateRefreshToken($user, $timestamp, $type),
+            'expired' => $this->accessTokenLifeTime($timestamp),
+            'enabled2FA' => $this->is2FAEnabled($user),
+            'enabledWebauthn' => $this->isEnabledWebauthn2faAuthentication($user),
+            'enabledOtp' => $this->isEnabledOneTimePasswordAuthentication($user),
+        ]);
+    }
+
+    /**
+     * Generates refresh token response.
+     *
+     * @param \Cake\Datasource\EntityInterface|array $user User info.
+     * @param array $payload Additional payload data.
+     * @return array
+     */
+    public function generateRefreshTokenResponse($user, $payload)
+    {
         $timestamp = new DateTimeImmutable();
 
         return Hash::merge($user, [
-            'access_token' => $this->generateAccessToken($user, $timestamp),
-            'refresh_token' => $this->generateRefreshToken($user, $timestamp),
+            'access_token' => $this->generateAccessToken($user, $timestamp, null, $payload),
+            'refresh_token' => $this->generateRefreshToken($user, $timestamp, null, $payload),
             'expired' => $this->accessTokenLifeTime($timestamp),
         ]);
     }
@@ -48,16 +75,18 @@ trait JwtTokenTrait
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param \DateTimeImmutable $timestamp Timestamp.
+     * @param string|null $type The type of token being generated.
+     * @param array|null $payload Additional payload data.
      * @return bool|string
      */
-    public function generateAccessToken($user, $timestamp)
+    public function generateAccessToken($user, $timestamp, $type, $payload = null)
     {
         if (empty($user)) {
             return false;
         }
 
         $subject = $user['id'];
-        $audience = Router::url('/', true);
+        $audience = $this->getAudience($user, $type, $payload);
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.AccessToken.secret');
@@ -76,20 +105,109 @@ trait JwtTokenTrait
     }
 
     /**
+     * Get the audience for the token.
+     *
+     * @param \Cake\Datasource\EntityInterface|array $user User info.
+     * @param string|null $type The type of token being generated.
+     * @param array|null $payload Additional payload data.
+     * @return string
+     */
+    public function getAudience($user, $type, $payload)
+    {
+        if ($type === null && is_array($payload) && isset($payload['aud'])) {
+            return $payload['aud'];
+        }
+        if ($type == 'login' && $this->is2FAEnabled($user)) {
+            $audience = Router::url('/2fa', true);
+        } else {
+            $audience = Router::url('/', true);
+        }
+
+        return $audience;
+    }
+
+    /**
+     * Check if 2FA is enabled for the user.
+     *
+     * @param \Cake\Datasource\EntityInterface|array $user User info.
+     * @return bool
+     */
+    protected function is2FAEnabled($user)
+    {
+        return $this->isEnabledWebauthn2faAuthentication($user) || $this->isEnabledOneTimePasswordAuthentication($user);
+    }
+
+    /**
+     * Check if Webauthn 2FA authentication is enabled for the user.
+     *
+     * @param \Cake\Datasource\EntityInterface|array $user User info.
+     * @return bool
+     */
+    public function isEnabledWebauthn2faAuthentication($user)
+    {
+        $enabledTwoFactorVerify = Configure::read('Api.2fa.enabled');
+        $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
+        if ($enabledTwoFactorVerify && $webauthn2faChecker->isRequired((array)$user)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if One-Time Password authentication is enabled for the user.
+     *
+     * @param \Cake\Datasource\EntityInterface|array $user User info.
+     * @return bool
+     */
+    public function isEnabledOneTimePasswordAuthentication($user)
+    {
+        $enabledTwoFactorVerify = Configure::read('Api.2fa.enabled');
+        $otpChecker = $this->getOneTimePasswordAuthenticationChecker();
+        if ($enabledTwoFactorVerify && $otpChecker->isRequired((array)$user)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the One-Time Password Authentication Checker.
+     *
+     * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
+     */
+    protected function getOneTimePasswordAuthenticationChecker()
+    {
+        return (new OneTimePasswordAuthenticationCheckerFactory())->build();
+    }
+
+    /**
+     * Get the configured u2f authentication checker
+     *
+     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
+     */
+    protected function getWebauthn2fAuthenticationChecker()
+    {
+        return (new Webauthn2fAuthenticationCheckerFactory())->build();
+    }
+
+    /**
      * Generates refresh token.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param \DateTimeImmutable $timestamp Timestamp.
+     * @param string|null $type The type of token being generated.
+     * @param array|null $payload Additional payload data.
      * @return bool|string
      */
-    public function generateRefreshToken($user, $timestamp)
+    public function generateRefreshToken($user, $timestamp, $type, $payload = null)
     {
         if (empty($user)) {
             return false;
         }
 
         $subject = $user['id'];
-        $audience = Router::url('/', true);
+        $audience = $this->getAudience($user, $type, $payload);
         $issuer = Router::url('/', true);
         $signer = new Sha512();
         $secret = Configure::read('Api.Jwt.RefreshToken.secret');
@@ -111,6 +229,7 @@ trait JwtTokenTrait
         $model = $UsersTable->getAlias();
 
         $table = TableRegistry::getTableLocator()->get('CakeDC/Api.JwtRefreshTokens');
+        /** @var \CakeDC\Api\Model\Entity\JwtRefreshToken $entity */
         $entity = $table->find()->where([
             'model' => $model,
             'foreign_key' => $subject,

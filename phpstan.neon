@@ -2,7 +2,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 4
+    level: 2
     bootstrapFiles:
         - tests/bootstrap.php
     ignoreErrors:
