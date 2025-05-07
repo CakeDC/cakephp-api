@@ -22,7 +22,7 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
 class Base64Utility
 {
     /**
-     * @param string $data
+     * @param string $data The data to encode
      * @return string
      */
     public static function complyEncodedNoPadding(string $data): string

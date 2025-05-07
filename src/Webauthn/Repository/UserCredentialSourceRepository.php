@@ -60,12 +60,10 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
      */
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
     {
-        if ($publicKeyCredentialUserEntity->getId() != $this->user->id) {
+        if ($publicKeyCredentialUserEntity->getId() != $this->user->get('id')) {
             return [];
         }
-        \Cake\Log\Log::error(print_r($this->user, true));
         $credentials = $this->getUserData($this->user);
-        \Cake\Log\Log::error(print_r($credentials, true));
 
         $list = [];
         foreach ($credentials as $credential) {

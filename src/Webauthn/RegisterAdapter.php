@@ -21,6 +21,7 @@ use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
+use Webauthn\PublicKeyCredentialSource;
 
 class RegisterAdapter extends BaseAdapter
 {
@@ -71,7 +72,7 @@ class RegisterAdapter extends BaseAdapter
      *
      * @return \Webauthn\PublicKeyCredentialSource
      */
-    public function verifyResponse(): \Webauthn\PublicKeyCredentialSource
+    public function verifyResponse(): PublicKeyCredentialSource
     {
         $storeEntity = $this->readStore();
         $options = $this->getStore($storeEntity, 'registerOptions');

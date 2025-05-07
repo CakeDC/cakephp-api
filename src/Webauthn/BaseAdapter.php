@@ -19,6 +19,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository;
+use CakeDC\Users\Model\Table\UsersTable;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
 use Cose\Algorithm\Signature\ECDSA\ES256K;
@@ -36,7 +37,6 @@ use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
-use CakeDC\Users\Model\Table\UsersTable;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
 
@@ -252,7 +252,8 @@ class BaseAdapter
     }
 
     /**
-     * @param \Webauthn\AttestationStatement\AttestationStatementSupportManager $attestationStatementSupportManager
+     * @param \Webauthn\AttestationStatement\AttestationStatementSupportManager $attestationStatementSupportManager manager instance
+     * @return void
      */
     public function setAttestationStatementSupportManager(
         AttestationStatementSupportManager $attestationStatementSupportManager
@@ -275,7 +276,7 @@ class BaseAdapter
     }
 
     /**
-     * @return \CakeDC\Users\Webauthn\PublicKeyCredentialLoader
+     * @return \CakeDC\Api\Webauthn\PublicKeyCredentialLoader
      */
     protected function createPublicKeyCredentialLoader(): PublicKeyCredentialLoader
     {
