@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Webauthn;
 
-use Cake\Log\Log;
+use Cake\Http\Exception\BadRequestException;
+use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
+use Webauthn\AuthenticatorAssertionResponse;
+use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -25,22 +28,20 @@ class AuthenticateAdapter extends BaseAdapter
     public function getOptions(): PublicKeyCredentialRequestOptions
     {
         $userEntity = $this->getUserEntity();
-        $allowed = array_map(function (PublicKeyCredentialSource $credential) {
+        $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
             return $credential->getPublicKeyCredentialDescriptor();
         }, $this->repository->findAllForUserEntity($userEntity));
-        Log::error(print_r($allowed, true));
 
-        $options = $this->server->generatePublicKeyCredentialRequestOptions(
-            PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED,
-            $allowed
-        );
+        $options = (new PublicKeyCredentialRequestOptions(random_bytes(32)))
+            ->setRpId($this->rpEntity->getId())
+            ->setUserVerification(PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED)
+            ->allowCredentials(...$allowedCredentials)
+            ->setExtensions(new AuthenticationExtensionsClientInputs());
+
         $storeEntity = $this->readStore();
-        Log::error(print_r($storeEntity, true));
         $storeEntity['store'] = [];
         $storeEntity = $this->patchStore($storeEntity, 'authenticateOptions', base64_encode(serialize($options)));
         $res = $this->store->save($storeEntity);
-        Log::error(print_r($storeEntity, true));
-        Log::error(print_r($res, true));
 
         return $options;
     }
@@ -49,31 +50,44 @@ class AuthenticateAdapter extends BaseAdapter
      * Verify the registration response
      *
      * @return \Webauthn\PublicKeyCredentialSource
+     * @throws \Throwable
      */
     public function verifyResponse(): \Webauthn\PublicKeyCredentialSource
     {
         $storeEntity = $this->readStore();
-        Log::error(print_r($storeEntity, true));
         $options = $this->getStore($storeEntity, 'authenticateOptions');
         if ($options) {
             $options = unserialize(base64_decode($options));
         }
-        Log::error(print_r($options, true));
 
-        return $this->loadAndCheckAssertionResponse($options);
+        $publicKeyCredentialLoader = $this->createPublicKeyCredentialLoader();
+        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($this->request->getData());
+        $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
+        if ($authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
+            $authenticatorAssertionResponseValidator = $this->createAssertionResponseValidator();
+
+            return $authenticatorAssertionResponseValidator->check(
+                $publicKeyCredential->getRawId(),
+                $authenticatorAssertionResponse,
+                $options,
+                $this->request,
+                $this->getUserEntity()->getId(),
+            );
+        }
+
+        throw new BadRequestException(__d('cake_d_c/api', 'Could not validate credential response for authentication'));
     }
 
     /**
-     * @param \Webauthn\PublicKeyCredentialRequestOptions $options request options
-     * @return \Webauthn\PublicKeyCredentialSource
+     * @return \Webauthn\AuthenticatorAssertionResponseValidator
      */
-    protected function loadAndCheckAssertionResponse($options): PublicKeyCredentialSource
+    protected function createAssertionResponseValidator(): AuthenticatorAssertionResponseValidator
     {
-        return $this->server->loadAndCheckAssertionResponse(
-            json_encode($this->request->getData()),
-            $options,
-            $this->getUserEntity(),
-            $this->request
+        return new AuthenticatorAssertionResponseValidator(
+            $this->repository,
+            null,
+            $this->createExtensionOutputCheckerHandler(),
+            $this->getAlgorithmManager()
         );
     }
 }

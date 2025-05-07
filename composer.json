@@ -43,7 +43,7 @@
         "phpstan/phpstan": "^1.8",
         "robthree/twofactorauth": "^1.6",
         "vlucas/phpdotenv": "^3.3",
-        "web-auth/webauthn-lib": "^5.0"
+        "web-auth/webauthn-lib": "^4.4"
     },
     "autoload": {
         "psr-4": {
@@ -58,7 +58,6 @@
         }
     },
     "prefer-stable": true,
-    "minimum-stability": "dev",
     "config": {
         "sort-packages": true,
         "allow-plugins": {
