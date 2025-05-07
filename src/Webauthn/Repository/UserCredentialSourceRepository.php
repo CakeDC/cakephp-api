@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Webauthn\Repository;
 
-use Base64Url\Base64Url;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Users\Model\Table\UsersTable;
+use CakeDC\Users\Webauthn\Base64Utility;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -46,7 +46,7 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
      */
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
-        $encodedId = Base64Url::encode($publicKeyCredentialId);
+        $encodedId = Base64Utility::basicEncode($publicKeyCredentialId);
         $credentials = $this->getUserData($this->user);
         $credential = $credentials[$encodedId] ?? null;
 
@@ -60,12 +60,10 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
      */
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
     {
-        if ($publicKeyCredentialUserEntity->getId() != $this->user->id) {
+        if ($publicKeyCredentialUserEntity->getId() != $this->user->get('id')) {
             return [];
         }
-        \Cake\Log\Log::error(print_r($this->user, true));
         $credentials = $this->getUserData($this->user);
-        \Cake\Log\Log::error(print_r($credentials, true));
 
         $list = [];
         foreach ($credentials as $credential) {
@@ -82,7 +80,7 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $credentials = $this->getUserData($this->user);
-        $id = Base64Url::encode($publicKeyCredentialSource->getPublicKeyCredentialId());
+        $id = Base64Utility::basicEncode($publicKeyCredentialSource->getPublicKeyCredentialId());
         $credentials[$id] = json_decode(json_encode($publicKeyCredentialSource), true);
         $this->patchUserData($this->user, $credentials);
         $res = $this->usersTable->saveOrFail($this->user);

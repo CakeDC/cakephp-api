@@ -137,6 +137,8 @@ Cake\Core\Configure::write('Email', [
 Cake\Core\Configure::write('Session', [
     'defaults' => 'php',
 ]);
+session_id('cli');
+
 Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 
 mb_internal_encoding(Configure::read('App.encoding'));

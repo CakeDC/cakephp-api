@@ -20,9 +20,25 @@ use Cake\Utility\Hash;
 use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository;
 use CakeDC\Users\Model\Table\UsersTable;
+use Cose\Algorithm\Manager;
+use Cose\Algorithm\Signature\ECDSA\ES256;
+use Cose\Algorithm\Signature\ECDSA\ES256K;
+use Cose\Algorithm\Signature\ECDSA\ES384;
+use Cose\Algorithm\Signature\ECDSA\ES512;
+use Cose\Algorithm\Signature\EdDSA\Ed256;
+use Cose\Algorithm\Signature\EdDSA\Ed512;
+use Cose\Algorithm\Signature\RSA\PS256;
+use Cose\Algorithm\Signature\RSA\PS384;
+use Cose\Algorithm\Signature\RSA\PS512;
+use Cose\Algorithm\Signature\RSA\RS256;
+use Cose\Algorithm\Signature\RSA\RS384;
+use Cose\Algorithm\Signature\RSA\RS512;
+use Webauthn\AttestationStatement\AttestationObjectLoader;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\Server;
 
 class BaseAdapter
 {
@@ -39,19 +55,29 @@ class BaseAdapter
     protected $repository;
 
     /**
-     * @var \Webauthn\Server
-     */
-    protected $server;
-
-    /**
      * @var \Cake\Datasource\EntityInterface|\CakeDC\Users\Model\Entity\User
      */
     private $user;
 
     /**
+     * @var \Webauthn\PublicKeyCredentialRpEntity
+     */
+    protected PublicKeyCredentialRpEntity $rpEntity;
+
+    /**
      * @var \CakeDC\Api\Model\Table\AuthStoreTable
      */
     protected $store;
+
+    /**
+     * @var \Webauthn\AttestationStatement\AttestationStatementSupportManager|null
+     */
+    protected ?AttestationStatementSupportManager $attestationStatementSupportManager = null;
+
+    /**
+     * @var \Cose\Algorithm\Manager|null
+     */
+    protected ?Manager $algorithmManager = null;
 
     /**
      * Constructor.
@@ -67,7 +93,7 @@ class BaseAdapter
         $store = TableRegistry::getTableLocator()->get('CakeDC/Api.AuthStore');
         $this->store = $store;
         $session = $this->readStore();
-        $rpEntity = new PublicKeyCredentialRpEntity(
+        $this->rpEntity = new PublicKeyCredentialRpEntity(
             Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.appName'), // The application name
             Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.id')
         );
@@ -80,11 +106,6 @@ class BaseAdapter
             $request,
             $this->user,
             $usersTable
-        );
-
-        $this->server = new Server(
-            $rpEntity,
-            $this->repository
         );
     }
 
@@ -107,7 +128,7 @@ class BaseAdapter
     /**
      * Get the user.
      *
-     * @return array|mixed|null
+     * @return mixed|array|null
      */
     public function getUser()
     {
@@ -228,5 +249,76 @@ class BaseAdapter
     public function getDomain($replace = true)
     {
         return RequestParser::getDomain($this->request, $replace);
+    }
+
+    /**
+     * @param \Webauthn\AttestationStatement\AttestationStatementSupportManager $attestationStatementSupportManager manager instance
+     * @return void
+     */
+    public function setAttestationStatementSupportManager(
+        AttestationStatementSupportManager $attestationStatementSupportManager
+    ): void {
+        $this->attestationStatementSupportManager = $attestationStatementSupportManager;
+    }
+
+    /**
+     * @return \Webauthn\AttestationStatement\AttestationStatementSupportManager
+     */
+    protected function getAttestationStatementSupportManager(): AttestationStatementSupportManager
+    {
+        if ($this->attestationStatementSupportManager === null) {
+            $this->attestationStatementSupportManager = new AttestationStatementSupportManager();
+            $this->attestationStatementSupportManager
+                ->add(new NoneAttestationStatementSupport());
+        }
+
+        return $this->attestationStatementSupportManager;
+    }
+
+    /**
+     * @return \CakeDC\Api\Webauthn\PublicKeyCredentialLoader
+     */
+    protected function createPublicKeyCredentialLoader(): PublicKeyCredentialLoader
+    {
+        $attestationObjectLoader = new AttestationObjectLoader(
+            $this->getAttestationStatementSupportManager()
+        );
+
+        return new PublicKeyCredentialLoader(
+            $attestationObjectLoader
+        );
+    }
+
+    /**
+     * @return \Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler
+     */
+    protected function createExtensionOutputCheckerHandler(): ExtensionOutputCheckerHandler
+    {
+        return new ExtensionOutputCheckerHandler();
+    }
+
+    /**
+     * @return \Cose\Algorithm\Manager
+     */
+    protected function getAlgorithmManager(): Manager
+    {
+        if ($this->algorithmManager === null) {
+            $this->algorithmManager = Manager::create()->add(
+                ES256::create(),
+                ES256K::create(),
+                ES384::create(),
+                ES512::create(),
+                RS256::create(),
+                RS384::create(),
+                RS512::create(),
+                PS256::create(),
+                PS384::create(),
+                PS512::create(),
+                Ed256::create(),
+                Ed512::create(),
+            );
+        }
+
+        return $this->algorithmManager;
     }
 }
