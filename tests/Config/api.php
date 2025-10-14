@@ -49,11 +49,11 @@ if (empty($config)) {
             'Jwt' => [
                 'AccessToken' => [
                     'lifetime' => 600,
-                    'secret' => 'secret',
+                    'secret' => 'this is a long secret, that must be longer than 512 bits if not an exception will be thrown',
                 ],
                 'RefreshToken' => [
                     'lifetime' => 14 * 86400,
-                    'secret' => 'secret',
+                    'secret' => 'this is a long secret, that must be longer than 512 bits if not an exception will be thrown',
                 ],
             ],
 
