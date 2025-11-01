@@ -64,7 +64,6 @@ class JwtLoginActionTest extends IntegrationTestCase
     public function testSuccessLogin()
     {
         $this->sendRequest('/auth/jwt_login', 'POST', ['username' => 'user-1', 'password' => '12345']);
-        print_r((string)$this->_response->getBody());
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertTrue(is_array($result['data']));
