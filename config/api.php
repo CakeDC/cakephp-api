@@ -71,13 +71,13 @@ return [
             ],
         ],
         'Middleware' => [
+            'bodyParser' => [
+                'class' => BodyParserMiddleware::class,
+            ],
             'authentication' => [
                 'class' => AuthenticationMiddleware::class,
                 'request' => ApiInitializer::class,
                 'method' => 'getAuthenticationService',
-            ],
-            'bodyParser' => [
-                'class' => BodyParserMiddleware::class,
             ],
             'apiParser' => [
                 'class' => ParseApiRequestMiddleware::class,
