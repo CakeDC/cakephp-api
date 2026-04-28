@@ -42,16 +42,16 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
      * On find entities.
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntities(Event $event): SelectQuery
+    public function findEntities(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
         /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
-        return $this->_autocompleteList($action, $query);
+        $event->setResult($this->_autocompleteList($action, $query));
     }
 
     /**

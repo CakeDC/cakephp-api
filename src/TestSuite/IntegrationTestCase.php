@@ -176,7 +176,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     protected function _appendGetParam(string $url, string $key, string $value): string
     {
-        $appendChar = strpos($url, '?') !== false ? '&' : '?';
+        $appendChar = str_contains($url, '?') ? '&' : '?';
 
         return $url . $appendChar . urlencode($key) . '=' . urlencode($value);
     }
@@ -197,7 +197,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     /**
      * @return mixed
      */
-    public function getJsonResponse()
+    public function getJsonResponse(): mixed
     {
         $body = (string)$this->_response->getBody();
 
@@ -228,7 +228,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $message The error message.
      * @return void
      */
-    public function assertStatus($code, $message = null)
+    public function assertStatus(int $code, ?string $message = null): void
     {
         if ($message === null) {
             $message = "Status code $code does not match";
@@ -246,6 +246,6 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function assertErrorMessage(array $result, string $expectedMessage): void
     {
         $message = Hash::get($result, 'message');
-        $this->assertTrue(is_string($message) && strpos($message, $expectedMessage) === 0);
+        $this->assertTrue(is_string($message) && str_starts_with($message, $expectedMessage));
     }
 }

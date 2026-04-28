@@ -10,8 +10,8 @@ use Cake\ORM\Entity;
  *
  * @property string $id
  * @property array|null $store
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  */
 class AuthStore extends Entity
 {

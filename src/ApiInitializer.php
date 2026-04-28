@@ -35,28 +35,39 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
     public function getAuthenticationService(): AuthenticationService
     {
         $service = new AuthenticationService();
-        $service->loadIdentifier('Authentication.JwtSubject', []);
-        $service->loadIdentifier('Authentication.Password', [
-            'resolver' => [
-                'className' => 'Authentication.Orm',
-                'userModel' => 'CakeDC/Users.Users',
-                'finder' => 'active',
-            ],
-        ]);
 
         $service->loadAuthenticator('Authentication.Session', [
             'sessionKey' => 'Auth',
+            'identifier' => [
+                'Authentication.Password' => [
+                    'resolver' => [
+                        'className' => 'Authentication.Orm',
+                        'userModel' => 'CakeDC/Users.Users',
+                        'finder' => 'active',
+                    ],
+                ],
+            ],
         ]);
         $service->loadAuthenticator('CakeDC/Auth.Form', [
-            // 'sessionKey' => 'Auth',
+            'identifier' => [
+                'Authentication.Password' => [
+                    'resolver' => [
+                        'className' => 'Authentication.Orm',
+                        'userModel' => 'CakeDC/Users.Users',
+                        'finder' => 'active',
+                    ],
+                ],
+            ],
         ]);
 
-        $service->loadIdentifier('Authentication.Token', [
-            'dataField' => 'token',
-            'tokenField' => 'api_token',
-        ]);
         $service->loadAuthenticator('Authentication.Token', [
             'queryParam' => 'token',
+            'identifier' => [
+                'Authentication.Token' => [
+                    'dataField' => 'token',
+                    'tokenField' => 'api_token',
+                ],
+            ],
         ]);
 
         $service->loadAuthenticator('Authentication.Jwt', [
@@ -66,6 +77,9 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
             'algorithm' => 'HS512',
             'returnPayload' => false,
             'secretKey' => Configure::read('Api.Jwt.AccessToken.secret'),
+            'identifier' => [
+                'Authentication.JwtSubject' => [],
+            ],
         ]);
 
         return $service;

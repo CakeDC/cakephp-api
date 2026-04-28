@@ -51,7 +51,7 @@ class RegisterAction extends Action
      */
     public function validates(): bool
     {
-        $validator = $this->getUsersTable()->getRegisterValidators($this->_registerOptions());
+        $validator = $this->getUsersTable()->getBehavior('Register')->getRegisterValidators($this->_registerOptions());
 
         $errors = $validator->validate($this->getData());
         if (!empty($errors)) {
@@ -79,7 +79,7 @@ class RegisterAction extends Action
         ]);
 
         if ($event->getResult() instanceof EntityInterface) {
-            $userSaved = $usersTable->register($user, $event->getResult()->toArray(), $options);
+            $userSaved = $usersTable->getBehavior('Register')->register($user, $event->getResult()->toArray(), $options);
             if ($userSaved) {
                 return $this->_afterRegister($userSaved);
             }
@@ -87,7 +87,7 @@ class RegisterAction extends Action
         if ($event->isStopped()) {
             return false;
         }
-        $userSaved = $usersTable->register($user, $requestData, $options);
+        $userSaved = $usersTable->getBehavior('Register')->register($user, $requestData, $options);
         if (!$userSaved) {
             $message = __d('CakeDC/Api', 'The user could not be saved');
             throw new ValidationException($message, 0, null, $user->getErrors());

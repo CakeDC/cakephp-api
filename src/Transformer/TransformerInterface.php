@@ -28,6 +28,6 @@ interface TransformerInterface
      * @param mixed $data Entity or array to transform
      * @return array Transformed data
      */
-    public function transform($data): array;
+    public function transform(mixed $data): array;
 }
 

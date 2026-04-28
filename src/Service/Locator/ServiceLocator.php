@@ -155,7 +155,7 @@ class ServiceLocator implements LocatorInterface
         if ($lookupPlugins === null) {
             $lookupPlugins = ['CakeDC/Api'];
         }
-        if (!$className && strpos($options['className'], '.') === false) {
+        if (!$className && !str_contains($options['className'], '.')) {
             foreach ($lookupPlugins as $candidate) {
                 $_options = $options;
                 if ($lookupMode === 'dasherize') {

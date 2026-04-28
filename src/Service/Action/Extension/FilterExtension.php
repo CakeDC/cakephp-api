@@ -40,9 +40,9 @@ class FilterExtension extends Extension implements EventListenerInterface
      * find entities
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntities(Event $event): void
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
@@ -73,7 +73,7 @@ class FilterExtension extends Extension implements EventListenerInterface
             $filter = collection($data)
                 ->filter(function ($item, $key) use ($fields, $postfix, $postfixDelimeter) {
                     if ($postfix !== '') {
-                        if (strpos($key, $postfixDelimeter . $postfix) === false) {
+                        if (!str_contains($key, $postfixDelimeter . $postfix)) {
                             return false;
                         }
                         $key = str_replace($postfixDelimeter . $postfix, '', $key);
@@ -110,6 +110,6 @@ class FilterExtension extends Extension implements EventListenerInterface
             }
         }
 
-        return $query;
+        $event->setResult($query);
     }
 }

@@ -84,13 +84,13 @@ Configure::write('App', [
 Cake\Core\Configure::write('debug', true);
 
 if (!file_exists(TMP . 'cache/models')) {
-    mkdir(TMP . 'cache/models', 0777);
+    mkdir(TMP . 'cache/models', 0777, true);
 }
 if (!file_exists(TMP . 'cache/persistent')) {
-    mkdir(TMP . 'cache/persistent', 0777);
+    mkdir(TMP . 'cache/persistent', 0777, true);
 }
 if (!file_exists(TMP . 'cache/views')) {
-    mkdir(TMP . 'cache/views', 0777);
+    mkdir(TMP . 'cache/views', 0777, true);
 }
 
 $cache = [
@@ -138,6 +138,7 @@ Cake\Core\Configure::write('Session', [
     'defaults' => 'php',
 ]);
 session_id('cli');
+date_default_timezone_set('UTC');
 
 Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 

@@ -75,7 +75,7 @@ class ValidateAccountRequestAction extends Action
         $reference = $data['reference'];
         try {
             if (
-                $this->getUsersTable()->resetToken($reference, [
+                $this->getUsersTable()->getBehavior('Password')->resetToken($reference, [
                 'expiration' => Configure::read('Users.Token.expiration'),
                 'checkActive' => true,
                 'sendEmail' => true,

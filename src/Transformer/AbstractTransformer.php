@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Api\Transformer;
 
 use Cake\Datasource\EntityInterface;
-use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 
 /**
  * Abstract Transformer
@@ -85,7 +85,7 @@ abstract class AbstractTransformer implements TransformerInterface
             return null;
         }
 
-        if ($date instanceof FrozenTime || $date instanceof FrozenDate) {
+        if ($date instanceof DateTime || $date instanceof Date) {
             return $date->toIso8601String();
         }
 
@@ -95,7 +95,7 @@ abstract class AbstractTransformer implements TransformerInterface
 
         if (is_string($date)) {
             try {
-                return (new FrozenTime($date))->toIso8601String();
+                return (new DateTime($date))->toIso8601String();
             } catch (\Exception $e) {
                 return null;
             }

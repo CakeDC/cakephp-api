@@ -242,7 +242,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param string $name Service name.
      * @return $this
      */
-    public function setName(string $name)
+    public function setName(string $name): static
     {
         $this->_name = $name;
 
@@ -286,7 +286,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param \CakeDC\Api\Service\RequestParser\BaseParser $parser A Parser instance.
      * @return $this
      */
-    public function setParser(BaseParser $parser)
+    public function setParser(BaseParser $parser): static
     {
         $this->_parser = $parser;
 
@@ -328,7 +328,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param callable $callable Wrapped router instance.
      * @return mixed
      */
-    protected function _routesWrapper(callable $callable)
+    protected function _routesWrapper(callable $callable): mixed
     {
         $this->resetRoutes();
         $this->loadRoutes();
@@ -411,7 +411,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @return string Full translated URL with base path.
      * @throws \Cake\Core\Exception\CakeException When the route name is not found
      */
-    public function routeUrl($route): string
+    public function routeUrl(string|array|null $route): string
     {
         return $this->_routesWrapper(fn() => ApiRouter::url($route));
     }
@@ -423,7 +423,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *     Cake\Http\ServerRequest object that needs to be reversed.
      * @return string The string that is the reversed result of the array
      */
-    public function routeReverse($params): ?string
+    public function routeReverse(ServerRequest|array $params): ?string
     {
         return $this->_routesWrapper(function () use ($params) {
             try {
@@ -506,7 +506,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param \Cake\Http\ServerRequest|\Psr\Http\Message\ServerRequestInterface $request A Request object.
      * @return \CakeDC\Api\Service\Action\Result
      */
-    public function dispatchProcessAction($request): Result
+    public function dispatchProcessAction(ServerRequest|\Psr\Http\Message\ServerRequestInterface $request): Result
     {
         try {
             $this->setRequest($request);
@@ -539,9 +539,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Dispatch service call through callbacks and action.
      *
-     * @return \CakeDC\Api\Service\Action\Result|null
+     * @return mixed
      */
-    protected function _dispatch()
+    protected function _dispatch(): mixed
     {
         $this->_prepareAction();
 
@@ -553,7 +553,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @return \CakeDC\Api\Service\Action\Result|null
      */
-    protected function _prepareAction()
+    protected function _prepareAction(): ?Result
     {
         $event = $this->triggerBeforeDispatch();
         if ($event->getResult() instanceof Result) {
@@ -568,9 +568,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Execute action.
      *
-     * @return \CakeDC\Api\Service\Action\Result|null
+     * @return mixed
      */
-    protected function _processAction()
+    protected function _processAction(): mixed
     {
         $response = $this->dispatchEvent('Service.beforeProcess', ['service' => $this, 'action' => $this]);
         if ($response->getResult() instanceof Result) {
@@ -672,7 +672,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @return self|null
      */
-    public function getParentService()
+    public function getParentService(): ?self
     {
         return $this->_parentService;
     }
@@ -683,7 +683,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param \CakeDC\Api\Service\Service $parentService Parent Service
      * @return $this
      */
-    public function setParentService(Service $parentService)
+    public function setParentService(Service $parentService): static
     {
         $this->_parentService = $parentService;
 
@@ -698,7 +698,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param array $actionName Action name.
      * @return mixed
      */
-    public function buildActionClass(string $class, array $route, $actionName = null)
+    public function buildActionClass(string $class, array $route, ?string $actionName = null): mixed
     {
         if ($this->container !== null) {
             $reflectedClass = new ReflectionClass($class);

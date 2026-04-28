@@ -27,15 +27,16 @@
         "source": "https://github.com/CakeDC/cakephp-api"
     },
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
-        "cakephp/cakephp": "^5.0",
-        "cakedc/users": "^15.1",
+        "cakephp/cakephp": "^5.1",
+        "cakedc/users": "^16.0",
         "lcobucci/jwt": "^5.5.0",
-        "firebase/php-jwt": "^6.3"
+        "firebase/php-jwt": "^6.3 || ^7.0"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^4.5",
+        "cweagans/composer-patches": "^1.7",
         "endroid/qr-code": "^4",
         "google/recaptcha": "@stable",
         "laminas/laminas-diactoros": "^3.0",
@@ -59,9 +60,17 @@
         }
     },
     "prefer-stable": true,
+    "extra": {
+        "patches": {
+            "league/flysystem-vfs": {
+                "Fix null passed to str_replace in PHP 8.1+": "patches/flysystem-vfs-null-str-replace.patch"
+            }
+        }
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "cweagans/composer-patches": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },

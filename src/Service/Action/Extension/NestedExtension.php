@@ -42,9 +42,9 @@ class NestedExtension extends Extension implements EventListenerInterface
      * On find entities.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntities(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
@@ -59,16 +59,16 @@ class NestedExtension extends Extension implements EventListenerInterface
             $query = $event->getResult();
         }
 
-        return $query;
+        $event->setResult($query);
     }
 
     /**
      * On find entity.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntity(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntity(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
@@ -83,16 +83,16 @@ class NestedExtension extends Extension implements EventListenerInterface
             $query = $event->getResult();
         }
 
-        return $query;
+        $event->setResult($query);
     }
 
     /**
      * On patch entity.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Entity
+     * @return void
      */
-    public function patchEntity(Event $event): \Cake\ORM\Entity
+    public function patchEntity(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
@@ -100,8 +100,6 @@ class NestedExtension extends Extension implements EventListenerInterface
         /** @var \Cake\ORM\Entity $entity */
         $entity = $event->getData('entity');
 
-        /** @var \Cake\ORM\Query\SelectQuery $query */
-        $query = $event->getData('query');
         if ($event->getResult()) {
             $entity = $event->getResult();
         }
@@ -112,6 +110,6 @@ class NestedExtension extends Extension implements EventListenerInterface
             $entity->set($field, $foreignKey);
         }
 
-        return $entity;
+        $event->setResult($entity);
     }
 }

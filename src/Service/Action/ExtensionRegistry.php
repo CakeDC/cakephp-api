@@ -60,7 +60,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
     protected function _resolveClassName($class): ?string
     {
         $result = App::className($class, 'Service/Action/Extension', 'Extension');
-        if ($result || strpos($class, '.') !== false) {
+        if ($result || str_contains($class, '.')) {
             return $result;
         }
 

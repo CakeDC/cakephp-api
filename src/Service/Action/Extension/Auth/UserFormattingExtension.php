@@ -45,22 +45,28 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      * On Login Format.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return array|null
+     * @return void
      */
-    public function onLoginFormat(Event $event): ?array
+    public function onLoginFormat(Event $event): void
     {
-        return $this->_userCleanup($event->getData('user'));
+        $result = $this->_userCleanup($event->getData('user'));
+        if ($result !== null) {
+            $event->setResult($result);
+        }
     }
 
     /**
      * On Register Format.
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return array|null
+     * @return void
      */
-    public function onRegisterFormat(Event $event): ?array
+    public function onRegisterFormat(Event $event): void
     {
-        return $this->_userCleanup($event->getData('user'));
+        $result = $this->_userCleanup($event->getData('user'));
+        if ($result !== null) {
+            $event->setResult($result);
+        }
     }
 
     /**

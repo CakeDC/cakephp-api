@@ -80,7 +80,7 @@ class LoginAction extends Action
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $socialLogin = false;
         $user = $this->Auth->getIdentity();
@@ -107,7 +107,7 @@ class LoginAction extends Action
      * @param bool $socialLogin is social login
      * @return array
      */
-    protected function _afterIdentifyUser($user, $socialLogin = false)
+    protected function _afterIdentifyUser(?array $user, bool $socialLogin = false): array
     {
         if (!empty($user)) {
 //???            $this->Auth->setUser($user);
@@ -118,7 +118,7 @@ class LoginAction extends Action
             $user = $event->getResult();
         }
 
-        return $user;
+        return $user ?? [];
     }
 
     /**

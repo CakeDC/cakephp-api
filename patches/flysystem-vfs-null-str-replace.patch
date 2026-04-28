@@ -1,0 +1,11 @@
+--- a/src/VfsAdapter.php
++++ b/src/VfsAdapter.php
+@@ -106,7 +106,7 @@ class VfsAdapter extends Local
+     protected function wrapPath($path)
+     {
+         $scheme = $this->vfs->scheme().'://';
+-        $path   = str_replace($scheme, null, $path);
++        $path   = str_replace($scheme, '', $path ?? '');
+
+         return $scheme.$path;
+     }

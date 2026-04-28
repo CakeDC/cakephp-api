@@ -31,12 +31,12 @@ class JwtLoginAction extends Action
      * @param bool $socialLogin is social login
      * @return array|bool
      */
-    protected function _afterIdentifyUser($user, $socialLogin = false)
+    protected function _afterIdentifyUser(?array $user, bool $socialLogin = false): array
     {
         $user = parent::_afterIdentifyUser($user, $socialLogin);
 
         if (empty($user)) {
-            return false;
+            return [];
         }
 
         return $this->generateTokenResponse($user, 'login');
