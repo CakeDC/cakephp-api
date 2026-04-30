@@ -35,7 +35,7 @@ class ApiConfigProvider extends AbstractProvider
      *
      * @return array Array of permissions
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         $autoload = $this->getConfig('autoload_config');
         if ($autoload) {
@@ -53,7 +53,7 @@ class ApiConfigProvider extends AbstractProvider
      * @param string $key name of the configuration file to read permissions from
      * @return array permissions
      */
-    protected function _loadPermissions($key)
+    protected function _loadPermissions(string $key): array
     {
         $permissions = null;
         try {

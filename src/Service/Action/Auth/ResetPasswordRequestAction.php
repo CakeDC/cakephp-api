@@ -88,7 +88,7 @@ class ResetPasswordRequestAction extends Action
                 };
             }
 
-            $resetUser = $this->getUsersTable()->resetToken($reference, $options);
+            $resetUser = $this->getUsersTable()->getBehavior('Password')->resetToken($reference, $options);
             if ($resetUser) {
                 return __d('CakeDC/Api', 'Please check your email to continue with password reset process');
             } else {

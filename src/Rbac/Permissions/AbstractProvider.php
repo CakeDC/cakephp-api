@@ -35,7 +35,7 @@ abstract class AbstractProvider
      *
      * @param array $config config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->setConfig($config);
         $this->defaultPermissions = [
@@ -82,12 +82,12 @@ abstract class AbstractProvider
      *
      * @return array Array of permissions
      */
-    abstract public function getPermissions();
+    abstract public function getPermissions(): array;
 
     /**
      * @return array
      */
-    public function getDefaultPermissions()
+    public function getDefaultPermissions(): array
     {
         return $this->defaultPermissions;
     }
@@ -96,7 +96,7 @@ abstract class AbstractProvider
      * @param array $defaultPermissions default permissions
      * @return void
      */
-    public function setDefaultPermissions($defaultPermissions)
+    public function setDefaultPermissions(array $defaultPermissions): void
     {
         $this->defaultPermissions = $defaultPermissions;
     }

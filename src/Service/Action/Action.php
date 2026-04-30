@@ -53,7 +53,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @var array
      */
-    public $extensions = [];
+    public array $extensions = [];
 
     /**
      * An Auth instance.

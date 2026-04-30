@@ -48,32 +48,32 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * On find entity
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntity(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntity(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
         /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
-        return $this->_attachAssociations($action, $query);
+        $event->setResult($this->_attachAssociations($action, $query));
     }
 
     /**
      * On find entities.
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntities(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\CrudAction $action */
         $action = $event->getSubject();
         /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
-        return $this->_attachAssociations($action, $query);
+        $event->setResult($this->_attachAssociations($action, $query));
     }
 
     /**

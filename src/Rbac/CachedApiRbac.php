@@ -32,14 +32,14 @@ class CachedApiRbac extends ApiRbac
      *
      * @var array[] rules array
      */
-    protected $permissionsMap = [];
+    protected array $permissionsMap = [];
 
     /**
      * CachedApiRbac constructor.
      *
      * @param array $config Class configuration
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         parent::__construct($config);
         $this->permissionsMap = Cache::remember('api_permissions_map', function () {
@@ -52,7 +52,7 @@ class CachedApiRbac extends ApiRbac
      *
      * @return array
      */
-    public function buildPermissionsMap()
+    public function buildPermissionsMap(): array
     {
         $asArray = function ($permission, $key, $default = null) {
             if ($default !== null && !array_key_exists($key, $permission)) {
@@ -95,7 +95,7 @@ class CachedApiRbac extends ApiRbac
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    public function checkPermissions($user, ServerRequestInterface $request)
+    public function checkPermissions(array|\ArrayAccess $user, ServerRequestInterface $request): bool
     {
         $roleField = $this->getConfig('role_field');
         $defaultRole = $this->getConfig('default_role');

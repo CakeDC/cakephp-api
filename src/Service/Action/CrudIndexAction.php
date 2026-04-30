@@ -20,7 +20,7 @@ namespace CakeDC\Api\Service\Action;
  */
 class CrudIndexAction extends CrudAction
 {
-    public $extensions = [];
+    public array $extensions = [];
 
     /**
      * Execute action.

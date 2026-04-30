@@ -68,7 +68,7 @@ class ApiRbac implements RbacInterface
      *
      * @param array $config Class configuration
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         if (!isset($config['log'])) {
             $config['log'] = Configure::read('debug');

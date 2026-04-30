@@ -30,7 +30,7 @@ abstract class OtpVerifyAction extends Action
     /**
      * @var \RobThree\Auth\TwoFactorAuth $tfa
      */
-    public $tfa;
+    public ?\RobThree\Auth\TwoFactorAuth $tfa = null;
 
     /**
      * initialize

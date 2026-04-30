@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2018 - 2020, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -9,11 +11,11 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-use Migrations\AbstractMigration;
+use Migrations\BaseMigration;
 
-class AuthStore extends AbstractMigration
+class AuthStore extends BaseMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('auth_store', ['id' => false, 'primary_key' => ['id']])
             ->addColumn('id', 'string', [

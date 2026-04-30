@@ -48,9 +48,9 @@ class SortExtension extends Extension implements EventListenerInterface
      * find entities
      *
      * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntities(Event $event): void
     {
         $action = $event->getSubject();
         $query = $event->getData('query');
@@ -68,9 +68,9 @@ class SortExtension extends Extension implements EventListenerInterface
         }
         if (!empty($data[$sortField])) {
             $sort = $data[$sortField];
-            $query->order([$sort => $direction]);
+            $query->orderBy([$sort => $direction]);
         }
 
-        return $query;
+        $event->setResult($query);
     }
 }

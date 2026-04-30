@@ -69,9 +69,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * find entities
      *
      * @param \Cake\Event\Event $event An Event instance.
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function findEntities(Event $event): \Cake\ORM\Query\SelectQuery
+    public function findEntities(Event $event): void
     {
         /** @var \CakeDC\Api\Service\Action\Action $action */
         $action = $event->getSubject();
@@ -94,7 +94,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         }
         $query->orderBy([$cursorField => $orderDirection]);
 
-        return $query;
+        $event->setResult($query);
     }
 
     /**
