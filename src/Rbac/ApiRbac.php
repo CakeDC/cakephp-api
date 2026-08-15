@@ -127,7 +127,7 @@ class ApiRbac implements RbacInterface
 
         foreach ($this->permissions as $permission) {
             $matchResult = $this->_matchPermission($permission, $user, $role, $request);
-            if ($matchResult !== null) {
+            if ($matchResult instanceof \CakeDC\Auth\Rbac\PermissionMatchResult) {
                 if ($this->getConfig('log')) {
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
                 }
@@ -149,7 +149,7 @@ class ApiRbac implements RbacInterface
      * @return null|\CakeDC\Auth\Rbac\PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, $user, $role, ServerRequestInterface $request)
+    protected function _matchPermission(array $permission, array|\ArrayAccess $user, string $role, ServerRequestInterface $request): ?\CakeDC\Auth\Rbac\PermissionMatchResult
     {
         $issetService = isset($permission['service']) || isset($permission['*service']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
@@ -180,7 +180,7 @@ class ApiRbac implements RbacInterface
         ];
 
         foreach ($permission as $key => $value) {
-            $inverse = is_string($key) && $this->_startsWith($key, '*');
+            $inverse = $this->_startsWith($key, '*');
             if ($inverse) {
                 $key = ltrim($key, '*');
             }
@@ -189,7 +189,7 @@ class ApiRbac implements RbacInterface
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif (is_array($value) && isset($value['className'])) {
                 $ruleInstance = RuleRegistry::get($value['className'], $value['options'] ?? []);
-                $return = (bool)$ruleInstance->allowed($user, $role, $request);
+                $return = $ruleInstance->allowed($user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = $value->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
@@ -235,7 +235,7 @@ class ApiRbac implements RbacInterface
      * @param bool $allowEmpty If true and $value is null, the rule will pass
      * @return bool
      */
-    protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
+    protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false): bool
     {
         $possibleArray = (array)$possibleValues;
 
@@ -251,7 +251,7 @@ class ApiRbac implements RbacInterface
      * @param string $value String to camelize.
      * @return string
      */
-    protected function _camelizeByChars(string $value)
+    protected function _camelizeByChars(string $value): string
     {
         $result = $value;
         foreach ($this->getConfig('route_breaking_chars') as $char) {
@@ -269,8 +269,8 @@ class ApiRbac implements RbacInterface
      * @param string $needle The beginning to check
      * @return bool
      */
-    protected function _startsWith($haystack, $needle)
+    protected function _startsWith($haystack, $needle): bool
     {
-        return substr($haystack, 0, strlen($needle)) === $needle;
+        return str_starts_with($haystack, $needle);
     }
 }

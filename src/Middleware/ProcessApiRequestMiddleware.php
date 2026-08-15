@@ -42,6 +42,7 @@ class ProcessApiRequestMiddleware implements MiddlewareInterface
         $service = $request->getAttribute('service');
         if ($service !== null) {
             try {
+                /** @var \Cake\Http\ServerRequest $request */
                 $result = $service->dispatchProcessAction($request);
                 $response = $service->respond($result);
             } catch (Exception $e) {

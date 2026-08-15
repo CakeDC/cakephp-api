@@ -27,7 +27,7 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -42,12 +42,12 @@ class CrudAuthorizeExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
 
-    public function testDefault()
+    public function testDefault(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();

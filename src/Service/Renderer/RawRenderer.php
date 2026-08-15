@@ -35,11 +35,7 @@ class RawRenderer extends BaseRenderer
     {
         $response = $this->_service->getResponse();
         $data = $result->getData();
-        if (is_array($data)) {
-            $body = print_r($data, true);
-        } else {
-            $body = (string)$data;
-        }
+        $body = is_array($data) ? print_r($data, true) : (string)$data;
         $response = $response->withStringBody($body)
               ->withStatus($result->getCode())
               ->withType('text/plain');

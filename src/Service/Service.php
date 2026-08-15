@@ -198,7 +198,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $this->container = $config['container'];
             $this->container->add(ServerRequest::class, $this->getRequest());
         }
-        $extensionRegistry = $eventManager = null;
+        $extensionRegistry = null;
+        $eventManager = null;
         if (!empty($config['eventManager'])) {
             $eventManager = $config['eventManager'];
         }
@@ -321,7 +322,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function routes(): array
     {
-        return $this->_routesWrapper(fn() => ApiRouter::routes());
+        return $this->_routesWrapper(fn(): array => ApiRouter::routes());
     }
 
     /**
@@ -358,7 +359,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     {
         $defaultOptions = $this->routerDefaultOptions();
         $builder = ApiRouter::createRouteBuilder('/', []);
-        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions) {
+        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($defaultOptions): void {
             $routes->setExtensions($this->_routeExtensions);
             if (!empty($defaultOptions['map'])) {
                 $routes->resources($this->getName(), $defaultOptions);
@@ -413,7 +414,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function routeUrl(string|array|null $route): string
     {
-        return $this->_routesWrapper(fn() => ApiRouter::url($route));
+        return $this->_routesWrapper(fn(): string => ApiRouter::url($route));
     }
 
     /**
@@ -425,10 +426,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function routeReverse(ServerRequest|array $params): ?string
     {
-        return $this->_routesWrapper(function () use ($params) {
+        return $this->_routesWrapper(function () use ($params): ?string {
             try {
                 return ApiRouter::reverse($params);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 return null;
             }
         });
@@ -503,10 +504,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     /**
      * Dispatch service call.
      *
-     * @param \Cake\Http\ServerRequest|\Psr\Http\Message\ServerRequestInterface $request A Request object.
+     * @param \Cake\Http\ServerRequest $request A Request object.
      * @return \CakeDC\Api\Service\Action\Result
      */
-    public function dispatchProcessAction(ServerRequest|\Psr\Http\Message\ServerRequestInterface $request): Result
+    public function dispatchProcessAction(ServerRequest $request): Result
     {
         try {
             $this->setRequest($request);
@@ -589,7 +590,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
     public function buildAction(): Action
     {
         $route = $this->parseRoute($this->getBaseUrl());
-        if (empty($route)) {
+        if ($route === []) {
             throw new MissingActionException('Invalid Action Route:' . $this->getBaseUrl()); // InvalidActionException
         }
         $service = null;
@@ -612,7 +613,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $service->setParentService($this);
         }
         $action = $route['action'];
-        [$namespace, $serviceClass] = namespaceSplit($service !== null ? get_class($service) : self::class);
+        [$namespace, $serviceClass] = namespaceSplit($service instanceof \CakeDC\Api\Service\Service ? $service::class : self::class);
         $actionPrefix = substr($serviceClass, 0, -7);
         $actionClass = $namespace . '\\Action\\' . $actionPrefix . Inflector::camelize($action) . 'Action';
         if (class_exists($actionClass)) {
@@ -634,7 +635,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function parseRoute(string $url): array
     {
-        return $this->_routesWrapper(fn() => ApiRouter::parseRequest(new ServerRequest([
+        return $this->_routesWrapper(fn(): array => ApiRouter::parseRequest(new ServerRequest([
             'url' => $url,
             'environment' => [
                 'REQUEST_METHOD' => $this->_request->getEnv('REQUEST_METHOD'),
@@ -695,7 +696,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      *
      * @param class-string $class Class name.
      * @param array $route Activated route.
-     * @param array $actionName Action name.
+     * @param string|null $actionName Action name.
      * @return mixed
      */
     public function buildActionClass(string $class, array $route, ?string $actionName = null): mixed
@@ -705,9 +706,9 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $args = $this->getActionArgs($reflectedClass, [$this->_actionOptions($route)], $actionName);
 
             return $reflectedClass->newInstanceArgs($args);
-        } else {
-            return new $class($this->_actionOptions($route));
         }
+
+        return new $class($this->_actionOptions($route));
     }
 
     /**
@@ -736,10 +737,10 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function getResult(): Result
     {
-        if ($this->_parentService !== null) {
+        if ($this->_parentService instanceof \CakeDC\Api\Service\Service) {
             return $this->_parentService->getResult();
         }
-        if ($this->_result === null) {
+        if (!$this->_result instanceof \CakeDC\Api\Service\Action\Result) {
             $this->_result = new Result();
         }
 
@@ -754,7 +755,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function setResult(Result $result)
     {
-        if ($this->_parentService !== null) {
+        if ($this->_parentService instanceof \CakeDC\Api\Service\Service) {
             $this->_parentService->setResult($result);
 
             return $this;
@@ -772,11 +773,11 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function respond(?Result $result = null): Response
     {
-        if ($result === null) {
+        if (!$result instanceof \CakeDC\Api\Service\Action\Result) {
             $result = $this->getResult();
         }
         $this->setResponse($this->getResponse()->withStatus($result->getCode()));
-        if ($result->getException() !== null) {
+        if ($result->getException() instanceof \Exception) {
             $this->getRenderer()
                  ->error($result->getException());
         } else {
@@ -885,7 +886,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function getExtensions(): ExtensionRegistry
     {
-        if ($this->_extensions === null) {
+        if (!$this->_extensions instanceof \CakeDC\Api\Service\ExtensionRegistry) {
             $this->_extensions = new ExtensionRegistry($this);
         }
 
@@ -900,7 +901,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     public function setExtensions(?ExtensionRegistry $extensions): self
     {
-        if ($extensions === null) {
+        if (!$extensions instanceof \CakeDC\Api\Service\ExtensionRegistry) {
             $extensions = new ExtensionRegistry($this);
         }
         $this->_extensions = $extensions;
@@ -916,7 +917,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      */
     protected function _loadExtensions(): void
     {
-        if (empty($this->extensions)) {
+        if ($this->extensions === []) {
             return;
         }
         $registry = $this->getExtensions();
@@ -943,7 +944,6 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $this->_parserClass = $parserClass;
         }
 
-        /** @var \CakeDC\Api\Service\RequestParser\BaseParser|null $class */
         $class = App::className($this->_parserClass, 'Service/RequestParser', 'Parser');
         if ($class === null || !class_exists($class)) {
             throw new MissingParserException(['class' => $this->_parserClass]);
@@ -1032,7 +1032,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
                 ]);
             }
 
-            if ($passedParams) {
+            if ($passedParams !== []) {
                 $argument = array_shift($passedParams);
                 if (is_string($argument) && $type instanceof ReflectionNamedType) {
                     $typedArgument = $this->coerceStringToType($argument, $type);
@@ -1081,22 +1081,16 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @param \ReflectionNamedType $type Parameter type
      * @return array|string|float|int|bool|null
      */
-    protected function coerceStringToType(string $argument, ReflectionNamedType $type)
+    protected function coerceStringToType(string $argument, ReflectionNamedType $type): array|string|float|int|bool|null
     {
-        switch ($type->getName()) {
-            case 'string':
-                return $argument;
-            case 'float':
-                return is_numeric($argument) ? (float)$argument : null;
-            case 'int':
-                return filter_var($argument, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
-            case 'bool':
-                return $argument === '0' ? false : ($argument === '1' ? true : null);
-            case 'array':
-                return $argument === '' ? [] : explode(',', $argument);
-        }
-
-        return null;
+        return match ($type->getName()) {
+            'string' => $argument,
+            'float' => is_numeric($argument) ? (float)$argument : null,
+            'int' => filter_var($argument, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE),
+            'bool' => $argument === '0' ? false : ($argument === '1' ? true : null),
+            'array' => $argument === '' ? [] : explode(',', $argument),
+            default => null,
+        };
     }
 
     /**

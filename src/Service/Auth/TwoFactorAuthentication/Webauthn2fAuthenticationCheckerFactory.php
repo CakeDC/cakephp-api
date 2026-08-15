@@ -24,9 +24,9 @@ class Webauthn2fAuthenticationCheckerFactory
     /**
      * Get the two factor authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
+     * @return \CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2fAuthenticationCheckerInterface
      */
-    public function build()
+    public function build(): Webauthn2fAuthenticationCheckerInterface
     {
         $className = Configure::read('Api.Webauthn2fa.checker');
         $interfaces = class_implements($className);
@@ -36,7 +36,7 @@ class Webauthn2fAuthenticationCheckerFactory
             return new $className();
         }
         $message = "Invalid config for 'Webauthn2fa.checker', " .
-         "'$className' does not implement '$required'";
+         sprintf("'%s' does not implement '%s'", $className, $required);
         throw new \InvalidArgumentException($message);
     }
 }

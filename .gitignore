@@ -10,3 +10,10 @@ pmip
 webroot/coverage
 .php_cs.cache
 .phpunit.cache/
+.repowise
+.claude
+.opencode
+.cursor
+tools
+build
+phpunit.xml.dist.bak

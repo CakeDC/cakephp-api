@@ -15,6 +15,8 @@ namespace CakeDC\Api\Service\Action;
 
 use Authentication\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Datasource\EntityInterface;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
@@ -26,9 +28,6 @@ use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Auth\Auth;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Transformer\TransformerInterface;
-use Cake\Datasource\EntityInterface;
-use Cake\Datasource\ResultSetInterface;
-use Cake\ORM\ResultSet;
 use Exception;
 use ReflectionMethod;
 
@@ -107,7 +106,8 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if (!empty($config['Extension'])) {
             $this->extensions = Hash::merge($this->extensions, $config['Extension']);
         }
-        $extensionRegistry = $eventManager = null;
+        $extensionRegistry = null;
+        $eventManager = null;
         if (!empty($config['eventManager'])) {
             $eventManager = $config['eventManager'];
         }
@@ -179,7 +179,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * @return \CakeDC\Api\Service\Service
      */
-    public function getService()
+    public function getService(): \CakeDC\Api\Service\Service
     {
         return $this->_service;
     }
@@ -210,7 +210,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return mixed
      */
-    abstract public function execute();
+    abstract public function execute(): mixed;
 
     /**
      * Action execution life cycle.
@@ -218,9 +218,8 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @return mixed
      * @throws \Exception
      */
-    public function process()
+    public function process(): mixed
     {
-        $data = null;
         $event = $this->dispatchEvent('Action.beforeProcess', ['action' => $this]);
 
         if ($event->isStopped()) {
@@ -267,7 +266,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @return mixed
      * @throws \Exception
      */
-    protected function _executeAction(string $methodName = 'action')
+    protected function _executeAction(string $methodName = 'action'): mixed
     {
         $parser = $this->getService()->getParser();
         $params = $parser->getParams();
@@ -322,7 +321,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param mixed $default The default data.
      * @return mixed The value being read.
      */
-    public function getData($name = null, $default = null)
+    public function getData($name = null, $default = null): mixed
     {
         $data = $this->getService()->getParser()->getParams();
         if ($name === null) {
@@ -346,11 +345,11 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      *
      * @return mixed
      */
-    public function getIdentity()
+    public function getIdentity(): mixed
     {
         $identity = $this->getService()->getRequest()->getAttribute('identity');
         if ($identity) {
-            $identity = $identity instanceof IdentityInterface ? $identity->getOriginalData() : $identity;
+            return $identity instanceof IdentityInterface ? $identity->getOriginalData() : $identity;
         }
 
         return $identity;
@@ -364,7 +363,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function setExtensions(?ExtensionRegistry $extensions = null): self
     {
-        if ($extensions === null && $this->_extensions === null) {
+        if (!$extensions instanceof \CakeDC\Api\Service\Action\ExtensionRegistry && !$this->_extensions instanceof \CakeDC\Api\Service\Action\ExtensionRegistry) {
             $this->_extensions = new ExtensionRegistry($this);
         } else {
             $this->_extensions = $extensions;
@@ -381,7 +380,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     protected function _loadExtensions(): void
     {
-        if (empty($this->extensions)) {
+        if ($this->extensions === []) {
             return;
         }
         $registry = $this->getExtensions();
@@ -455,11 +454,11 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     protected function transform($data, string $transformerClass): array
     {
         if (!class_exists($transformerClass)) {
-            throw new \InvalidArgumentException("Transformer class {$transformerClass} does not exist");
+            throw new \InvalidArgumentException(sprintf('Transformer class %s does not exist', $transformerClass));
         }
 
         if (!is_subclass_of($transformerClass, TransformerInterface::class)) {
-            throw new \InvalidArgumentException("Transformer class {$transformerClass} must implement " . TransformerInterface::class);
+            throw new \InvalidArgumentException(sprintf('Transformer class %s must implement ', $transformerClass) . TransformerInterface::class);
         }
 
         $transformer = new $transformerClass();
@@ -470,7 +469,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             return $data;
         }
 
-        if ($data instanceof ResultSetInterface || $data instanceof ResultSet) {
+        if ($data instanceof ResultSetInterface) {
             return $this->_transformCollection($data, $transformer);
         }
 
@@ -493,7 +492,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * Transform collection
      *
      * @param iterable $collection Collection to transform
-     * @param TransformerInterface $transformer Transformer instance
+     * @param \CakeDC\Api\Transformer\TransformerInterface $transformer Transformer instance
      * @return array Transformed collection
      */
     private function _transformCollection(iterable $collection, TransformerInterface $transformer): array
@@ -502,6 +501,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         foreach ($collection as $item) {
             $result[] = $transformer->transform($item);
         }
+
         return $result;
     }
 }

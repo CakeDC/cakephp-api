@@ -32,7 +32,7 @@ class ArticlesUntagAction extends Action
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
     }
 }

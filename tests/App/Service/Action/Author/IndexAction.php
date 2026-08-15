@@ -33,7 +33,7 @@ class IndexAction extends CrudAction
         return true;
     }
 
-    public function execute()
+    public function execute(): string
     {
         return 'custom action applied';
     }

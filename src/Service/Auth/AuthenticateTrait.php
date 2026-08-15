@@ -158,9 +158,7 @@ trait AuthenticateTrait
      */
     public function getIdentity(): ?IdentityInterface
     {
-        $identity = $this->getRequest()->getAttribute($this->getConfig('identityAttribute'));
-
-        return $identity;
+        return $this->getRequest()->getAttribute($this->getConfig('identityAttribute'));
     }
 
     /**
@@ -296,9 +294,9 @@ trait AuthenticateTrait
     {
         $service = $this->getAuthenticationService();
         if (!($service instanceof ImpersonationInterface)) {
-            $className = get_class($service);
+            $className = $service::class;
             throw new InvalidArgumentException(
-                "The {$className} must implement ImpersonationInterface in order to use impersonation."
+                sprintf('The %s must implement ImpersonationInterface in order to use impersonation.', $className)
             );
         }
 

@@ -33,7 +33,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -48,13 +48,13 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testNoInclude()
+    public function testNoInclude(): void
     {
         $this->sendRequest('/articles/1', 'GET', ['include_direct' => false]);
         $result = $this->getJsonResponse();
@@ -69,7 +69,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }
 
-    public function testIncludeDirect()
+    public function testIncludeDirect(): void
     {
         $this->sendRequest('/articles/1', 'GET', ['include_direct' => true]);
         $result = $this->getJsonResponse();
@@ -89,7 +89,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }
 
-    public function testIncludeNoRelations()
+    public function testIncludeNoRelations(): void
     {
         $this->sendRequest('/articles/1', 'GET', ['include_relations' => '']);
         $result = $this->getJsonResponse();
@@ -104,7 +104,7 @@ class CrudRelationsExtensionTest extends IntegrationTestCase
         $this->assertEquals($expected, Hash::get($result, 'data'));
     }
 
-    public function testIncludeAuthorRelations()
+    public function testIncludeAuthorRelations(): void
     {
         $this->sendRequest('/articles/1', 'GET', ['include_relations' => 'authors']);
         $result = $this->getJsonResponse();

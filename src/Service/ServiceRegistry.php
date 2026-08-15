@@ -34,7 +34,7 @@ class ServiceRegistry
      */
     public static function getServiceLocator(): \CakeDC\Api\Service\Locator\LocatorInterface
     {
-        if (static::$_locator === null) {
+        if (!static::$_locator instanceof \CakeDC\Api\Service\Locator\LocatorInterface) {
             static::$_locator = new static::$_defaultLocatorClass();
         }
 

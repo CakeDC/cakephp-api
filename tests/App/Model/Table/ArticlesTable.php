@@ -53,7 +53,7 @@ class ArticlesTable extends Table
         return $validator;
     }
 
-    public function createRecords($count, $authorId, $templates = null)
+    public function createRecords($count, $authorId, $templates = null): void
     {
         if ($templates === null) {
             $templates = [

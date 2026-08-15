@@ -40,7 +40,7 @@ class ListAction extends Action
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $path = APP . 'Model' . DS . 'Table' . DS;
         $tables = [];
@@ -52,7 +52,7 @@ class ListAction extends Action
         }
 
         return collection($tables)
-            ->map(function ($item) {
+            ->map(function ($item): ?string {
                 preg_match('/^(.*)Table\.php/', $item, $replacedMatch);
                 if (empty($replacedMatch[1])) {
                     return null;
@@ -60,7 +60,7 @@ class ListAction extends Action
 
                 return Inflector::underscore($replacedMatch[1]);
             })
-            ->filter(fn($item) => !empty($item))
+            ->filter(fn($item): bool => !empty($item))
             ->toArray();
     }
 }

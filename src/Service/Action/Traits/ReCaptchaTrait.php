@@ -29,7 +29,7 @@ trait ReCaptchaTrait
      * @param string $recaptchaResponse response
      * @return bool
      */
-    public function validateReCaptcha($recaptchaResponse = null)
+    public function validateReCaptcha($recaptchaResponse = null): bool
     {
         $domain = RequestParser::getDomain($this->getService()->getRequest());
         $reCaptcha = Configure::read('Api.reCaptcha.' . $domain);
@@ -51,7 +51,7 @@ trait ReCaptchaTrait
      *
      * @return \ReCaptcha\ReCaptcha|null
      */
-    protected function _getReCaptchaInstance()
+    protected function _getReCaptchaInstance(): ?\ReCaptcha\ReCaptcha
     {
         $domain = RequestParser::getDomain($this->getService()->getRequest());
         $reCaptchaSecret = Configure::read('Api.reCaptcha.' . $domain . '.secret');

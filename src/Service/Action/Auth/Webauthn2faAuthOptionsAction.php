@@ -29,9 +29,9 @@ class Webauthn2faAuthOptionsAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return \Webauthn\PublicKeyCredentialRequestOptions
      */
-    public function execute()
+    public function execute(): \Webauthn\PublicKeyCredentialRequestOptions
     {
         $request = $this->getService()->getRequest();
         $adapter = new AuthenticateAdapter($request, $this->getUsersTable(), $this->getIdentity());

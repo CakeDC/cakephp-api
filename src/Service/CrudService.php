@@ -41,7 +41,7 @@ abstract class CrudService extends Service
      *
      * @var string
      */
-    protected $_table = null;
+    protected $_table;
 
     /**
      * Id param name.

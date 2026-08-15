@@ -39,7 +39,7 @@ class Base64Utility
     {
         $encoded = strtr(base64_encode($data), '+/', '-_');
 
-        return $usePadding === true ? $encoded : rtrim($encoded, '=');
+        return $usePadding ? $encoded : rtrim($encoded, '=');
     }
 
     /**

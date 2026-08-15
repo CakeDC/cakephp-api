@@ -33,7 +33,7 @@ class RegisterActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -50,13 +50,13 @@ class RegisterActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testSuccessRegister()
+    public function testSuccessRegister(): void
     {
         $this->sendRequest('/auth/register', 'POST', [
             'username' => 'user-100',
@@ -85,7 +85,7 @@ class RegisterActionTest extends IntegrationTestCase
         $this->assertEquals($expected, $data);
     }
 
-    public function testRegisterValidationFail()
+    public function testRegisterValidationFail(): void
     {
         $this->sendRequest('/auth/register', 'POST', ['username' => 'user-100']);
         $result = $this->getJsonResponse();

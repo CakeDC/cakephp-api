@@ -1,0 +1,22 @@
+diff --git a/src/QrCode.php b/src/QrCode.php
+--- a/src/QrCode.php
++++ b/src/QrCode.php
+@@ -23,13 +23,13 @@ final class QrCode implements QrCodeInterface
+ 
+     public function __construct(
+         private string $data,
+-        EncodingInterface $encoding = null,
+-        ErrorCorrectionLevelInterface $errorCorrectionLevel = null,
++        ?EncodingInterface $encoding = null,
++        ?ErrorCorrectionLevelInterface $errorCorrectionLevel = null,
+         private int $size = 300,
+         private int $margin = 10,
+-        RoundBlockSizeModeInterface $roundBlockSizeMode = null,
+-        ColorInterface $foregroundColor = null,
+-        ColorInterface $backgroundColor = null
++        ?RoundBlockSizeModeInterface $roundBlockSizeMode = null,
++        ?ColorInterface $foregroundColor = null,
++        ?ColorInterface $backgroundColor = null
+     ) {
+         $this->encoding = $encoding ?? new Encoding('UTF-8');
+         $this->errorCorrectionLevel = $errorCorrectionLevel ?? new ErrorCorrectionLevelLow();

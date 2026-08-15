@@ -42,6 +42,7 @@ class FlysystemRenderer extends FileRenderer
     {
         $data = $result->getData();
         try {
+            /** @var \League\Flysystem\File $file */
             $file = $this->getFile(
                 Hash::get($data, 'filesystem'),
                 Hash::get($data, 'path')
@@ -51,7 +52,7 @@ class FlysystemRenderer extends FileRenderer
             $this->_service->setResponse(
                 $this->deliverAsset($this->_service->getResponse(), $file, $name)
             );
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
             $response = $this->_service->getResponse()
                 ->withStatus(404);
 
@@ -84,8 +85,8 @@ class FlysystemRenderer extends FileRenderer
     public function deliverAsset(Response $response, File $file, ?string $name): Response
     {
         $contentType = $file->getType();
-        $modified = $file->getTimestamp();
-        $expire = strtotime(Configure::read('Api.Flysystem.expire'));
+        $modified = $file->getTimestamp() ?: time();
+        $expire = strtotime((string)Configure::read('Api.Flysystem.expire')) ?: time();
         $maxAge = $expire - time();
         $stream = new Stream($file->readStream());
 

@@ -40,7 +40,7 @@ class DeleteActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -50,7 +50,7 @@ class DeleteActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         unset($this->Service, $this->Action, $this->request);
@@ -60,7 +60,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testExecuteSuccess()
+    public function testExecuteSuccess(): void
     {
         $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
@@ -77,7 +77,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationPostNotArray()
+    public function testValidationPostNotArray(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction(
@@ -89,7 +89,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationPostEmpty()
+    public function testValidationPostEmpty(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction();
@@ -99,7 +99,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationPostString()
+    public function testValidationPostString(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction(['something' => 'value']);
@@ -109,7 +109,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testExecuteValidationEntityNotValid()
+    public function testExecuteValidationEntityNotValid(): void
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Validation failed');
@@ -124,7 +124,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidatesEntity()
+    public function testValidatesEntity(): void
     {
         $this->_initializeAction([
             ['id' => 1],
@@ -137,7 +137,7 @@ class DeleteActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidatesEntityNotValid()
+    public function testValidatesEntityNotValid(): void
     {
         $this->_initializeAction([
             ['id' => 1],
@@ -147,7 +147,7 @@ class DeleteActionTest extends TestCase
         try {
             $this->Action->validates();
             $this->fail('ValidationException was expected');
-        } catch (ValidationException $ex) {
+        } catch (ValidationException $validationException) {
             $this->assertSame([
                 // note the index here is important, first entity (0) is valid
                 1 => [
@@ -155,11 +155,11 @@ class DeleteActionTest extends TestCase
                         '_empty' => 'Missing id',
                     ],
                 ],
-            ], $ex->getValidationErrors());
+            ], $validationException->getValidationErrors());
         }
     }
 
-    protected function _initializeAction($post = [])
+    protected function _initializeAction($post = []): void
     {
         $this->_initializeRequest([
             'params' => [

@@ -30,9 +30,9 @@ class TwoFactorAuthAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return array
      */
-    public function execute()
+    public function execute(): array
     {
         $user = $this->getIdentity();
         $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);

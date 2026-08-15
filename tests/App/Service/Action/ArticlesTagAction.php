@@ -38,14 +38,14 @@ class ArticlesTagAction extends CrudAction
             ->requirePresence('tag_id', 'create')
             ->notEmptyString('tag_id');
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
         return true;
     }
 
-    public function execute()
+    public function execute(): mixed
     {
         throw new NotImplementedException('It will never thrown as action is defined');
     }
@@ -57,7 +57,7 @@ class ArticlesTagAction extends CrudAction
      * @return mixed
      */
     // @codingStandardsIgnoreStart
-    public function action($tag_id)
+    public function action($tag_id): bool
     {
         return true;
     }

@@ -24,9 +24,9 @@ class OneTimePasswordAuthenticationCheckerFactory
     /**
      * Get the two factor authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
+     * @return \CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerInterface
      */
-    public function build()
+    public function build(): OneTimePasswordAuthenticationCheckerInterface
     {
         $className = Configure::read('Api.OneTimePasswordAuthenticator.checker');
         $interfaces = class_implements($className);
@@ -36,7 +36,7 @@ class OneTimePasswordAuthenticationCheckerFactory
             return new $className();
         }
         $message = "Invalid config for 'OneTimePasswordAuthenticator.checker', " .
-         "'$className' does not implement '$required'";
+         sprintf("'%s' does not implement '%s'", $className, $required);
         throw new \InvalidArgumentException($message);
     }
 }

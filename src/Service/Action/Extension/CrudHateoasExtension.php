@@ -101,7 +101,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         $links[] = $this->_reverseRouter->link('self', $path, $indexRoute['_method'], $version);
         $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':add', $path, 'POST', $version);
 
-        if ($parent !== null) {
+        if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentName = $parent->getName() . ':view';
             $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
             $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);
@@ -124,10 +124,10 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         $version = $service->getVersion();
         $parent = $action->getService()->getParentService();
         $path = null;
-        if ($parent !== null) {
+        if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentRoutes = $parent->routes();
             $currentRoute = $this->_reverseRouter->findRoute($viewRoute, $parentRoutes);
-            if ($currentRoute !== null) {
+            if ($currentRoute instanceof \Cake\Routing\Route\Route) {
                 $path = $parent->routeReverse($viewRoute);
                 array_pop($viewRoute['pass']);
 
@@ -140,7 +140,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
 
             $indexName = $service->getName() . ':index';
             $route = collection($service->routes())
-                ->filter(fn($item) => $item->getName() == $indexName)
+                ->filter(fn($item): bool => $item->getName() == $indexName)
                 ->first();
             $indexPath = $service->routeReverse($route->defaults);
         }
@@ -153,24 +153,24 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $links[] = $this->_reverseRouter->link($routeName, $indexPath, 'GET', $version);
         }
 
-        if ($parent === null && $action instanceof CrudAction) {
+        if (!$parent instanceof \CakeDC\Api\Service\Service && $action instanceof CrudAction) {
             $table = $action->getTable();
             $hasMany = $table->associations()->getByType('HasMany');
             foreach ($hasMany as $assoc) {
                 $target = $assoc->getTarget();
                 $alias = $target->getAlias();
 
-                $targetClass = get_class($target);
+                $targetClass = $target::class;
                 [, $className] = namespaceSplit($targetClass);
-                $className = preg_replace('/(.*)Table$/', '\1', $className);
+                $className = preg_replace('/(.*)Table$/', '\1', (string)$className);
                 if ($className === '') {
                     $className = $alias;
                 }
-                $serviceName = strtolower($className);
+                $serviceName = strtolower((string)$className);
 
                 $indexName = $serviceName . ':index';
                 $route = collection($service->routes())
-                    ->filter(fn($item) => $item->getName() == $indexName)
+                    ->filter(fn($item): bool => $item->getName() == $indexName)
                     ->first();
 
                 $currentId = Inflector::singularize(Inflector::underscore($service->getName())) . '_id';
@@ -186,7 +186,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             }
         }
 
-        if ($parent !== null) {
+        if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentName = $parent->getName() . ':view';
             $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
             $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);

@@ -28,9 +28,7 @@ class AuthenticateAdapter extends BaseAdapter
     public function getOptions(): PublicKeyCredentialRequestOptions
     {
         $userEntity = $this->getUserEntity();
-        $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
-            return $credential->getPublicKeyCredentialDescriptor();
-        }, $this->repository->findAllForUserEntity($userEntity));
+        $allowedCredentials = array_map(fn(PublicKeyCredentialSource $credential): \Webauthn\PublicKeyCredentialDescriptor => $credential->getPublicKeyCredentialDescriptor(), $this->repository->findAllForUserEntity($userEntity));
 
         $options = (new PublicKeyCredentialRequestOptions(random_bytes(32)))
             ->setRpId($this->rpEntity->getId())
@@ -39,9 +37,10 @@ class AuthenticateAdapter extends BaseAdapter
             ->setExtensions(new AuthenticationExtensionsClientInputs());
 
         $storeEntity = $this->readStore();
-        $storeEntity['store'] = [];
+        $storeEntity->store = [];
         $storeEntity = $this->patchStore($storeEntity, 'authenticateOptions', base64_encode(serialize($options)));
-        $res = $this->store->save($storeEntity);
+
+        $this->store->save($storeEntity);
 
         return $options;
     }

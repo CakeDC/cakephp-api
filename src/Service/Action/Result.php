@@ -32,7 +32,7 @@ class Result
      *
      * @var array|mixed
      */
-    protected $_data = null;
+    protected $_data;
 
     /**
      * Response payload
@@ -65,7 +65,7 @@ class Result
      *
      * @return array|mixed
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->_data;
     }
@@ -147,7 +147,7 @@ class Result
      * @param string $key Payload key.
      * @return array|null|mixed Payload
      */
-    public function getPayload(?string $key = null)
+    public function getPayload(?string $key = null): mixed
     {
         if ($key === null) {
             return $this->_payload;
@@ -163,10 +163,10 @@ class Result
     /**
      * Sets a result payload.
      *
-     * @param mixed $value payload to be delivered for the api
+     * @param array $value payload to be delivered for the api
      * @return $this
      */
-    public function setPayload($value)
+    public function setPayload(array $value)
     {
         $this->_payload = $value;
 
@@ -185,7 +185,7 @@ class Result
             'data' => $this->_data,
             'payload' => $this->_payload,
         ];
-        if ($this->_exception !== null) {
+        if ($this->_exception instanceof \Exception) {
             $info['exception'] = $this->_exception->getMessage();
             $info['exceptionStack'] = $this->_exception->getTraceAsString();
         }

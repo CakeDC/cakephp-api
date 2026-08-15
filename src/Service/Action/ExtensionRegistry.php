@@ -46,7 +46,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
      */
     public function __construct(?Action $action = null)
     {
-        if ($action !== null) {
+        if ($action instanceof \CakeDC\Api\Service\Action\Action) {
             $this->_action = $action;
         }
     }

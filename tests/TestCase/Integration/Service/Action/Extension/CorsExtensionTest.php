@@ -32,7 +32,7 @@ class CorsExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -47,20 +47,20 @@ class CorsExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testCorsHeaders()
+    public function testCorsHeaders(): void
     {
         $this->_request['headers']['Origin'] = 'http://foobar.com';
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id']);
         $result = $this->getJsonResponse();
         $headers = $this->_response->getHeaders();
         $this->assertSuccess($result);
-        $this->assertTrue(!empty($headers));
+        $this->assertTrue($headers !== []);
         $this->assertEquals(['*'], $headers['Access-Control-Allow-Origin']);
         $expectedMethods = ['GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH'];
         $this->assertEquals($expectedMethods, $headers['Access-Control-Allow-Methods']);

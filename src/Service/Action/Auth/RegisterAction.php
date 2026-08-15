@@ -51,7 +51,9 @@ class RegisterAction extends Action
      */
     public function validates(): bool
     {
-        $validator = $this->getUsersTable()->getBehavior('Register')->getRegisterValidators($this->_registerOptions());
+        /** @var \CakeDC\Users\Model\Behavior\RegisterBehavior $registerBehavior */
+        $registerBehavior = $this->getUsersTable()->getBehavior('Register');
+        $validator = $registerBehavior->getRegisterValidators($this->_registerOptions());
 
         $errors = $validator->validate($this->getData());
         if (!empty($errors)) {
@@ -66,9 +68,11 @@ class RegisterAction extends Action
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $usersTable = $this->getUsersTable();
+        /** @var \CakeDC\Users\Model\Behavior\RegisterBehavior $registerBehavior */
+        $registerBehavior = $usersTable->getBehavior('Register');
         $user = $usersTable->newEntity([]);
         $options = $this->_registerOptions();
         $requestData = $this->getData();
@@ -79,7 +83,7 @@ class RegisterAction extends Action
         ]);
 
         if ($event->getResult() instanceof EntityInterface) {
-            $userSaved = $usersTable->getBehavior('Register')->register($user, $event->getResult()->toArray(), $options);
+            $userSaved = $registerBehavior->register($user, $event->getResult()->toArray(), $options);
             if ($userSaved) {
                 return $this->_afterRegister($userSaved);
             }
@@ -87,7 +91,7 @@ class RegisterAction extends Action
         if ($event->isStopped()) {
             return false;
         }
-        $userSaved = $usersTable->getBehavior('Register')->register($user, $requestData, $options);
+        $userSaved = $registerBehavior->register($user, $requestData, $options);
         if (!$userSaved) {
             $message = __d('CakeDC/Api', 'The user could not be saved');
             throw new ValidationException($message, 0, null, $user->getErrors());
@@ -100,9 +104,9 @@ class RegisterAction extends Action
      * Prepare flash messages after registration, and dispatch afterRegister event
      *
      * @param \Cake\Datasource\EntityInterface $userSaved User entity saved
-     * @return \Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    protected function _afterRegister(EntityInterface $userSaved)
+    protected function _afterRegister(EntityInterface $userSaved): EntityInterface|array
     {
         $validateEmail = (bool)Configure::read('Users.Email.validate');
         $message = __d('CakeDC/Api', 'You have registered successfully, please log in');

@@ -56,7 +56,7 @@ class ValidateAccountRequestAction extends Action
             ->requirePresence('reference', 'create')
             ->notBlank('reference');
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -69,13 +69,15 @@ class ValidateAccountRequestAction extends Action
      * @return mixed
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): mixed
     {
         $data = $this->getData();
         $reference = $data['reference'];
         try {
+            /** @var \CakeDC\Users\Model\Behavior\PasswordBehavior $passwordBehavior */
+            $passwordBehavior = $this->getUsersTable()->getBehavior('Password');
             if (
-                $this->getUsersTable()->getBehavior('Password')->resetToken($reference, [
+                $passwordBehavior->resetToken($reference, [
                 'expiration' => Configure::read('Users.Token.expiration'),
                 'checkActive' => true,
                 'sendEmail' => true,
@@ -83,9 +85,8 @@ class ValidateAccountRequestAction extends Action
                 ])
             ) {
                 return __d('CakeDC/Api', 'Token has been reset successfully. Please check your email.');
-            } else {
-                throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500);
             }
+            throw new Exception(__d('CakeDC/Api', 'Token could not be reset'), 500);
         } catch (UserNotFoundException $ex) {
             throw new Exception(__d('CakeDC/Api', 'User {0} was not found', $reference), 404, $ex);
         } catch (UserAlreadyActiveException $ex) {

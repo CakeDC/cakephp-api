@@ -27,9 +27,9 @@ class OtpVerifyGetAction extends OtpVerifyAction
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return array
      */
-    public function execute()
+    public function execute(): array
     {
         $user = $this->getIdentity();
         $secretVerified = $user['secret_verified'] ?? null;
@@ -38,19 +38,17 @@ class OtpVerifyGetAction extends OtpVerifyAction
             $secret = $this->onVerifyGetSecret($user);
             if (empty($secret)) {
                 throw new \Exception('Secret generation issue, please try again');
-            } else {
-                $secretDataUri = $this->getQRCodeImageAsDataUri($user['email'], $secret);
-                $result = [
-                    'secretDataUri' => $secretDataUri,
-                    'secret' => $secret,
-                    'verified' => false,
-                ];
             }
-        } else {
-            $result = ['verified' => true];
+            $secretDataUri = $this->getQRCodeImageAsDataUri($user['email'], $secret);
+
+            return [
+                'secretDataUri' => $secretDataUri,
+                'secret' => $secret,
+                'verified' => false,
+            ];
         }
 
-        return $result;
+        return ['verified' => true];
     }
 
     /**
@@ -59,7 +57,7 @@ class OtpVerifyGetAction extends OtpVerifyAction
      * @param array $user User.
      * @return string
      */
-    protected function onVerifyGetSecret($user)
+    protected function onVerifyGetSecret(array $user): string
     {
         if (isset($user['secret']) && $user['secret']) {
             return $user['secret'];
@@ -72,7 +70,7 @@ class OtpVerifyGetAction extends OtpVerifyAction
                 ->set(['secret' => $secret])
                 ->where(['id' => $user['id']]);
             $query->execute();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $message = __d('cake_d_c/api', 'Could not verify, please try again');
 
             throw new \Exception($message);

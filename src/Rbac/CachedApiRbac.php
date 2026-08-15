@@ -15,7 +15,6 @@ namespace CakeDC\Api\Rbac;
 
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
-use CakeDC\Api\Rbac\ApiRbac;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 
@@ -42,9 +41,7 @@ class CachedApiRbac extends ApiRbac
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-        $this->permissionsMap = Cache::remember('api_permissions_map', function () {
-            return $this->buildPermissionsMap();
-        }, '_cakedc_api_auth_');
+        $this->permissionsMap = Cache::remember('api_permissions_map', fn(): array => $this->buildPermissionsMap(), '_cakedc_api_auth_');
     }
 
     /**
@@ -54,7 +51,7 @@ class CachedApiRbac extends ApiRbac
      */
     public function buildPermissionsMap(): array
     {
-        $asArray = function ($permission, $key, $default = null) {
+        $asArray = function (array $permission, $key, $default = null): array {
             if ($default !== null && !array_key_exists($key, $permission)) {
                 return [$default, '_'];
             }
@@ -65,16 +62,13 @@ class CachedApiRbac extends ApiRbac
             if (is_string($item)) {
                 return [$item];
             }
+
             return (array)$item;
         };
 
         $map = [];
         foreach ($this->permissions as $permission) {
-            if (isset($permission['role'])) {
-                $role = $permission['role'];
-            } else {
-                $role = '*';
-            }
+            $role = $permission['role'] ?? '*';
             $roles = (array)$role;
             foreach ($roles as $role) {
                 $services = $asArray($permission, 'service', '*');
@@ -120,7 +114,7 @@ class CachedApiRbac extends ApiRbac
                 $permissions = $this->permissionsMap[$checkRole][$key];
                 foreach ($permissions as $permission) {
                     $matchResult = $this->_matchPermission($permission, $user, $role, $request);
-                    if ($matchResult !== null) {
+                    if ($matchResult instanceof \CakeDC\Auth\Rbac\PermissionMatchResult) {
                         if ($this->getConfig('log')) {
                             $this->log($matchResult->getReason(), LogLevel::DEBUG);
                         }

@@ -34,7 +34,7 @@ class ResetPasswordRequestActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_authAccess();
@@ -46,13 +46,13 @@ class ResetPasswordRequestActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testSuccessResetPasswordRequest()
+    public function testSuccessResetPasswordRequest(): void
     {
         $builder = Router::createRouteBuilder('/', []);
         $builder->connect('/users/reset-password/*', [

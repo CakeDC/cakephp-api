@@ -56,6 +56,7 @@ class FilterExtension extends Extension implements EventListenerInterface
         $schema = $table->getSchema();
         $fields = $schema->columns();
         $fields = array_flip($fields);
+
         $data = $action->getData();
         $postfixDelimeter = '$';
         $filterPostfixes = [
@@ -71,7 +72,7 @@ class FilterExtension extends Extension implements EventListenerInterface
         ];
         foreach ($filterPostfixes as $postfix => $rule) {
             $filter = collection($data)
-                ->filter(function ($item, $key) use ($fields, $postfix, $postfixDelimeter) {
+                ->filter(function ($item, $key) use ($fields, $postfix, $postfixDelimeter): bool {
                     if ($postfix !== '') {
                         if (!str_contains($key, $postfixDelimeter . $postfix)) {
                             return false;
@@ -85,22 +86,22 @@ class FilterExtension extends Extension implements EventListenerInterface
 
             if (!empty($filter)) {
                 foreach ($filter as $field => $value) {
-                    if ($postfix == 'ge' || $postfix == 'ne') {
+                    if ($postfix === 'ge' || $postfix === 'ne') {
                         unset($data[$field]);
                     }
                     if (is_array($value)) {
-                        if ($postfix == '') {
+                        if ($postfix === '') {
                             $query->where([$field . ' IN' => $value]);
-                        } elseif ($postfix == 'ne') {
+                        } elseif ($postfix === 'ne') {
                             $query->where([$field . ' NOT IN' => $value]);
                         }
                     } else {
                         if ($postfix !== '') {
                             $field = str_replace($postfixDelimeter . $postfix, '', $field) . $rule;
-                            if ($postfix == 'llike' || $postfix == 'like') {
+                            if ($postfix === 'llike' || $postfix === 'like') {
                                 $value = '%' . $value;
                             }
-                            if ($postfix == 'rlike' || $postfix == 'like') {
+                            if ($postfix === 'rlike' || $postfix === 'like') {
                                 $value .= '%';
                             }
                         }

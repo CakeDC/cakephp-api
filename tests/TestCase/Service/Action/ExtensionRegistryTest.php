@@ -43,7 +43,7 @@ class ExtensionRegistryTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class ExtensionRegistryTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->ExtensionRegistry, $this->Action);
         parent::tearDown();
@@ -78,7 +78,7 @@ class ExtensionRegistryTest extends TestCase
      *
      * @return void
      */
-    public function testLoad()
+    public function testLoad(): void
     {
         $extension = $this->ExtensionRegistry->load('CakeDC/Api.Sort', []);
         $this->assertTrue($extension instanceof SortExtension);
@@ -91,7 +91,7 @@ class ExtensionRegistryTest extends TestCase
      *
      * @return void
      */
-    public function testLoadWrongClass()
+    public function testLoadWrongClass(): void
     {
         $this->expectException(MissingExtensionException::class);
         $this->ExtensionRegistry->load('Unknown', []);

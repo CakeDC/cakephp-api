@@ -36,9 +36,9 @@ abstract class CollectionAction extends CrudAction
         $data = $this->getData();
         $this->_validateDataIsArray($data);
         $index = 0;
-        $errors = collection($data)->reduce(function ($errors, $data) use ($validator, &$index) {
+        $errors = collection($data)->reduce(function ($errors, array $data) use ($validator, &$index) {
             $error = $validator->validate($data);
-            if ($error) {
+            if ($error !== []) {
                 $errors[$index] = $error;
             }
 
@@ -65,14 +65,13 @@ abstract class CollectionAction extends CrudAction
     {
         if ($this->getTable()->saveMany($entities)) {
             return $entities;
-        } else {
-            $errors = collection($entities)->reduce(
-                fn($errors, EntityInterface $entity) => array_merge($errors, $entity->getErrors()),
-                []
-            );
-            $message = __('Validation on {0} failed', $this->getTable()->getAlias());
-            throw new ValidationException($message, 0, null, $errors);
         }
+        $errors = collection($entities)->reduce(
+            fn($errors, EntityInterface $entity): array => array_merge($errors, $entity->getErrors()),
+            []
+        );
+        $message = __('Validation on {0} failed', $this->getTable()->getAlias());
+        throw new ValidationException($message, 0, null, $errors);
     }
 
     /**
@@ -81,12 +80,12 @@ abstract class CollectionAction extends CrudAction
      * @param array $patchOptions options to use in patch
      * @return \Cake\Datasource\EntityInterface[] entities
      */
-    protected function _newEntities(array $patchOptions = [])
+    protected function _newEntities(array $patchOptions = []): array
     {
         $data = $this->getData();
         $this->_validateDataIsArray($data);
 
-        return collection($data)->reduce(function ($entities, $data) use ($patchOptions) {
+        return collection($data)->reduce(function ($entities, array $data) use ($patchOptions) {
             $entity = $this->_newEntity();
             $entity = $this->_patchEntity($entity, $data, $patchOptions);
             $entities[] = $entity;
@@ -105,7 +104,7 @@ abstract class CollectionAction extends CrudAction
     protected function _validateDataIsArray($data): void
     {
         if (!is_array($data) || Hash::dimensions($data) < 2) {
-            throw new ValidationException(__('Validation failed, POST data is not an array of items'), 0, null);
+            throw new ValidationException(__('Validation failed, POST data is not an array of items'), 0);
         }
     }
 }

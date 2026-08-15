@@ -39,7 +39,7 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -62,12 +62,9 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererInitializeByClassName()
+    public function testRendererInitializeByClassName(): void
     {
-        $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
-            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
-            ->getMock();
+        $response = $this->createStub(\Cake\Http\Response::class);
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
@@ -86,15 +83,12 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererSuccess()
+    public function testRendererSuccess(): void
     {
         Configure::write('debug', false);
         Configure::write('Api.Flysystem.expire', '+1 day');
 
-        $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
-            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
-            ->getMock();
+        $response = new \Cake\Http\Response();
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
@@ -136,7 +130,7 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendereFileNotFound()
+    public function testRendereFileNotFound(): void
     {
         Configure::write('debug', false);
         $response = $this
@@ -167,7 +161,7 @@ class FlysystemRendererTest extends TestCase
         $response->expects($this->once())
             ->method('withStatus')
             ->with(404)
-            ->will($this->returnValue($response));
+            ->willReturn($response);
         $response->expects($this->never())
             ->method('withType');
         $response->expects($this->never())
@@ -188,7 +182,7 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererError()
+    public function testRendererError(): void
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
@@ -211,7 +205,7 @@ class FlysystemRendererTest extends TestCase
         $response->expects($this->once())
             ->method('withStatus')
             ->with(401)
-            ->will($this->returnValue($response));
+            ->willReturn($response);
         $response->expects($this->never())
             ->method('withType');
         $response->expects($this->never())
@@ -225,7 +219,7 @@ class FlysystemRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererErrorEmptyExceptionCode()
+    public function testRendererErrorEmptyExceptionCode(): void
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
@@ -248,7 +242,7 @@ class FlysystemRendererTest extends TestCase
         $response->expects($this->once())
             ->method('withStatus')
             ->with(500)
-            ->will($this->returnValue($response));
+            ->willReturn($response);
         $response->expects($this->never())
             ->method('withType');
         $response->expects($this->never())

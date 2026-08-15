@@ -56,7 +56,7 @@ class JwtRefreshAction extends Action
     public function validates(): bool
     {
         $authHeader = $this->getService()->getRequest()->getHeader('Authorization');
-        if (!empty($authHeader)) {
+        if ($authHeader !== []) {
             $authHeader = array_pop($authHeader);
         }
 
@@ -92,7 +92,7 @@ class JwtRefreshAction extends Action
             ])->first();
 
         $authHeader = str_ireplace($options['tokenPrefix'] . ' ', '', $authHeader);
-        if (!$entity || $entity['token'] != $authHeader) {
+        if (!$entity || $entity->get('token') != $authHeader) {
             throw new ValidationException('Invalid token provided', 401);
         }
 
@@ -104,9 +104,9 @@ class JwtRefreshAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return false|array
      */
-    public function execute()
+    public function execute(): false|array
     {
         if (empty($this->user)) {
             return false;

@@ -31,10 +31,10 @@ class Webauthn2faAuthAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return array
      * @throws \Throwable
      */
-    public function execute()
+    public function execute(): array
     {
         try {
             $user = $this->getIdentity();
@@ -43,11 +43,11 @@ class Webauthn2faAuthAction extends Action
             $adapter->deleteStore();
 
             return $this->generateTokenResponse($user->toArray(), '2fa');
-        } catch (\Throwable $e) {
+        } catch (\Throwable $throwable) {
             $user = $this->getIdentity();
             $message = __d('cake_d_c/api', 'Register error with webauthn for user id: {0}', $user['id'] ?? 'empty');
             Log::debug($message);
-            throw $e;
+            throw $throwable;
         }
     }
 }

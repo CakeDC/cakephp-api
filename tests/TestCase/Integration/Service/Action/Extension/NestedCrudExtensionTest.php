@@ -28,7 +28,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -42,13 +42,13 @@ class NestedCrudExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->sendRequest('/authors/1/articles', 'GET');
         $result = $this->getJsonResponse();
@@ -56,7 +56,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $this->assertEquals([1, 10, 13, 15], Hash::extract($result['data'], '{n}.id'));
     }
 
-    public function testView()
+    public function testView(): void
     {
         $this->sendRequest('/authors/1/articles/1', 'GET');
         $result = $this->getJsonResponse();
@@ -76,7 +76,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $this->assertNull($result['data']);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $article = [
             'title' => 'New Article',
@@ -97,7 +97,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $res);
     }
 
-    public function testEdit()
+    public function testEdit(): void
     {
         $article = [
             'title' => 'Article 1',
@@ -118,7 +118,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $res);
     }
 
-    public function testEditOwnedByOtherAuthor()
+    public function testEditOwnedByOtherAuthor(): void
     {
         $article = [
             'title' => 'Article 1',
@@ -131,7 +131,7 @@ class NestedCrudExtensionTest extends IntegrationTestCase
         $this->assertNull($result['data']);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->sendRequest('/authors/1/articles/1', 'DELETE');
         $result = $this->getJsonResponse();

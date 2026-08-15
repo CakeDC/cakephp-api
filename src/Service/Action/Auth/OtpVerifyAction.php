@@ -55,7 +55,7 @@ abstract class OtpVerifyAction extends Action
      *
      * @return string base32 shared secret stored in users table
      */
-    public function createSecret()
+    public function createSecret(): string
     {
         return $this->tfa->createSecret();
     }
@@ -68,7 +68,7 @@ abstract class OtpVerifyAction extends Action
      * @param string $code from verification form
      * @return bool
      */
-    public function verifyCode($secret, $code)
+    public function verifyCode($secret, $code): bool
     {
         return $this->tfa->verifyCode($secret, $code);
     }
@@ -80,7 +80,7 @@ abstract class OtpVerifyAction extends Action
      * @param string $secret secret
      * @return string base64 string containing QR code for shared secret
      */
-    public function getQRCodeImageAsDataUri($issuer, $secret)
+    public function getQRCodeImageAsDataUri($issuer, $secret): string
     {
         return $this->tfa->getQRCodeImageAsDataUri($issuer, $secret);
     }

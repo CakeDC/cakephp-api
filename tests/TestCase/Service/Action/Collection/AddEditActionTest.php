@@ -41,7 +41,7 @@ class AddEditActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -51,7 +51,7 @@ class AddEditActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         unset($this->Service, $this->Action, $this->request);
@@ -61,7 +61,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testExecuteSuccess()
+    public function testExecuteSuccess(): void
     {
         $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
@@ -78,7 +78,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationPostNotArray()
+    public function testValidationPostNotArray(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction(
@@ -90,7 +90,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationPostEmpty()
+    public function testValidationPostEmpty(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction();
@@ -100,7 +100,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationPostString()
+    public function testValidationPostString(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction(['something' => 'value']);
@@ -110,7 +110,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testExecuteValidationEntityNotValid()
+    public function testExecuteValidationEntityNotValid(): void
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Validation on Articles failed');
@@ -129,7 +129,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidatesEntity()
+    public function testValidatesEntity(): void
     {
         $this->_initializeAction([
             ['title' => 'Article1'],
@@ -142,7 +142,7 @@ class AddEditActionTest extends TestCase
     /**
      * @return void
      */
-    public function testValidatesEntityNotValid()
+    public function testValidatesEntityNotValid(): void
     {
         $this->_initializeAction([
             ['title' => 'Article1'],
@@ -152,7 +152,7 @@ class AddEditActionTest extends TestCase
         try {
             $this->Action->validates();
             $this->fail('ValidationException was expected');
-        } catch (ValidationException $ex) {
+        } catch (ValidationException $validationException) {
             $this->assertSame([
                 // note the index here is important, first entity (0) is valid
                 1 => [
@@ -160,11 +160,11 @@ class AddEditActionTest extends TestCase
                         '_empty' => 'This field cannot be left empty',
                     ],
                 ],
-            ], $ex->getValidationErrors());
+            ], $validationException->getValidationErrors());
         }
     }
 
-    public function testIntegrationArticlesCollection()
+    public function testIntegrationArticlesCollection(): void
     {
         $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
@@ -194,12 +194,13 @@ class AddEditActionTest extends TestCase
         $action->Auth->allow('*');
 
         $action->setTable($ArticlesTable);
-        $result = $action->process();
+        $action->process();
+
         $finalCount = $ArticlesTable->find()->count();
         $this->assertEquals(2, $finalCount - $initialCount, 'We should have added 3 new articles');
     }
 
-    protected function _initializeAction($post = [])
+    protected function _initializeAction($post = []): void
     {
         $this->_initializeRequest([
             'params' => [

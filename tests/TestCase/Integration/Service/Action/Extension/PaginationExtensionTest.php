@@ -28,7 +28,7 @@ class PaginationExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -42,12 +42,12 @@ class PaginationExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
 
-    public function testDefault()
+    public function testDefault(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();
@@ -61,7 +61,7 @@ class PaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals($expected, $result['pagination']);
     }
 
-    public function testLimitDefault()
+    public function testLimitDefault(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();
@@ -70,7 +70,7 @@ class PaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals(range(1, 15), Hash::extract($result, 'data.{n}.id'));
     }
 
-    public function testCustomLimit()
+    public function testCustomLimit(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4]);
         $result = $this->getJsonResponse();
@@ -85,7 +85,7 @@ class PaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
     }
 
-    public function testCustomLimitAndPage()
+    public function testCustomLimitAndPage(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'page' => 2]);
         $result = $this->getJsonResponse();

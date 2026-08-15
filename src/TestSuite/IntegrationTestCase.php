@@ -52,7 +52,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('Api', []);
@@ -63,7 +63,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         ServiceRegistry::getServiceLocator()->clear();
@@ -75,7 +75,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string|null $userId User id.
      * @return string|null
      */
-    public function getDefaultUser(?string $userId = null)
+    public function getDefaultUser(?string $userId = null): ?string
     {
         if ($userId === null) {
             $userId = $this->_defaultUserId;
@@ -92,7 +92,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $userId User id.
      * @return mixed|null
      */
-    protected function _userToken(?string $userId = null)
+    protected function _userToken(?string $userId = null): mixed
     {
         if ($userId === null) {
             $userId = $this->getDefaultUser();
@@ -103,7 +103,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
                           ->where(['id' => $userId])
                           ->first();
             if ($user instanceof EntityInterface) {
-                return $user['api_token'];
+                return $user->get('api_token');
             }
         }
 
@@ -133,23 +133,18 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
 
         Configure::load('api');
 
-        if (!empty($headers)) {
+        if ($headers !== []) {
             $this->configRequest([
                 ' ' => ' ',
                 'headers' => $headers,
             ]);
         }
 
-        if (!is_string($url)) {
-            $this->_sendRequest($url, $method, $data);
-
-            return;
-        }
         $url = '/api' . $url;
         if ($userToken !== null) {
             $url = $this->_appendGetParam($url, 'token', (string)$userToken);
         }
-        if ($method == 'GET' && !empty($data)) {
+        if ($method === 'GET' && !empty($data)) {
             foreach ($data as $key => $value) {
                 if (!is_array($value)) {
                     $url = $this->_appendGetParam($url, $key, (string)$value);
@@ -160,9 +155,9 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
             ServiceRegistry::getServiceLocator()->clear();
             TableRegistry::getTableLocator()->clear();
             $this->_sendRequest($url, $method, $data);
-        } catch (MissingTemplateException $ex) {
+        } catch (MissingTemplateException $missingTemplateException) {
             $message = sprintf('Possibly related to %s', $this->_exception->getMessage());
-            throw new MissingTemplateException($message, [], 500, $ex);
+            throw new MissingTemplateException($message, [], 500, $missingTemplateException);
         }
     }
 
@@ -199,7 +194,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     public function getJsonResponse(): mixed
     {
-        $body = (string)$this->_response->getBody();
+        $this->_response->getBody();
 
         return json_decode((string)$this->_response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
@@ -231,7 +226,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function assertStatus(int $code, ?string $message = null): void
     {
         if ($message === null) {
-            $message = "Status code $code does not match";
+            $message = sprintf('Status code %d does not match', $code);
         }
         $this->assertResponseCode($code, $message);
     }

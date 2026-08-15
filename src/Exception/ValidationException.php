@@ -34,9 +34,9 @@ class ValidationException extends ServiceException
      * @param array $validationErrors the array with the validations
      */
     public function __construct(
-        $message = 'Validation errors',
-        $code = 0,
-        $previous = null,
+        array|string $message = 'Validation errors',
+        ?int $code = 0,
+        ?\Throwable $previous = null,
         array $validationErrors = []
     ) {
         if ($code === 0) {

@@ -30,9 +30,9 @@ class Webauthn2faRegisterOptionsAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return \Webauthn\PublicKeyCredentialCreationOptions
      */
-    public function execute()
+    public function execute(): \Webauthn\PublicKeyCredentialCreationOptions
     {
         $user = $this->getIdentity();
         $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);

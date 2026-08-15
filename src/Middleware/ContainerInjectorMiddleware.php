@@ -14,10 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ContainerInjectorMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var \Cake\Core\ContainerInterface
-     */
-    protected $container;
+    protected \Cake\Core\ContainerInterface $container;
 
     /**
      * Constructor

@@ -5,7 +5,7 @@ namespace CakeDC\Api\Test\App\DI\Service;
 
 class TestService
 {
-    public function data()
+    public function data(): array
     {
         return [
             'a' => 1,

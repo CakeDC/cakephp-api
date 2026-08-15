@@ -46,7 +46,7 @@ class ServiceTest extends TestCase
     /**
      * Setup
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->container = new Container();
@@ -57,7 +57,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         parent::tearDown();
@@ -69,7 +69,7 @@ class ServiceTest extends TestCase
      * @return void
      * expectedException \CakeDC\Api\Service\Exception\MissingAdapterException
      */
-    public function testConstructWithoutAdapter()
+    public function testConstructWithoutAdapter(): void
     {
         $this->_initializeRequest();
         $this->Service = new FallbackService([
@@ -86,7 +86,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testConstructWithRendererAsParameter()
+    public function testConstructWithRendererAsParameter(): void
     {
         $this->_initializeRequest();
         $this->Service = new FallbackService([
@@ -104,7 +104,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testActionNotFound()
+    public function testActionNotFound(): void
     {
         $this->expectException(MissingRouteException::class);
         $this->_initializeRequest([
@@ -125,7 +125,7 @@ class ServiceTest extends TestCase
         $this->assertEquals('authors', $Service->getName());
 
         $this->assertTextEquals('/authors', $Service->getBaseUrl());
-        $action = $Service->buildAction();
+        $Service->buildAction();
     }
 
     /**
@@ -133,7 +133,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testActionInitialize()
+    public function testActionInitialize(): void
     {
         $this->_initializeRequest([
             'params' => [
@@ -163,7 +163,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testNestedActionInitialize()
+    public function testNestedActionInitialize(): void
     {
         $this->_initializeRequest([
             'params' => [
@@ -198,7 +198,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testInitializeActionStoredAsExistsClass()
+    public function testInitializeActionStoredAsExistsClass(): void
     {
         $this->_initializeRequest([
             'params' => [
@@ -224,7 +224,7 @@ class ServiceTest extends TestCase
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/articles/tag/1', $Service->getBaseUrl());
         $action = $Service->buildAction();
-        $this->assertEquals(\CakeDC\Api\Test\App\Service\Action\ArticlesTagAction::class, get_class($action));
+        $this->assertEquals(\CakeDC\Api\Test\App\Service\Action\ArticlesTagAction::class, $action::class);
     }
 
     /**
@@ -232,7 +232,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testInitializeActionByServiceConfigMap()
+    public function testInitializeActionByServiceConfigMap(): void
     {
         $actionClass = \CakeDC\Api\Test\App\Service\Action\Author\IndexAction::class;
         $this->_addSettingByPath('Service.authors.options', [
@@ -262,7 +262,7 @@ class ServiceTest extends TestCase
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/authors', $Service->getBaseUrl());
         $action = $Service->buildAction();
-        $this->assertEquals($actionClass, get_class($action));
+        $this->assertEquals($actionClass, $action::class);
         $this->assertTextEquals('custom action applied', $action->process());
     }
 
@@ -271,7 +271,7 @@ class ServiceTest extends TestCase
      *
      * @return void
      */
-    public function testActionInitializeContainer()
+    public function testActionInitializeContainer(): void
     {
         $this->_initializeRequest([
             'params' => [

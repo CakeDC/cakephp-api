@@ -25,9 +25,9 @@ class CrudDescribeAction extends CrudAction
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return array
      */
-    public function execute()
+    public function execute(): array
     {
         return $this->_describe();
     }

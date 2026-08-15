@@ -46,6 +46,7 @@ class RegisterAdapter extends BaseAdapter
 
         $storeEntity = $this->readStore();
         $storeEntity = $this->patchStore($storeEntity, 'registerOptions', base64_encode(serialize($options)));
+
         $this->store->save($storeEntity);
 
         return $options;

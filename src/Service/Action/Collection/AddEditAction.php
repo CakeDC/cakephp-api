@@ -45,7 +45,7 @@ class AddEditAction extends CollectionAction
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $keys = $this->getTable()->getPrimaryKey();
         $accessibleFields = [];

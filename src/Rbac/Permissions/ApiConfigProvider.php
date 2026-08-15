@@ -59,7 +59,7 @@ class ApiConfigProvider extends AbstractProvider
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('CakeDC/Auth.api_permissions');
-        } catch (\Exception $ex) {
+        } catch (\Exception) {
             $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
             $this->log($msg, LogLevel::WARNING);
         }

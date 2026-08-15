@@ -192,6 +192,6 @@ class JSendRenderer extends BaseRenderer
     protected function _mapStatus(Result $result): void
     {
         $code = $result->getCode();
-        $this->status = $code == 0 || $code >= 200 && $code <= 399 ? self::STATUS_SUCCESS : self::STATUS_ERROR;
+        $this->status = $code === 0 || $code >= 200 && $code <= 399 ? self::STATUS_SUCCESS : self::STATUS_ERROR;
     }
 }

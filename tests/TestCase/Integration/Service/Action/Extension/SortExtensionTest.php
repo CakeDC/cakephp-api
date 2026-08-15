@@ -33,7 +33,7 @@ class SortExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -48,13 +48,13 @@ class SortExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testDefault()
+    public function testDefault(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();
@@ -68,7 +68,7 @@ class SortExtensionTest extends IntegrationTestCase
         $this->assertEquals($expected, $result['pagination']);
     }
 
-    public function testSortById()
+    public function testSortById(): void
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id']);
         $result = $this->getJsonResponse();
@@ -76,7 +76,7 @@ class SortExtensionTest extends IntegrationTestCase
         $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
     }
 
-    public function testSortByIdDesc()
+    public function testSortByIdDesc(): void
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id', 'direction' => 'desc']);
         $result = $this->getJsonResponse();
@@ -84,7 +84,7 @@ class SortExtensionTest extends IntegrationTestCase
         $this->assertEquals(array_reverse(range(12, 15)), Hash::extract($result, 'data.{n}.id'));
     }
 
-    public function testSortByName()
+    public function testSortByName(): void
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'first_name']);
         $result = $this->getJsonResponse();
@@ -92,7 +92,7 @@ class SortExtensionTest extends IntegrationTestCase
         $this->assertEquals([7, 5, 11, 15], Hash::extract($result, 'data.{n}.id'));
     }
 
-    public function testSortByNameDesc()
+    public function testSortByNameDesc(): void
     {
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'first_name', 'direction' => 'desc']);
         $result = $this->getJsonResponse();

@@ -127,7 +127,7 @@ class ServiceLocator implements LocatorInterface
         $alias = Inflector::camelize($alias);
 
         if (isset($this->_instances[$alias]) && empty($options['refresh'])) {
-            if (!empty($options) && !$this->_compareOptions($alias, $options)) {
+            if ($options !== [] && !$this->_compareOptions($alias, $options)) {
                 throw new RuntimeException(sprintf(
                     'You cannot configure "%s", it already exists in the registry.',
                     $alias

@@ -34,7 +34,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param mixed $default Default value if condition is false
      * @return mixed
      */
-    protected function when(bool $condition, $value, $default = null)
+    protected function when(bool $condition, $value, $default = null): mixed
     {
         return $condition ? $value : $default;
     }
@@ -50,7 +50,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param mixed $default Default value if key doesn't exist
      * @return mixed
      */
-    protected function get($data, string $key, $default = null)
+    protected function get($data, string $key, $default = null): mixed
     {
         if (is_array($data)) {
             return $data[$key] ?? $default;
@@ -96,7 +96,7 @@ abstract class AbstractTransformer implements TransformerInterface
         if (is_string($date)) {
             try {
                 return (new DateTime($date))->toIso8601String();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 return null;
             }
         }
@@ -118,6 +118,7 @@ abstract class AbstractTransformer implements TransformerInterface
         }
 
         $transformer = new $transformerClass();
+
         return $transformer->transform($entity);
     }
 
@@ -158,6 +159,7 @@ abstract class AbstractTransformer implements TransformerInterface
         }
 
         $transformer = new $transformerClass();
+
         return $transformer->transform($matchingData);
     }
 
@@ -175,7 +177,7 @@ abstract class AbstractTransformer implements TransformerInterface
         }
 
         $transformer = new $transformerClass();
+
         return $transformer->transform($joinData);
     }
 }
-

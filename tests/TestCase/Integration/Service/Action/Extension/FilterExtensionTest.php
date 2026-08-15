@@ -33,7 +33,7 @@ class FilterExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -48,13 +48,13 @@ class FilterExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testFilterByFields()
+    public function testFilterByFields(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'title' => 'Article N4']);
         $result = $this->getJsonResponse();

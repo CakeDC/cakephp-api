@@ -56,7 +56,7 @@ class ValidateAccountAction extends Action
             ->requirePresence('token', 'create')
             ->notBlank('token');
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -69,18 +69,18 @@ class ValidateAccountAction extends Action
      * @return mixed
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): mixed
     {
         $data = $this->getData();
         $token = $data['token'];
 
         try {
-            $result = $this->getUsersTable()->validate($token, 'activateUser');
-            if ($result) {
-                return __d('CakeDC/Api', 'User account validated successfully');
-            } else {
-                throw new Exception(__d('CakeDC/Api', 'User account could not be validated'), 500);
-            }
+            /** @var \CakeDC\Users\Model\Behavior\RegisterBehavior $registerBehavior */
+            $registerBehavior = $this->getUsersTable()->getBehavior('Register');
+            $user = $registerBehavior->validate($token);
+            $registerBehavior->activateUser($user);
+
+            return __d('CakeDC/Api', 'User account validated successfully');
         } catch (UserAlreadyActiveException $exception) {
             throw new Exception(__d('CakeDC/Api', 'User already active'), 500, $exception);
         } catch (UserNotFoundException $ex) {

@@ -19,7 +19,7 @@ interface OneTimePasswordAuthenticationCheckerInterface
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
     /**
      * Check if two factor authentication is required for a user
@@ -27,5 +27,5 @@ interface OneTimePasswordAuthenticationCheckerInterface
      * @param array $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null);
+    public function isRequired(?array $user = null): bool;
 }

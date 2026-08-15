@@ -40,7 +40,7 @@ class DeleteAction extends CollectionAction
                     $error[$key] = ['_empty' => 'Missing id'];
                 }
             }
-            if (!empty($error)) {
+            if ($error !== []) {
                 $errors[$index] = $error;
             }
 
@@ -60,10 +60,10 @@ class DeleteAction extends CollectionAction
     /**
      * Execute action. Returns the array of deleted id's
      *
-     * @return mixed
+     * @return array
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): array
     {
         $keys = $this->getTable()->getPrimaryKey();
         $accessibleFields = [];
@@ -89,7 +89,7 @@ class DeleteAction extends CollectionAction
     protected function _deleteMany(array $entities): array
     {
         $deleted = [];
-        $this->getTable()->getConnection()->transactional(function () use ($entities, &$deleted) {
+        $this->getTable()->getConnection()->transactional(function () use ($entities, &$deleted): true {
             $errors = [];
             foreach ($entities as $index => $entity) {
                 /** @var \Cake\ORM\Entity $entity */
@@ -104,7 +104,7 @@ class DeleteAction extends CollectionAction
                 $deleted[] = $entity->get($this->getTable()->getPrimaryKey());
             }
 
-            if ($errors) {
+            if ($errors !== []) {
                 throw new ValidationException(__('Validation failed'), 0, null, $errors);
             }
 

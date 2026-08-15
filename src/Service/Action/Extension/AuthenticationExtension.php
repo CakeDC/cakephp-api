@@ -152,7 +152,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      *
      * @return array
      */
-    public function getUnauthenticatedActions()
+    public function getUnauthenticatedActions(): array
     {
         return $this->unauthenticatedActions;
     }
@@ -186,11 +186,11 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      * @return mixed
      * @throws \RuntimeException If the identity has not been found.
      */
-    public function getIdentityData($path)
+    public function getIdentityData(array|string|int|null $path): mixed
     {
         $identity = $this->getIdentity();
 
-        if ($identity === null) {
+        if (!$identity instanceof \Authentication\IdentityInterface) {
             throw new RuntimeException('The identity has not been found.');
         }
 
@@ -213,7 +213,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      */
     public function setIdentity(ArrayAccess $identity)
     {
-        $request = $this->getAction()->getService()->getRequest();
+        $this->getAction()->getService()->getRequest();
 
         $result = $this->getAuthenticationService()->persistIdentity(
             $this->getAction()->getService()->getRequest(),
@@ -221,8 +221,12 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
             $identity
         );
 
-        $this->getAction()->getService()->setRequest($result['request']);
-        $this->getAction()->getService()->setResponse($result['response']);
+        /** @var \Cake\Http\ServerRequest $request */
+        $request = $result['request'];
+        /** @var \Cake\Http\Response $response */
+        $response = $result['response'];
+        $this->getAction()->getService()->setRequest($request);
+        $this->getAction()->getService()->setResponse($response);
 
         return $this;
     }

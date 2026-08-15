@@ -27,22 +27,18 @@ class RequestParser
      * @param bool $replace Whether to replace the domain.
      * @return string
      */
-    public static function getDomain(ServerRequest $request, $replace = true)
+    public static function getDomain(ServerRequest $request, $replace = true): string
     {
         $domain = null;
         if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
             $domain = parse_url($_SERVER['HTTP_REFERER']);
         }
-        if ($domain !== null && $domain['host']) {
-            $host = $domain['host'];
-        } else {
-            $host = $request->domain();
-        }
+        $host = $domain !== null && $domain['host'] ? $domain['host'] : $request->domain();
 
         if ($replace) {
             return str_replace('.', '$', $host);
-        } else {
-            return $host;
         }
+
+        return $host;
     }
 }

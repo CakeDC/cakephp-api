@@ -61,15 +61,15 @@ class ReverseRouting
      * @param callable $beforeReverse Callback.
      * @return array|string|null
      */
-    public function indexPath(Action $action, ?callable $beforeReverse = null)
+    public function indexPath(Action $action, ?callable $beforeReverse = null): array|string|null
     {
         $indexRoute = $action->getRoute();
         $parent = $action->getService()->getParentService();
         $path = null;
-        if ($parent !== null) {
+        if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentRoutes = $parent->routes();
             $currentRoute = $this->findRoute($indexRoute, $parentRoutes);
-            if ($currentRoute !== null) {
+            if ($currentRoute instanceof \Cake\Routing\Route\Route) {
                 if (is_callable($beforeReverse)) {
                     $indexRoute = $beforeReverse($indexRoute);
                 }
@@ -78,13 +78,12 @@ class ReverseRouting
             }
 
             return $path;
-        } else {
-            if (is_callable($beforeReverse)) {
-                $indexRoute = $beforeReverse($indexRoute);
-            }
-
-            return $action->getService()->routeReverse($indexRoute);
         }
+        if (is_callable($beforeReverse)) {
+            $indexRoute = $beforeReverse($indexRoute);
+        }
+
+        return $action->getService()->routeReverse($indexRoute);
     }
 
     /**
@@ -101,14 +100,14 @@ class ReverseRouting
         $parent = $action->getService()->getParentService();
         $parentId = Inflector::singularize(Inflector::underscore($parent->getName())) . '_id';
         $route = collection($parent->routes())
-            ->filter(fn($item) => $item->getName() == $parentName)
+            ->filter(fn($item): bool => $item->getName() == $parentName)
             ->first();
         $routeDefault = $route->defaults;
         if (array_key_exists($parentId, $baseRoute)) {
-            if ($type == 'view') {
+            if ($type === 'view') {
                 $routeDefault['pass']['id'] = $baseRoute[$parentId];
             }
-            if ($type == 'index') {
+            if ($type === 'index') {
                 $routeDefault[$parentId] = $baseRoute[$parentId];
             }
         }
@@ -123,7 +122,7 @@ class ReverseRouting
      * @param array $routes List of all routes.
      * @return \Cake\Routing\Route\Route|null
      */
-    public function findRoute(array $route, array $routes)
+    public function findRoute(array $route, array $routes): ?\Cake\Routing\Route\Route
     {
         foreach ($routes as $item) {
             if ($this->compareDefaults($item->defaults, $route)) {

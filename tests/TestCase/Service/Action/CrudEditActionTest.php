@@ -41,7 +41,7 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -51,7 +51,7 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         unset($this->Service, $this->Action, $this->request);
@@ -63,14 +63,14 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteSuccess()
+    public function testExecuteSuccess(): void
     {
         $this->_initializeAction(1, [
             'title' => 'New message',
         ]);
 
         $onFindEntity = false;
-        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity): void {
             $onFindEntity = true;
         });
 
@@ -84,7 +84,7 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteValidationError()
+    public function testExecuteValidationError(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction(1, [
@@ -100,7 +100,7 @@ class CrudEditActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteNotFound()
+    public function testExecuteNotFound(): void
     {
         $this->expectException(RecordNotFoundException::class);
         $this->_initializeAction(999, [
@@ -109,7 +109,7 @@ class CrudEditActionTest extends TestCase
         $this->Action->execute();
     }
 
-    protected function _initializeAction($id, $post = [])
+    protected function _initializeAction($id, $post = []): void
     {
         $this->_initializeRequest([
             'params' => [

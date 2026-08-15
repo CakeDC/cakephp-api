@@ -28,7 +28,36 @@ abstract class AbstractProvider
     /**
      * Default permissions to be loaded if no provided permissions
      */
-    protected array $defaultPermissions;
+    protected array $defaultPermissions = [
+        //all bypass
+        [
+            'service' => 'Auth',
+            'action' => [
+                'SocialLogin',
+                'Login',
+                'Register',
+                'ValidateAccount',
+                'ValidateAccountRequest',
+                'ResetPassword',
+                'ResetPasswordRequest',
+            ],
+            'bypassAuth' => true,
+        ],
+        //admin role allowed to all the things
+        [
+            'role' => 'admin',
+            'service' => '*',
+            'action' => '*',
+        ],
+
+        // demo allowing all GET requests for user role
+        [
+            'role' => 'user',
+            'service' => '*',
+            'action' => '*',
+            'method' => 'GET',
+        ],
+    ];
 
     /**
      * AbstractProvider constructor.
@@ -38,36 +67,6 @@ abstract class AbstractProvider
     public function __construct(array $config = [])
     {
         $this->setConfig($config);
-        $this->defaultPermissions = [
-            //all bypass
-            [
-                'service' => 'Auth',
-                'action' => [
-                    'SocialLogin',
-                    'Login',
-                    'Register',
-                    'ValidateAccount',
-                    'ValidateAccountRequest',
-                    'ResetPassword',
-                    'ResetPasswordRequest',
-                ],
-                'bypassAuth' => true,
-            ],
-            //admin role allowed to all the things
-            [
-                'role' => 'admin',
-                'service' => '*',
-                'action' => '*',
-            ],
-
-            // demo allowing all GET requests for user role
-            [
-                'role' => 'user',
-                'service' => '*',
-                'action' => '*',
-                'method' => 'GET',
-            ],
-        ];
     }
 
     /**

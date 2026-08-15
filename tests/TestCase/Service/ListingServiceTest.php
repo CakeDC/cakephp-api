@@ -36,7 +36,7 @@ class ListingServiceTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -46,7 +46,7 @@ class ListingServiceTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         parent::tearDown();
@@ -57,7 +57,7 @@ class ListingServiceTest extends TestCase
      *
      * @return void
      */
-    public function testActionProcess()
+    public function testActionProcess(): void
     {
         $this->_initializeRequest([
             'params' => [

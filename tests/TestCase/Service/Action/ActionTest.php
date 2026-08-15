@@ -37,7 +37,7 @@ class ActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -47,7 +47,7 @@ class ActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         unset($this->Service, $this->Action, $this->request);
@@ -59,7 +59,7 @@ class ActionTest extends TestCase
      *
      * @return void
      */
-    public function testActionCallOnProcess()
+    public function testActionCallOnProcess(): void
     {
         $this->_initializeRequest([
             'params' => [

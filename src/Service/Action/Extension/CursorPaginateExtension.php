@@ -109,9 +109,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $sinceIdField = $this->getConfig('sinceIdField');
         if (!empty($sinceIdField) && !empty($data[$sinceIdField]) && is_numeric($data[$sinceIdField])) {
             return (int)$data[$sinceIdField];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -126,9 +126,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $maxIdField = $this->getConfig('maxIdField');
         if (!empty($maxIdField) && !empty($data[$maxIdField]) && is_numeric($data[$maxIdField])) {
             return (int)$data[$maxIdField];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -144,9 +144,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $maxCount = $this->getConfig('defaultCount');
         if (!empty($countField) && !empty($data[$countField]) && is_numeric($data[$countField])) {
             return min((int)$data[$countField], $maxCount);
-        } else {
-            return $maxCount;
         }
+
+        return $maxCount;
     }
 
     /**
@@ -188,7 +188,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $version = $action->getService()->getVersion();
 
         $links = [];
-        $path = $this->_reverseRouter->indexPath($action, function ($route) use ($newSinceId) {
+        $path = $this->_reverseRouter->indexPath($action, function (array $route) use ($newSinceId): array {
             $route['?']['since_id'] = $newSinceId;
 
             return $route;
@@ -196,7 +196,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $link = $this->_reverseRouter->link('prev', $path, $indexRoute['_method'], $version);
         $links[$link['name']] = $link['href'];
 
-        $path = $this->_reverseRouter->indexPath($action, function ($route) use ($newMaxId) {
+        $path = $this->_reverseRouter->indexPath($action, function (array $route) use ($newMaxId): array {
             $route['?']['max_id'] = $newMaxId;
 
             return $route;

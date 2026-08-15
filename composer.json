@@ -31,18 +31,22 @@
         "ext-json": "*",
         "cakephp/cakephp": "^5.1",
         "cakedc/users": "^16.0",
+        "lcobucci/clock": "^2.2.0,<2.3.0",
         "lcobucci/jwt": "^5.5.0",
         "firebase/php-jwt": "^6.3 || ^7.0"
     },
     "require-dev": {
+        "boundwize/structarmed": "^0.14",
+        "cakedc/cakephp-phpstan": "^4.3",
         "cakephp/cakephp-codesniffer": "^4.5",
         "cweagans/composer-patches": "^1.7",
         "endroid/qr-code": "^4",
         "google/recaptcha": "@stable",
         "laminas/laminas-diactoros": "^3.0",
         "league/flysystem-vfs": "^1.0",
-        "phpstan/phpstan": "^1.8",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^11.5 || ^12.5",
+        "phpstan/phpstan": "^2.2.2,<2.2.6",
+        "rector/rector": "^2.5",
         "robthree/twofactorauth": "^1.6",
         "vlucas/phpdotenv": "^3.3",
         "web-auth/webauthn-lib": "^4.4"
@@ -62,6 +66,12 @@
     "prefer-stable": true,
     "extra": {
         "patches": {
+            "endroid/qr-code": {
+                "Fix implicit nullable params in PHP 8.4": "patches/endroid-qr-code-nullable.patch"
+            },
+            "league/flysystem": {
+                "Fix implicit nullable params in PHP 8.4": "patches/flysystem-nullable.patch"
+            },
             "league/flysystem-vfs": {
                 "Fix null passed to str_replace in PHP 8.1+": "patches/flysystem-vfs-null-str-replace.patch"
             }
@@ -77,23 +87,26 @@
     "scripts": {
         "check": [
             "@cs-check",
+            "@rector-check",
             "@test",
             "@analyse"
         ],
+        "fix": [
+            "@cs-fix",
+            "@rector-fix",
+            "@cs-fix",
+            "@analyse"
+        ],
         "analyse": [
-            "@stan",
-            "@psalm"
-         ],
-        "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
-        "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+            "@stan"
+        ],
+        "cs-check": "phpcs -p --standard=phpcs.xml src/ tests/",
+        "cs-fix": "phpcbf --standard=phpcs.xml src/ tests/",
+        "fix-eol": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/fix-lineendings.ps1",
         "test": "phpunit --stderr",
+        "rector-check": "vendor/bin/rector process --dry-run",
+        "rector-fix": "vendor/bin/rector process",
         "stan": "phpstan analyse src/",
-        "psalm": "php vendor/psalm/phar/psalm.phar --show-info=false src/  --update-baseline ",
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.9.0 psalm/phar:^5.1.0 && mv composer.backup composer.json",
-        "stan-rebuild-baseline": "phpstan analyse --configuration phpstan.neon --error-format baselineNeon src/ > phpstan-baseline.neon",
-        "psalm-rebuild-baseline": "php vendor/psalm/phar/psalm.phar --show-info=false  --set-baseline=psalm-baseline.xml  src/",
-        "rector": "rector process src/",
-        "rector-setup": "cp composer.json composer.backup && composer require --dev rector/rector:^0.11.2 && mv composer.backup composer.json",
-        "coverage-test": "phpunit --stderr --coverage-clover=clover.xml"
+        "stan-baseline": "phpstan analyse --generate-baseline"
     }
 }

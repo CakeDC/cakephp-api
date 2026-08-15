@@ -85,7 +85,7 @@ class Auth
         'identityAttribute' => 'identity',
     ];
 
-    protected $_registry = null;
+    protected $_registry;
 
     /**
      * @var \CakeDC\Api\Service\Service
@@ -120,7 +120,7 @@ class Auth
      * @param array $config The config data.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (array_key_exists('service', $config)) {
             $this->_service = $config['service'];
@@ -136,7 +136,7 @@ class Auth
      *
      * @return void
      */
-    protected function _setDefaults()
+    protected function _setDefaults(): void
     {
         $defaults = [
         'authenticate' => ['CakeDC/Api.Token'],
@@ -165,7 +165,7 @@ class Auth
      * @param string|array $actions Controller action name or array of actions
      * @return void
      */
-    public function allow($actions)
+    public function allow($actions): void
     {
         $this->allowedActions = array_merge($this->allowedActions, (array)$actions);
     }
@@ -188,7 +188,7 @@ class Auth
      * @param string|array|null $actions Controller action name or array of actions
      * @return void
      */
-    public function deny($actions = null)
+    public function deny($actions = null): void
     {
         if ($actions === null) {
             $this->allowedActions = [];
@@ -196,7 +196,7 @@ class Auth
             return;
         }
         foreach ((array)$actions as $action) {
-            $i = array_search($action, $this->allowedActions);
+            $i = array_search($action, $this->allowedActions, true);
             if (is_int($i)) {
                 unset($this->allowedActions[$i]);
             }
@@ -210,11 +210,11 @@ class Auth
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return bool True if action is accessible without authentication else false
      */
-    protected function _isAllowed(Action $action)
+    protected function _isAllowed(Action $action): bool
     {
-        $action = strtolower($action->getName());
+        $action = strtolower((string)$action->getName());
 
-        return in_array($action, array_map('strtolower', $this->allowedActions)) ||
+        return in_array($action, array_map(strtolower(...), $this->allowedActions), true) ||
         in_array('*', $this->allowedActions);
     }
 
@@ -224,7 +224,7 @@ class Auth
      * @param string $name Name
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name): mixed
     {
         if (isset($this->{$name})) {
             return $this->{$name};
@@ -240,7 +240,7 @@ class Auth
      * @param string $value value of the attribute
      * @return void
      */
-    public function __set($name, $value)
+    public function __set(string $name, mixed $value): void
     {
         $this->{$name} = $value;
     }

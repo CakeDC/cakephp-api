@@ -32,7 +32,7 @@ class CrudIndexActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,7 +56,7 @@ class CrudIndexActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -67,13 +67,14 @@ class CrudIndexActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecute()
+    public function testExecute(): void
     {
-        $onFindEntities = $afterFindEntities = false;
-        $this->Action->getEventManager()->on('Action.Crud.onFindEntities', function () use (&$onFindEntities) {
+        $onFindEntities = false;
+        $afterFindEntities = false;
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntities', function () use (&$onFindEntities): void {
             $onFindEntities = true;
         });
-        $this->Action->getEventManager()->on('Action.Crud.afterFindEntities', function () use (&$afterFindEntities) {
+        $this->Action->getEventManager()->on('Action.Crud.afterFindEntities', function () use (&$afterFindEntities): void {
             $afterFindEntities = true;
         });
 

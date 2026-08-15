@@ -37,7 +37,7 @@ abstract class CrudAction extends Action
      * Object Identifier
      *
      * @var mixed     */
-    protected $_id = null;
+    protected $_id;
 
     /**
      * Object Identifier name
@@ -58,7 +58,7 @@ abstract class CrudAction extends Action
      * Used for nested services
      *
      * @var mixed     */
-    protected $_parentId = null;
+    protected $_parentId;
 
     /**
      * Parent Object Identifier name
@@ -135,7 +135,7 @@ abstract class CrudAction extends Action
     /**
      * @return \CakeDC\Api\Service\CrudService
      */
-    public function getService()
+    public function getService(): \CakeDC\Api\Service\CrudService
     {
         return $this->_service;
     }
@@ -145,7 +145,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->_id;
     }
@@ -165,7 +165,7 @@ abstract class CrudAction extends Action
      *
      * @return mixed|string
      */
-    public function getParentId()
+    public function getParentId(): mixed
     {
         return $this->_parentId;
     }
@@ -203,7 +203,7 @@ abstract class CrudAction extends Action
         $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', ['entity' => $entity]);
         if ($event->getResult()) {
-            $entity = $event->getResult();
+            return $event->getResult();
         }
 
         return $entity;
@@ -228,7 +228,7 @@ abstract class CrudAction extends Action
         $records = $query->all();
         $event = $this->dispatchEvent('Action.Crud.afterFindEntities', ['query' => $query, 'records' => $records]);
         if ($event->getResult() !== null) {
-            $records = $event->getResult();
+            return $event->getResult();
         }
 
         return $records;
@@ -250,7 +250,7 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key.
      * @return \Cake\Datasource\EntityInterface|array
      */
-    protected function _getEntity($primaryKey)
+    protected function _getEntity($primaryKey): \Cake\Datasource\EntityInterface|array
     {
         $query = $this->_getEntityQuery($primaryKey);
         if ($this->_finder !== null) {
@@ -264,7 +264,7 @@ abstract class CrudAction extends Action
         $record = $query->firstOrFail();
         $event = $this->dispatchEvent('Action.Crud.afterFindEntity', ['query' => $query, 'record' => $record]);
         if ($event->getResult() !== null) {
-            $record = $event->getResult();
+            return $event->getResult();
         }
 
         return $record;
@@ -276,7 +276,7 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key.
      * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _getEntityQuery($primaryKey)
+    protected function _getEntityQuery($primaryKey): \Cake\ORM\Query\SelectQuery
     {
         return $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
     }
@@ -298,12 +298,12 @@ abstract class CrudAction extends Action
         $primaryKey = (array)$primaryKey;
         if (count($key) !== count($primaryKey)) {
             $primaryKey = $primaryKey ?: [null];
-            $primaryKey = array_map(fn($key) => var_export($key, true), $primaryKey);
+            $primaryKey = array_map(fn($key): string => var_export($key, true), $primaryKey);
 
             $msg = sprintf(
                 'Record not found in table "%s" with primary key [%s]',
                 $table->getTable(),
-                implode($primaryKey, ', ')
+                implode(', ', $primaryKey)
             );
             throw new InvalidPrimaryKeyException($msg);
         }
@@ -321,10 +321,9 @@ abstract class CrudAction extends Action
     {
         if ($this->getTable()->save($entity)) {
             return $entity;
-        } else {
-            $message = __('Validation on {0} failed', $this->getTable()->getAlias());
-            throw new ValidationException($message, 0, null, $entity->getErrors());
         }
+        $message = __('Validation on {0} failed', $this->getTable()->getAlias());
+        throw new ValidationException($message, 0, null, $entity->getErrors());
     }
 
     /**
@@ -384,26 +383,26 @@ abstract class CrudAction extends Action
         }
 
         $labels = collection($schema->columns())
-            ->map(fn($column) => [
+            ->map(fn($column): array => [
                 'name' => $column,
-                'label' => __(Inflector::humanize(preg_replace('/_id$/', '', $column))),
+                'label' => __(Inflector::humanize(preg_replace('/_id$/', '', (string)$column))),
             ])
             ->combine('name', 'label')
             ->toArray();
 
         $associationTypes = ['BelongsTo', 'HasOne', 'HasMany', 'BelongsToMany'];
         $associations = collection($associationTypes)
-            ->map(fn(string $type) => [
+            ->map(fn(string $type): array => [
                 'type' => $type,
                 'assocs' => collection($table->associations()->getByType($type))
-                    ->map(fn(Association $assoc) => $assoc->getTarget()->getTable())
+                    ->map(fn(Association $assoc): string => $assoc->getTarget()->getTable())
                     ->toArray(),
             ])
             ->combine('type', 'assocs')
             ->toArray();
 
         $fieldTypes = collection($schema->columns())
-            ->map(fn(string $column) => [
+            ->map(fn(string $column): array => [
                 'name' => $column,
                 'column' => $schema->getColumn($column),
             ])

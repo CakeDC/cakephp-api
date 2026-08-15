@@ -15,11 +15,12 @@ namespace CakeDC\Api\Webauthn;
 
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use CakeDC\Api\Model\Entity\AuthStore;
 use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository;
-use CakeDC\Users\Model\Table\UsersTable;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
 use Cose\Algorithm\Signature\ECDSA\ES256K;
@@ -44,20 +45,11 @@ class BaseAdapter
 {
     public const STORE_PREFIX = 'api.Webauthn2fa';
 
-    /**
-     * @var \Cake\Http\ServerRequest
-     */
-    protected $request;
+    protected \Cake\Http\ServerRequest $request;
 
-    /**
-     * @var \CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository
-     */
-    protected $repository;
+    protected \CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository $repository;
 
-    /**
-     * @var \Cake\Datasource\EntityInterface|\CakeDC\Users\Model\Entity\User
-     */
-    private $user;
+    private \Cake\Datasource\EntityInterface $user;
 
     /**
      * @var \Webauthn\PublicKeyCredentialRpEntity
@@ -83,16 +75,16 @@ class BaseAdapter
      * Constructor.
      *
      * @param \Cake\Http\ServerRequest $request The request.
-     * @param \CakeDC\Users\Model\Table\UsersTable|null $usersTable The users table.
+     * @param \Cake\ORM\Table|null $usersTable The users table.
      * @param \Cake\Datasource\EntityInterface|\CakeDC\Users\Model\Entity\User $userData The user data.
      */
-    public function __construct(ServerRequest $request, ?UsersTable $usersTable, $userData)
+    public function __construct(ServerRequest $request, ?Table $usersTable, $userData)
     {
         $this->request = $request;
         /** @var \CakeDC\Api\Model\Table\AuthStoreTable $store */
         $store = TableRegistry::getTableLocator()->get('CakeDC/Api.AuthStore');
         $this->store = $store;
-        $session = $this->readStore();
+        $this->readStore();
         $this->rpEntity = new PublicKeyCredentialRpEntity(
             Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.appName'), // The application name
             Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.id')
@@ -130,7 +122,7 @@ class BaseAdapter
      *
      * @return mixed|array|null
      */
-    public function getUser()
+    public function getUser(): mixed
     {
         return $this->user;
     }
@@ -152,7 +144,7 @@ class BaseAdapter
      *
      * @return \CakeDC\Api\Model\Entity\AuthStore
      */
-    public function readStore()
+    public function readStore(): \CakeDC\Api\Model\Entity\AuthStore
     {
         /** @var \CakeDC\Api\Model\Entity\AuthStore|null $entity */
         $entity = $this->store->find()->where(['id' => $this->getStoreKey()])->first();
@@ -173,7 +165,7 @@ class BaseAdapter
      * @param array $data The data to save.
      * @return \CakeDC\Api\Model\Entity\AuthStore|false
      */
-    public function saveStore($data)
+    public function saveStore($data): \CakeDC\Api\Model\Entity\AuthStore|false
     {
         $entity = $this->readStore();
         $entity->store = $data;
@@ -186,7 +178,7 @@ class BaseAdapter
      *
      * @return bool
      */
-    public function deleteStore()
+    public function deleteStore(): bool
     {
         $entity = $this->readStore();
 
@@ -198,12 +190,11 @@ class BaseAdapter
      *
      * @return string
      */
-    public function getStoreKey()
+    public function getStoreKey(): string
     {
         $authHeader = $this->request->getHeader('Authorization');
-        if (is_array($authHeader)) {
-            $authHeader = array_pop($authHeader);
-        }
+        $authHeader = array_pop($authHeader);
+
         $options = [
             'tokenPrefix' => 'bearer',
         ];
@@ -216,12 +207,12 @@ class BaseAdapter
      *
      * @param \CakeDC\Api\Model\Entity\AuthStore $entity The entity to patch.
      * @param string $name The name of the data.
-     * @param array $options The options to patch.
+     * @param string|array $options The options to patch.
      * @return \CakeDC\Api\Model\Entity\AuthStore
      */
-    public function patchStore($entity, $name, $options)
+    public function patchStore($entity, $name, $options): \CakeDC\Api\Model\Entity\AuthStore
     {
-        $entity['store']['api']['Webauthn2fa'][$this->getDomain()][$name] = $options;
+        $entity->store['api']['Webauthn2fa'][$this->getDomain()][$name] = $options;
 
         return $entity;
     }
@@ -229,15 +220,15 @@ class BaseAdapter
     /**
      * Get the store data.
      *
-     * @param array $entity The entity to get data from.
+     * @param \CakeDC\Api\Model\Entity\AuthStore $entity The entity to get data from.
      * @param string $name The name of the data to get.
      * @return mixed|null
      */
-    public function getStore($entity, $name)
+    public function getStore(AuthStore $entity, $name): mixed
     {
         $path = self::STORE_PREFIX . '.' . $this->getDomain() . '.' . $name;
 
-        return Hash::get($entity['store'], $path, null);
+        return Hash::get($entity->store ?? [], $path);
     }
 
     /**
@@ -246,7 +237,7 @@ class BaseAdapter
      * @param bool $replace Whether to replace the domain.
      * @return string
      */
-    public function getDomain($replace = true)
+    public function getDomain($replace = true): string
     {
         return RequestParser::getDomain($this->request, $replace);
     }
@@ -266,7 +257,7 @@ class BaseAdapter
      */
     protected function getAttestationStatementSupportManager(): AttestationStatementSupportManager
     {
-        if ($this->attestationStatementSupportManager === null) {
+        if (!$this->attestationStatementSupportManager instanceof \Webauthn\AttestationStatement\AttestationStatementSupportManager) {
             $this->attestationStatementSupportManager = new AttestationStatementSupportManager();
             $this->attestationStatementSupportManager
                 ->add(new NoneAttestationStatementSupport());
@@ -302,7 +293,7 @@ class BaseAdapter
      */
     protected function getAlgorithmManager(): Manager
     {
-        if ($this->algorithmManager === null) {
+        if (!$this->algorithmManager instanceof \Cose\Algorithm\Manager) {
             $this->algorithmManager = Manager::create()->add(
                 ES256::create(),
                 ES256K::create(),

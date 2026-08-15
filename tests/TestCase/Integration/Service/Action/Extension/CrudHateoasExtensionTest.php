@@ -33,7 +33,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -48,13 +48,13 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testView()
+    public function testView(): void
     {
         $this->sendRequest('/articles/1', 'GET', []);
         $result = $this->getJsonResponse();
@@ -88,7 +88,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
         $this->assertEquals($links, Hash::get($result, 'links'));
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4]);
         $result = $this->getJsonResponse();
@@ -110,7 +110,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
         $this->assertEquals($links, Hash::get($result, 'links'));
     }
 
-    public function testViewNested()
+    public function testViewNested(): void
     {
         $this->sendRequest('/authors/1/articles/1', 'GET', []);
         $result = $this->getJsonResponse();
@@ -150,7 +150,7 @@ class CrudHateoasExtensionTest extends IntegrationTestCase
         $this->assertEquals($links, Hash::get($result, 'links'));
     }
 
-    public function testIndexNested()
+    public function testIndexNested(): void
     {
         $this->sendRequest('/authors/1/articles', 'GET', ['limit' => 4]);
         $result = $this->getJsonResponse();

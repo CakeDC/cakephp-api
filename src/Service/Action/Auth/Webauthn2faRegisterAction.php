@@ -32,7 +32,7 @@ class Webauthn2faRegisterAction extends Action
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $user = $this->getIdentity();
         $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);

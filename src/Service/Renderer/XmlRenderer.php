@@ -105,10 +105,10 @@ class XmlRenderer extends BaseRenderer
             $data = $data->toArray();
         }
         foreach ($data as $name => $value) {
-            if (is_object($value) && $value instanceof \DateTime) {
+            if ($value instanceof \DateTime) {
                 $property = [];
                 $property['@'] = $value->format(\DateTime::ISO8601);
-            } elseif (is_object($value) && $value instanceof DateTime) {
+            } elseif ($value instanceof DateTime) {
                 $property = [];
                 $property['@'] = $value->toIso8601String();
             } elseif (is_object($value)) {
@@ -163,10 +163,10 @@ class XmlRenderer extends BaseRenderer
     /**
      * Encoded object as xml.
      *
-     * @param mixed $data Encoded data.
+     * @param array|object $data Encoded data.
      * @return string
      */
-    protected function _encode($data): string
+    protected function _encode(object|array $data): string
     {
         $xmlObject = Xml::fromArray($data, ['format' => 'tags']);
 

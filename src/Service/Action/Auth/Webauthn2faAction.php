@@ -29,9 +29,9 @@ class Webauthn2faAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return array
      */
-    public function execute()
+    public function execute(): array
     {
         $user = $this->getIdentity();
         $request = $this->getService()->getRequest();

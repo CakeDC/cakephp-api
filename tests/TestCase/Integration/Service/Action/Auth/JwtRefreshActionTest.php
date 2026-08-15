@@ -43,7 +43,7 @@ class JwtRefreshActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         TableRegistry::getTableLocator()->clear();
@@ -56,13 +56,13 @@ class JwtRefreshActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testSuccessRefresh()
+    public function testSuccessRefresh(): void
     {
         $this->sendRequest('/auth/jwt_login', 'POST', ['username' => 'user-1', 'password' => '12345']);
         $result = $this->getJsonResponse();

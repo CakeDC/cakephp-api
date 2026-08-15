@@ -34,7 +34,7 @@ trait FixturesTrait
         'plugin.CakeDC/Api.ArticlesTags',
     ];
 
-    public function mergeFixtures()
+    public function mergeFixtures(): void
     {
         if (empty($this->fixtures)) {
             $this->fixtures = $this->defaultFixtures;

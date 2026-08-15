@@ -40,7 +40,7 @@ class CrudAddActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -50,7 +50,7 @@ class CrudAddActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         unset($this->Action, $this->request);
@@ -62,7 +62,7 @@ class CrudAddActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteSuccess()
+    public function testExecuteSuccess(): void
     {
         $this->_initializeAction([
             'title' => 'New message',
@@ -78,7 +78,7 @@ class CrudAddActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteValidationError()
+    public function testExecuteValidationError(): void
     {
         $this->expectException(ValidationException::class);
         $this->_initializeAction([
@@ -89,7 +89,7 @@ class CrudAddActionTest extends TestCase
         $this->assertTrue($result instanceof EntityInterface);
     }
 
-    protected function _initializeAction($post = [])
+    protected function _initializeAction($post = []): void
     {
         $this->_initializeRequest([
             'params' => [

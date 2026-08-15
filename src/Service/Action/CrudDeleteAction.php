@@ -25,7 +25,7 @@ class CrudDeleteAction extends CrudAction
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $record = $this->_getEntity($this->_id);
 

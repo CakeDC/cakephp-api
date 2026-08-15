@@ -90,7 +90,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
         }
 
         $user = $currentUser->toArray();
-        $user['api_token'] = $currentUser['api_token'];
+        $user['api_token'] = $currentUser->get('api_token');
 
         $cleanup = ['created', 'modified', 'is_superuser'];
         foreach ($cleanup as $field) {

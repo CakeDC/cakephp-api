@@ -34,9 +34,9 @@ class DummyAction extends Action
      * Describe service.
      * For services that inherited from CrudService it provides action description using CrudDescribeAction.
      *
-     * @return mixed
+     * @return null
      */
-    public function execute()
+    public function execute(): null
     {
         return null;
     }

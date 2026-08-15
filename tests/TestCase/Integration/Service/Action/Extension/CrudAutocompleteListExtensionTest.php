@@ -33,7 +33,7 @@ class CrudAutocompleteListExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -48,13 +48,13 @@ class CrudAutocompleteListExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testNoAutocompleteList()
+    public function testNoAutocompleteList(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'autocomplete_list' => false]);
         $result = $this->getJsonResponse();
@@ -63,7 +63,7 @@ class CrudAutocompleteListExtensionTest extends IntegrationTestCase
         $this->assertEquals(['id', 'author_id', 'title', 'body', 'published'], array_keys(Hash::get($result, 'data.0')));
     }
 
-    public function testAutocompleteList()
+    public function testAutocompleteList(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 4, 'autocomplete_list' => true]);
         $result = $this->getJsonResponse();

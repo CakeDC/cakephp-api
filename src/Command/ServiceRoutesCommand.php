@@ -66,15 +66,10 @@ class ServiceRoutesCommand extends Command
         }
 
         $service = ServiceRegistry::getServiceLocator()->get($serviceName);
-        if ($service === null) {
-            $io->error(__('Service "{0}" not found', $serviceName));
-
-            return Command::CODE_ERROR;
-        }
 
         $availableRoutes = $service->routes();
-
-        $output = $duplicateRoutesCounter = [];
+        $output = [];
+        $duplicateRoutesCounter = [];
 
         foreach ($availableRoutes as $route) {
             $methods = isset($route->defaults['_method']) ? (array)$route->defaults['_method'] : [''];
@@ -105,9 +100,7 @@ class ServiceRoutesCommand extends Command
         }
 
         if ($args->getOption('sort')) {
-            usort($output, function ($a, $b) {
-                return strcasecmp($a[0], $b[0]);
-            });
+            usort($output, fn(array $a, array $b): int => strcasecmp($a[0], $b[0]));
         }
 
         array_unshift($output, $header);
@@ -141,7 +134,7 @@ class ServiceRoutesCommand extends Command
             }
         }
 
-        if ($duplicateRoutes) {
+        if ($duplicateRoutes !== []) {
             array_unshift($duplicateRoutes, $header);
             $io->warning('The following possible route collisions were detected.');
             $io->helper('table')->output($duplicateRoutes);

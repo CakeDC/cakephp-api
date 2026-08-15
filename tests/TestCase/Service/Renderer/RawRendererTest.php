@@ -36,7 +36,7 @@ class RawRendererTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class RawRendererTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -59,12 +59,9 @@ class RawRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererInitializeByClassName()
+    public function testRendererInitializeByClassName(): void
     {
-        $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
-            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
-            ->getMock();
+        $response = $this->createStub(\Cake\Http\Response::class);
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
@@ -83,7 +80,7 @@ class RawRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererSuccess()
+    public function testRendererSuccess(): void
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
@@ -109,15 +106,15 @@ class RawRendererTest extends TestCase
         $response->expects($this->once())
                  ->method('withStatus')
                  ->with($statusCode)
-                ->will($this->returnValue($response));
+                ->willReturn($response);
         $response->expects($this->once())
                  ->method('withStringBody')
                 ->with($data)
-                ->will($this->returnValue($response));
+                ->willReturn($response);
         $response->expects($this->once())
                  ->method('withType')
                  ->with('text/plain')
-                ->will($this->returnValue($response));
+                ->willReturn($response);
 
         $renderer->response($result);
     }
@@ -127,7 +124,7 @@ class RawRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererError()
+    public function testRendererError(): void
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
@@ -150,11 +147,11 @@ class RawRendererTest extends TestCase
         $response->expects($this->once())
             ->method('withStringBody')
             ->with('Unauthenticated')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
         $response->expects($this->once())
             ->method('withType')
             ->with('text/plain')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
 
         $renderer->error($error);
     }

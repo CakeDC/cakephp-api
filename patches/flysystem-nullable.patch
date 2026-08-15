@@ -1,0 +1,72 @@
+diff --git a/src/FileExistsException.php b/src/FileExistsException.php
+--- a/src/FileExistsException.php
++++ b/src/FileExistsException.php
+@@ -18,7 +18,7 @@ class FileExistsException extends Exception
+      * @param int           $code
+      * @param BaseException $previous
+      */
+-    public function __construct($path, $code = 0, BaseException $previous = null)
++    public function __construct($path, $code = 0, ?BaseException $previous = null)
+     {
+         $this->path = $path;
+ 
+diff --git a/src/FileNotFoundException.php b/src/FileNotFoundException.php
+--- a/src/FileNotFoundException.php
++++ b/src/FileNotFoundException.php
+@@ -18,7 +18,7 @@ class FileNotFoundException extends Exception
+      * @param int        $code
+      * @param \Exception $previous
+      */
+-    public function __construct($path, $code = 0, BaseException $previous = null)
++    public function __construct($path, $code = 0, ?BaseException $previous = null)
+     {
+         $this->path = $path;
+ 
+diff --git a/src/Filesystem.php b/src/Filesystem.php
+--- a/src/Filesystem.php
++++ b/src/Filesystem.php
+@@ -360,7 +360,7 @@ class Filesystem implements FilesystemInterface
+     /**
+      * @inheritdoc
+      */
+-    public function get($path, Handler $handler = null)
++    public function get($path, ?Handler $handler = null)
+     {
+         $path = Util::normalizePath($path);
+ 
+diff --git a/src/FilesystemInterface.php b/src/FilesystemInterface.php
+--- a/src/FilesystemInterface.php
++++ b/src/FilesystemInterface.php
+@@ -271,7 +271,7 @@ interface FilesystemInterface
+      *
+      * @return Handler Either a file or directory handler.
+      */
+-    public function get($path, Handler $handler = null);
++    public function get($path, ?Handler $handler = null);
+ 
+     /**
+      * Register a plugin.
+diff --git a/src/Handler.php b/src/Handler.php
+--- a/src/Handler.php
++++ b/src/Handler.php
+@@ -25,7 +25,7 @@ abstract class Handler
+      * @param FilesystemInterface $filesystem
+      * @param string              $path
+      */
+-    public function __construct(FilesystemInterface $filesystem = null, $path = null)
++    public function __construct(?FilesystemInterface $filesystem = null, $path = null)
+     {
+         $this->path = $path;
+         $this->filesystem = $filesystem;
+diff --git a/src/MountManager.php b/src/MountManager.php
+--- a/src/MountManager.php
++++ b/src/MountManager.php
+@@ -639,7 +639,7 @@ class MountManager implements FilesystemInterface
+      *
+      * @return Handler Either a file or directory handler.
+      */
+-    public function get($path, Handler $handler = null)
++    public function get($path, ?Handler $handler = null)
+     {
+         list($prefix, $path) = $this->getPrefixAndPath($path);
+ 

@@ -30,15 +30,15 @@ class OtpVerifyCheckAction extends OtpVerifyAction
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $codeVerified = false;
         $verificationCode = $this->getData('code');
         $user = $this->getIdentity();
         $entity = $this->getUsersTable()->get($user['id']);
 
-        if (!empty($entity['secret'])) {
-            $codeVerified = $this->verifyCode($entity['secret'], $verificationCode);
+        if (!empty($entity->secret)) {
+            $codeVerified = $this->verifyCode($entity->secret, $verificationCode);
         }
 
         if (!$codeVerified) {

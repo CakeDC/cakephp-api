@@ -37,7 +37,7 @@ class DescribeAction extends Action
             ->requirePresence('service', 'create')
             ->notBlank('service');
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -50,7 +50,7 @@ class DescribeAction extends Action
      *
      * @return mixed
      */
-    public function execute()
+    public function execute(): mixed
     {
         $serviceName = $this->getData()['service'];
         $service = ServiceRegistry::getServiceLocator()->get($serviceName);

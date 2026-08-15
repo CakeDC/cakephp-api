@@ -61,11 +61,9 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Cake\Core\ContainerInterface) {
             $this->container = $request->getAttribute('container');
         }
-        $response = null;
-        $service = null;
         $prefix = Configure::read('Api.prefix');
         if (empty($prefix)) {
             $prefix = 'api';
@@ -94,10 +92,10 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler Request handler.
-     * @param mixed $matches Matches definition.
+     * @param array $matches Matches definition.
      * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface
      */
-    protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, $matches)
+    protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, array $matches): \Psr\Http\Message\ResponseInterface|\Cake\Http\Response
     {
         $service = null;
         $response = null;
@@ -122,7 +120,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                                       ->get($serviceName, $options);
             $result = $service->dispatchPrepareAction();
 
-            if ($result !== null) {
+            if ($result instanceof \CakeDC\Api\Service\Action\Result) {
                 $response = $service->respond($result);
             } else {
                 $request = $request->withAttribute('service', $service);
@@ -130,7 +128,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 return $handler->handle($request);
             }
         } catch (UnauthenticatedException $e) {
-            if ($service !== null) {
+            if ($service instanceof \CakeDC\Api\Service\Service) {
                 $service->getResult()
                         ->setCode(401);
                 $service->getResult()
@@ -138,7 +136,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 $response = $service->respond();
             }
         } catch (Exception $e) {
-            if ($service !== null) {
+            if ($service instanceof \CakeDC\Api\Service\Service) {
                 $service->getResult()
                         ->setCode(400);
                 $service->getResult()
@@ -146,8 +144,8 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 $response = $service->respond();
             }
         }
-        if ($response === null) {
-            $response = (new Response())->withStatus(400);
+        if (!$response instanceof \Cake\Http\Response) {
+            return (new Response())->withStatus(400);
         }
 
         return $response;

@@ -1,10 +1,35 @@
 includes:
     - phpstan-baseline.neon
+    - vendor/cakedc/cakephp-phpstan/extension.neon
 
 parameters:
-    level: 2
+    cakeDC:
+        appNamespace: CakeDC\Api
+    level: 5
+    paths:
+        - src
     bootstrapFiles:
         - tests/bootstrap.php
+    tmpDir: build/phpstan
+    excludePaths:
+    # CakePHP declares @template TSubject on the dispatchEvent() METHOD, not on the
+    # class, so EventDispatcherInterface/Trait are not generic CLASSES to phpstan.
+    # The @implements/@use <X> tags are kept (framework's own pattern); these
+    # generics.notGeneric reports are recognized false positives, scoped to files.
     ignoreErrors:
+        - identifier: generics.notGeneric
+          path: src/Service/Action/Action.php
+        - identifier: generics.notGeneric
+          path: src/Service/Service.php
+        - identifier: generics.notGeneric
+          path: src/Service/Auth/Auth.php
+        - identifier: generics.notGeneric
+          path: src/Service/ExtensionRegistry.php
+        - identifier: generics.notGeneric
+          path: src/Service/Action/ExtensionRegistry.php
+        # Public library trait — not used internally, but part of the plugin API
+        # (consuming apps may use it to get the service locator).
+        - identifier: trait.unused
+          path: src/Service/Locator/LocatorAwareTrait.php
 
 services:

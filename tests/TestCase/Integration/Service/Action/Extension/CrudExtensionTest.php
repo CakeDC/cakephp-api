@@ -27,7 +27,7 @@ class CrudExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -41,13 +41,13 @@ class CrudExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();
@@ -55,7 +55,7 @@ class CrudExtensionTest extends IntegrationTestCase
         $this->assertEquals(15, is_countable($result['data']) ? count($result['data']) : 0);
     }
 
-    public function testView()
+    public function testView(): void
     {
         $this->sendRequest('/articles/1', 'GET');
         $result = $this->getJsonResponse();
@@ -70,7 +70,7 @@ class CrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $result['data']);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $article = [
             'author_id' => 15,
@@ -92,7 +92,7 @@ class CrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $res);
     }
 
-    public function testEdit()
+    public function testEdit(): void
     {
         $article = [
             'author_id' => 15,
@@ -114,7 +114,7 @@ class CrudExtensionTest extends IntegrationTestCase
         $this->assertEquals($article, $res);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->sendRequest('/articles/1', 'DELETE');
         $result = $this->getJsonResponse();

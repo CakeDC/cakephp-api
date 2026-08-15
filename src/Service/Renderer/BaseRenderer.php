@@ -95,7 +95,7 @@ abstract class BaseRenderer
         $count = count($trace);
         for ($i = 0; $i < $count; $i++) {
             foreach (array_keys($trace[$i]) as $key) {
-                if ($key === 'object' || $key === 'type' || $key === 'args') {
+                if (in_array($key, ['object', 'type', 'args'], true)) {
                     unset($trace[$i][$key]);
                 }
             }

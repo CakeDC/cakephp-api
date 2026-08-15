@@ -13,14 +13,15 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use ArrayAccess;
+use Authentication\IdentityInterface;
+use Cake\Datasource\EntityInterface;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\LoginTrait;
 use CakeDC\Users\Exception\UserNotFoundException;
-use Authentication\IdentityInterface;
-use Cake\Datasource\EntityInterface;
 
 /**
  * Class LoginAction
@@ -33,6 +34,7 @@ class LoginAction extends Action
     use LoginTrait;
 
     protected string $_identifiedField = 'username';
+
     protected string $_passwordField = 'password';
 
     /**
@@ -68,7 +70,7 @@ class LoginAction extends Action
             ->requirePresence($this->_passwordField, 'create')
             ->notBlank($this->_passwordField);
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -86,18 +88,20 @@ class LoginAction extends Action
         $user = $this->Auth->getIdentity();
 
         if ($user instanceof IdentityInterface) {
-            $user = $user->getOriginalData()->toArray();
+            $user = $user->getOriginalData();
         }
         if ($user instanceof EntityInterface) {
             $user = $user->toArray();
+        } elseif ($user instanceof ArrayAccess) {
+            $user = (array)$user;
         }
 
         $user = $this->_afterIdentifyUser($user, $socialLogin);
-        if (empty($user)) {
+        if ($user === []) {
             throw new UserNotFoundException(__d('CakeDC/Api', 'User not found'), 401);
-        } else {
-            return $user;
         }
+
+        return $user;
     }
 
     /**

@@ -42,7 +42,7 @@ class JwtLoginActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         TableRegistry::getTableLocator()->clear();
@@ -55,13 +55,13 @@ class JwtLoginActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testSuccessLogin()
+    public function testSuccessLogin(): void
     {
         $this->sendRequest('/auth/jwt_login', 'POST', ['username' => 'user-1', 'password' => '12345']);
         $result = $this->getJsonResponse();
@@ -82,7 +82,7 @@ class JwtLoginActionTest extends IntegrationTestCase
         $this->assertEquals(15, is_countable($dataResponse['data']) ? count($dataResponse['data']) : 0);
     }
 
-    public function testLoginFail()
+    public function testLoginFail(): void
     {
         $this->sendRequest('/auth/jwt_login', 'POST', ['username' => 'user-1', 'password' => '111']);
         $result = $this->getJsonResponse();

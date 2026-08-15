@@ -31,7 +31,7 @@ class ServiceRegistryTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -41,7 +41,7 @@ class ServiceRegistryTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
         parent::tearDown();
@@ -52,7 +52,7 @@ class ServiceRegistryTest extends TestCase
      *
      * @return void
      */
-    public function testLoad()
+    public function testLoad(): void
     {
         $this->_initializeRequest([
             'params' => [
@@ -77,7 +77,7 @@ class ServiceRegistryTest extends TestCase
      *
      * @return void
      */
-    public function testLoadNested()
+    public function testLoadNested(): void
     {
         $this->_initializeRequest([
             'params' => [

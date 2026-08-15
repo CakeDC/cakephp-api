@@ -21,8 +21,12 @@ namespace CakeDC\Api\Test;
 class Settings
 {
     public const USER1 = '00000000-0000-0000-0000-000000000001';
+
     public const USER2 = '00000000-0000-0000-0000-000000000002';
+
     public const USER4 = '00000000-0000-0000-0000-000000000004';
+
     public const USER5 = '00000000-0000-0000-0000-000000000005';
+
     public const USER6 = '00000000-0000-0000-0000-000000000006';
 }

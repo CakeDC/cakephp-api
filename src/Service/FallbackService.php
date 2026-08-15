@@ -32,7 +32,7 @@ class FallbackService extends NestedCrudService
      *
      * @var string
      */
-    protected $_table = null;
+    protected $_table;
 
     /**
      * Initialize method
@@ -58,14 +58,14 @@ class FallbackService extends NestedCrudService
 
         $defaultOptions = $this->routerDefaultOptions();
         $builder = ApiRouter::createRouteBuilder('/', []);
-        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions) {
+        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions): void {
             $routes->setExtensions($this->_routeExtensions);
             $options = $defaultOptions;
             $options['map'] = array_merge($options['map'], [
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
             ]);
-            $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table) {
+            $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table): void {
                 $routes->setExtensions($this->_routeExtensions);
 
                 $keys = ['HasMany'/*, 'HasOne'*/];
@@ -76,7 +76,7 @@ class FallbackService extends NestedCrudService
                         $target = $assoc->getTarget();
                         $alias = $target->getAlias();
 
-                        $targetClass = get_class($target);
+                        $targetClass = $target::class;
                         [, $className] = namespaceSplit($targetClass);
                         $className = preg_replace('/(.*)Table$/', '\1', $className);
                         if ($className === '') {

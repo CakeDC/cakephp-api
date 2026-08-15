@@ -26,13 +26,15 @@ use Cake\Utility\Hash;
 trait ConfigTrait
 {
     public $request;
+
     public $response;
+
     public $Controller;
 
     /**
      * Configure public auth access
      */
-    protected function _publicAccess()
+    protected function _publicAccess(): void
     {
         $config = Configure::read('Test.Api');
         $config['Auth'] = [
@@ -57,7 +59,7 @@ trait ConfigTrait
     /**
      * Configure token auth access
      */
-    protected function _authAccess()
+    protected function _authAccess(): void
     {
         $config = (array)Configure::read('Test.Api');
         $auth = [
@@ -81,7 +83,7 @@ trait ConfigTrait
     /**
      * Configure token auth access
      */
-    protected function _tokenAccess()
+    protected function _tokenAccess(): void
     {
         $config = (array)Configure::read('Test.Api');
         $config['Auth'] = [
@@ -116,7 +118,7 @@ trait ConfigTrait
      * @param mixed $options An options.
      * @return void
      */
-    protected function _addSettingByPath($path, $options)
+    protected function _addSettingByPath(string $path, $options): void
     {
         $config = (array)Configure::read('Test.Api');
         $config = Hash::insert($config, $path, $options);
@@ -129,7 +131,7 @@ trait ConfigTrait
      * @param array|string $extension
      * @param bool $overwrite Owerwrite flag.
      */
-    protected function _loadDefaultExtensions($extension, $overwrite = false)
+    protected function _loadDefaultExtensions($extension, $overwrite = false): void
     {
         $config = (array)Configure::read('Test.Api');
         $path = 'Service.default.Action.default.Extension';
@@ -146,7 +148,7 @@ trait ConfigTrait
      * @param array $options Options.
      * @return void
      */
-    protected function _initializeRequest($requestOptions = [], $method = 'GET', $options = [])
+    protected function _initializeRequest(array $requestOptions = [], $method = 'GET', array $options = []): void
     {
         $_SERVER['REQUEST_METHOD'] = $method;
         if (empty($requestOptions['params'])) {
@@ -162,7 +164,7 @@ trait ConfigTrait
         $this->request = new ServerRequest($requestOptions);
 
         $this->response = empty($options['response']) ? new Response() : $options['response'];
-        $this->Controller = $this->createMock(\Cake\Controller\Controller::class);
+        $this->Controller = $this->createStub(\Cake\Controller\Controller::class);
         $this->Controller->setRequest($this->request);
         $this->Controller->setResponse($this->response);
     }

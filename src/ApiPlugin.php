@@ -29,7 +29,7 @@ class ApiPlugin extends BasePlugin
     /**
      * @inheritDoc
      */
-    public function routes($routes): void
+    public function routes(\Cake\Routing\RouteBuilder $routes): void
     {
         $middlewares = Configure::read('Api.Middleware', []);
         foreach ($middlewares as $alias => $middleware) {
@@ -46,13 +46,11 @@ class ApiPlugin extends BasePlugin
                 } else {
                     $this->registerMiddleware($routes, $alias, new $class($request));
                 }
+            } elseif (array_key_exists('params', $middleware)) {
+                $options = $middleware['params'];
+                $this->registerMiddleware($routes, $alias, new $class($options));
             } else {
-                if (array_key_exists('params', $middleware)) {
-                    $options = $middleware['params'];
-                    $this->registerMiddleware($routes, $alias, new $class($options));
-                } else {
-                    $this->registerMiddleware($routes, $alias, new $class());
-                }
+                $this->registerMiddleware($routes, $alias, new $class());
             }
         }
 
@@ -67,7 +65,7 @@ class ApiPlugin extends BasePlugin
      * @param string $class Middleware class instance.
      * @return void
      */
-    protected function registerMiddleware($routes, $alias, $class)
+    protected function registerMiddleware($routes, string $alias, \Psr\Http\Server\MiddlewareInterface|\Closure|string $class): void
     {
         $routes->registerMiddleware($alias, $class);
         $this->middlewares[$alias] = $class;

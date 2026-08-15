@@ -17,7 +17,7 @@ use Cake\Error\ExceptionTrap;
 use Cake\Mailer\Mailer;
 use Cake\Utility\Security;
 
-$findRoot = function () {
+$findRoot = function (): ?string {
     $root = dirname(__DIR__);
     if (is_dir($root . '/vendor/cakephp/cakephp')) {
         return $root;
@@ -36,7 +36,7 @@ $findRoot = function () {
     return null;
 };
 
-function def($name, $value)
+function def($name, $value): void
 {
     if (!defined($name)) {
         define($name, $value);

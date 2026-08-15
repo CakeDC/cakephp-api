@@ -60,7 +60,7 @@ class SocialLoginAction extends Action
         $validator
             ->requirePresence('options', 'create');
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -73,16 +73,18 @@ class SocialLoginAction extends Action
      * @return mixed
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): mixed
     {
         $input = $this->getData();
         $data = $input['data'];
         $options = $input['options'];
 
         try {
-            $result = $this->getUsersTable()->socialLogin($data, $options);
+            /** @var \CakeDC\Users\Model\Table\UsersTable $usersTable */
+            $usersTable = $this->getUsersTable();
+            $result = $usersTable->socialLogin($data, $options);
             if ($result instanceof EntityInterface) {
-                $result = $result->toArray();
+                return $result->toArray();
             }
 
             return $result;

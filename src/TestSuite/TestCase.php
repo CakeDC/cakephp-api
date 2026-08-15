@@ -40,7 +40,7 @@ class TestCase extends BaseTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -50,7 +50,7 @@ class TestCase extends BaseTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         ServiceRegistry::getServiceLocator()->clear();

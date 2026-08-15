@@ -56,7 +56,7 @@ class ResetPasswordRequestAction extends Action
             ->requirePresence('reference', 'create')
             ->notBlank('reference');
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -69,7 +69,7 @@ class ResetPasswordRequestAction extends Action
      * @return mixed
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): mixed
     {
         $data = $this->getData();
         $reference = $data['reference'];
@@ -83,18 +83,17 @@ class ResetPasswordRequestAction extends Action
                 'ensureActive' => Configure::read('Users.Registration.ensureActive'),
             ];
             if (!empty($baseUrl)) {
-                $options['linkGenerator'] = function ($token) use ($baseUrl) {
-                    return $baseUrl . '?token=' . $token;
-                };
+                $options['linkGenerator'] = fn($token): string => $baseUrl . '?token=' . $token;
             }
 
-            $resetUser = $this->getUsersTable()->getBehavior('Password')->resetToken($reference, $options);
+            /** @var \CakeDC\Users\Model\Behavior\PasswordBehavior $passwordBehavior */
+            $passwordBehavior = $this->getUsersTable()->getBehavior('Password');
+            $resetUser = $passwordBehavior->resetToken($reference, $options);
             if ($resetUser) {
                 return __d('CakeDC/Api', 'Please check your email to continue with password reset process');
-            } else {
-                $message = __d('CakeDC/Api', 'The password token could not be generated. Please try again');
-                throw new Exception($message, 500);
             }
+            $message = __d('CakeDC/Api', 'The password token could not be generated. Please try again');
+            throw new Exception($message, 500);
         } catch (UserNotFoundException $exception) {
             throw new Exception(__d('CakeDC/Api', 'User {0} was not found', $reference), 404, $exception);
         } catch (UserNotActiveException $exception) {

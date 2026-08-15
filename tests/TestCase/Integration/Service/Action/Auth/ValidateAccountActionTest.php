@@ -31,7 +31,7 @@ class ValidateAccountActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_authAccess();
@@ -43,13 +43,13 @@ class ValidateAccountActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testSuccessValidateAccount()
+    public function testSuccessValidateAccount(): void
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-6', 'password' => '12345']);
         $result = $this->getJsonResponse();

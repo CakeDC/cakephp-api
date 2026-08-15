@@ -15,7 +15,6 @@ namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Query\SelectQuery;
 use CakeDC\Api\Service\Action\Action;
 
 /**
@@ -77,9 +76,9 @@ class PaginateExtension extends Extension implements EventListenerInterface
         $pageField = $this->getConfig('pageField');
         if (!empty($data[$pageField]) && is_numeric($data[$pageField])) {
             return (int)$data[$pageField];
-        } else {
-            return 1;
         }
+
+        return 1;
     }
 
     /**
@@ -88,7 +87,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance
      * @return mixed
      */
-    protected function _limit(Action $action)
+    protected function _limit(Action $action): mixed
     {
         $data = $action->getData();
         $limitField = $this->getConfig('limitField');
@@ -98,9 +97,9 @@ class PaginateExtension extends Extension implements EventListenerInterface
         }
         if (!empty($limitField) && !empty($data[$limitField]) && is_numeric($data[$limitField])) {
             return min((int)$data[$limitField], $maxLimit);
-        } else {
-            return $maxLimit;
         }
+
+        return $maxLimit;
     }
 
     /**

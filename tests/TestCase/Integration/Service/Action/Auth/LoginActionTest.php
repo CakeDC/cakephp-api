@@ -32,7 +32,7 @@ class LoginActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_authAccess();
@@ -44,13 +44,13 @@ class LoginActionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testSuccessLogin()
+    public function testSuccessLogin(): void
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-1', 'password' => '12345']);
         $result = $this->getJsonResponse();
@@ -73,7 +73,7 @@ class LoginActionTest extends IntegrationTestCase
         $this->assertEquals($expected, $data);
     }
 
-    public function testLoginFail()
+    public function testLoginFail(): void
     {
         $this->sendRequest('/auth/login', 'POST', ['username' => 'user-1', 'password' => '111']);
         $result = $this->getJsonResponse();

@@ -43,7 +43,7 @@ class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuth
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return Configure::read($this->enabledKey) !== false;
     }
@@ -54,7 +54,7 @@ class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuth
      * @param array $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null)
+    public function isRequired(?array $user = null): bool
     {
         return !empty($user) && $this->isEnabled();
     }

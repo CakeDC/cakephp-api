@@ -25,7 +25,7 @@ class FallbackServiceTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->_publicAccess();
         parent::setUp();
@@ -36,12 +36,12 @@ class FallbackServiceTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
 
-    public function testArticlesIndex()
+    public function testArticlesIndex(): void
     {
         $this->sendRequest('/articles', 'GET', ['limit' => 5]);
         $this->assertResponseOk();

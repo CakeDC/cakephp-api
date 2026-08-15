@@ -17,7 +17,7 @@ class ServiceRoutesCommandTest extends TestCase
     /**
      * setUp method
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->_publicAccess();
         parent::setUp();
@@ -26,7 +26,7 @@ class ServiceRoutesCommandTest extends TestCase
     /**
      * tearDown method
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         ServiceRegistry::getServiceLocator()->clear();

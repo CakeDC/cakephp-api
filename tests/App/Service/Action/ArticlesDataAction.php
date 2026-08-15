@@ -42,12 +42,12 @@ class ArticlesDataAction extends CrudAction
         return true;
     }
 
-    public function execute()
+    public function execute(): array
     {
         return $this->testService->data();
     }
 
-    public function getTestService()
+    public function getTestService(): \CakeDC\Api\Test\App\DI\Service\TestService
     {
         return $this->testService;
     }

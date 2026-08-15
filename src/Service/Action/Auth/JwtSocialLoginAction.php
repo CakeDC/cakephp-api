@@ -27,10 +27,10 @@ class JwtSocialLoginAction extends Action
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return false|array
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): false|array
     {
         $user = parent::execute();
 

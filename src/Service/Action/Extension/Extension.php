@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Core\InstanceConfigTrait;
+use Cake\Event\EventListenerInterface;
 use CakeDC\Api\Service\Action\ExtensionRegistry;
 
 /**
@@ -21,7 +22,7 @@ use CakeDC\Api\Service\Action\ExtensionRegistry;
  *
  * @package CakeDC\Api\Service\Action\Extension
  */
-abstract class Extension
+abstract class Extension implements EventListenerInterface
 {
     use InstanceConfigTrait;
 

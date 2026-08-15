@@ -43,7 +43,7 @@ class DescribeActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ class DescribeActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -83,7 +83,7 @@ class DescribeActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteSuccess()
+    public function testExecuteSuccess(): void
     {
         $this->Action = new DescribeAction([
             'service' => $this->Service,

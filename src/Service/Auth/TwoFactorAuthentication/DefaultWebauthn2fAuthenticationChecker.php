@@ -26,7 +26,7 @@ class DefaultWebauthn2fAuthenticationChecker implements Webauthn2fAuthentication
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return Configure::read('Api.Webauthn2fa.enabled') !== false;
     }
@@ -37,7 +37,7 @@ class DefaultWebauthn2fAuthenticationChecker implements Webauthn2fAuthentication
      * @param array $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null)
+    public function isRequired(?array $user = null): bool
     {
         return !empty($user) && $this->isEnabled();
     }

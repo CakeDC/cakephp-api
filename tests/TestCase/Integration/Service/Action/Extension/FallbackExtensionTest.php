@@ -27,7 +27,7 @@ class FallbackExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -41,13 +41,13 @@ class FallbackExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Configure::write('Test.Api.Extension', null);
+        Configure::write('Test.Api.Extension');
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();

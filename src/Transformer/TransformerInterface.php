@@ -30,4 +30,3 @@ interface TransformerInterface
      */
     public function transform(mixed $data): array;
 }
-

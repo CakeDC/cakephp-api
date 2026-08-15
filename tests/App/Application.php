@@ -84,7 +84,7 @@ class Application extends BaseApplication
     /**
      * @inheritDoc
      */
-    public function routes($routes): void
+    public function routes(\Cake\Routing\RouteBuilder $routes): void
     {
         $middlewares = Configure::read('Api.Middleware');
         foreach ($middlewares as $alias => $middleware) {

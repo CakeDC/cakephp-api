@@ -31,7 +31,7 @@ class CrudAddAction extends CrudAction
     {
         $validator = $this->getTable()->getValidator();
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -41,9 +41,9 @@ class CrudAddAction extends CrudAction
     /**
      * Execute action.
      *
-     * @return mixed
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function execute()
+    public function execute(): \Cake\Datasource\EntityInterface
     {
         $entity = $this->_newEntity();
         $entity = $this->_patchEntity($entity, $this->getData());

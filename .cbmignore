@@ -1,0 +1,21 @@
+# vendor — framework deps resolved via layerPattern, not scanned
+vendor/
+
+# test noise / generated mirrors
+tests/
+phpunit.xml
+phpunit.xml.dist
+phpunit.xml.dist.bak
+webroot/
+workspace/
+
+# junk / backups from previous refactors (do not index)
+src/Collection.php_
+src/Controller/ApiController.php_
+src/Service/Action/Extension/AuthorizationExtension.php_
+src/Service/Action/Extension/AuthorizationExtension.php__
+tests/Fixture/UsersFixture.php1
+
+# scratch
+rector.php
+CODE_REVIEW.md

@@ -29,7 +29,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
@@ -43,12 +43,12 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
 
-    public function testListDefault()
+    public function testListDefault(): void
     {
         $this->sendRequest('/articles', 'GET');
         $result = $this->getJsonResponse();
@@ -60,7 +60,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=1', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithConfigCount()
+    public function testListWithConfigCount(): void
     {
         $this->_loadDefaultExtensions([
             'CakeDC/Api.CursorPaginate' => [
@@ -85,7 +85,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=11', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithCountAsGetParam()
+    public function testListWithCountAsGetParam(): void
     {
         $this->sendRequest('/articles', 'GET', ['count' => 5]);
         $result = $this->getJsonResponse();
@@ -97,7 +97,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=11', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithMaxId()
+    public function testListWithMaxId(): void
     {
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'max_id' => 11]);
         $result = $this->getJsonResponse();
@@ -109,7 +109,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=6', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithMaxIdWithNewDataAdded()
+    public function testListWithMaxIdWithNewDataAdded(): void
     {
         $this->_addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'max_id' => 11]);
@@ -122,7 +122,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=6', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithCountAsGetParamWithNewDataAdded()
+    public function testListWithCountAsGetParamWithNewDataAdded(): void
     {
         $this->_addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5]);
@@ -135,7 +135,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=21', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithSinceId()
+    public function testListWithSinceId(): void
     {
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'since_id' => 15]);
         $result = $this->getJsonResponse();
@@ -147,7 +147,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles', Hash::get($result, 'pagination.links.next'));
     }
 
-    public function testListWithSinceIdWithNewDataAdded()
+    public function testListWithSinceIdWithNewDataAdded(): void
     {
         $this->_addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'since_id' => 15]);
@@ -160,7 +160,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=16', Hash::get($result, 'pagination.links.next'));
     }
 
-    protected function _addData($count)
+    protected function _addData($count): void
     {
         $Article = TableRegistry::getTableLocator()->get('Articles');
         $Article->createRecords($count, 1);

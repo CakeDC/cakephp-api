@@ -75,7 +75,7 @@ class ResetPasswordAction extends Action
                 ]]);
 
         $errors = $validator->validate($this->getData());
-        if (!empty($errors)) {
+        if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
         }
 
@@ -88,18 +88,17 @@ class ResetPasswordAction extends Action
      * @return mixed
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): mixed
     {
         $data = $this->getData();
         $token = $data['token'];
 
         try {
-            $result = $this->getUsersTable()->validate($token);
-            if (!empty($result)) {
-                return $this->_changePassword($result->id);
-            } else {
-                throw new Exception(__d('CakeDC/Api', 'Reset password token could not be validated'));
-            }
+            /** @var \CakeDC\Users\Model\Behavior\RegisterBehavior $registerBehavior */
+            $registerBehavior = $this->getUsersTable()->getBehavior('Register');
+            $result = $registerBehavior->validate($token);
+
+            return $this->_changePassword($result->get('id'));
         } catch (UserAlreadyActiveException $exception) {
             throw new Exception(__d('CakeDC/Api', 'User already active'), 500, $exception);
         } catch (UserNotFoundException $ex) {
@@ -116,7 +115,7 @@ class ResetPasswordAction extends Action
      * @return string
      * @throws \Exception
      */
-    protected function _changePassword($userId)
+    protected function _changePassword($userId): string
     {
         /** @var \CakeDC\Users\Model\Entity\User $user */
         $user = $this->getUsersTable()->newEntity([], ['validate' => false]);
@@ -124,12 +123,13 @@ class ResetPasswordAction extends Action
         try {
             $data = $this->getData();
             $user->password = $data['password'];
-            $user = $this->getUsersTable()->changePassword($user);
+            /** @var \CakeDC\Users\Model\Behavior\PasswordBehavior $passwordBehavior */
+            $passwordBehavior = $this->getUsersTable()->getBehavior('Password');
+            $user = $passwordBehavior->changePassword($user);
             if ($user) {
                 return __d('CakeDC/Api', 'Password has been changed successfully');
-            } else {
-                throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500);
             }
+            throw new Exception(__d('CakeDC/Api', 'Password could not be changed'), 500);
         } catch (UserNotFoundException $exception) {
             throw new Exception(__d('CakeDC/Api', 'User was not found'), 404, $exception);
         } catch (WrongPasswordException $wpe) {

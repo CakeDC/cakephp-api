@@ -36,7 +36,7 @@ class XmlRendererTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class XmlRendererTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -59,12 +59,9 @@ class XmlRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererInitializeByClassName()
+    public function testRendererInitializeByClassName(): void
     {
-        $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
-            ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
-            ->getMock();
+        $response = $this->createStub(\Cake\Http\Response::class);
 
         $this->_initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
@@ -83,7 +80,7 @@ class XmlRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererSuccess()
+    public function testRendererSuccess(): void
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
@@ -109,15 +106,15 @@ class XmlRendererTest extends TestCase
         $response->expects($this->once())
                  ->method('withStatus')
                  ->with($statusCode)
-                 ->will($this->returnValue($response));
+                 ->willReturn($response);
         $response->expects($this->once())
                 ->method('withStringBody')
                 ->with($this->_xmlMessage('<data><value>Updated!</value></data>'))
-                ->will($this->returnValue($response));
+                ->willReturn($response);
         $response->expects($this->once())
                  ->method('withType')
                  ->with('application/xml')
-                ->will($this->returnValue($response));
+                ->willReturn($response);
 
         $renderer->response($result);
     }
@@ -127,7 +124,7 @@ class XmlRendererTest extends TestCase
      *
      * @return void
      */
-    public function testRendererError()
+    public function testRendererError(): void
     {
         $response = $this
             ->getMockBuilder(\Cake\Http\Response::class)
@@ -150,16 +147,16 @@ class XmlRendererTest extends TestCase
         $response->expects($this->once())
                 ->method('withStringBody')
                 ->with($this->_xmlMessage('<error><code>401</code><message>Unauthenticated</message></error>'))
-                ->will($this->returnValue($response));
+                ->willReturn($response);
         $response->expects($this->once())
                  ->method('withType')
                  ->with('application/xml')
-                ->will($this->returnValue($response));
+                ->willReturn($response);
 
         $renderer->error($error);
     }
 
-    protected function _xmlMessage($text)
+    protected function _xmlMessage($text): string
     {
         return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $text . "\n";
     }

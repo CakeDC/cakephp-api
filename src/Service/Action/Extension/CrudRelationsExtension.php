@@ -80,9 +80,9 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * Checks if endpoint returns additional associations.
      *
      * @param \CakeDC\Api\Service\Action\CrudAction $action A CrudAction instance.
-     * @return array|bool
+     * @return false|array
      */
-    protected function _includeAssociations(CrudAction $action)
+    protected function _includeAssociations(CrudAction $action): false|array
     {
         $data = $action->getData();
         if (!empty($data['include_associations']) && empty($data['include_relations'])) {
@@ -92,15 +92,15 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         if (!$exists) {
             return false;
         }
-        $associations = $data['include_relations'];
+        $associations = $data['include_relations'] ?? [];
         if (!is_array($associations)) {
-            return explode(',', $associations);
+            $associations = explode(',', (string)$associations);
         }
-        if (count($associations) > 0) {
-            return $associations;
+        if ($associations === []) {
+            return false;
         }
 
-        return false;
+        return $associations;
     }
 
     /**
@@ -119,9 +119,9 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
     /**
      * @param \CakeDC\Api\Service\Action\CrudAction $action An Action instance.
      * @param \Cake\ORM\Query\SelectQuery $query A Query instance.
-     * @return mixed
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _attachAssociations(CrudAction $action, SelectQuery $query)
+    protected function _attachAssociations(CrudAction $action, SelectQuery $query): SelectQuery
     {
         $associations = $this->_includeAssociations($action);
         if (empty($associations) && $this->_includeDirectAssociations($action)) {
@@ -130,7 +130,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
                 ->associations()
                 ->getByType(['HasOne', 'BelongsTo']);
             $associations = collection($relations)
-                ->map(fn(Association $relation) => $relation->getTarget()->getTable())
+                ->map(fn(Association $relation): string => $relation->getTarget()->getTable())
                 ->toArray();
         }
         if (empty($associations)) {
@@ -138,10 +138,10 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         }
 
         $tables = collection($associations)
-            ->map(fn($name) => Inflector::camelize($name))
+            ->map(fn(string $name): string => Inflector::camelize($name))
             ->toArray();
 
-        collection($tables)->each(function ($name) use ($query, $action) {
+        collection($tables)->each(function ($name) use ($query, $action): void {
             $assoc = $action->getTable()->getAssociation($name);
             $query->select($assoc);
         });

@@ -40,7 +40,7 @@ class CrudViewActionTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -68,7 +68,7 @@ class CrudViewActionTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Action);
         parent::tearDown();
@@ -79,18 +79,18 @@ class CrudViewActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteSuccess()
+    public function testExecuteSuccess(): void
     {
         $this->Action = new CrudViewAction([
             'service' => $this->Service,
             'id' => 1,
         ]);
-
-        $onFindEntity = $afterFindEntity = false;
-        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity) {
+        $onFindEntity = false;
+        $afterFindEntity = false;
+        $this->Action->getEventManager()->on('Action.Crud.onFindEntity', function () use (&$onFindEntity): void {
             $onFindEntity = true;
         });
-        $this->Action->getEventManager()->on('Action.Crud.afterFindEntity', function () use (&$afterFindEntity) {
+        $this->Action->getEventManager()->on('Action.Crud.afterFindEntity', function () use (&$afterFindEntity): void {
             $afterFindEntity = true;
         });
 
@@ -105,7 +105,7 @@ class CrudViewActionTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteNotFound()
+    public function testExecuteNotFound(): void
     {
         $this->expectException(RecordNotFoundException::class);
         $this->Action = new CrudViewAction([
