@@ -33,9 +33,9 @@ class LoginAction extends Action
 {
     use LoginTrait;
 
-    protected string $_identifiedField = 'username';
+    protected string $identifiedField = 'username';
 
-    protected string $_passwordField = 'password';
+    protected string $passwordField = 'password';
 
     /**
      * Initialize an action instance
@@ -46,10 +46,10 @@ class LoginAction extends Action
     public function initialize(array $config): void
     {
         if (isset($config['identifiedField'])) {
-            $this->_identifiedField = $config['identifiedField'];
+            $this->identifiedField = $config['identifiedField'];
         }
         if (isset($config['passwordField'])) {
-            $this->_passwordField = $config['passwordField'];
+            $this->passwordField = $config['passwordField'];
         }
         parent::initialize($config);
         $this->Auth->allow($this->getName());
@@ -64,11 +64,11 @@ class LoginAction extends Action
     {
         $validator = new Validator();
         $validator
-            ->requirePresence($this->_identifiedField, 'create')
-            ->notBlank($this->_identifiedField);
+            ->requirePresence($this->identifiedField, 'create')
+            ->notBlank($this->identifiedField);
         $validator
-            ->requirePresence($this->_passwordField, 'create')
-            ->notBlank($this->_passwordField);
+            ->requirePresence($this->passwordField, 'create')
+            ->notBlank($this->passwordField);
         $errors = $validator->validate($this->getData());
         if ($errors !== []) {
             throw new ValidationException(__('Validation failed'), 0, null, $errors);
@@ -96,7 +96,7 @@ class LoginAction extends Action
             $user = (array)$user;
         }
 
-        $user = $this->_afterIdentifyUser($user, $socialLogin);
+        $user = $this->afterIdentifyUser($user, $socialLogin);
         if ($user === []) {
             throw new UserNotFoundException(__d('CakeDC/Api', 'User not found'), 401);
         }
@@ -111,7 +111,7 @@ class LoginAction extends Action
      * @param bool $socialLogin is social login
      * @return array
      */
-    protected function _afterIdentifyUser(?array $user, bool $socialLogin = false): array
+    protected function afterIdentifyUser(?array $user, bool $socialLogin = false): array
     {
         if (!empty($user)) {
 //???            $this->Auth->setUser($user);
@@ -130,14 +130,14 @@ class LoginAction extends Action
      *
      * @return array
      */
-    protected function _authConfig(): array
+    protected function authConfig(): array
     {
-        return Hash::merge(parent::_authConfig(), [
+        return Hash::merge(parent::authConfig(), [
             'authenticate' => [
                 'CakeDC/Api.Form' => [
                     'fields' => [
-                        'username' => $this->_identifiedField,
-                        'password' => $this->_passwordField,
+                        'username' => $this->identifiedField,
+                        'password' => $this->passwordField,
                     ],
                     'finder' => 'active',
                 ],

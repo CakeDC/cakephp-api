@@ -82,6 +82,7 @@ class ListingServiceTest extends TestCase
             'articles',
             'articles_tags',
             'authors',
+            'posts',
             'tags',
         ];
         sort($expected);

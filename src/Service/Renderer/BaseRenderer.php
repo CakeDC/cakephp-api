@@ -26,7 +26,7 @@ abstract class BaseRenderer
     /**
      * Reference to the Service.
      */
-    protected ?\CakeDC\Api\Service\Service $_service = null;
+    protected ?\CakeDC\Api\Service\Service $service = null;
 
     /**
      * Constructor
@@ -35,7 +35,7 @@ abstract class BaseRenderer
      */
     public function __construct(Service $service)
     {
-        $this->_service = $service;
+        $this->service = $service;
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class BaseRenderer
      * @param \Exception $exception An Exception instance.
      * @return string
      */
-    protected function _buildMessage(Exception $exception): string
+    protected function buildMessage(Exception $exception): string
     {
         $message = $exception->getMessage();
         if (Configure::read('debug')) {
@@ -86,7 +86,7 @@ abstract class BaseRenderer
      * @param \Exception $exception An Exception instance.
      * @return array|null
      */
-    protected function _stackTrace(Exception $exception): ?array
+    protected function stackTrace(Exception $exception): ?array
     {
         if (!Configure::read('debug')) {
             return null;

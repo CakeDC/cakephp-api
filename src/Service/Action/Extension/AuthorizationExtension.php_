@@ -179,7 +179,7 @@ class AuthorizationExtension extends Extension implements EventListenerInterface
      */
     public function mapAction(string $controllerAction, string $policyAction)
     {
-        $this->_config['actionMap'][$controllerAction] = $policyAction;
+        $this->config['actionMap'][$controllerAction] = $policyAction;
 
         return $this;
     }
@@ -206,7 +206,7 @@ class AuthorizationExtension extends Extension implements EventListenerInterface
      */
     public function authorizeModel(string ...$actions)
     {
-        $this->_config['authorizeModel'] = array_merge($this->_config['authorizeModel'], $actions);
+        $this->config['authorizeModel'] = array_merge($this->config['authorizeModel'], $actions);
 
         return $this;
     }

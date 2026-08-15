@@ -58,8 +58,8 @@ class PaginateExtension extends Extension implements EventListenerInterface
         if ($event->getResult()) {
             $query = $event->getResult();
         }
-        $query->limit($this->_limit($action));
-        $query->page($this->_page($action));
+        $query->limit($this->limit($action));
+        $query->page($this->page($action));
 
         $event->setResult($query);
     }
@@ -70,7 +70,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance
      * @return int
      */
-    protected function _page(Action $action): int
+    protected function page(Action $action): int
     {
         $data = $action->getData();
         $pageField = $this->getConfig('pageField');
@@ -87,7 +87,7 @@ class PaginateExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance
      * @return mixed
      */
-    protected function _limit(Action $action): mixed
+    protected function limit(Action $action): mixed
     {
         $data = $action->getData();
         $limitField = $this->getConfig('limitField');
@@ -115,9 +115,9 @@ class PaginateExtension extends Extension implements EventListenerInterface
         $query = $event->getData('query');
         $result = $action->getService()->getResult();
         $count = $query->count();
-        $limit = $this->_limit($action);
+        $limit = $this->limit($action);
         $pagination = [
-            'page' => $this->_page($action),
+            'page' => $this->page($action),
             'limit' => $limit,
             'pages' => ceil($count / $limit),
             'count' => $count,

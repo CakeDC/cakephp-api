@@ -28,5 +28,7 @@ class TagsTable extends Table
         $this->setTable('tags');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->belongsTo('Posts')->setForeignKey('post_id');
     }
 }

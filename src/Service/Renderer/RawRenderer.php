@@ -33,13 +33,13 @@ class RawRenderer extends BaseRenderer
      */
     public function response(?Result $result = null): bool
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $data = $result->getData();
         $body = is_array($data) ? print_r($data, true) : (string)$data;
         $response = $response->withStringBody($body)
               ->withStatus($result->getCode())
               ->withType('text/plain');
-        $this->_service->setResponse($response);
+        $this->service->setResponse($response);
 
         return true;
     }
@@ -52,13 +52,13 @@ class RawRenderer extends BaseRenderer
      */
     public function error(Exception $exception): void
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $message = $exception->getMessage();
         if (Configure::read('debug')) {
             $message .= ' on line ' . $exception->getLine() . ' in ' . $exception->getFile();
         }
         $trace = $exception->getTrace();
         $debug = Configure::read('debug') ? "\n" . print_r($trace, true) : '';
-        $this->_service->setResponse($response->withStringBody($message . $debug)->withType('text/plain'));
+        $this->service->setResponse($response->withStringBody($message . $debug)->withType('text/plain'));
     }
 }

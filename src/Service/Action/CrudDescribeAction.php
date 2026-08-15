@@ -29,6 +29,6 @@ class CrudDescribeAction extends CrudAction
      */
     public function execute(): array
     {
-        return $this->_describe();
+        return $this->describe();
     }
 }

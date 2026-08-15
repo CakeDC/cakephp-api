@@ -45,9 +45,9 @@ class CrudAddAction extends CrudAction
      */
     public function execute(): \Cake\Datasource\EntityInterface
     {
-        $entity = $this->_newEntity();
-        $entity = $this->_patchEntity($entity, $this->getData());
+        $entity = $this->newEntity();
+        $entity = $this->patchEntity($entity, $this->getData());
 
-        return $this->_save($entity);
+        return $this->save($entity);
     }
 }

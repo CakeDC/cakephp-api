@@ -80,10 +80,10 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
 
         $path = $request->getUri()->getPath();
         if (preg_match($expr, $path, $matches)) {
-            return $this->_matchRequest($request, $handler, $matches);
+            return $this->matchRequest($request, $handler, $matches);
         }
         if ($altExpr !== null && preg_match($altExpr, $path, $matches)) {
-            return $this->_matchRequest($request, $handler, $matches);
+            return $this->matchRequest($request, $handler, $matches);
         }
 
         return $handler->handle($request);
@@ -95,7 +95,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      * @param array $matches Matches definition.
      * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface
      */
-    protected function _matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, array $matches): \Psr\Http\Message\ResponseInterface|\Cake\Http\Response
+    protected function matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, array $matches): \Psr\Http\Message\ResponseInterface|\Cake\Http\Response
     {
         $service = null;
         $response = null;

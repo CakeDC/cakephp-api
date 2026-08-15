@@ -31,18 +31,18 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 abstract class CrudAction extends Action
 {
-    protected ?\Cake\ORM\Table $_table = null;
+    protected ?\Cake\ORM\Table $table = null;
 
     /**
      * Object Identifier
      *
      * @var mixed     */
-    protected $_id;
+    protected $id;
 
     /**
      * Object Identifier name
      */
-    protected string $_idName = 'id';
+    protected string $idName = 'id';
 
     /**
      * Crud service.
@@ -50,7 +50,7 @@ abstract class CrudAction extends Action
      * @psalm-suppress: NonInvariantDocblockPropertyType
      * @var \CakeDC\Api\Service\CrudService
      */
-    protected $_service;
+    protected $service;
 
     /**
      * Parent Object Identifier
@@ -58,17 +58,17 @@ abstract class CrudAction extends Action
      * Used for nested services
      *
      * @var mixed     */
-    protected $_parentId;
+    protected $parentId;
 
     /**
      * Parent Object Identifier name
      */
-    protected ?string $_parentIdName = null;
+    protected ?string $parentIdName = null;
 
     /**
      * Api table finder method
      */
-    protected ?string $_finder = null;
+    protected ?string $finder = null;
 
     /**
      * Action constructor.
@@ -89,19 +89,19 @@ abstract class CrudAction extends Action
             $this->setTable($table);
         }
         if (!empty($config['id'])) {
-            $this->_id = $config['id'];
+            $this->id = $config['id'];
         }
         if (!empty($config['idName'])) {
-            $this->_idName = $config['idName'];
+            $this->idName = $config['idName'];
         }
         if (!empty($config['finder'])) {
-            $this->_finder = $config['finder'];
+            $this->finder = $config['finder'];
         }
         if (!empty($config['parentId'])) {
-            $this->_parentId = $config['parentId'];
+            $this->parentId = $config['parentId'];
         }
         if (!empty($config['parentIdName'])) {
-            $this->_parentIdName = $config['parentIdName'];
+            $this->parentIdName = $config['parentIdName'];
         }
         if (!empty($config['table'])) {
             $this->setTable($config['table']);
@@ -116,7 +116,7 @@ abstract class CrudAction extends Action
      */
     public function getTable(): ?Table
     {
-        return $this->_table;
+        return $this->table;
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class CrudAction extends Action
      */
     public function setTable(Table $table)
     {
-        $this->_table = $table;
+        $this->table = $table;
 
         return $this;
     }
@@ -137,7 +137,7 @@ abstract class CrudAction extends Action
      */
     public function getService(): \CakeDC\Api\Service\CrudService
     {
-        return $this->_service;
+        return $this->service;
     }
 
     /**
@@ -147,7 +147,7 @@ abstract class CrudAction extends Action
      */
     public function getId(): mixed
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -157,7 +157,7 @@ abstract class CrudAction extends Action
      */
     public function getIdName(): string
     {
-        return $this->_idName;
+        return $this->idName;
     }
 
     /**
@@ -167,7 +167,7 @@ abstract class CrudAction extends Action
      */
     public function getParentId(): mixed
     {
-        return $this->_parentId;
+        return $this->parentId;
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class CrudAction extends Action
      */
     public function getParentIdName(): ?string
     {
-        return $this->_parentIdName;
+        return $this->parentIdName;
     }
 
     /**
@@ -185,7 +185,7 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _newEntity(): EntityInterface
+    protected function newEntity(): EntityInterface
     {
         return $this->getTable()->newEntity([]);
     }
@@ -198,7 +198,7 @@ abstract class CrudAction extends Action
      * @param array $options Patch entity options.
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _patchEntity(EntityInterface $entity, array $data, array $options = []): EntityInterface
+    protected function patchEntity(EntityInterface $entity, array $data, array $options = []): EntityInterface
     {
         $entity = $this->getTable()->patchEntity($entity, $data, $options);
         $event = $this->dispatchEvent('Action.Crud.onPatchEntity', ['entity' => $entity]);
@@ -214,11 +214,11 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\Datasource\ResultSetInterface
      */
-    protected function _getEntities(): ResultSetInterface
+    protected function getEntities(): ResultSetInterface
     {
-        $query = $this->_getEntitiesQuery();
-        if ($this->_finder !== null) {
-            $query = $query->find($this->_finder);
+        $query = $this->getEntitiesQuery();
+        if ($this->finder !== null) {
+            $query = $query->find($this->finder);
         }
 
         $event = $this->dispatchEvent('Action.Crud.onFindEntities', ['query' => $query]);
@@ -239,7 +239,7 @@ abstract class CrudAction extends Action
      *
      * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _getEntitiesQuery(): SelectQuery
+    protected function getEntitiesQuery(): SelectQuery
     {
         return $this->getTable()->find();
     }
@@ -250,11 +250,11 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key.
      * @return \Cake\Datasource\EntityInterface|array
      */
-    protected function _getEntity($primaryKey): \Cake\Datasource\EntityInterface|array
+    protected function getEntity($primaryKey): \Cake\Datasource\EntityInterface|array
     {
-        $query = $this->_getEntityQuery($primaryKey);
-        if ($this->_finder !== null) {
-            $query = $query->find($this->_finder);
+        $query = $this->getEntityQuery($primaryKey);
+        if ($this->finder !== null) {
+            $query = $query->find($this->finder);
         }
         $event = $this->dispatchEvent('Action.Crud.onFindEntity', ['query' => $query]);
         if ($event->getResult()) {
@@ -276,9 +276,9 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key.
      * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _getEntityQuery($primaryKey): \Cake\ORM\Query\SelectQuery
+    protected function getEntityQuery($primaryKey): \Cake\ORM\Query\SelectQuery
     {
-        return $this->getTable()->find('all')->where($this->_buildViewCondition($primaryKey));
+        return $this->getTable()->find('all')->where($this->buildViewCondition($primaryKey));
     }
 
     /**
@@ -287,7 +287,7 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key
      * @return array
      */
-    protected function _buildViewCondition($primaryKey): array
+    protected function buildViewCondition($primaryKey): array
     {
         $table = $this->getTable();
         $key = (array)$table->getPrimaryKey();
@@ -317,7 +317,7 @@ abstract class CrudAction extends Action
      * @param \Cake\Datasource\EntityInterface $entity An Entity instance.
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _save(EntityInterface $entity): EntityInterface
+    protected function save(EntityInterface $entity): EntityInterface
     {
         if ($this->getTable()->save($entity)) {
             return $entity;
@@ -331,12 +331,12 @@ abstract class CrudAction extends Action
      *
      * @return array
      */
-    protected function _describe(): array
+    protected function describe(): array
     {
         $table = $this->getTable();
         $schema = $table->getSchema();
 
-        $entity = $this->_newEntity();
+        $entity = $this->newEntity();
         $reverseRouter = new ReverseRouting();
         $path = $reverseRouter->indexPath($this);
         $version = $this->getService()->getVersion();

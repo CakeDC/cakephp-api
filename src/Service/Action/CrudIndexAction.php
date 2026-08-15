@@ -29,6 +29,6 @@ class CrudIndexAction extends CrudAction
      */
     public function execute(): \Cake\Datasource\ResultSetInterface
     {
-        return $this->_getEntities();
+        return $this->getEntities();
     }
 }

@@ -25,7 +25,7 @@ trait LocatorAwareTrait
      *
      * @var \CakeDC\Api\Service\Locator\LocatorInterface
      */
-    protected $_serviceLocator;
+    protected $serviceLocator;
 
     /**
      * Sets the table locator.
@@ -35,7 +35,7 @@ trait LocatorAwareTrait
      */
     public function setServiceLocator(LocatorInterface $serviceLocator): self
     {
-        $this->_serviceLocator = $serviceLocator;
+        $this->serviceLocator = $serviceLocator;
 
         return $this;
     }
@@ -47,10 +47,10 @@ trait LocatorAwareTrait
      */
     public function getServiceLocator(): \CakeDC\Api\Service\Locator\LocatorInterface
     {
-        if (!$this->_serviceLocator) {
-            $this->_serviceLocator = ServiceRegistry::getServiceLocator();
+        if (!$this->serviceLocator) {
+            $this->serviceLocator = ServiceRegistry::getServiceLocator();
         }
 
-        return $this->_serviceLocator;
+        return $this->serviceLocator;
     }
 }

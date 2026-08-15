@@ -29,7 +29,7 @@ class DeleteAction extends CollectionAction
     public function validates(): bool
     {
         $data = $this->getData();
-        $this->_validateDataIsArray($data);
+        $this->validateDataIsArray($data);
         $index = 0;
         $pkKey = $this->getTable()->getPrimaryKey();
         $errors = collection($data)->reduce(function ($errors, $data) use ($pkKey, &$index) {
@@ -74,9 +74,9 @@ class DeleteAction extends CollectionAction
         } else {
             $accessibleFields = [$keys => true];
         }
-        $entities = $this->_newEntities(['accessibleFields' => $accessibleFields]);
+        $entities = $this->newEntities(['accessibleFields' => $accessibleFields]);
 
-        return $this->_deleteMany($entities);
+        return $this->deleteMany($entities);
     }
 
     /**
@@ -86,7 +86,7 @@ class DeleteAction extends CollectionAction
      * @return array
      * @throws \Exception
      */
-    protected function _deleteMany(array $entities): array
+    protected function deleteMany(array $entities): array
     {
         $deleted = [];
         $this->getTable()->getConnection()->transactional(function () use ($entities, &$deleted): true {

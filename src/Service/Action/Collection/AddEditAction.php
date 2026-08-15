@@ -37,7 +37,7 @@ class AddEditAction extends CollectionAction
      */
     public function validates(): bool
     {
-        return $this->_validateMany();
+        return $this->validateMany();
     }
 
     /**
@@ -56,8 +56,8 @@ class AddEditAction extends CollectionAction
         } else {
             $accessibleFields = [$keys => true];
         }
-        $entities = $this->_newEntities(['accessibleFields' => $accessibleFields]);
+        $entities = $this->newEntities(['accessibleFields' => $accessibleFields]);
 
-        return $this->_saveMany($entities);
+        return $this->saveMany($entities);
     }
 }

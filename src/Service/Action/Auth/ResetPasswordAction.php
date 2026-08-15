@@ -98,7 +98,7 @@ class ResetPasswordAction extends Action
             $registerBehavior = $this->getUsersTable()->getBehavior('Register');
             $result = $registerBehavior->validate($token);
 
-            return $this->_changePassword($result->get('id'));
+            return $this->changePassword($result->get('id'));
         } catch (UserAlreadyActiveException $exception) {
             throw new Exception(__d('CakeDC/Api', 'User already active'), 500, $exception);
         } catch (UserNotFoundException $ex) {
@@ -115,7 +115,7 @@ class ResetPasswordAction extends Action
      * @return string
      * @throws \Exception
      */
-    protected function _changePassword($userId): string
+    protected function changePassword($userId): string
     {
         /** @var \CakeDC\Users\Model\Entity\User $user */
         $user = $this->getUsersTable()->newEntity([], ['validate' => false]);
@@ -144,9 +144,9 @@ class ResetPasswordAction extends Action
      *
      * @return array
      */
-    protected function _authConfig(): array
+    protected function authConfig(): array
     {
-        return Hash::merge(parent::_authConfig(), [
+        return Hash::merge(parent::authConfig(), [
             'authenticate' => [
                 'CakeDC/Api.Form' => [],
             ],

@@ -27,23 +27,23 @@ class ServiceLocator implements LocatorInterface
     /**
      * Configuration for aliases.
      */
-    protected array $_config = [];
+    protected array $config = [];
 
     /**
      * Instances that belong to the registry.
      */
-    protected array $_instances = [];
+    protected array $instances = [];
 
     /**
      * Contains a list of Method objects that were created out of the
      * built-in Method class. The list is indexed by method names
      */
-    protected array $_fallbacked = [];
+    protected array $fallbacked = [];
 
     /**
      * Contains a list of options that were passed to get() method.
      */
-    protected array $_options = [];
+    protected array $options = [];
 
     /**
      * Stores a list of options to be used when instantiating an object
@@ -57,19 +57,19 @@ class ServiceLocator implements LocatorInterface
     public function setConfig($alias, ?array $options = null): LocatorInterface
     {
         if (!is_string($alias)) {
-            $this->_config = $alias;
+            $this->config = $alias;
 
             return $this;
         }
 
-        if (isset($this->_instances[$alias])) {
+        if (isset($this->instances[$alias])) {
             throw new RuntimeException(sprintf(
                 'You cannot configure "%s", service has already been constructed.',
                 $alias
             ));
         }
 
-        $this->_config[$alias] = $options;
+        $this->config[$alias] = $options;
 
         return $this;
     }
@@ -83,10 +83,10 @@ class ServiceLocator implements LocatorInterface
     public function getConfig(?string $alias = null): array
     {
         if ($alias === null) {
-            return $this->_config;
+            return $this->config;
         }
 
-        return $this->_config[$alias] ?? [];
+        return $this->config[$alias] ?? [];
     }
 
     /**
@@ -126,30 +126,30 @@ class ServiceLocator implements LocatorInterface
     {
         $alias = Inflector::camelize($alias);
 
-        if (isset($this->_instances[$alias]) && empty($options['refresh'])) {
-            if ($options !== [] && !$this->_compareOptions($alias, $options)) {
+        if (isset($this->instances[$alias]) && empty($options['refresh'])) {
+            if ($options !== [] && !$this->compareOptions($alias, $options)) {
                 throw new RuntimeException(sprintf(
                     'You cannot configure "%s", it already exists in the registry.',
                     $alias
                 ));
             }
 
-            return $this->_instances[$alias];
+            return $this->instances[$alias];
         }
 
-        $this->_options[$alias] = $options;
+        $this->options[$alias] = $options;
         [, $classAlias] = pluginSplit($alias);
         $options = ['alias' => $classAlias] + $options;
 
-        if (isset($this->_config[$alias])) {
-            $options += $this->_config[$alias];
+        if (isset($this->config[$alias])) {
+            $options += $this->config[$alias];
         }
 
         if (empty($options['className'])) {
             $options['className'] = Inflector::camelize($alias);
         }
 
-        $className = $this->_getClassName($alias, $options);
+        $className = $this->getClassName($alias, $options);
         $lookupPlugins = Configure::read('Api.serviceLookupPlugins');
         $lookupMode = Configure::read('Api.lookupMode', 'underscore');
         if ($lookupPlugins === null) {
@@ -157,13 +157,12 @@ class ServiceLocator implements LocatorInterface
         }
         if (!$className && !str_contains($options['className'], '.')) {
             foreach ($lookupPlugins as $candidate) {
-                $_options = $options;
                 if ($lookupMode === 'dasherize') {
-                    $_options['className'] = Inflector::camelize(Inflector::underscore($_options['className']));
+                    $options['className'] = Inflector::camelize(Inflector::underscore($options['className']));
                 }
 
-                $_options['className'] = $candidate . '.' . $_options['className'];
-                $className = $this->_getClassName($alias, $_options);
+                $options['className'] = $candidate . '.' . $options['className'];
+                $className = $this->getClassName($alias, $options);
                 if ($className) {
                     break;
                 }
@@ -190,9 +189,9 @@ class ServiceLocator implements LocatorInterface
             }
         }
 
-        $this->_instances[$alias] = $this->_create($options);
+        $this->instances[$alias] = $this->create($options);
 
-        return $this->_instances[$alias];
+        return $this->instances[$alias];
     }
 
     /**
@@ -202,7 +201,7 @@ class ServiceLocator implements LocatorInterface
      * @param array $options Method options array.
      * @return string
      */
-    protected function _getClassName(string $alias, array $options = []): ?string
+    protected function getClassName(string $alias, array $options = []): ?string
     {
         $useVersions = Configure::read('Api.useVersioning');
         if ($useVersions) {
@@ -230,7 +229,7 @@ class ServiceLocator implements LocatorInterface
      * @param array $options The alias to check for.
      * @return \CakeDC\Api\Service\Service
      */
-    protected function _create(array $options): \CakeDC\Api\Service\Service
+    protected function create(array $options): \CakeDC\Api\Service\Service
     {
         return new $options['className']($options);
     }
@@ -240,7 +239,7 @@ class ServiceLocator implements LocatorInterface
      */
     public function exists(string $alias): bool
     {
-        return isset($this->_instances[$alias]);
+        return isset($this->instances[$alias]);
     }
 
     /**
@@ -248,7 +247,7 @@ class ServiceLocator implements LocatorInterface
      */
     public function set(string $alias, Service $object): Service
     {
-        return $this->_instances[$alias] = $object;
+        return $this->instances[$alias] = $object;
     }
 
     /**
@@ -256,9 +255,9 @@ class ServiceLocator implements LocatorInterface
      */
     public function clear(): void
     {
-        $this->_instances = [];
-        $this->_config = [];
-        $this->_fallbacked = [];
+        $this->instances = [];
+        $this->config = [];
+        $this->fallbacked = [];
     }
 
     /**
@@ -271,7 +270,7 @@ class ServiceLocator implements LocatorInterface
      */
     public function genericInstances(): array
     {
-        return $this->_fallbacked;
+        return $this->fallbacked;
     }
 
     /**
@@ -280,9 +279,9 @@ class ServiceLocator implements LocatorInterface
     public function remove(string $alias): void
     {
         unset(
-            $this->_instances[$alias],
-            $this->_config[$alias],
-            $this->_fallbacked[$alias]
+            $this->instances[$alias],
+            $this->config[$alias],
+            $this->fallbacked[$alias]
         );
     }
 
@@ -293,9 +292,9 @@ class ServiceLocator implements LocatorInterface
      * @param array $options Options.
      * @return bool
      */
-    protected function _compareOptions(string $alias, array $options): bool
+    protected function compareOptions(string $alias, array $options): bool
     {
-        $currentOptions = $this->_options[$alias];
+        $currentOptions = $this->options[$alias];
         unset($currentOptions['controller']);
         unset($options['controller']);
 

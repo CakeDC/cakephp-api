@@ -35,13 +35,13 @@ class JsonRenderer extends BaseRenderer
      */
     public function response(?Result $result = null): bool
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $data = $result->getData();
         $payload = $result->getPayload();
         if (is_array($data) && is_array($payload)) {
             $data = Hash::merge($data, $payload);
         }
-        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withStatus($result->getCode())
+        $this->service->setResponse($response->withStringBody($this->encode($data))->withStatus($result->getCode())
             ->withType('application/json'));
 
         return true;
@@ -55,24 +55,24 @@ class JsonRenderer extends BaseRenderer
      */
     public function error(Exception $exception): void
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $code = $exception->getCode();
         if ($code === 0) {
-            $code = $this->_service->getResponse()->getStatusCode();
+            $code = $this->service->getResponse()->getStatusCode();
         }
         $data = [
             'error' => [
                 'code' => $code,
-                'message' => $this->_buildMessage($exception),
+                'message' => $this->buildMessage($exception),
             ],
         ];
         if (Configure::read('debug')) {
-            $data['error']['trace'] = $this->_stackTrace($exception);
+            $data['error']['trace'] = $this->stackTrace($exception);
         }
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withType('application/json'));
+        $this->service->setResponse($response->withStringBody($this->encode($data))->withType('application/json'));
     }
 
     /**
@@ -81,7 +81,7 @@ class JsonRenderer extends BaseRenderer
      * @param mixed $data Encoded data.
      * @return string
      */
-    protected function _encode($data): string
+    protected function encode($data): string
     {
         $format = Configure::read('debug') ? JSON_PRETTY_PRINT : 0;
 

@@ -25,24 +25,24 @@ class Result
     /**
      * Response code
      */
-    protected int $_code = 200;
+    protected int $code = 200;
 
     /**
      * Response data
      *
      * @var array|mixed
      */
-    protected $_data;
+    protected $data;
 
     /**
      * Response payload
      */
-    protected array $_payload = [];
+    protected array $payload = [];
 
     /**
      * Exception structure
      */
-    protected ?\Exception $_exception = null;
+    protected ?\Exception $exception = null;
 
     /**
      * Result constructor.
@@ -67,7 +67,7 @@ class Result
      */
     public function getData(): mixed
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -78,7 +78,7 @@ class Result
      */
     public function setData($value): self
     {
-        $this->_data = $value;
+        $this->data = $value;
 
         return $this;
     }
@@ -90,7 +90,7 @@ class Result
      */
     public function getCode(): int
     {
-        return $this->_code;
+        return $this->code;
     }
 
     /**
@@ -101,7 +101,7 @@ class Result
      */
     public function setCode(int $value): self
     {
-        $this->_code = $value;
+        $this->code = $value;
 
         return $this;
     }
@@ -113,7 +113,7 @@ class Result
      */
     public function getException(): ?Exception
     {
-        return $this->_exception;
+        return $this->exception;
     }
 
     /**
@@ -124,7 +124,7 @@ class Result
      */
     public function setException(\Exception $value): self
     {
-        $this->_exception = $value;
+        $this->exception = $value;
 
         return $this;
     }
@@ -138,7 +138,7 @@ class Result
      */
     public function appendPayload(string $key, $value): void
     {
-        $this->_payload[$key] = $value;
+        $this->payload[$key] = $value;
     }
 
     /**
@@ -150,11 +150,11 @@ class Result
     public function getPayload(?string $key = null): mixed
     {
         if ($key === null) {
-            return $this->_payload;
+            return $this->payload;
         }
 
-        if (isset($this->_payload[$key])) {
-            return $this->_payload[$key];
+        if (isset($this->payload[$key])) {
+            return $this->payload[$key];
         }
 
         return null;
@@ -168,7 +168,7 @@ class Result
      */
     public function setPayload(array $value)
     {
-        $this->_payload = $value;
+        $this->payload = $value;
 
         return $this;
     }
@@ -181,13 +181,13 @@ class Result
     public function toArray(): array
     {
         $info = [
-            'code' => $this->_code,
-            'data' => $this->_data,
-            'payload' => $this->_payload,
+            'code' => $this->code,
+            'data' => $this->data,
+            'payload' => $this->payload,
         ];
-        if ($this->_exception instanceof \Exception) {
-            $info['exception'] = $this->_exception->getMessage();
-            $info['exceptionStack'] = $this->_exception->getTraceAsString();
+        if ($this->exception instanceof \Exception) {
+            $info['exception'] = $this->exception->getMessage();
+            $info['exceptionStack'] = $this->exception->getTraceAsString();
         }
 
         return $info;

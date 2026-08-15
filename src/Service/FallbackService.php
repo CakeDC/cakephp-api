@@ -32,7 +32,7 @@ class FallbackService extends NestedCrudService
      *
      * @var string
      */
-    protected $_table;
+    protected $table;
 
     /**
      * Initialize method
@@ -42,8 +42,8 @@ class FallbackService extends NestedCrudService
     public function initialize(): void
     {
         parent::initialize();
-        if (empty($this->_table)) {
-            $this->_table = Inflector::pluralize(Inflector::camelize($this->getName()));
+        if (empty($this->table)) {
+            $this->table = Inflector::pluralize(Inflector::camelize($this->getName()));
         }
     }
 
@@ -54,19 +54,19 @@ class FallbackService extends NestedCrudService
      */
     public function loadRoutes(): void
     {
-        $table = $this->fetchTable($this->_table);
+        $table = $this->fetchTable($this->table);
 
         $defaultOptions = $this->routerDefaultOptions();
         $builder = ApiRouter::createRouteBuilder('/', []);
         $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions): void {
-            $routes->setExtensions($this->_routeExtensions);
+            $routes->setExtensions($this->routeExtensions);
             $options = $defaultOptions;
             $options['map'] = array_merge($options['map'], [
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
             ]);
             $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table): void {
-                $routes->setExtensions($this->_routeExtensions);
+                $routes->setExtensions($this->routeExtensions);
 
                 $keys = ['HasMany'/*, 'HasOne'*/];
 
@@ -82,7 +82,7 @@ class FallbackService extends NestedCrudService
                         if ($className === '') {
                             $className = $alias;
                         }
-                        $this->_innerServices[] = Inflector::underscore($className);
+                        $this->innerServices[] = Inflector::underscore($className);
                         $options = [
                             'map' => [
                                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],

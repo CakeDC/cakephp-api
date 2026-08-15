@@ -30,11 +30,11 @@ abstract class CollectionAction extends CrudAction
      *
      * @return bool
      */
-    protected function _validateMany(): bool
+    protected function validateMany(): bool
     {
         $validator = $this->getTable()->getValidator();
         $data = $this->getData();
-        $this->_validateDataIsArray($data);
+        $this->validateDataIsArray($data);
         $index = 0;
         $errors = collection($data)->reduce(function ($errors, array $data) use ($validator, &$index) {
             $error = $validator->validate($data);
@@ -61,7 +61,7 @@ abstract class CollectionAction extends CrudAction
      * @return \Cake\Datasource\EntityInterface[]|\Cake\Datasource\ResultSetInterface|array of entities saved
      * @throws \Exception
      */
-    protected function _saveMany(iterable $entities)
+    protected function saveMany(iterable $entities)
     {
         if ($this->getTable()->saveMany($entities)) {
             return $entities;
@@ -80,14 +80,14 @@ abstract class CollectionAction extends CrudAction
      * @param array $patchOptions options to use in patch
      * @return \Cake\Datasource\EntityInterface[] entities
      */
-    protected function _newEntities(array $patchOptions = []): array
+    protected function newEntities(array $patchOptions = []): array
     {
         $data = $this->getData();
-        $this->_validateDataIsArray($data);
+        $this->validateDataIsArray($data);
 
         return collection($data)->reduce(function ($entities, array $data) use ($patchOptions) {
-            $entity = $this->_newEntity();
-            $entity = $this->_patchEntity($entity, $data, $patchOptions);
+            $entity = $this->newEntity();
+            $entity = $this->patchEntity($entity, $data, $patchOptions);
             $entities[] = $entity;
 
             return $entities;
@@ -101,7 +101,7 @@ abstract class CollectionAction extends CrudAction
      * @throws \CakeDC\Api\Exception\ValidationException
      * @return void
      */
-    protected function _validateDataIsArray($data): void
+    protected function validateDataIsArray($data): void
     {
         if (!is_array($data) || Hash::dimensions($data) < 2) {
             throw new ValidationException(__('Validation failed, POST data is not an array of items'), 0);

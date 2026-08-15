@@ -51,7 +51,7 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
         /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
-        $event->setResult($this->_autocompleteList($action, $query));
+        $event->setResult($this->autocompleteList($action, $query));
     }
 
     /**
@@ -59,7 +59,7 @@ class CrudAutocompleteListExtension extends Extension implements EventListenerIn
      * @param \Cake\ORM\Query\SelectQuery $query A Query instance.
      * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _autocompleteList(CrudAction $action, SelectQuery $query): SelectQuery
+    protected function autocompleteList(CrudAction $action, SelectQuery $query): SelectQuery
     {
         $data = $action->getData();
         if (!is_array($data) || empty($data['autocomplete_list'])) {

@@ -49,14 +49,14 @@ class FlysystemRenderer extends FileRenderer
             );
             $name = Hash::get($data, 'name');
 
-            $this->_service->setResponse(
-                $this->deliverAsset($this->_service->getResponse(), $file, $name)
+            $this->service->setResponse(
+                $this->deliverAsset($this->service->getResponse(), $file, $name)
             );
         } catch (FileNotFoundException) {
-            $response = $this->_service->getResponse()
+            $response = $this->service->getResponse()
                 ->withStatus(404);
 
-            $this->_service->setResponse($response);
+            $this->service->setResponse($response);
         }
 
         return true;
@@ -111,12 +111,12 @@ class FlysystemRenderer extends FileRenderer
     public function error(Exception $exception): void
     {
         $code = $exception->getCode();
-        $response = $this->_service->getResponse()
+        $response = $this->service->getResponse()
             ->withStatus($code ?: 500);
 
         $this->log($exception->getMessage());
         $this->log($exception->getTraceAsString());
 
-        $this->_service->setResponse($response);
+        $this->service->setResponse($response);
     }
 }

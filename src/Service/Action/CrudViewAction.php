@@ -27,6 +27,6 @@ class CrudViewAction extends CrudAction
      */
     public function execute(): mixed
     {
-        return $this->_getEntity($this->_id);
+        return $this->getEntity($this->id);
     }
 }

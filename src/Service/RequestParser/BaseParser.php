@@ -23,7 +23,7 @@ abstract class BaseParser
     /**
      * Reference to the Service.
      */
-    protected ?\CakeDC\Api\Service\Service $_service = null;
+    protected ?\CakeDC\Api\Service\Service $service = null;
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ abstract class BaseParser
      */
     public function __construct(Service $service)
     {
-        $this->_service = $service;
+        $this->service = $service;
     }
 
     /**

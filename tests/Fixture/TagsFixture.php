@@ -26,8 +26,9 @@ class TagsFixture extends TestFixture
      * @var array
      */
     public array $records = [
-        ['id' => 1, 'name' => 'tag1'],
-        ['id' => 2, 'name' => 'tag2'],
-        ['id' => 3, 'name' => 'tag3'],
+        ['id' => 1, 'post_id' => 1, 'name' => 'tag1'],
+        ['id' => 2, 'post_id' => 1, 'name' => 'tag2'],
+        ['id' => 3, 'post_id' => 2, 'name' => 'tag3'],
+        ['id' => 4, 'post_id' => 2, 'name' => 'tag4'],
     ];
 }

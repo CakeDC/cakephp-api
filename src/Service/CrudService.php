@@ -27,7 +27,7 @@ abstract class CrudService extends Service
      *
      * @var array
      */
-    protected array $_actionsClassMap = [
+    protected array $actionsClassMap = [
         'describe' => \CakeDC\Api\Service\Action\CrudDescribeAction::class,
         'index' => \CakeDC\Api\Service\Action\CrudIndexAction::class,
         'view' => \CakeDC\Api\Service\Action\CrudViewAction::class,
@@ -41,12 +41,12 @@ abstract class CrudService extends Service
      *
      * @var string
      */
-    protected $_table;
+    protected $table;
 
     /**
      * Id param name.
      */
-    protected string $_idName = 'id';
+    protected string $idName = 'id';
 
     /**
      * CrudService constructor.
@@ -70,7 +70,7 @@ abstract class CrudService extends Service
      */
     public function getTable(): string
     {
-        return $this->_table;
+        return $this->table;
     }
 
     /**
@@ -81,7 +81,7 @@ abstract class CrudService extends Service
      */
     public function setTable(string $table)
     {
-        $this->_table = $table;
+        $this->table = $table;
 
         return $this;
     }
@@ -92,16 +92,16 @@ abstract class CrudService extends Service
      * @param array $route Activated route.
      * @return array
      */
-    protected function _actionOptions(array $route): array
+    protected function actionOptions(array $route): array
     {
         $id = null;
-        if (isset($route[$this->_idName])) {
-            $id = $route[$this->_idName];
+        if (isset($route[$this->idName])) {
+            $id = $route[$this->idName];
         }
 
-        return parent::_actionOptions($route) + [
+        return parent::actionOptions($route) + [
             'id' => $id,
-            'idName' => $this->_idName,
+            'idName' => $this->idName,
         ];
     }
 }

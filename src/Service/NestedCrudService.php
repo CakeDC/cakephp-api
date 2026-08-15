@@ -23,7 +23,7 @@ use Cake\Utility\Inflector;
  */
 abstract class NestedCrudService extends CrudService
 {
-    protected ?string $_parentIdName = null;
+    protected ?string $parentIdName = null;
 
     /**
      * NestedCrudService constructor.
@@ -34,7 +34,7 @@ abstract class NestedCrudService extends CrudService
     {
         parent::__construct($config);
         if (isset($config['parentIdName'])) {
-            $this->_parentIdName = $config['parentIdName'];
+            $this->parentIdName = $config['parentIdName'];
         }
     }
 
@@ -44,28 +44,28 @@ abstract class NestedCrudService extends CrudService
      * @param array $route Action route,
      * @return array
      */
-    protected function _actionOptions(array $route): array
+    protected function actionOptions(array $route): array
     {
         $parent = $this->getParentService();
-        if ($this->_parentIdName === null && $parent instanceof Service) {
+        if ($this->parentIdName === null && $parent instanceof Service) {
             $parentName = $parent->getName();
             $parentIdName = Inflector::singularize($parentName) . '_id';
             if (array_key_exists($parentIdName, $route)) {
-                $this->_parentIdName = $parentIdName;
+                $this->parentIdName = $parentIdName;
             }
         }
         $parentId = null;
-        if ($this->_parentIdName !== null && isset($route[$this->_parentIdName])) {
-            $parentId = $route[$this->_parentIdName];
+        if ($this->parentIdName !== null && isset($route[$this->parentIdName])) {
+            $parentId = $route[$this->parentIdName];
         }
         $options = [
             'parentId' => $parentId,
-            'parentIdName' => $this->_parentIdName,
+            'parentIdName' => $this->parentIdName,
         ];
         if ($parentId !== null) {
             $options['Extension'] = ['CakeDC/Api.Nested'];
         }
 
-        return Hash::merge(parent::_actionOptions($route), $options);
+        return Hash::merge(parent::actionOptions($route), $options);
     }
 }

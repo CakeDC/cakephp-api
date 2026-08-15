@@ -60,7 +60,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function accept(): bool
     {
-        $request = $this->_service->getRequest();
+        $request = $this->service->getRequest();
         $json = $request->accepts('application/json') || $request->accepts('text/json');
         $js = $request->accepts('text/javascript');
 
@@ -75,7 +75,7 @@ class JSendRenderer extends BaseRenderer
      */
     public function response(?Result $result = null): bool
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
 
         $data = $result->getData();
         $payload = $result->getPayload();
@@ -85,12 +85,12 @@ class JSendRenderer extends BaseRenderer
         if (is_array($payload)) {
             $return = Hash::merge($return, $payload);
         }
-        $this->_mapStatus($result);
+        $this->mapStatus($result);
 
-        $response = $response->withStringBody($this->_format($this->status, $return))
+        $response = $response->withStringBody($this->format($this->status, $return))
             ->withStatus($result->getCode())
             ->withType('application/json');
-        $this->_service->setResponse($response);
+        $this->service->setResponse($response);
 
         return true;
     }
@@ -103,14 +103,14 @@ class JSendRenderer extends BaseRenderer
      */
     public function error(Exception $exception): void
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $data = $exception instanceof ValidationException ? $exception->getValidationErrors() : null;
-        $message = $this->_buildMessage($exception);
-        $trace = $this->_stackTrace($exception);
+        $message = $this->buildMessage($exception);
+        $trace = $this->stackTrace($exception);
         $response = $response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))
             ->withStatus($this->errorCode)
             ->withType('application/json');
-        $this->_service->setResponse($response);
+        $this->service->setResponse($response);
     }
 
     /**
@@ -120,7 +120,7 @@ class JSendRenderer extends BaseRenderer
      * @param array $response The response properties.
      * @return string
      */
-    protected function _format(string $status, array $response = []): string
+    protected function format(string $status, array $response = []): string
     {
         $object = new stdClass();
         $object->status = $status;
@@ -138,9 +138,9 @@ class JSendRenderer extends BaseRenderer
      * @param array $data The response data object.
      * @return string
      */
-    protected function _success(?array $data = null): string
+    protected function success(?array $data = null): string
     {
-        return $this->_format(self::STATUS_SUCCESS, ['data' => $data]);
+        return $this->format(self::STATUS_SUCCESS, ['data' => $data]);
     }
 
     /**
@@ -149,9 +149,9 @@ class JSendRenderer extends BaseRenderer
      * @param array $data The response data object.
      * @return string
      */
-    protected function _fail(?array $data = null): string
+    protected function fail(?array $data = null): string
     {
-        return $this->_format(self::STATUS_FAIL, ['data' => $data]);
+        return $this->format(self::STATUS_FAIL, ['data' => $data]);
     }
 
 // phpcs:disable
@@ -167,7 +167,7 @@ class JSendRenderer extends BaseRenderer
     protected function _error(string $message = 'Unknown error', $code = 0, ?array $data = null, ?array $trace = null): string
     {
 // phpcs:enable
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         if ($code === 0) {
             $code = $response->getStatusCode();
         }
@@ -180,7 +180,7 @@ class JSendRenderer extends BaseRenderer
             $response['trace'] = $trace;
         }
 
-        return $this->_format(self::STATUS_ERROR, $response);
+        return $this->format(self::STATUS_ERROR, $response);
     }
 
     /**
@@ -189,7 +189,7 @@ class JSendRenderer extends BaseRenderer
      * @param \CakeDC\Api\Service\Action\Result $result A result object instance.
      * @return void
      */
-    protected function _mapStatus(Result $result): void
+    protected function mapStatus(Result $result): void
     {
         $code = $result->getCode();
         $this->status = $code === 0 || $code >= 200 && $code <= 399 ? self::STATUS_SUCCESS : self::STATUS_ERROR;

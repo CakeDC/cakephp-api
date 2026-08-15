@@ -25,7 +25,7 @@ class FormParser extends BaseParser
      */
     public function getParams(): array
     {
-        $request = $this->_service->getRequest();
+        $request = $this->service->getRequest();
         if (!$request instanceof \Cake\Http\ServerRequest) {
             throw new \RuntimeException('Request is not available in the parser.');
         }

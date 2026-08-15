@@ -95,9 +95,9 @@ class ValidateAccountAction extends Action
      *
      * @return array
      */
-    protected function _authConfig(): array
+    protected function authConfig(): array
     {
-        return Hash::merge(parent::_authConfig(), [
+        return Hash::merge(parent::authConfig(), [
             'authenticate' => [
                 'CakeDC/Api.Form' => [],
             ],

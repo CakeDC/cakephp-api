@@ -45,7 +45,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     /**
      * @var string|null Current logged in user
      */
-    protected ?string $_defaultUserId = null;
+    protected ?string $defaultUserId = null;
 
     /**
      * setUp
@@ -78,9 +78,9 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function getDefaultUser(?string $userId = null): ?string
     {
         if ($userId === null) {
-            $userId = $this->_defaultUserId;
+            $userId = $this->defaultUserId;
         } else {
-            $this->_defaultUserId = $userId;
+            $this->defaultUserId = $userId;
         }
 
         return $userId;
@@ -92,7 +92,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $userId User id.
      * @return mixed|null
      */
-    protected function _userToken(?string $userId = null): mixed
+    protected function userToken(?string $userId = null): mixed
     {
         if ($userId === null) {
             $userId = $this->getDefaultUser();
@@ -129,7 +129,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
         array $headers = []
     ): void {
         ServiceRegistry::getServiceLocator()->clear();
-        $userToken = $this->_userToken($userId);
+        $userToken = $this->userToken($userId);
 
         Configure::load('api');
 
@@ -142,12 +142,12 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
 
         $url = '/api' . $url;
         if ($userToken !== null) {
-            $url = $this->_appendGetParam($url, 'token', (string)$userToken);
+            $url = $this->appendGetParam($url, 'token', (string)$userToken);
         }
         if ($method === 'GET' && !empty($data)) {
             foreach ($data as $key => $value) {
                 if (!is_array($value)) {
-                    $url = $this->_appendGetParam($url, $key, (string)$value);
+                    $url = $this->appendGetParam($url, $key, (string)$value);
                 }
             }
         }
@@ -169,7 +169,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param string $value Param value.
      * @return string
      */
-    protected function _appendGetParam(string $url, string $key, string $value): string
+    protected function appendGetParam(string $url, string $key, string $value): string
     {
         $appendChar = str_contains($url, '?') ? '&' : '?';
 

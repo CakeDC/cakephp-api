@@ -27,16 +27,16 @@ class ConfigReader
      */
     public function serviceOptions(string $serviceName, ?string $version = null): array
     {
-        $defaults = $this->_checkServiceOptions('default.options');
+        $defaults = $this->checkServiceOptions('default.options');
         if (Configure::read('Api.useVersioning') && $version) {
-            $versionDefaults = $this->_checkServiceOptions($version . '.default.options');
-            $options = $this->_checkServiceOptions(sprintf('%s.%s.options', $version, $serviceName));
-            $options = $this->_mergeWithDefaults($options, $versionDefaults, true);
+            $versionDefaults = $this->checkServiceOptions($version . '.default.options');
+            $options = $this->checkServiceOptions(sprintf('%s.%s.options', $version, $serviceName));
+            $options = $this->mergeWithDefaults($options, $versionDefaults, true);
         } else {
-            $options = $this->_checkServiceOptions($serviceName . '.options');
+            $options = $this->checkServiceOptions($serviceName . '.options');
         }
 
-        return $this->_mergeWithDefaults($options, $defaults, true);
+        return $this->mergeWithDefaults($options, $defaults, true);
     }
 
     /**
@@ -50,28 +50,28 @@ class ConfigReader
     public function actionOptions(string $serviceName, string $actionName, ?string $version = null): array
     {
         $actionName = Inflector::camelize($actionName);
-        $defaults = $this->_checkServiceOptions('default.Action.default');
-        $defaultByName = $this->_checkServiceOptions('default.Action.' . $actionName);
+        $defaults = $this->checkServiceOptions('default.Action.default');
+        $defaultByName = $this->checkServiceOptions('default.Action.' . $actionName);
         if (Configure::read('Api.useVersioning') && $version) {
-            $versionDefaults = $this->_checkServiceOptions($version . '.default.Action.default');
-            $versionDefaultsByName = $this->_checkServiceOptions(sprintf('%s.default.Action.%s', $version, $actionName));
+            $versionDefaults = $this->checkServiceOptions($version . '.default.Action.default');
+            $versionDefaultsByName = $this->checkServiceOptions(sprintf('%s.default.Action.%s', $version, $actionName));
 
-            $byServiceDefault = $this->_checkServiceOptions(sprintf('%s.%s.Action.default', $version, $serviceName));
-            $byServiceOptions = $this->_checkServiceOptions(sprintf('%s.%s.Action.%s', $version, $serviceName, $actionName));
+            $byServiceDefault = $this->checkServiceOptions(sprintf('%s.%s.Action.default', $version, $serviceName));
+            $byServiceOptions = $this->checkServiceOptions(sprintf('%s.%s.Action.%s', $version, $serviceName, $actionName));
 
-            $options = $this->_mergeWithDefaults($byServiceOptions, $byServiceDefault);
-            $options = $this->_mergeWithDefaults($options, $versionDefaultsByName);
-            $options = $this->_mergeWithDefaults($options, $versionDefaults);
+            $options = $this->mergeWithDefaults($byServiceOptions, $byServiceDefault);
+            $options = $this->mergeWithDefaults($options, $versionDefaultsByName);
+            $options = $this->mergeWithDefaults($options, $versionDefaults);
         } else {
-            $byServiceDefault = $this->_checkServiceOptions($serviceName . '.Action.default');
-            $byServiceOptions = $this->_checkServiceOptions(sprintf('%s.Action.%s', $serviceName, $actionName));
+            $byServiceDefault = $this->checkServiceOptions($serviceName . '.Action.default');
+            $byServiceOptions = $this->checkServiceOptions(sprintf('%s.Action.%s', $serviceName, $actionName));
 
-            $options = $this->_mergeWithDefaults($byServiceOptions, $byServiceDefault);
+            $options = $this->mergeWithDefaults($byServiceOptions, $byServiceDefault);
         }
 
-        $options = $this->_mergeWithDefaults($defaultByName, $options);
+        $options = $this->mergeWithDefaults($defaultByName, $options);
 
-        return $this->_mergeWithDefaults($defaults, $options);
+        return $this->mergeWithDefaults($defaults, $options);
     }
 
     /**
@@ -80,7 +80,7 @@ class ConfigReader
      * @param string $prefix Path prefix.
      * @return \ArrayAccess|array
      */
-    protected function _checkServiceOptions(string $prefix): \ArrayAccess|array
+    protected function checkServiceOptions(string $prefix): \ArrayAccess|array
     {
         $data = Configure::read('Api.Service');
         if (is_array($data) && Hash::check($data, $prefix)) {
@@ -98,7 +98,7 @@ class ConfigReader
      * @param bool $overwrite Overwrite flag.
      * @return array
      */
-    protected function _mergeWithDefaults(array $options, array $defaults, bool $overwrite = false): array
+    protected function mergeWithDefaults(array $options, array $defaults, bool $overwrite = false): array
     {
         if ($overwrite) {
             foreach ($options as $key => $value) {

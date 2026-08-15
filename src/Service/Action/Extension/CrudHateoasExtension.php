@@ -28,7 +28,7 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 class CrudHateoasExtension extends Extension implements EventListenerInterface
 {
-    protected \CakeDC\Api\Service\Utility\ReverseRouting $_reverseRouter;
+    protected \CakeDC\Api\Service\Utility\ReverseRouting $reverseRouter;
 
     /**
      * CrudHateous Extension constructor.
@@ -39,7 +39,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
     public function __construct(ExtensionRegistry $registry, array $config = [])
     {
         parent::__construct($registry, $config);
-        $this->_reverseRouter = new ReverseRouting();
+        $this->reverseRouter = new ReverseRouting();
     }
 
     /**
@@ -70,10 +70,10 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         $links = [];
         //$route = $action->route();
         if ($actionName == 'view') {
-            $links = $this->_buildViewLinks($action);
+            $links = $this->buildViewLinks($action);
         }
         if ($actionName == 'index') {
-            $links = $this->_buildIndexLinks($action);
+            $links = $this->buildIndexLinks($action);
         }
 
         $parent = $action->getService()->getParentService();
@@ -90,21 +90,21 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return array
      */
-    protected function _buildIndexLinks(Action $action): array
+    protected function buildIndexLinks(Action $action): array
     {
         $links = [];
         $indexRoute = $action->getRoute();
         $version = $action->getService()->getVersion();
         $parent = $action->getService()->getParentService();
-        $path = $this->_reverseRouter->indexPath($action);
+        $path = $this->reverseRouter->indexPath($action);
 
-        $links[] = $this->_reverseRouter->link('self', $path, $indexRoute['_method'], $version);
-        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':add', $path, 'POST', $version);
+        $links[] = $this->reverseRouter->link('self', $path, $indexRoute['_method'], $version);
+        $links[] = $this->reverseRouter->link($action->getService()->getName() . ':add', $path, 'POST', $version);
 
         if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentName = $parent->getName() . ':view';
-            $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
-            $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);
+            $path = $this->reverseRouter->parentViewPath($parentName, $action, 'view');
+            $links[] = $this->reverseRouter->link($parentName, $path, 'GET', $version);
         }
 
         return $links;
@@ -116,7 +116,7 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return array
      */
-    protected function _buildViewLinks(Action $action): array
+    protected function buildViewLinks(Action $action): array
     {
         $links = [];
         $viewRoute = $action->getRoute();
@@ -126,13 +126,13 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
         $path = null;
         if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentRoutes = $parent->routes();
-            $currentRoute = $this->_reverseRouter->findRoute($viewRoute, $parentRoutes);
+            $currentRoute = $this->reverseRouter->findRoute($viewRoute, $parentRoutes);
             if ($currentRoute instanceof \Cake\Routing\Route\Route) {
                 $path = $parent->routeReverse($viewRoute);
                 array_pop($viewRoute['pass']);
 
                 $indexName = $service->getName() . ':index';
-                $indexPath = $this->_reverseRouter->parentViewPath($indexName, $action, 'index');
+                $indexPath = $this->reverseRouter->parentViewPath($indexName, $action, 'index');
             }
         } else {
             $path = $service->routeReverse($viewRoute);
@@ -145,12 +145,12 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
             $indexPath = $service->routeReverse($route->defaults);
         }
 
-        $links[] = $this->_reverseRouter->link('self', $path, $viewRoute['_method'], $version);
-        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':edit', $path, 'PUT', $version);
-        $links[] = $this->_reverseRouter->link($action->getService()->getName() . ':delete', $path, 'DELETE', $version);
+        $links[] = $this->reverseRouter->link('self', $path, $viewRoute['_method'], $version);
+        $links[] = $this->reverseRouter->link($action->getService()->getName() . ':edit', $path, 'PUT', $version);
+        $links[] = $this->reverseRouter->link($action->getService()->getName() . ':delete', $path, 'DELETE', $version);
         if (!empty($indexPath)) {
             $routeName = $action->getService()->getName() . ':index';
-            $links[] = $this->_reverseRouter->link($routeName, $indexPath, 'GET', $version);
+            $links[] = $this->reverseRouter->link($routeName, $indexPath, 'GET', $version);
         }
 
         if (!$parent instanceof \CakeDC\Api\Service\Service && $action instanceof CrudAction) {
@@ -181,15 +181,15 @@ class CrudHateoasExtension extends Extension implements EventListenerInterface
                     $defaults[$currentId] = $viewRoute['id'];
                     $indexPath = $service->routeReverse($defaults);
 
-                    $links[] = $this->_reverseRouter->link($serviceName . ':index', $indexPath, 'GET', $version);
+                    $links[] = $this->reverseRouter->link($serviceName . ':index', $indexPath, 'GET', $version);
                 }
             }
         }
 
         if ($parent instanceof \CakeDC\Api\Service\Service) {
             $parentName = $parent->getName() . ':view';
-            $path = $this->_reverseRouter->parentViewPath($parentName, $action, 'view');
-            $links[] = $this->_reverseRouter->link($parentName, $path, 'GET', $version);
+            $path = $this->reverseRouter->parentViewPath($parentName, $action, 'view');
+            $links[] = $this->reverseRouter->link($parentName, $path, 'GET', $version);
         }
 
         return $links;

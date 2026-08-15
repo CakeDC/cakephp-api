@@ -91,6 +91,7 @@ class ListActionTest extends TestCase
             'articles',
             'articles_tags',
             'authors',
+            'posts',
             'tags',
         ];
         sort($expected);

@@ -18,10 +18,11 @@ use CakeDC\Api\Test\App\DI\Service\TestService;
 
 class ArticlesService extends FallbackService
 {
-    protected array $_actions = [
+    protected array $actions = [
         'tag' => ['method' => ['PUT', 'POST'], 'path' => 'tag/{id}'],
         'untag' => ['method' => ['PUT', 'POST'], 'path' => 'untag/{id}'],
         'data' => ['method' => ['GET'], 'path' => 'data'],
+        'featured' => ['method' => ['GET'], 'path' => 'featured'],
     ];
 
     public function initialize(): void
@@ -32,6 +33,11 @@ class ArticlesService extends FallbackService
             'method' => ['GET'],
             'mapCors' => true,
             'path' => 'data',
+        ]);
+
+        $this->mapAction('featured', \CakeDC\Api\Test\App\Service\Action\FeaturedAction::class, [
+            'method' => ['GET'],
+            'path' => 'featured',
         ]);
 
         $this->setTable('Articles');

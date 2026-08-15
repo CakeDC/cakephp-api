@@ -20,7 +20,7 @@ use CakeDC\Api\Service\Action\Collection\DeleteAction;
 
 class CollectionExtension extends Extension implements EventListenerInterface
 {
-    protected \CakeDC\Api\Service\Service $_service;
+    protected \CakeDC\Api\Service\Service $service;
 
     /**
      * Returns a list of events this object is implementing. When the class is registered
@@ -43,18 +43,18 @@ class CollectionExtension extends Extension implements EventListenerInterface
      */
     public function beforeProcess(Event $event): void
     {
-        $this->_service = $event->getData('service');
-        $this->_service->mapAction('bulkAdd', AddEditAction::class, [
+        $this->service = $event->getData('service');
+        $this->service->mapAction('bulkAdd', AddEditAction::class, [
             'method' => ['POST'],
             'mapCors' => true,
             'path' => 'bulk',
         ]);
-        $this->_service->mapAction('bulkEdit', AddEditAction::class, [
+        $this->service->mapAction('bulkEdit', AddEditAction::class, [
             'method' => ['PUT'],
             'mapCors' => true,
             'path' => 'bulk',
         ]);
-        $this->_service->mapAction('bulkDelete', DeleteAction::class, [
+        $this->service->mapAction('bulkDelete', DeleteAction::class, [
             'method' => ['DELETE'],
             'mapCors' => true,
             'path' => 'bulk',

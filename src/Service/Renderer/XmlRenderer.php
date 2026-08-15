@@ -39,9 +39,9 @@ class XmlRenderer extends BaseRenderer
      */
     public function response(?Result $result = null): bool
     {
-        $response = $this->_service->getResponse();
-        $xml = $this->_format($result->getData());
-        $this->_service->setResponse($response->withStringBody($this->_encode($xml))->withType('application/xml')
+        $response = $this->service->getResponse();
+        $xml = $this->format($result->getData());
+        $this->service->setResponse($response->withStringBody($this->encode($xml))->withType('application/xml')
             ->withStatus($result->getCode()));
 
         return true;
@@ -55,20 +55,20 @@ class XmlRenderer extends BaseRenderer
      */
     public function error(Exception $exception): void
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $data = [
             'error' => [
                 'code' => $exception->getCode(),
-                'message' => $this->_buildMessage($exception),
+                'message' => $this->buildMessage($exception),
             ],
         ];
         if (Configure::read('debug')) {
-            $data['error']['trace'] = $this->_stackTrace($exception);
+            $data['error']['trace'] = $this->stackTrace($exception);
         }
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withType('application/xml'));
+        $this->service->setResponse($response->withStringBody($this->encode($data))->withType('application/xml'));
     }
 
     /**
@@ -77,12 +77,12 @@ class XmlRenderer extends BaseRenderer
      * @param mixed $content The content to process.
      * @return array
      */
-    protected function _format($content = null): array
+    protected function format($content = null): array
     {
         if (is_array($content) || $content instanceof Collection || $content instanceof ResultSetInterface) {
-            $data = $this->_array($content);
+            $data = $this->array($content);
         } elseif (is_object($content)) {
-            $data = $this->_object($content);
+            $data = $this->object($content);
         } else {
             $data = ['value' => $content];
         }
@@ -98,7 +98,7 @@ class XmlRenderer extends BaseRenderer
      * @param object $data The object to process.
      * @return array
      */
-    protected function _object(object $data): array
+    protected function object(object $data): array
     {
         $xml = [];
         if ($data instanceof EntityInterface) {
@@ -112,9 +112,9 @@ class XmlRenderer extends BaseRenderer
                 $property = [];
                 $property['@'] = $value->toIso8601String();
             } elseif (is_object($value)) {
-                $property = $this->_object($value);
+                $property = $this->object($value);
             } elseif (is_array($value)) {
-                    $property = $this->_array($value);
+                    $property = $this->array($value);
             } else {
                 $property = [];
                 $property['@'] = $value ?? '';
@@ -134,7 +134,7 @@ class XmlRenderer extends BaseRenderer
      * @param array|\Cake\Collection\Collection $data The array to process.
      * @return array
      */
-    protected function _array($data): array
+    protected function array($data): array
     {
         $xml = [];
         $items = [];
@@ -145,9 +145,9 @@ class XmlRenderer extends BaseRenderer
             $item = [];
             $item['@key'] = $name;
             if (is_object($value)) {
-                $item = $this->_object($value);
+                $item = $this->object($value);
             } elseif (is_array($value)) {
-                $item = $this->_array($value);
+                $item = $this->array($value);
             } else {
                 $item = [];
                 $item['@'] = $value ?? '';
@@ -166,7 +166,7 @@ class XmlRenderer extends BaseRenderer
      * @param array|object $data Encoded data.
      * @return string
      */
-    protected function _encode(object|array $data): string
+    protected function encode(object|array $data): string
     {
         $xmlObject = Xml::fromArray($data, ['format' => 'tags']);
 

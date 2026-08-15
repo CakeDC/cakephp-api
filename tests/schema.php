@@ -49,9 +49,34 @@ return [
         ],
     ],
     [
+        'table' => 'auth_store',
+        'columns' => [
+            'id' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+            'store' => ['type' => 'text', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
+            'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+            'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        ],
+        'constraints' => [
+            'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+        ],
+    ],
+    [
+        'table' => 'posts',
+        'columns' => [
+            'id' => ['type' => 'integer'],
+            'title' => ['type' => 'string', 'null' => true],
+            'body' => 'text',
+            'published' => ['type' => 'string', 'length' => 1, 'default' => 'N'],
+        ],
+        'constraints' => [
+            'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+        ],
+    ],
+    [
         'table' => 'tags',
         'columns' => [
             'id' => ['type' => 'integer', 'null' => false],
+            'post_id' => ['type' => 'integer', 'null' => true],
             'name' => ['type' => 'string', 'null' => false],
         ],
         'constraints' => [

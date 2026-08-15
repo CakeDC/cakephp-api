@@ -49,7 +49,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      */
     public function onLoginFormat(Event $event): void
     {
-        $result = $this->_userCleanup($event->getData('user'));
+        $result = $this->userCleanup($event->getData('user'));
         if ($result !== null) {
             $event->setResult($result);
         }
@@ -63,7 +63,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      */
     public function onRegisterFormat(Event $event): void
     {
-        $result = $this->_userCleanup($event->getData('user'));
+        $result = $this->userCleanup($event->getData('user'));
         if ($result !== null) {
             $event->setResult($result);
         }
@@ -73,7 +73,7 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
      * @param array|\Cake\Datasource\EntityInterface|null $user User data
      * @return array|null
      */
-    protected function _userCleanup($user): ?array
+    protected function userCleanup($user): ?array
     {
         if ($user === null) {
             return null;

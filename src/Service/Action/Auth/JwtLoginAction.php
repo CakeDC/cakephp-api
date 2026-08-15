@@ -31,9 +31,9 @@ class JwtLoginAction extends Action
      * @param bool $socialLogin is social login
      * @return array
      */
-    protected function _afterIdentifyUser(?array $user, bool $socialLogin = false): array
+    protected function afterIdentifyUser(?array $user, bool $socialLogin = false): array
     {
-        $user = parent::_afterIdentifyUser($user, $socialLogin);
+        $user = parent::afterIdentifyUser($user, $socialLogin);
 
         if ($user === []) {
             return [];

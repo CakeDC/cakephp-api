@@ -33,11 +33,11 @@ class FileRenderer extends BaseRenderer
      */
     public function response(?Result $result = null): bool
     {
-        $response = $this->_service
+        $response = $this->service
             ->getResponse()
             ->withFile($result->getData())
             ->withStatus($result->getCode());
-        $this->_service->setResponse($response);
+        $this->service->setResponse($response);
 
         return true;
     }
@@ -50,20 +50,20 @@ class FileRenderer extends BaseRenderer
      */
     public function error(Exception $exception): void
     {
-        $response = $this->_service->getResponse();
+        $response = $this->service->getResponse();
         $data = [
             'error' => [
                 'code' => $exception->getCode(),
-                'message' => $this->_buildMessage($exception),
+                'message' => $this->buildMessage($exception),
             ],
         ];
         if (Configure::read('debug')) {
-            $data['error']['trace'] = $this->_stackTrace($exception);
+            $data['error']['trace'] = $this->stackTrace($exception);
         }
         if ($exception instanceof ValidationException) {
             $data['error']['validation'] = $exception->getValidationErrors();
         }
-        $this->_service->setResponse($response->withStringBody($this->_encode($data))->withType('application/json'));
+        $this->service->setResponse($response->withStringBody($this->encode($data))->withType('application/json'));
     }
 
     /**
@@ -72,7 +72,7 @@ class FileRenderer extends BaseRenderer
      * @param mixed $data Encoded data.
      * @return string
      */
-    protected function _encode($data): string
+    protected function encode($data): string
     {
         $format = Configure::read('debug') ? JSON_PRETTY_PRINT : 0;
 

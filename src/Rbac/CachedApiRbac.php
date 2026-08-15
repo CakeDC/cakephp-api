@@ -113,7 +113,7 @@ class CachedApiRbac extends ApiRbac
                 }
                 $permissions = $this->permissionsMap[$checkRole][$key];
                 foreach ($permissions as $permission) {
-                    $matchResult = $this->_matchPermission($permission, $user, $role, $request);
+                    $matchResult = $this->matchPermission($permission, $user, $role, $request);
                     if ($matchResult instanceof \CakeDC\Auth\Rbac\PermissionMatchResult) {
                         if ($this->getConfig('log')) {
                             $this->log($matchResult->getReason(), LogLevel::DEBUG);

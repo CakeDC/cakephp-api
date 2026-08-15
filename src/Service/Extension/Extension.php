@@ -31,7 +31,7 @@ abstract class Extension implements EventListenerInterface
     /**
      * ExtensionRegistry instance.
      */
-    protected \CakeDC\Api\Service\ExtensionRegistry $_registry;
+    protected \CakeDC\Api\Service\ExtensionRegistry $registry;
 
     /**
      * Extension constructor.
@@ -41,7 +41,7 @@ abstract class Extension implements EventListenerInterface
      */
     public function __construct(ExtensionRegistry $registry, array $config = [])
     {
-        $this->_registry = $registry;
+        $this->registry = $registry;
         $this->setConfig($config);
     }
 }

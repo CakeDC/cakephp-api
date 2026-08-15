@@ -37,7 +37,7 @@ trait ReCaptchaTrait
             return true;
         }
 
-        $recaptcha = $this->_getReCaptchaInstance();
+        $recaptcha = $this->getReCaptchaInstance();
         if ($recaptchaResponse === null) {
             $recaptchaResponse = $this->getService()->getRequest()->getData('g-recaptcha-response');
         }
@@ -51,7 +51,7 @@ trait ReCaptchaTrait
      *
      * @return \ReCaptcha\ReCaptcha|null
      */
-    protected function _getReCaptchaInstance(): ?\ReCaptcha\ReCaptcha
+    protected function getReCaptchaInstance(): ?\ReCaptcha\ReCaptcha
     {
         $domain = RequestParser::getDomain($this->getService()->getRequest());
         $reCaptchaSecret = Configure::read('Api.reCaptcha.' . $domain . '.secret');

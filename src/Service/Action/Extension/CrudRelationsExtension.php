@@ -57,7 +57,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
-        $event->setResult($this->_attachAssociations($action, $query));
+        $event->setResult($this->attachAssociations($action, $query));
     }
 
     /**
@@ -73,7 +73,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $event->getData('query');
 
-        $event->setResult($this->_attachAssociations($action, $query));
+        $event->setResult($this->attachAssociations($action, $query));
     }
 
     /**
@@ -82,7 +82,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\CrudAction $action A CrudAction instance.
      * @return false|array
      */
-    protected function _includeAssociations(CrudAction $action): false|array
+    protected function includeAssociations(CrudAction $action): false|array
     {
         $data = $action->getData();
         if (!empty($data['include_associations']) && empty($data['include_relations'])) {
@@ -109,7 +109,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param \CakeDC\Api\Service\Action\CrudAction $action An CrudAction instance.
      * @return bool
      */
-    protected function _includeDirectAssociations(CrudAction $action): bool
+    protected function includeDirectAssociations(CrudAction $action): bool
     {
         $data = $action->getData();
 
@@ -121,10 +121,10 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * @param \Cake\ORM\Query\SelectQuery $query A Query instance.
      * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function _attachAssociations(CrudAction $action, SelectQuery $query): SelectQuery
+    protected function attachAssociations(CrudAction $action, SelectQuery $query): SelectQuery
     {
-        $associations = $this->_includeAssociations($action);
-        if (empty($associations) && $this->_includeDirectAssociations($action)) {
+        $associations = $this->includeAssociations($action);
+        if (empty($associations) && $this->includeDirectAssociations($action)) {
             $relations = $action
                 ->getTable()
                 ->associations()

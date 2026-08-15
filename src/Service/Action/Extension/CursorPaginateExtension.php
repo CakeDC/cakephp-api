@@ -36,7 +36,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         'sinceIdField' => 'since_id',
     ];
 
-    protected \CakeDC\Api\Service\Utility\ReverseRouting $_reverseRouter;
+    protected \CakeDC\Api\Service\Utility\ReverseRouting $reverseRouter;
 
     /**
      * CursorPaginateExtension constructor.
@@ -48,7 +48,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
     public function __construct(ExtensionRegistry $registry, array $config = [])
     {
         parent::__construct($registry, $config);
-        $this->_reverseRouter = new ReverseRouting();
+        $this->reverseRouter = new ReverseRouting();
     }
 
     /**
@@ -80,9 +80,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         if ($event->getResult()) {
             $query = $event->getResult();
         }
-        $query->limit($this->_count($action));
-        $sinceId = $this->_sinceId($action);
-        $maxId = $this->_maxId($action);
+        $query->limit($this->count($action));
+        $sinceId = $this->sinceId($action);
+        $maxId = $this->maxId($action);
         $orderDirection = 'desc';
         $cursorField = $this->getConfig('cursorField');
         if ($maxId) {
@@ -103,7 +103,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
-    protected function _sinceId(Action $action): ?int
+    protected function sinceId(Action $action): ?int
     {
         $data = $action->getData();
         $sinceIdField = $this->getConfig('sinceIdField');
@@ -120,7 +120,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
-    protected function _maxId(Action $action): ?int
+    protected function maxId(Action $action): ?int
     {
         $data = $action->getData();
         $maxIdField = $this->getConfig('maxIdField');
@@ -137,7 +137,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return int|null
      */
-    protected function _count(Action $action): ?int
+    protected function count(Action $action): ?int
     {
         $data = $action->getData();
         $countField = $this->getConfig('countField');
@@ -173,8 +173,8 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
             }
         }
 
-        $sinceId = $this->_sinceId($action);
-        $maxId = $this->_maxId($action);
+        $sinceId = $this->sinceId($action);
+        $maxId = $this->maxId($action);
 
         if ($newSinceId === null) {
             $newSinceId = $sinceId;
@@ -188,23 +188,23 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $version = $action->getService()->getVersion();
 
         $links = [];
-        $path = $this->_reverseRouter->indexPath($action, function (array $route) use ($newSinceId): array {
+        $path = $this->reverseRouter->indexPath($action, function (array $route) use ($newSinceId): array {
             $route['?']['since_id'] = $newSinceId;
 
             return $route;
         });
-        $link = $this->_reverseRouter->link('prev', $path, $indexRoute['_method'], $version);
+        $link = $this->reverseRouter->link('prev', $path, $indexRoute['_method'], $version);
         $links[$link['name']] = $link['href'];
 
-        $path = $this->_reverseRouter->indexPath($action, function (array $route) use ($newMaxId): array {
+        $path = $this->reverseRouter->indexPath($action, function (array $route) use ($newMaxId): array {
             $route['?']['max_id'] = $newMaxId;
 
             return $route;
         });
-        $link = $this->_reverseRouter->link('next', $path, $indexRoute['_method'], $version);
+        $link = $this->reverseRouter->link('next', $path, $indexRoute['_method'], $version);
         $links[$link['name']] = $link['href'];
 
-        $count = $this->_count($action);
+        $count = $this->count($action);
         $pagination = [
             'links' => $links,
             'count' => $count,

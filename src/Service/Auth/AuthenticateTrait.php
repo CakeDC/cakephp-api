@@ -43,7 +43,7 @@ trait AuthenticateTrait
      *
      * @var \Authentication\AuthenticationServiceInterface|null
      */
-    protected ?AuthenticationServiceInterface $_authentication = null;
+    protected ?AuthenticationServiceInterface $authentication = null;
 
     /**
      * Returns authentication service.
@@ -53,8 +53,8 @@ trait AuthenticateTrait
      */
     public function getAuthenticationService(): AuthenticationServiceInterface
     {
-        if ($this->_authentication !== null) {
-            return $this->_authentication;
+        if ($this->authentication !== null) {
+            return $this->authentication;
         }
 
         $service = $this->getRequest()->getAttribute('authentication');
@@ -69,7 +69,7 @@ trait AuthenticateTrait
             throw new Exception('Authentication service does not implement ' . AuthenticationServiceInterface::class);
         }
 
-        $this->_authentication = $service;
+        $this->authentication = $service;
 
         return $service;
     }

@@ -85,17 +85,17 @@ class Auth
         'identityAttribute' => 'identity',
     ];
 
-    protected $_registry;
+    protected $registry;
 
     /**
      * @var \CakeDC\Api\Service\Service
      */
-    protected $_service;
+    protected $service;
 
     /**
      * @var \CakeDC\Api\Service\Action\Action
      */
-    protected $_action;
+    protected $action;
 
     /**
      * Constructor
@@ -123,12 +123,12 @@ class Auth
     public function initialize(array $config): void
     {
         if (array_key_exists('service', $config)) {
-            $this->_service = $config['service'];
+            $this->service = $config['service'];
         }
         if (array_key_exists('action', $config)) {
-            $this->_action = $config['action'];
+            $this->action = $config['action'];
         }
-        $this->setEventManager($this->_action->getEventManager());
+        $this->setEventManager($this->action->getEventManager());
     }
 
     /**
@@ -136,7 +136,7 @@ class Auth
      *
      * @return void
      */
-    protected function _setDefaults(): void
+    protected function setDefaults(): void
     {
         $defaults = [
         'authenticate' => ['CakeDC/Api.Token'],
@@ -210,7 +210,7 @@ class Auth
      * @param \CakeDC\Api\Service\Action\Action $action An Action instance.
      * @return bool True if action is accessible without authentication else false
      */
-    protected function _isAllowed(Action $action): bool
+    protected function isAllowed(Action $action): bool
     {
         $action = strtolower((string)$action->getName());
 

@@ -126,7 +126,7 @@ class ApiRbac implements RbacInterface
         }
 
         foreach ($this->permissions as $permission) {
-            $matchResult = $this->_matchPermission($permission, $user, $role, $request);
+            $matchResult = $this->matchPermission($permission, $user, $role, $request);
             if ($matchResult instanceof \CakeDC\Auth\Rbac\PermissionMatchResult) {
                 if ($this->getConfig('log')) {
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
@@ -149,7 +149,7 @@ class ApiRbac implements RbacInterface
      * @return null|\CakeDC\Auth\Rbac\PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, array|\ArrayAccess $user, string $role, ServerRequestInterface $request): ?\CakeDC\Auth\Rbac\PermissionMatchResult
+    protected function matchPermission(array $permission, array|\ArrayAccess $user, string $role, ServerRequestInterface $request): ?\CakeDC\Auth\Rbac\PermissionMatchResult
     {
         $issetService = isset($permission['service']) || isset($permission['*service']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
@@ -180,7 +180,7 @@ class ApiRbac implements RbacInterface
         ];
 
         foreach ($permission as $key => $value) {
-            $inverse = $this->_startsWith($key, '*');
+            $inverse = $this->startsWith($key, '*');
             if ($inverse) {
                 $key = ltrim($key, '*');
             }
@@ -197,13 +197,13 @@ class ApiRbac implements RbacInterface
             } elseif ($key === 'allowed') {
                 $return = !empty($user) && (bool)$value;
             } elseif (array_key_exists($key, $reserved)) {
-                $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
+                $return = $this->matchOrAsterisk($value, $reserved[$key], true);
             } else {
-                if (!$this->_startsWith($key, 'user.')) {
+                if (!$this->startsWith($key, 'user.')) {
                     $key = 'user.' . $key;
                 }
 
-                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, $key));
+                $return = $this->matchOrAsterisk($value, Hash::get($userArr, $key));
             }
 
             if ($inverse) {
@@ -235,14 +235,14 @@ class ApiRbac implements RbacInterface
      * @param bool $allowEmpty If true and $value is null, the rule will pass
      * @return bool
      */
-    protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false): bool
+    protected function matchOrAsterisk($possibleValues, $value, $allowEmpty = false): bool
     {
         $possibleArray = (array)$possibleValues;
 
         return $possibleValues === '*' ||
         $value === $possibleValues ||
         in_array($value, $possibleArray) ||
-        in_array($this->_camelizeByChars((string)$value), $possibleArray);
+        in_array($this->camelizeByChars((string)$value), $possibleArray);
     }
 
     /**
@@ -251,7 +251,7 @@ class ApiRbac implements RbacInterface
      * @param string $value String to camelize.
      * @return string
      */
-    protected function _camelizeByChars(string $value): string
+    protected function camelizeByChars(string $value): string
     {
         $result = $value;
         foreach ($this->getConfig('route_breaking_chars') as $char) {
@@ -269,7 +269,7 @@ class ApiRbac implements RbacInterface
      * @param string $needle The beginning to check
      * @return bool
      */
-    protected function _startsWith($haystack, $needle): bool
+    protected function startsWith($haystack, $needle): bool
     {
         return str_starts_with($haystack, $needle);
     }

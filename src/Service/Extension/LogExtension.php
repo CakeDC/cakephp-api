@@ -22,11 +22,11 @@ class LogExtension extends Extension implements EventListenerInterface
 {
     use LogTrait;
 
-    protected \CakeDC\Api\Service\Service $_service;
+    protected \CakeDC\Api\Service\Service $service;
 
-    protected \CakeDC\Api\Service\Action\Action $_action;
+    protected \CakeDC\Api\Service\Action\Action $action;
 
-    protected ?float $_timer = null;
+    protected ?float $timer = null;
 
     /**
      * Returns a list of events this object is implementing. When the class is registered
@@ -50,8 +50,8 @@ class LogExtension extends Extension implements EventListenerInterface
      */
     public function beforeProcess(EventInterface $event): void
     {
-        $this->_service = $event->getData('service');
-        $this->_timer = microtime(true);
+        $this->service = $event->getData('service');
+        $this->timer = microtime(true);
     }
 
     /**
@@ -62,10 +62,10 @@ class LogExtension extends Extension implements EventListenerInterface
      */
     public function afterProcess(EventInterface $event): void
     {
-        $duration = round((microtime(true) - $this->_timer) * 1000, 0);
-        $url = $this->_service->getBaseUrl();
-        $data = $this->_service->getParser()->getParams();
-        $result = $this->_service->getResult()->toArray();
+        $duration = round((microtime(true) - $this->timer) * 1000, 0);
+        $url = $this->service->getBaseUrl();
+        $data = $this->service->getParser()->getParams();
+        $result = $this->service->getResult()->toArray();
         $log = [
             'url' => $url,
             'method' => env('REQUEST_METHOD'),
