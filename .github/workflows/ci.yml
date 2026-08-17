@@ -103,8 +103,10 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+        key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-cs-stan
+
+    - name: composer install
+      run: composer install --prefer-dist --no-progress
 
     - name: Run All Gates
       run: composer check
-      continue-on-error: true
