@@ -26,6 +26,7 @@ class DeleteAction extends CollectionAction
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function validates(): bool
     {
         $data = $this->getData();

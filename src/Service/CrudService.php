@@ -92,6 +92,7 @@ abstract class CrudService extends Service
      * @param array $route Activated route.
      * @return array
      */
+    #[\Override]
     protected function actionOptions(array $route): array
     {
         $id = null;

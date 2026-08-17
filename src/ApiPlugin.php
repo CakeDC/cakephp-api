@@ -29,6 +29,7 @@ class ApiPlugin extends BasePlugin
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function routes(\Cake\Routing\RouteBuilder $routes): void
     {
         $middlewares = Configure::read('Api.Middleware', []);
@@ -90,6 +91,7 @@ class ApiPlugin extends BasePlugin
      * @param \Cake\Console\CommandCollection $commands The command collection to update
      * @return \Cake\Console\CommandCollection
      */
+    #[\Override]
     public function console(CommandCollection $commands): CommandCollection
     {
         return $commands->add('service routes', ServiceRoutesCommand::class);

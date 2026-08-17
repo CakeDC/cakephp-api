@@ -35,6 +35,7 @@ class AddEditAction extends CollectionAction
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         return $this->validateMany();

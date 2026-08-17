@@ -89,6 +89,7 @@ class CachedApiRbac extends ApiRbac
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
+    #[\Override]
     public function checkPermissions(array|\ArrayAccess $user, ServerRequestInterface $request): bool
     {
         $roleField = $this->getConfig('role_field');

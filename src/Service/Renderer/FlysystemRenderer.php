@@ -38,6 +38,7 @@ class FlysystemRenderer extends FileRenderer
      * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
+    #[\Override]
     public function response(?Result $result = null): bool
     {
         $data = $result->getData();
@@ -108,6 +109,7 @@ class FlysystemRenderer extends FileRenderer
      * @param \Exception $exception thrown at service or action
      * @return void
      */
+    #[\Override]
     public function error(Exception $exception): void
     {
         $code = $exception->getCode();

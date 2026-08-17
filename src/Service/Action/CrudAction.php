@@ -135,6 +135,7 @@ abstract class CrudAction extends Action
     /**
      * @return \CakeDC\Api\Service\CrudService
      */
+    #[\Override]
     public function getService(): \CakeDC\Api\Service\CrudService
     {
         return $this->service;

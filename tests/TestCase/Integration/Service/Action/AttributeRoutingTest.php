@@ -55,7 +55,6 @@ class AttributeRoutingTest extends IntegrationTestCase
     public function testAttributeCustomActionRoute(): void
     {
         $this->sendRequest('/attributes/featured', 'GET', []);
-        fwrite(STDERR, 'ATTR2_BODY: ' . $this->_response->getBody() . PHP_EOL);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertNotEmpty($result['data']);

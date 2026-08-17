@@ -39,6 +39,7 @@ class FallbackService extends NestedCrudService
      *
      * @return void
      */
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -52,6 +53,7 @@ class FallbackService extends NestedCrudService
      *
      * @return void
      */
+    #[\Override]
     public function loadRoutes(): void
     {
         $table = $this->fetchTable($this->table);

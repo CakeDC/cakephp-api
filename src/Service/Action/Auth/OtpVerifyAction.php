@@ -38,6 +38,7 @@ abstract class OtpVerifyAction extends Action
      * @param array $config Configuration.
      * @return void
      */
+    #[\Override]
     public function initialize(array $config): void
     {
         $this->tfa = new TwoFactorAuth(

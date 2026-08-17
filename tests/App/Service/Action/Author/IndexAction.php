@@ -17,6 +17,7 @@ use CakeDC\Api\Service\Action\CrudAction;
 
 class IndexAction extends CrudAction
 {
+    #[\Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -28,6 +29,7 @@ class IndexAction extends CrudAction
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         return true;

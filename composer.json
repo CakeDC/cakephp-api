@@ -101,8 +101,8 @@
         "analyse": [
             "@stan"
         ],
-        "cs-check": "phpcs -p --standard=phpcs.xml src/ tests/",
-        "cs-fix": "phpcbf --standard=phpcs.xml src/ tests/",
+        "cs-check": "vendor/bin/phpcs -p --standard=phpcs.xml src/ tests/",
+        "cs-fix": "vendor/bin/phpcbf --standard=phpcs.xml src/ tests/",
         "fix-eol": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/fix-lineendings.ps1",
         "test": "phpunit --stderr",
         "rector-check": "vendor/bin/rector process --dry-run",

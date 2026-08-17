@@ -43,6 +43,7 @@ class LoginAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
+    #[\Override]
     public function initialize(array $config): void
     {
         if (isset($config['identifiedField'])) {
@@ -60,6 +61,7 @@ class LoginAction extends Action
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -130,6 +132,7 @@ class LoginAction extends Action
      *
      * @return array
      */
+    #[\Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

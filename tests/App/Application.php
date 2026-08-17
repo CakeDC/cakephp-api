@@ -36,6 +36,7 @@ use CakeDC\Api\Test\App\DI\Service\TestService;
  */
 class Application extends BaseApplication
 {
+    #[\Override]
     public function bootstrap(): void
     {
         parent::bootstrap();
@@ -49,6 +50,7 @@ class Application extends BaseApplication
         ]);
     }
 
+    #[\Override]
     public function pluginBootstrap(): void
     {
         parent::pluginBootstrap();
@@ -84,6 +86,7 @@ class Application extends BaseApplication
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function routes(\Cake\Routing\RouteBuilder $routes): void
     {
         $middlewares = Configure::read('Api.Middleware');

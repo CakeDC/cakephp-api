@@ -41,6 +41,7 @@ class SocialLoginAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
+    #[\Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -52,6 +53,7 @@ class SocialLoginAction extends Action
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -108,6 +110,7 @@ class SocialLoginAction extends Action
      *
      * @return array
      */
+    #[\Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

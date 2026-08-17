@@ -45,6 +45,7 @@ class ArticlesFixture extends TestFixture
         ['id' => 15, 'author_id' => 1, 'title' => 'Article N15', 'body' => 'Article N15 Body', 'published' => 'Y'],
     ];
 
+    #[\Override]
     public function insert(ConnectionInterface $db): bool
     {
         $result = parent::insert($db);
