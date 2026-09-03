@@ -50,6 +50,7 @@ class AuthStoreTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
+    #[\Override]
     public function validationDefault(Validator $validator): Validator
     {
         $validator
@@ -64,6 +65,7 @@ class AuthStoreTable extends Table
      *
      * @return \Cake\Database\Schema\TableSchemaInterface
      */
+    #[\Override]
     public function getSchema(): TableSchemaInterface
     {
         $schema = parent::getSchema();

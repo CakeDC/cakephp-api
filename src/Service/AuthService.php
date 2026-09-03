@@ -43,6 +43,7 @@ class AuthService extends Service
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -80,6 +81,7 @@ class AuthService extends Service
      * @param array $route Action route.
      * @return array
      */
+    #[\Override]
     protected function actionOptions(array $route): array
     {
         $options = [];

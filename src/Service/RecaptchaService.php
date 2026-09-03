@@ -25,6 +25,7 @@ class RecaptchaService extends Service
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();

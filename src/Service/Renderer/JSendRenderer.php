@@ -58,6 +58,7 @@ class JSendRenderer extends BaseRenderer
      *
      * @return bool
      */
+    #[\Override]
     public function accept(): bool
     {
         $request = $this->service->getRequest();

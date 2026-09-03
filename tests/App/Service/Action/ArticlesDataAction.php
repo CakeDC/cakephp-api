@@ -26,6 +26,7 @@ class ArticlesDataAction extends CrudAction
         parent::__construct($config);
     }
 
+    #[\Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -37,6 +38,7 @@ class ArticlesDataAction extends CrudAction
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         return true;

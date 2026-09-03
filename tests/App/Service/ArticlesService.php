@@ -25,6 +25,7 @@ class ArticlesService extends FallbackService
         'featured' => ['method' => ['GET'], 'path' => 'featured'],
     ];
 
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();

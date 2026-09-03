@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\TestCase\Command;
 
+use Cake\AttributeResolver\AttributeResolver;
 use Cake\Command\Command;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
@@ -30,6 +31,7 @@ class ServiceRoutesCommandTest extends TestCase
     {
         parent::tearDown();
         ServiceRegistry::getServiceLocator()->clear();
+        AttributeResolver::drop('default');
     }
 
     /**
@@ -70,6 +72,55 @@ class ServiceRoutesCommandTest extends TestCase
             '<info>Action</info>',
             '<info>Plugin</info>',
         ];
+    }
+
+    /**
+     * Test attribute-declared routes are printed by the command.
+     */
+    public function testServiceRoutesListsAttributeRoutes(): void
+    {
+        if (AttributeResolver::getConfig('default') !== null) {
+            AttributeResolver::clear('default');
+            AttributeResolver::drop('default');
+        }
+        AttributeResolver::setConfig('default', [
+            'paths' => ['tests/App/Service/*.php', 'tests/App/Service/**/*.php'],
+            'cache' => false,
+        ]);
+
+        $this->exec('service routes attributes');
+        $this->assertExitCode(Command::CODE_SUCCESS);
+
+        $this->assertOutputContainsRow($this->getHeaderRow());
+        $this->assertOutputContainsRow([
+            'attributes:featured',
+            'GET',
+            '/attributes/featured',
+            'attributes',
+            'featured',
+            '',
+        ]);
+        $this->assertOutputContainsRow([
+            'attributes:index',
+            'GET',
+            '/attributes',
+            'attributes',
+            'index',
+            '',
+        ]);
+
+        // route with a {id} placeholder
+        $this->assertOutputContainsRow([
+            'attributes:item',
+            'GET',
+            '/attributes/item/{id}',
+            'attributes',
+            'item',
+            '',
+        ]);
+
+        // add is excluded by ApiResource(only: ...) and must not be printed
+        $this->assertOutputNotContains('attributes:add');
     }
 
     private function getArticleRoutes(): array

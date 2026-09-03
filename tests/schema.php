@@ -23,6 +23,18 @@ return [
         ],
     ],
     [
+        'table' => 'attributes',
+        'columns' => [
+            'id' => ['type' => 'integer'],
+            'title' => ['type' => 'string', 'null' => true],
+            'body' => 'text',
+            'published' => ['type' => 'string', 'length' => 1, 'default' => 'N'],
+        ],
+        'constraints' => [
+            'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+        ],
+    ],
+    [
         'table' => 'authors',
         'columns' => [
             'id' => ['type' => 'integer'],
