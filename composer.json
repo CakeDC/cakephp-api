@@ -38,7 +38,8 @@
         "cakephp/cakephp-codesniffer": "~4.4.0",
         "league/flysystem-vfs": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "vlucas/phpdotenv": "^3.3"
+        "vlucas/phpdotenv": "^3.3",
+        "web-auth/webauthn-lib": "^3.3.11"
     },
     "autoload": {
         "psr-4": {
@@ -58,6 +59,11 @@
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "audit": {
+            "ignore": {
+                "CVE-2025-45769": "Low severity; firebase/php-jwt 7.x requires PHP 8.0 and this branch supports PHP 7.4"
+            }
         }
     },
     "scripts": {
