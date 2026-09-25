@@ -25,6 +25,10 @@ use Cake\Validation\ValidatorAwareTrait;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Auth\Auth;
 use CakeDC\Api\Service\Service;
+use CakeDC\Api\Transformer\TransformerInterface;
+use Cake\Datasource\EntityInterface;
+use Cake\Datasource\ResultSetInterface;
+use Cake\ORM\ResultSet;
 use Exception;
 use ReflectionMethod;
 
@@ -435,5 +439,72 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             'response' => $this->_service->getResponse(),
             'action' => $this,
         ]);
+    }
+
+    /**
+     * Transform data using specified transformer
+     *
+     * Automatically handles:
+     * - Single entities
+     * - Collections (ResultSet, array, iterable)
+     * - Paginated results (preserves pagination metadata)
+     * - Arrays (JOIN results, matchingData, joinData)
+     *
+     * @param mixed $data Entity, array, or collection to transform
+     * @param string $transformerClass Transformer class name (must implement TransformerInterface)
+     * @return array Transformed data
+     * @throws \InvalidArgumentException If transformer class doesn't exist or doesn't implement TransformerInterface
+     */
+    protected function transform($data, string $transformerClass): array
+    {
+        if (!class_exists($transformerClass)) {
+            throw new \InvalidArgumentException("Transformer class {$transformerClass} does not exist");
+        }
+
+        if (!is_subclass_of($transformerClass, TransformerInterface::class)) {
+            throw new \InvalidArgumentException("Transformer class {$transformerClass} must implement " . TransformerInterface::class);
+        }
+
+        $transformer = new $transformerClass();
+
+        if (is_array($data) && isset($data['data']) && isset($data['pagination'])) {
+            $data['data'] = $this->_transformCollection($data['data'], $transformer);
+
+            return $data;
+        }
+
+        if ($data instanceof ResultSetInterface || $data instanceof ResultSet) {
+            return $this->_transformCollection($data, $transformer);
+        }
+
+        if (is_iterable($data) && !($data instanceof EntityInterface) && !is_array($data)) {
+            return $this->_transformCollection($data, $transformer);
+        }
+
+        if (is_array($data)) {
+            if (array_keys($data) === range(0, count($data) - 1)) {
+                return $this->_transformCollection($data, $transformer);
+            }
+
+            return $transformer->transform($data);
+        }
+
+        return $transformer->transform($data);
+    }
+
+    /**
+     * Transform collection
+     *
+     * @param iterable $collection Collection to transform
+     * @param TransformerInterface $transformer Transformer instance
+     * @return array Transformed collection
+     */
+    private function _transformCollection(iterable $collection, TransformerInterface $transformer): array
+    {
+        $result = [];
+        foreach ($collection as $item) {
+            $result[] = $transformer->transform($item);
+        }
+        return $result;
     }
 }

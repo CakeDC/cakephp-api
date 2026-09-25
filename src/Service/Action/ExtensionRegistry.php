@@ -97,4 +97,14 @@ class ExtensionRegistry extends ObjectRegistry
 
         return $instance;
     }
+
+    /**
+     * Action instance getter.
+     *
+     * @return \CakeDC\Api\Service\Action\Action $action.
+     */
+    public function getAction(): ?Action
+    {
+        return $this->_action;
+    }
 }
