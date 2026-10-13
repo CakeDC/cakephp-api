@@ -394,7 +394,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
 
         $extensions = $registry->normalizeArray($this->extensions);
         foreach ($extensions as $name => $properties) {
-            $instance = $registry->load($name, $properties);
+            $instance = $registry->load($properties['className'], $properties);
             $this->_eventManager->on($instance);
             if ($instance->attachable()) {
                 [, $prop] = pluginSplit($name);

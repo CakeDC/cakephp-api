@@ -69,13 +69,6 @@
     },
     "config": {
         "sort-packages": true,
-        "policy": {
-            "advisories": {
-                "ignore": [
-                    "league/flysystem"
-                ]
-            }
-        },
         "allow-plugins": {
             "cweagans/composer-patches": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
