@@ -921,8 +921,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
         }
         $registry = $this->getExtensions();
         $extensions = $registry->normalizeArray($this->extensions);
-        foreach ($extensions as $properties) {
-            $instance = $registry->load($properties['class'], $properties['config']);
+        foreach ($extensions as $name => $config) {
+            $instance = $registry->load($name, $config);
             $this->_eventManager->on($instance);
         }
     }
