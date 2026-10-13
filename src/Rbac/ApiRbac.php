@@ -119,7 +119,10 @@ class ApiRbac implements RbacInterface
     {
         $roleField = $this->getConfig('role_field');
         $defaultRole = $this->getConfig('default_role');
-        $role = Hash::get($user, $roleField, $defaultRole);
+        // The role is matched against the permission 'role' key and passed to the rules,
+        // whose signature (CakeDC\Auth\Rbac\Rules\Rule) types it as string. Apps commonly
+        // store the role as an integer group id, so cast it here to avoid a TypeError.
+        $role = (string)Hash::get($user, $roleField, $defaultRole);
 
         if ($this->permissions === null) {
             return false;
