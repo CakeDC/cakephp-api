@@ -28,6 +28,7 @@ class DescribeService extends Service
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function loadRoutes(): void
     {
         $builder = ApiRouter::createRouteBuilder('/', []);

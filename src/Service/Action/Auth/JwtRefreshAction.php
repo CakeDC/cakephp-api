@@ -43,6 +43,7 @@ class JwtRefreshAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
+    #[\Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -53,6 +54,7 @@ class JwtRefreshAction extends Action
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         $authHeader = $this->getService()->getRequest()->getHeader('Authorization');

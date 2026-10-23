@@ -19,6 +19,7 @@ use CakeDC\Api\Service\FallbackService;
 
 class ArticlesCollectionService extends FallbackService
 {
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();

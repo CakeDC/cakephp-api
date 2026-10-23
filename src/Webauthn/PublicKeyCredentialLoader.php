@@ -20,6 +20,7 @@ class PublicKeyCredentialLoader extends \Webauthn\PublicKeyCredentialLoader
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function loadArray(array $json): PublicKeyCredential
     {
         if (isset($json['response']['clientDataJSON']) && is_string($json['response']['clientDataJSON'])) {

@@ -32,6 +32,7 @@ class ListingService extends Service
      *
      * @return void
      */
+    #[\Override]
     public function loadRoutes(): void
     {
         $builder = ApiRouter::createRouteBuilder('/', []);

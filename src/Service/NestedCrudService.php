@@ -44,6 +44,7 @@ abstract class NestedCrudService extends CrudService
      * @param array $route Action route,
      * @return array
      */
+    #[\Override]
     protected function actionOptions(array $route): array
     {
         $parent = $this->getParentService();

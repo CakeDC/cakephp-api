@@ -27,10 +27,11 @@
         "source": "https://github.com/CakeDC/cakephp-api"
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-json": "*",
         "cakephp/cakephp": "^5.1",
         "cakedc/users": "^16.0",
+        "crustum/cakephp-attribute-resolver": "^1.0",
         "lcobucci/clock": "^2.2.0,<2.3.0",
         "lcobucci/jwt": "^5.5.0",
         "firebase/php-jwt": "^6.3 || ^7.0"
@@ -100,13 +101,14 @@
         "analyse": [
             "@stan"
         ],
-        "cs-check": "phpcs -p --standard=phpcs.xml src/ tests/",
-        "cs-fix": "phpcbf --standard=phpcs.xml src/ tests/",
+        "cs-check": "vendor/bin/phpcs -p --standard=phpcs.xml src/ tests/",
+        "cs-fix": "vendor/bin/phpcbf --standard=phpcs.xml src/ tests/",
         "fix-eol": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/fix-lineendings.ps1",
         "test": "phpunit --stderr",
         "rector-check": "vendor/bin/rector process --dry-run",
         "rector-fix": "vendor/bin/rector process",
         "stan": "phpstan analyse src/",
-        "stan-baseline": "phpstan analyse --generate-baseline"
+        "stan-baseline": "phpstan analyse --generate-baseline",
+        "structarmed": "vendor/bin/structarmed analyze src"
     }
 }

@@ -28,6 +28,7 @@ class CollectionsService extends FallbackService
      *
      * @return void
      */
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -54,6 +55,7 @@ class CollectionsService extends FallbackService
      *
      * @return string
      */
+    #[\Override]
     public function getTable(): string
     {
         return 'Articles';

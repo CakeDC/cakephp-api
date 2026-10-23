@@ -32,6 +32,7 @@ use CakeDC\Api\Routing\ApiRouter;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Action\DummyAction;
 use CakeDC\Api\Service\Action\Result;
+use CakeDC\Api\Service\Attribute\ServiceAttributeConnector;
 use CakeDC\Api\Service\Exception\MissingActionException;
 use CakeDC\Api\Service\Exception\MissingParserException;
 use CakeDC\Api\Service\Exception\MissingRendererException;
@@ -64,6 +65,15 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
      * @var array
      */
     protected array $actions = [];
+
+    /**
+     * Resource route options, merged into the resource route generation.
+     *
+     * Populated from the `ApiResource` attribute by the attribute connector.
+     *
+     * @var array<string, mixed>
+     */
+    protected array $resourceOptions = [];
 
     /**
      * Actions classes map, indexed by action name.
@@ -225,6 +235,8 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $className = (new \ReflectionClass($this))->getShortName();
             $this->setName(Inflector::underscore(str_replace('Service', '', $className)));
         }
+
+        (new ServiceAttributeConnector())->apply($this);
     }
 
     /**
@@ -397,7 +409,7 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
 
         return [
             'map' => $mapList,
-        ];
+        ] + $this->resourceOptions;
     }
 
     /**
@@ -853,6 +865,48 @@ abstract class Service implements EventListenerInterface, EventDispatcherInterfa
             $route['path'] = $actionName;
         }
         $this->actions[$actionName] = $route;
+    }
+
+    /**
+     * Define an action route without an action class.
+     *
+     * The action class is resolved by convention during action building
+     * (`{ServiceNamespace}\Action\{ServiceName}{ActionName}Action`).
+     *
+     * @param string $actionName Action name.
+     * @param array $route Route config.
+     * @return void
+     */
+    public function addAction(string $actionName, array $route): void
+    {
+        $route += ['mapCors' => false];
+        if (!isset($route['path'])) {
+            $route['path'] = $actionName;
+        }
+        $this->actions[$actionName] = $route;
+    }
+
+    /**
+     * Sets resource route options (e.g. from the ApiResource attribute).
+     *
+     * @param array<string, mixed> $options Resource options.
+     * @return $this
+     */
+    public function setResourceOptions(array $options)
+    {
+        $this->resourceOptions = $options;
+
+        return $this;
+    }
+
+    /**
+     * Gets resource route options.
+     *
+     * @return array<string, mixed>
+     */
+    public function getResourceOptions(): array
+    {
+        return $this->resourceOptions;
     }
 
     /**

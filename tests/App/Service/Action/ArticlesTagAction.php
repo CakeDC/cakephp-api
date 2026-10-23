@@ -20,6 +20,7 @@ use CakeDC\Api\Service\Action\CrudAction;
 
 class ArticlesTagAction extends CrudAction
 {
+    #[\Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -31,6 +32,7 @@ class ArticlesTagAction extends CrudAction
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         $validator = new Validator();

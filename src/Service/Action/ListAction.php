@@ -29,6 +29,7 @@ class ListAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
+    #[\Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);

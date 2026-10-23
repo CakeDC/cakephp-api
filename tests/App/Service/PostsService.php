@@ -27,6 +27,7 @@ class PostsService extends FallbackService
      *
      * @return void
      */
+    #[\Override]
     public function initialize(): void
     {
         parent::initialize();

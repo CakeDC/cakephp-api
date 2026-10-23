@@ -31,6 +31,7 @@ class PostsFixture extends TestFixture
         ['id' => 4, 'title' => 'Fourth Post', 'body' => 'Fourth Post Body', 'published' => 'Y'],
     ];
 
+    #[\Override]
     public function insert(ConnectionInterface $db): bool
     {
         $result = parent::insert($db);

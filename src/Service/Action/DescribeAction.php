@@ -30,6 +30,7 @@ class DescribeAction extends Action
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         $validator = new Validator();

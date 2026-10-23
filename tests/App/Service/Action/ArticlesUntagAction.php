@@ -22,6 +22,7 @@ class ArticlesUntagAction extends Action
      *
      * @return bool
      */
+    #[\Override]
     public function validates(): bool
     {
         return true;
