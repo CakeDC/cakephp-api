@@ -106,8 +106,8 @@ class CachedApiRbac extends ApiRbac
             return false;
         }
 
-        $serviceName = $service->getName();
-        $keys = [$serviceName, '*'];
+        $target = (array)$request->getAttribute(self::TARGET_ATTRIBUTE);
+        $keys = array_merge((array)($target['service'] ?? $service->getName()), ['*']);
 
         foreach ([$role, '*'] as $checkRole) {
             if (!array_key_exists($checkRole, $this->permissionsMap)) {

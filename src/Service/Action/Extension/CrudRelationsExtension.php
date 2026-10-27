@@ -13,11 +13,20 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Extension;
 
+use ArrayAccess;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityDecorator;
+use Authorization\IdentityInterface;
+use Authorization\Policy\Exception\MissingMethodException;
+use Authorization\Policy\Exception\MissingPolicyException;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Log\Log;
 use Cake\ORM\Association;
 use Cake\ORM\Query\SelectQuery;
+use Cake\ORM\Table;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Rbac\ApiRbac;
 use CakeDC\Api\Service\Action\CrudAction;
 
 /**
@@ -30,6 +39,18 @@ use CakeDC\Api\Service\Action\CrudAction;
  */
 class CrudRelationsExtension extends Extension implements EventListenerInterface
 {
+    /**
+     * Default settings
+     *
+     * - `checkPermissions`: embed an association only when the user may access its service.
+     *   Set it to false to embed requested associations without that check, as before.
+     *
+     * @var array
+     */
+    protected array $_defaultConfig = [
+        'checkPermissions' => true,
+    ];
+
     /**
      * Returns a list of events this object is implementing. When the class is registered
      * in an event manager, each individual method will be associated with the respective event.
@@ -140,6 +161,13 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         $tables = collection($associations)
             ->map(fn($name) => Inflector::camelize($name))
             ->toArray();
+        // embed only the associations whose service the current user may access
+        $tables = array_values(array_filter($tables, function ($name) use ($action) {
+            return $this->_isRelationAccessible($action, (string)$name);
+        }));
+        if ($tables === []) {
+            return $query;
+        }
 
         collection($tables)->each(function ($name) use ($query, $action) {
             $assoc = $action->getTable()->getAssociation($name);
@@ -149,5 +177,105 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
         $query->contain($tables);
 
         return $query;
+    }
+
+    /**
+     * Whether the current user may access the service of every table on an association path.
+     *
+     * The data of an association would otherwise be embedded without the permissions of its own
+     * service. The request's authorization service is asked whether the user may access the
+     * `index` action of each related service, named after the association's table alias. Without
+     * an authorization service, without a policy for requests, or with `checkPermissions` set to
+     * false, the association is embedded as before.
+     *
+     * @param \CakeDC\Api\Service\Action\CrudAction $action Action instance.
+     * @param string $path Association name, or a dotted path of association names.
+     * @return bool
+     */
+    protected function _isRelationAccessible(CrudAction $action, string $path): bool
+    {
+        if (!$this->getConfig('checkPermissions')) {
+            return true;
+        }
+        // a nested service keeps the request from before authorization; the root service has the current one
+        $service = $action->getService();
+        while ($service->getParentService() !== null) {
+            $service = $service->getParentService();
+        }
+        $request = $service->getRequest();
+        $authorization = $request === null ? null : $request->getAttribute('authorization');
+        if (!$authorization instanceof AuthorizationServiceInterface) {
+            Log::debug(sprintf('CrudRelations embeds %s without a permission check: no authorization service', $path), [
+                'scope' => ['api'],
+            ]);
+
+            return true;
+        }
+        // RbacPolicy prefers the request's `rbac` adapter; only ApiRbac knows the target to check
+        $rbac = $request->getAttribute('rbac');
+        if ($rbac !== null && !$rbac instanceof ApiRbac) {
+            Log::debug(sprintf('CrudRelations checks %s with an RBAC adapter that may ignore the target', $path), [
+                'scope' => ['api'],
+            ]);
+        }
+        $identity = $request->getAttribute('identity');
+        if ($identity !== null && !$identity instanceof IdentityInterface) {
+            $identity = is_array($identity) || $identity instanceof ArrayAccess
+                ? new IdentityDecorator($authorization, $identity)
+                : null;
+        }
+
+        $table = $action->getTable();
+        foreach (explode('.', $path) as $name) {
+            $association = $table->associations()->get($name);
+            if ($association === null) {
+                // an unknown association fails later, as before
+                return true;
+            }
+            $table = $association->getTarget();
+            // the data belongs to the service of the target table, also for an aliased association
+            // such as `Writers` with `className` `Authors`
+            $serviceName = $this->_relatedServiceName($table);
+            $spellings = array_unique([Inflector::underscore($serviceName), Inflector::dasherize($serviceName)]);
+            $probe = $request->withMethod('GET')->withAttribute(ApiRbac::TARGET_ATTRIBUTE, [
+                'service' => array_values($spellings),
+                'action' => 'index',
+            ]);
+            try {
+                if (!$authorization->can($identity, 'access', $probe)) {
+                    return false;
+                }
+            } catch (MissingPolicyException | MissingMethodException $exception) {
+                // no request policy with an `access` check: keep the association, as before
+                Log::debug(sprintf('CrudRelations embeds %s without a permission check: no request policy', $path), [
+                    'scope' => ['api'],
+                ]);
+
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the name of the service that owns the data of a table.
+     *
+     * A service finds its table by its own name, so the table class names the service: `AuthorsTable`
+     * gives `Authors`, whatever the association alias or the database table name. A generic `Table`
+     * has no class of its own, so its database table names the service.
+     *
+     * @param \Cake\ORM\Table $table Target table of an association.
+     * @return string
+     */
+    protected function _relatedServiceName(Table $table): string
+    {
+        [, $class] = namespaceSplit(get_class($table));
+        if ($class !== 'Table' && substr($class, -5) === 'Table') {
+            return substr($class, 0, -5);
+        }
+        $name = explode('.', $table->getTable());
+
+        return Inflector::camelize(end($name));
     }
 }

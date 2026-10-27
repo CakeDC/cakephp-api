@@ -23,12 +23,19 @@ use Cake\Event\EventListenerInterface;
  */
 class SortExtension extends Extension implements EventListenerInterface
 {
+    use SortableTrait;
+
     /**
+     * Default settings
+     *
+     * - `sortableFields`: allowed sort fields. When empty, only action table columns the entity does not hide are allowed.
+     *
      * @var array
      */
     protected array $_defaultConfig = [
         'sortField' => 'sort',
         'directionField' => 'direction',
+        'sortableFields' => [],
     ];
 
     /**
@@ -58,16 +65,10 @@ class SortExtension extends Extension implements EventListenerInterface
             $query = $event->getResult();
         }
         $data = $action->getData();
-        $direction = 'asc';
-        $sort = null;
 
-        $directionField = $this->getConfig('directionField');
-        $sortField = $this->getConfig('sortField');
-        if (!empty($data[$directionField])) {
-            $direction = $data[$directionField];
-        }
-        if (!empty($data[$sortField])) {
-            $sort = $data[$sortField];
+        $sort = $this->_sortField($action, $data[$this->getConfig('sortField')] ?? null);
+        if ($sort !== null) {
+            $direction = $this->_sortDirection($data[$this->getConfig('directionField')] ?? null);
             $query->orderBy([$sort => $direction]);
         }
 

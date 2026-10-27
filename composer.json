@@ -72,6 +72,11 @@
         "allow-plugins": {
             "cweagans/composer-patches": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "audit": {
+            "ignore": {
+                "CVE-2026-102601": "Development only: league/flysystem-vfs ^1.0 (used by the tests) needs league/flysystem 1.x, which this advisory covers; this affects installs of this package as the root project, not applications"
+            }
         }
     },
     "scripts": {
@@ -83,7 +88,7 @@
         "analyse": [
             "@stan",
             "@psalm"
-         ],
+        ],
         "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "test": "phpunit --stderr",

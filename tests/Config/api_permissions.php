@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Cake\Core\Configure;
+
 $permissions = [
     [
         'role' => '*',
@@ -17,6 +19,12 @@ $permissions = [
         'bypassAuth' => true,
     ],
 ];
+
+// tests can replace the permission list
+$override = Configure::read('Test.Api.Permissions');
+if (is_array($override)) {
+    $permissions = $override;
+}
 
 return [
     'CakeDC/Auth.api_permissions' => $permissions,
