@@ -61,6 +61,12 @@
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "audit": {
+            "ignore": {
+                "CVE-2025-45769": "Temporary: lets the 11.1.1 security release install a stable firebase/php-jwt 6.x release instead of the 6.x-dev branch, because the advisory covers every 6.x release",
+                "CVE-2026-102601": "Development only: league/flysystem-vfs ^1.0 (used by the tests) needs league/flysystem 1.x, which this advisory covers; this affects installs of this package as the root project, not applications"
+            }
         }
     },
     "scripts": {
@@ -72,7 +78,7 @@
         "analyse": [
             "@stan",
             "@psalm"
-         ],
+        ],
         "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "test": "phpunit --stderr",
