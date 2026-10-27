@@ -15,16 +15,22 @@ namespace CakeDC\Api\Service\Action\Extension;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use JsonException;
 
 class ExtendedSortExtension extends Extension implements EventListenerInterface
 {
+    use SortableTrait;
+
     /**
      * Default settings
+     *
+     * - `sortableFields`: allowed sort fields. When empty, only action table columns the entity does not hide are allowed.
      *
      * @var array
      */
     protected array $_defaultConfig = [
         'sortField' => 'sort',
+        'sortableFields' => [],
     ];
 
     /**
@@ -54,14 +60,26 @@ class ExtendedSortExtension extends Extension implements EventListenerInterface
             $query = $event->getResult();
         }
         $data = $action->getData();
-        $sort = null;
 
+        $sort = [];
         $sortField = $this->getConfig('sortField');
-        if (!empty($data[$sortField])) {
-            $sort = json_decode($data[$sortField], true, 512, JSON_THROW_ON_ERROR);
+        if (!empty($data[$sortField]) && is_string($data[$sortField])) {
+            try {
+                $sort = json_decode($data[$sortField], true, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException) {
+                $sort = [];
+            }
         }
-        if (is_array($sort)) {
-            $query->order($sort);
+
+        $order = [];
+        foreach (is_array($sort) ? $sort : [] as $field => $direction) {
+            $field = $this->_sortField($action, $field);
+            if ($field !== null && is_string($direction)) {
+                $order[$field] = $this->_sortDirection($direction);
+            }
+        }
+        if ($order !== []) {
+            $query->orderBy($order);
         }
 
         return $query;

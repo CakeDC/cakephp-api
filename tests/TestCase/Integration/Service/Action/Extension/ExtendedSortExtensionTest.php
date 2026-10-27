@@ -100,4 +100,68 @@ class ExtendedSortExtensionTest extends IntegrationTestCase
         $this->assertSuccess($result);
         $this->assertEquals([4, 9, 14, 10], Hash::extract($result, 'data.{n}.id'));
     }
+
+    public function testInvalidJsonIsIgnored()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => '{not json']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testInvalidEntriesAreIgnored()
+    {
+        $sort = [
+            '(CASE WHEN 1=1 THEN first_name END)' => 'asc',
+            'unknown_field' => 'asc',
+            'Authors.last_name' => 'foo',
+            'id' => ['desc'],
+        ];
+        // only Authors.last_name survives: the SQL expression and the unknown field are
+        // rejected, its own invalid direction is normalized to asc, and the non-string
+        // direction of `id` drops that entry
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode($sort, JSON_THROW_ON_ERROR)]);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([9, 3, 7, 1], Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testSortableFields()
+    {
+        $this->_addSettingByPath('Service.authors.Action.Index.Extension', [
+            'CakeDC/Api.ExtendedSort' => ['sortableFields' => ['Authors.last_name']],
+        ]);
+        $sort = ['first_name' => 'desc', 'last_name' => 'asc'];
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => json_encode($sort, JSON_THROW_ON_ERROR)]);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([9, 3, 7, 1], Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testListAndNumericKeyEntriesAreIgnored()
+    {
+        // a numeric key makes CakePHP emit the value verbatim, so list elements and numeric
+        // object keys are rejected, including the formerly accepted list form ["first_name"]
+        $payloads = [
+            '["(CASE WHEN 1=1 THEN first_name END)"]',
+            '{"0": "(CASE WHEN 1=1 THEN first_name END)"}',
+            '["first_name"]',
+        ];
+        foreach ($payloads as $sort) {
+            $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => $sort]);
+            $result = $this->getJsonResponse();
+            $this->assertSuccess($result);
+            $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'), $sort);
+        }
+    }
+
+    public function testUnlistedAssociationFieldIsIgnored()
+    {
+        $this->_loadDefaultExtensions('CakeDC/Api.CrudRelations');
+        $sort = json_encode(['Authors.first_name' => 'asc'], JSON_THROW_ON_ERROR);
+        $this->sendRequest('/articles', 'GET', ['limit' => 2, 'sort' => $sort, 'include_relations' => 'authors']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([1, 2], Hash::extract($result, 'data.{n}.id'));
+    }
 }

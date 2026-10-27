@@ -18,9 +18,9 @@ jobs:
         prefer-lowest: ['']
 
     steps:
-    - name: Setup MySQL latest
+    - name: Setup MySQL 8.4
       if: matrix.db-type == 'mysql'
-      run: docker run --rm --name=mysqld -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=cakephp -p 3306:3306 -d mysql --default-authentication-plugin=mysql_native_password --disable-log-bin
+      run: docker run --rm --name=mysqld -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=cakephp -p 3306:3306 -d mysql:8.4 --disable-log-bin
 
     - name: Setup PostgreSQL latest
       if: matrix.db-type == 'pgsql'
@@ -64,9 +64,9 @@ jobs:
 
     - name: Run PHPUnit
       run: |
-        if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
-        if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp?encoding=utf8'; fi
-        if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
+        if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export db_dsn='sqlite:///:memory:'; fi
+        if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export db_dsn='mysql://root:root@127.0.0.1/cakephp?encoding=utf8'; fi
+        if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export db_dsn='postgres://postgres:postgres@127.0.0.1/postgres'; fi
         if [[ ${{ matrix.php-version }} == '8.1' ]]; then
           export CODECOVERAGE=1 && vendor/bin/phpunit --display-deprecations --display-incomplete --display-skipped --coverage-clover=coverage.xml
         else

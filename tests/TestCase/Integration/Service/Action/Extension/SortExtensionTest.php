@@ -99,4 +99,115 @@ class SortExtensionTest extends IntegrationTestCase
         $this->assertSuccess($result);
         $this->assertEquals([4, 9, 14, 10], Hash::extract($result, 'data.{n}.id'));
     }
+
+    public function testSortByAliasedField()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'Authors.id', 'direction' => 'desc']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(array_reverse(range(12, 15)), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testUnknownSortFieldIsIgnored()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'unknown_field']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testSqlExpressionSortIsIgnored()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => '(CASE WHEN 1=1 THEN first_name END)']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testInvalidDirectionFallsBackToAsc()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'last_name', 'direction' => 'foo']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([9, 3, 7, 1], Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testUppercaseDirection()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id', 'direction' => 'DESC']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(array_reverse(range(12, 15)), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testArraySortParamIsIgnored()
+    {
+        // sent as a raw query string, because sendRequest() drops array values from $data
+        $this->sendRequest('/authors?sort[]=first_name&direction[]=desc', 'GET', ['limit' => 4]);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testOtherTableAliasSortIsIgnored()
+    {
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'Articles.id', 'direction' => 'desc']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testSortableFields()
+    {
+        $this->_addSettingByPath('Service.authors.Action.Index.Extension', [
+            'CakeDC/Api.Sort' => ['sortableFields' => ['Authors.last_name']],
+        ]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'last_name']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([9, 3, 7, 1], Hash::extract($result, 'data.{n}.id'));
+
+        // first_name is not whitelisted, so it is ignored
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'first_name']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals(range(1, 4), Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testSortableFieldsMatchAliasedRequestField()
+    {
+        $this->_addSettingByPath('Service.authors.Action.Index.Extension', [
+            'CakeDC/Api.Sort' => ['sortableFields' => ['last_name']],
+        ]);
+        $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'Authors.last_name']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([9, 3, 7, 1], Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testSortableOwnFieldIsQualifiedWithJoinedAssociation()
+    {
+        $this->_loadDefaultExtensions('CakeDC/Api.CrudRelations');
+        $this->_addSettingByPath('Service.articles.Action.Index.Extension', [
+            'CakeDC/Api.Sort' => ['sortableFields' => ['id']],
+        ]);
+        $this->sendRequest('/articles', 'GET', ['limit' => 4, 'sort' => 'id', 'direction' => 'desc', 'include_relations' => 'authors']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([15, 14, 13, 12], Hash::extract($result, 'data.{n}.id'));
+    }
+
+    public function testSortableAssociationField()
+    {
+        $this->_loadDefaultExtensions('CakeDC/Api.CrudRelations');
+        $this->_addSettingByPath('Service.articles.Action.Index.Extension', [
+            'CakeDC/Api.Sort' => ['sortableFields' => ['Authors.first_name']],
+        ]);
+        // limited to 2: only Alex (article 5) and Alien (article 12) are unambiguous
+        // without a tie-breaker, the next four articles all belong to "Electra"
+        $this->sendRequest('/articles', 'GET', ['limit' => 2, 'sort' => 'Authors.first_name', 'include_relations' => 'authors']);
+        $result = $this->getJsonResponse();
+        $this->assertSuccess($result);
+        $this->assertEquals([5, 12], Hash::extract($result, 'data.{n}.id'));
+    }
 }
