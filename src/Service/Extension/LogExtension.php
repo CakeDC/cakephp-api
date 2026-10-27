@@ -16,11 +16,25 @@ namespace CakeDC\Api\Service\Extension;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\LogTrait;
+use JsonSerializable;
 use Psr\Log\LogLevel;
+use stdClass;
+use Traversable;
 
 class LogExtension extends Extension implements EventListenerInterface
 {
     use LogTrait;
+
+    /**
+     * Default settings
+     *
+     * - `redact`: values of keys that contain one of these words are replaced in the log.
+     *
+     * @var array
+     */
+    protected array $_defaultConfig = [
+        'redact' => ['password', 'token', 'secret', 'authorization'],
+    ];
 
     protected \CakeDC\Api\Service\Service $_service;
 
@@ -66,13 +80,55 @@ class LogExtension extends Extension implements EventListenerInterface
         $url = $this->_service->getBaseUrl();
         $data = $this->_service->getParser()->getParams();
         $result = $this->_service->getResult()->toArray();
+        // the trace of an exception can hold call arguments, such as a password
+        unset($result['exceptionStack']);
         $log = [
             'url' => $url,
             'method' => env('REQUEST_METHOD'),
             'duration' => $duration . 'ms',
-            'input' => $data,
-            'result' => json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            'input' => $this->_redact($data),
+            'result' => json_encode($this->_redact($result), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $this->log(print_r($log, true), LogLevel::INFO, ['api']);
+    }
+
+    /**
+     * Replaces sensitive values, such as passwords and tokens, before they are logged.
+     *
+     * @param mixed $data Request data or result.
+     * @return mixed
+     */
+    protected function _redact($data)
+    {
+        // a query serializes to a result set, which serializes to its rows
+        while ($data instanceof JsonSerializable) {
+            $serialized = $data->jsonSerialize();
+            if ($serialized === $data) {
+                break;
+            }
+            $data = $serialized;
+        }
+        if ($data instanceof stdClass) {
+            $data = get_object_vars($data);
+        } elseif ($data instanceof Traversable) {
+            $data = iterator_to_array($data);
+        }
+        if (!is_array($data)) {
+            return $data;
+        }
+        $words = (array)$this->getConfig('redact');
+        foreach ($data as $key => $value) {
+            $name = strtolower((string)$key);
+            foreach ($words as $word) {
+                $word = strtolower((string)$word);
+                if ($word !== '' && strpos($name, $word) !== false) {
+                    $data[$key] = '***';
+                    continue 2;
+                }
+            }
+            $data[$key] = $this->_redact($value);
+        }
+
+        return $data;
     }
 }

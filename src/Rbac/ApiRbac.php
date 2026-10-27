@@ -36,6 +36,19 @@ class ApiRbac implements RbacInterface
     use LogTrait;
 
     /**
+     * Request attribute that names the service and action to check instead of the current action.
+     *
+     * Set by the plugin to ask whether the user may access another service, for example the
+     * service of an association that CrudRelations embeds: `['service' => ..., 'action' => ...]`.
+     * The service may be a list of spellings of the same name.
+     *
+     * Callables and `Rule` objects receive the probe request: its `service` attribute and route
+     * params still describe the current action, so a rule that inspects the request must read this
+     * attribute to know which service is checked.
+     */
+    public const TARGET_ATTRIBUTE = 'apiRbacTarget';
+
+    /**
      * @var array default configuration
      */
     protected array $_defaultConfig = [
@@ -161,14 +174,18 @@ class ApiRbac implements RbacInterface
         }
 
         $permission += ['allowed' => true];
+        // `allowed` and `bypassAuth` end the check, so the other keys of the rule are checked first
+        $permission = $this->_terminalKeysLast($permission);
         $userArr = ['user' => $user];
         /** @var \CakeDC\Api\Service\Service $service */
         $service = $request->getAttribute('service');
 
         $action = $service->getAction();
+        // a target set by the plugin, for example by CrudRelations, is checked instead of the action
+        $target = (array)$request->getAttribute(self::TARGET_ATTRIBUTE);
         $reserved = [
-            'service' => $action->getService()->getName(),
-            'action' => $action->getName(),
+            'service' => $target['service'] ?? $action->getService()->getName(),
+            'action' => $target['action'] ?? $action->getName(),
             'method' => $request->getMethod(),
             'role' => $role,
         ];
@@ -187,6 +204,12 @@ class ApiRbac implements RbacInterface
                 $return = true;
             } elseif ($key === 'allowed') {
                 $return = !empty($user) && (bool)$value;
+            } elseif ($key === 'service' && is_array($reserved['service'])) {
+                // a target may name its service in more than one spelling; any of them may match
+                $return = false;
+                foreach ($reserved['service'] as $candidate) {
+                    $return = $return || $this->_matchOrAsterisk($value, $candidate, true);
+                }
             } elseif (array_key_exists($key, $reserved)) {
                 $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
             } else {
@@ -216,6 +239,28 @@ class ApiRbac implements RbacInterface
         }
 
         return null;
+    }
+
+    /**
+     * Moves the `allowed` and `bypassAuth` keys of a permission rule after its other keys.
+     *
+     * These keys end the check of a rule, so a rule that started with one of them matched
+     * without checking its service, action, method or role.
+     *
+     * @param array $permission Permission rule.
+     * @return array
+     */
+    protected function _terminalKeysLast(array $permission): array
+    {
+        $terminal = [];
+        foreach ($permission as $key => $value) {
+            if (in_array(ltrim((string)$key, '*'), ['allowed', 'bypassAuth'], true)) {
+                $terminal[$key] = $value;
+                unset($permission[$key]);
+            }
+        }
+
+        return $permission + $terminal;
     }
 
     /**

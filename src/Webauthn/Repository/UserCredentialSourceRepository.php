@@ -62,9 +62,7 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
         if ($publicKeyCredentialUserEntity->getId() != $this->user->id) {
             return [];
         }
-        \Cake\Log\Log::error(print_r($this->user, true));
         $credentials = $this->getUserData($this->user);
-        \Cake\Log\Log::error(print_r($credentials, true));
 
         $list = [];
         foreach ($credentials as $credential) {

@@ -28,19 +28,15 @@ class AuthenticateAdapter extends BaseAdapter
         $allowed = array_map(function (PublicKeyCredentialSource $credential) {
             return $credential->getPublicKeyCredentialDescriptor();
         }, $this->repository->findAllForUserEntity($userEntity));
-        \Cake\Log\Log::error(print_r($allowed, true));
 
         $options = $this->server->generatePublicKeyCredentialRequestOptions(
             PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED,
             $allowed
         );
         $storeEntity = $this->readStore();
-        \Cake\Log\Log::error(print_r($storeEntity, true));
         $storeEntity['store'] = [];
         $storeEntity = $this->patchStore($storeEntity, 'authenticateOptions', base64_encode(serialize($options)));
         $res = $this->store->save($storeEntity);
-        \Cake\Log\Log::error(print_r($storeEntity, true));
-        \Cake\Log\Log::error(print_r($res, true));
 
         return $options;
     }
@@ -53,12 +49,10 @@ class AuthenticateAdapter extends BaseAdapter
     public function verifyResponse(): \Webauthn\PublicKeyCredentialSource
     {
         $storeEntity = $this->readStore();
-        \Cake\Log\Log::error(print_r($storeEntity, true));
         $options = $this->getStore($storeEntity, 'authenticateOptions');
         if ($options) {
             $options = unserialize(base64_decode($options));
         }
-        \Cake\Log\Log::error(print_r($options, true));
 
         return $this->loadAndCheckAssertionResponse($options);
     }

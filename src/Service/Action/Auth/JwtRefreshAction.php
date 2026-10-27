@@ -96,7 +96,13 @@ class JwtRefreshAction extends Action
             throw new ValidationException('Invalid token provided', 401);
         }
 
-        $this->payload = $auth->getPayload();
+        $this->payload = (array)$auth->getPayload();
+        // A refresh token must carry the audience it was issued with. getAudience() refuses a
+        // missing or non-string `aud` too; checking here rejects the request before any token
+        // is generated.
+        if (!is_string($this->payload['aud'] ?? null) || $this->payload['aud'] === '') {
+            throw new ValidationException('Invalid token provided', 401);
+        }
 
         return true;
     }
