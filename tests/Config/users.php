@@ -149,6 +149,8 @@ $config = [
         // ],
     ],
     'OAuth' => ['path' => null],
+    // robthree/twofactorauth 1.x has no Algorithm enum, so the CakeDC/Users default is null
+    'OneTimePasswordAuthenticator' => ['algorithm' => 'sha1'],
 ];
 
 return $config;
