@@ -17,12 +17,14 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\App;
 
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use CakeDC\Api\ApiInitializer;
 use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
 use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
 use CakeDC\Api\Service\ServiceRegistry;
@@ -67,8 +69,12 @@ class Application extends BaseApplication
         $middleware
             // Catch any exceptions in the lower layers,
             // and make an error page/response
-            ->add(new ErrorHandlerMiddleware([]))
-            // ->add($authentication)
+            ->add(new ErrorHandlerMiddleware([]));
+        if (Configure::read('Test.Api.Authentication')) {
+            // the requests of the two-factor tests need the identity from their JWT
+            $middleware->add(new AuthenticationMiddleware((new ApiInitializer())->getAuthenticationService()));
+        }
+        $middleware
             // Apply Api
             ->add(new ParseApiRequestMiddleware())
             ->add(new ProcessApiRequestMiddleware())
