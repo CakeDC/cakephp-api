@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Traits;
 
 use Cake\Core\Configure;
+use Cake\Log\Log;
 use CakeDC\Api\Utility\RequestParser;
 use ReCaptcha\ReCaptcha;
 
@@ -32,13 +33,23 @@ trait ReCaptchaTrait
      */
     public function validateReCaptcha($recaptchaResponse = null)
     {
-        $domain = RequestParser::getDomain($this->getService()->getRequest());
-        $reCaptcha = Configure::read('Api.reCaptcha.' . $domain);
-        if ($reCaptcha['disabled'] ?? false) {
+        if (Configure::read('Api.reCaptcha.disabled') === true) {
             return true;
+        }
+        // turning validation off is a global setting; a domain setting only logs a warning, without a
+        // scope so that the application's default logs record it
+        $domain = RequestParser::getDomain($this->getService()->getRequest());
+        if (Configure::read('Api.reCaptcha.' . $domain . '.disabled')) {
+            Log::warning(sprintf(
+                '`Api.reCaptcha.%s.disabled` is ignored; set `Api.reCaptcha.disabled` to true instead',
+                $domain
+            ));
         }
 
         $recaptcha = $this->_getReCaptchaInstance();
+        if ($recaptcha === null) {
+            return false;
+        }
         if ($recaptchaResponse === null) {
             $recaptchaResponse = $this->getService()->getRequest()->getData('g-recaptcha-response');
         }

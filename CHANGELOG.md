@@ -4,6 +4,11 @@ Changelog
 Releases for CakePHP 4.3
 -------------
 
+* 9.1.11
+    * reCaptcha: validation is turned off only by the new `Api.reCaptcha.disabled` setting, set to the boolean `true`. `Api.reCaptcha.<domain>.disabled` is ignored and logs a warning. Without a configured secret for the domain, validation now fails instead of raising an error.
+    * Upgrade note: if you disabled reCaptcha for a domain, for example in a development config, set `Api.reCaptcha.disabled` to `true` there instead. A string such as `'true'` from an environment variable leaves validation on. Turn validation off with this setting, not with reCaptcha test keys for a domain.
+    * `RequestParser::getDomain()` no longer fails for a request without a `Referer` header, and no longer raises a PHP warning for a `Referer` header without a host.
+
 * 9.1.10
     * Security: refreshing a JWT issued before the second factor was completed returned tokens that no longer required 2FA; refresh now preserves the token audience.
     * Upgrade note: if 2FA is enabled, invalidate existing refresh tokens after upgrading, by emptying the `jwt_refresh_tokens` table or rotating `Api.Jwt.RefreshToken.secret`. Until you do, tokens that were already escalated before the upgrade keep their privileged audience: the access tokens stay valid for the rest of their lifetime, and their refresh tokens keep minting privileged ones. Rotating `Api.Jwt.AccessToken.secret` also ends current access tokens.
