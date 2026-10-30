@@ -62,7 +62,8 @@
         },
         "audit": {
             "ignore": {
-                "CVE-2025-45769": "Low severity; firebase/php-jwt 7.x requires PHP 8.0 and this branch supports PHP 7.4"
+                "CVE-2025-45769": "Low severity; firebase/php-jwt 7.x requires PHP 8.0 and this branch supports PHP 7.4",
+                "CVE-2026-102601": "Development only: league/flysystem-vfs ^1.0 (used by the tests) needs league/flysystem 1.x, which this advisory covers; this affects installs of this package as the root project, not applications"
             }
         }
     },
