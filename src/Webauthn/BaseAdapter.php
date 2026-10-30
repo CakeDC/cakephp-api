@@ -148,6 +148,16 @@ class BaseAdapter
     }
 
     /**
+     * Check if the user has a credential under any domain, not only the current one.
+     *
+     * @return bool
+     */
+    public function hasCredentialOnAnyDomain(): bool
+    {
+        return $this->repository->hasCredentialOnAnyDomain();
+    }
+
+    /**
      * Read the store data.
      *
      * @return \CakeDC\Api\Model\Entity\AuthStore
