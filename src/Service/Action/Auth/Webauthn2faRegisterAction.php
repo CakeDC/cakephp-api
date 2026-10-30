@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Http\Exception\BadRequestException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\RegisterAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
@@ -25,6 +26,7 @@ use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 class Webauthn2faRegisterAction extends Action
 {
     use CustomUsersTableTrait;
+    use SecondFactorTrait;
 
     /**
      * Execute action.
@@ -34,9 +36,11 @@ class Webauthn2faRegisterAction extends Action
     public function execute()
     {
         $user = $this->getIdentity();
+        $this->_refuseEnrollmentIf($this->_hasVerifiedOtp($user));
         $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);
 
-        if (!$adapter->hasCredential()) {
+        // a key registered under another domain counts too: the domain can come from the Referer
+        if (!$adapter->hasCredentialOnAnyDomain()) {
             $adapter->verifyResponse();
 
             return ['success' => true];
