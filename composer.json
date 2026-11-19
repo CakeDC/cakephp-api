@@ -80,6 +80,11 @@
     },
     "config": {
         "sort-packages": true,
+         "audit": {
+            "ignore": [
+                "PKSA-w9tt-7782-78jx"
+            ]
+        },
         "policy": {
             "advisories": {
                 "ignore": [
