@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace CakeDC\Api\Middleware;
 
 use Authentication\Authenticator\UnauthenticatedException;
+use Cake\Container\ContainerInterface;
 use Cake\Core\Configure;
-use Cake\Core\ContainerInterface;
 use Cake\Http\Response;
+use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\ConfigReader;
+use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -34,14 +36,14 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
     /**
      * Container
      *
-     * @var \Cake\Core\ContainerInterface|null
+     * @var \Cake\Container\ContainerInterface|null
      */
     protected ?ContainerInterface $container;
 
     /**
      * Constructor.
      *
-     * @param \Cake\Core\ContainerInterface|null $container Application DI container.
+     * @param \Cake\Container\ContainerInterface|null $container Application DI container.
      */
     public function __construct(?ContainerInterface $container = null)
     {
@@ -61,7 +63,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->container instanceof \Cake\Core\ContainerInterface) {
+        if (!$this->container instanceof ContainerInterface) {
             $this->container = $request->getAttribute('container');
         }
         $prefix = Configure::read('Api.prefix');
@@ -95,7 +97,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
      * @param array $matches Matches definition.
      * @return \Cake\Http\Response|\Psr\Http\Message\ResponseInterface
      */
-    protected function matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, array $matches): \Psr\Http\Message\ResponseInterface|\Cake\Http\Response
+    protected function matchRequest(ServerRequestInterface $request, RequestHandlerInterface $handler, array $matches): ResponseInterface|Response
     {
         $service = null;
         $response = null;
@@ -120,7 +122,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                                       ->get($serviceName, $options);
             $result = $service->dispatchPrepareAction();
 
-            if ($result instanceof \CakeDC\Api\Service\Action\Result) {
+            if ($result instanceof Result) {
                 $response = $service->respond($result);
             } else {
                 $request = $request->withAttribute('service', $service);
@@ -128,7 +130,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 return $handler->handle($request);
             }
         } catch (UnauthenticatedException $e) {
-            if ($service instanceof \CakeDC\Api\Service\Service) {
+            if ($service instanceof Service) {
                 $service->getResult()
                         ->setCode(401);
                 $service->getResult()
@@ -136,7 +138,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 $response = $service->respond();
             }
         } catch (Exception $e) {
-            if ($service instanceof \CakeDC\Api\Service\Service) {
+            if ($service instanceof Service) {
                 $service->getResult()
                         ->setCode(400);
                 $service->getResult()
@@ -144,7 +146,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
                 $response = $service->respond();
             }
         }
-        if (!$response instanceof \Cake\Http\Response) {
+        if (!$response instanceof Response) {
             return (new Response())->withStatus(400);
         }
 
@@ -154,7 +156,7 @@ class ParseApiRequestMiddleware implements MiddlewareInterface
     /**
      * Sets the service parser.
      *
-     * @param \Cake\Core\ContainerInterface $container A ContainerInterface instance.
+     * @param \Cake\Container\ContainerInterface $container A ContainerInterface instance.
      * @return void
      */
     public function setContainer(ContainerInterface $container): void

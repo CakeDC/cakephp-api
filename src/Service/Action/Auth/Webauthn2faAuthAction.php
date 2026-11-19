@@ -17,6 +17,7 @@ use Cake\Log\Log;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\AuthenticateAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use Throwable;
 
 /**
  * Class LoginAction
@@ -43,7 +44,7 @@ class Webauthn2faAuthAction extends Action
             $adapter->deleteStore();
 
             return $this->generateTokenResponse($user->toArray(), '2fa');
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $user = $this->getIdentity();
             $message = __d('cake_d_c/api', 'Register error with webauthn for user id: {0}', $user['id'] ?? 'empty');
             Log::debug($message);

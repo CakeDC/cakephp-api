@@ -80,7 +80,7 @@ class CrudRelationsExtension extends Extension implements EventListenerInterface
      * Checks if endpoint returns additional associations.
      *
      * @param \CakeDC\Api\Service\Action\CrudAction $action A CrudAction instance.
-     * @return false|array
+     * @return array|false
      */
     protected function includeAssociations(CrudAction $action): false|array
     {

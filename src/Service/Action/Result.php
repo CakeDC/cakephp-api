@@ -30,9 +30,9 @@ class Result
     /**
      * Response data
      *
-     * @var array|mixed
+     * @var mixed|array
      */
-    protected $data;
+    protected mixed $data;
 
     /**
      * Response payload
@@ -42,7 +42,7 @@ class Result
     /**
      * Exception structure
      */
-    protected ?\Exception $exception = null;
+    protected ?Exception $exception = null;
 
     /**
      * Result constructor.
@@ -63,7 +63,7 @@ class Result
     /**
      * Gets a result data.
      *
-     * @return array|mixed
+     * @return mixed|array
      */
     public function getData(): mixed
     {
@@ -73,10 +73,10 @@ class Result
     /**
      * Sets a result data.
      *
-     * @param array|mixed $value data to be delivered for the api
+     * @param mixed|array $value data to be delivered for the api
      * @return self
      */
-    public function setData($value): self
+    public function setData(mixed $value): self
     {
         $this->data = $value;
 
@@ -122,7 +122,7 @@ class Result
      * @param \Exception $value exception to be delivered for the api
      * @return self
      */
-    public function setException(\Exception $value): self
+    public function setException(Exception $value): self
     {
         $this->exception = $value;
 
@@ -136,7 +136,7 @@ class Result
      * @param mixed $value value to be used as payload
      * @return void
      */
-    public function appendPayload(string $key, $value): void
+    public function appendPayload(string $key, mixed $value): void
     {
         $this->payload[$key] = $value;
     }
@@ -145,7 +145,7 @@ class Result
      * Gets a result payload.
      *
      * @param string $key Payload key.
-     * @return array|null|mixed Payload
+     * @return mixed|array|null Payload
      */
     public function getPayload(?string $key = null): mixed
     {
@@ -166,7 +166,7 @@ class Result
      * @param array $value payload to be delivered for the api
      * @return $this
      */
-    public function setPayload(array $value)
+    public function setPayload(array $value): static
     {
         $this->payload = $value;
 
@@ -185,7 +185,7 @@ class Result
             'data' => $this->data,
             'payload' => $this->payload,
         ];
-        if ($this->exception instanceof \Exception) {
+        if ($this->exception instanceof Exception) {
             $info['exception'] = $this->exception->getMessage();
             $info['exceptionStack'] = $this->exception->getTraceAsString();
         }

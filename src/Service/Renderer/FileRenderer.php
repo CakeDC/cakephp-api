@@ -72,7 +72,7 @@ class FileRenderer extends BaseRenderer
      * @param mixed $data Encoded data.
      * @return string
      */
-    protected function encode($data): string
+    protected function encode(mixed $data): string
     {
         $format = Configure::read('debug') ? JSON_PRETTY_PRINT : 0;
 

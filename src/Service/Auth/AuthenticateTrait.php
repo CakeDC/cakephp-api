@@ -61,7 +61,7 @@ trait AuthenticateTrait
         if ($service === null) {
             throw new Exception(
                 'The request object does not contain the required `authentication` attribute. Verify the ' .
-                'AuthenticationMiddleware has been added.'
+                'AuthenticationMiddleware has been added.',
             );
         }
 
@@ -110,7 +110,7 @@ trait AuthenticateTrait
      * @param array<string> $actions The action list.
      * @return $this
      */
-    public function allowUnauthenticated(array $actions)
+    public function allowUnauthenticated(array $actions): static
     {
         $this->unauthenticatedActions = $actions;
 
@@ -123,7 +123,7 @@ trait AuthenticateTrait
      * @param array<string> $actions The action or actions to append.
      * @return $this
      */
-    public function addUnauthenticatedActions(array $actions)
+    public function addUnauthenticatedActions(array $actions): static
     {
         $this->unauthenticatedActions = array_merge($this->unauthenticatedActions, $actions);
         $this->unauthenticatedActions = array_values(array_unique($this->unauthenticatedActions));
@@ -190,7 +190,7 @@ trait AuthenticateTrait
      * @param \ArrayAccess $identity Identity data to persist.
      * @return $this
      */
-    public function setIdentity(ArrayAccess $identity)
+    public function setIdentity(ArrayAccess $identity): static
     {
         $service = $this->getAuthenticationService();
 
@@ -200,7 +200,7 @@ trait AuthenticateTrait
         $result = $service->persistIdentity(
             $this->getRequest(),
             $this->getResponse(),
-            $identity
+            $identity,
         );
 
         $this->setRequest($result['request']);
@@ -216,7 +216,7 @@ trait AuthenticateTrait
      * @return $this
      * @throws \Exception
      */
-    public function impersonate(ArrayAccess $impersonated)
+    public function impersonate(ArrayAccess $impersonated): static
     {
         $service = $this->getImpersonationAuthenticationService();
 
@@ -230,7 +230,7 @@ trait AuthenticateTrait
             $this->getRequest(),
             $this->getResponse(),
             $identity,
-            $impersonated
+            $impersonated,
         );
 
         if (!$service->isImpersonating($this->getRequest())) {
@@ -249,14 +249,14 @@ trait AuthenticateTrait
      * @return $this
      * @throws \Exception
      */
-    public function stopImpersonating()
+    public function stopImpersonating(): static
     {
         $service = $this->getImpersonationAuthenticationService();
 
         /** @psalm-var array{request: \Cake\Http\ServerRequest, response: \Cake\Http\Response} $result */
         $result = $service->stopImpersonating(
             $this->getRequest(),
-            $this->getResponse()
+            $this->getResponse(),
         );
 
         if ($service->isImpersonating($this->getRequest())) {
@@ -280,7 +280,7 @@ trait AuthenticateTrait
         $service = $this->getImpersonationAuthenticationService();
 
         return $service->isImpersonating(
-            $this->getRequest()
+            $this->getRequest(),
         );
     }
 
@@ -296,7 +296,7 @@ trait AuthenticateTrait
         if (!($service instanceof ImpersonationInterface)) {
             $className = $service::class;
             throw new InvalidArgumentException(
-                sprintf('The %s must implement ImpersonationInterface in order to use impersonation.', $className)
+                sprintf('The %s must implement ImpersonationInterface in order to use impersonation.', $className),
             );
         }
 

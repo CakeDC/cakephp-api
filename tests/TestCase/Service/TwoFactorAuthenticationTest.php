@@ -19,6 +19,8 @@ use CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultWebauthn2fAuthenticat
 use CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerFactory;
 use CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2fAuthenticationCheckerFactory;
 use CakeDC\Api\TestSuite\TestCase;
+use InvalidArgumentException;
+use stdClass;
 
 /**
  * Unit tests for the 2FA authentication checkers and their factories.
@@ -105,8 +107,8 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function testOtpFactoryRejectsInvalidChecker(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        Configure::write('Api.OneTimePasswordAuthenticator.checker', \stdClass::class);
+        $this->expectException(InvalidArgumentException::class);
+        Configure::write('Api.OneTimePasswordAuthenticator.checker', stdClass::class);
         (new OneTimePasswordAuthenticationCheckerFactory())->build();
     }
 
@@ -120,8 +122,8 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function testWebauthnFactoryRejectsInvalidChecker(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        Configure::write('Api.Webauthn2fa.checker', \stdClass::class);
+        $this->expectException(InvalidArgumentException::class);
+        Configure::write('Api.Webauthn2fa.checker', stdClass::class);
         (new Webauthn2fAuthenticationCheckerFactory())->build();
     }
 }

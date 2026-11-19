@@ -16,7 +16,7 @@ use Cake\Routing\RouteBuilder;
 /**
  * @var \Cake\Routing\RouteBuilder $routes
  */
-$routes->plugin('CakeDC/Api', ['path' => '/api'], function ($routes) {
+$routes->plugin('CakeDC/Api', function ($routes) {
     $useVersioning = Configure::read('Api.useVersioning');
     $versionPrefix = Configure::read('Api.versionPrefix');
     $middlewares = Configure::read('Api.Middleware', []);
@@ -50,4 +50,4 @@ $routes->plugin('CakeDC/Api', ['path' => '/api'], function ($routes) {
             'action' => 'listing'
         ]);
     $routes->connect('/**', ['plugin' => 'CakeDC/Api', 'controller' => 'Api', 'action' => 'notFound']);
-});
+}, ['path' => '/api']);

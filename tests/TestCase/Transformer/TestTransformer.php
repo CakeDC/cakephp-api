@@ -42,7 +42,7 @@ class TestTransformer extends AbstractTransformer
         return $this->item($entity, $transformerClass);
     }
 
-    public function exposedCollection($entities, string $transformerClass): array
+    public function exposedCollection(iterable $entities, string $transformerClass): array
     {
         return $this->collection($entities, $transformerClass);
     }

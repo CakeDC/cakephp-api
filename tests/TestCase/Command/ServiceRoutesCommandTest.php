@@ -20,7 +20,7 @@ class ServiceRoutesCommandTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->_publicAccess();
+        $this->publicAccess();
         parent::setUp();
     }
 

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\TestCase\Service\Action\Collection;
 
+use ArrayObject;
 use Cake\ORM\TableRegistry;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
@@ -29,11 +30,7 @@ class DeleteActionTest extends TestCase
      */
     public $Service;
 
-    public $request;
-
-    public $response;
-
-    public ?\CakeDC\Api\Service\Action\Collection\DeleteAction $Action = null;
+    public ?DeleteAction $Action = null;
 
     /**
      * setUp method
@@ -53,7 +50,7 @@ class DeleteActionTest extends TestCase
     protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
-        unset($this->Service, $this->Action, $this->request);
+        unset($this->Service, $this->Action, $this->testRequest);
         parent::tearDown();
     }
 
@@ -64,7 +61,7 @@ class DeleteActionTest extends TestCase
     {
         $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
-        $this->_initializeAction([
+        $this->initializeAction([
             ['id' => 1],
             ['id' => 2],
         ]);
@@ -80,8 +77,8 @@ class DeleteActionTest extends TestCase
     public function testValidationPostNotArray(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction(
-            ['id' => 1]
+        $this->initializeAction(
+            ['id' => 1],
         );
         $this->Action->execute();
     }
@@ -92,7 +89,7 @@ class DeleteActionTest extends TestCase
     public function testValidationPostEmpty(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction();
+        $this->initializeAction();
         $this->Action->execute();
     }
 
@@ -102,7 +99,7 @@ class DeleteActionTest extends TestCase
     public function testValidationPostString(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction(['something' => 'value']);
+        $this->initializeAction(['something' => 'value']);
         $this->Action->execute();
     }
 
@@ -113,9 +110,9 @@ class DeleteActionTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Validation failed');
-        $this->_initializeAction([
+        $this->initializeAction([
             ['not-id' => 'something'],
-            ['blank' => new \ArrayObject()],
+            ['blank' => new ArrayObject()],
         ]);
 
         $this->Action->execute();
@@ -126,7 +123,7 @@ class DeleteActionTest extends TestCase
      */
     public function testValidatesEntity(): void
     {
-        $this->_initializeAction([
+        $this->initializeAction([
             ['id' => 1],
             ['id' => 7],
         ]);
@@ -139,7 +136,7 @@ class DeleteActionTest extends TestCase
      */
     public function testValidatesEntityNotValid(): void
     {
-        $this->_initializeAction([
+        $this->initializeAction([
             ['id' => 1],
             ['id' => ''],
         ]);
@@ -159,9 +156,9 @@ class DeleteActionTest extends TestCase
         }
     }
 
-    protected function _initializeAction($post = []): void
+    protected function initializeAction($post = []): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articlesCollection',
             ],
@@ -170,11 +167,11 @@ class DeleteActionTest extends TestCase
         $options = [
             'version' => null,
             'service' => null,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles_collection/collection/delete',
         ];
-        $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($this->testRequest->getParam('service'), $options);
 
         $this->Action = new DeleteAction([
             'service' => $this->Service,

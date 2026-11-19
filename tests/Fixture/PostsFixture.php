@@ -16,6 +16,7 @@ namespace CakeDC\Api\Test\Fixture;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionInterface;
 use Cake\TestSuite\Fixture\TestFixture;
+use Override;
 
 class PostsFixture extends TestFixture
 {
@@ -31,17 +32,15 @@ class PostsFixture extends TestFixture
         ['id' => 4, 'title' => 'Fourth Post', 'body' => 'Fourth Post Body', 'published' => 'Y'],
     ];
 
-    #[\Override]
-    public function insert(ConnectionInterface $db): bool
+    #[Override]
+    public function insert(ConnectionInterface $db): void
     {
-        $result = parent::insert($db);
+        parent::insert($db);
 
         if ($db->getDriver() instanceof Postgres) {
             foreach (range(1, count($this->records)) as $i) {
                 $db->execute("select nextval('posts_id_seq'::regclass)");
             }
         }
-
-        return $result;
     }
 }

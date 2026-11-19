@@ -13,10 +13,14 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\TestCase\Service;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Result;
+use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
+use RuntimeException;
 
 /**
  * Unit tests for the service event dispatch and error-code mapping.
@@ -31,18 +35,18 @@ class ServiceEventsTest extends TestCase
         parent::tearDown();
     }
 
-    protected function buildService(string $serviceName = 'articles', string $baseUrl = '/articles', array $params = [], string $method = 'GET'): \CakeDC\Api\Service\Service
+    protected function buildService(string $serviceName = 'articles', string $baseUrl = '/articles', array $params = [], string $method = 'GET'): Service
     {
         ServiceRegistry::getServiceLocator()->clear();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => $serviceName] + $params,
         ], $method);
 
         return ServiceRegistry::getServiceLocator()->get($serviceName, [
             'version' => null,
             'service' => $serviceName,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => $baseUrl,
         ]);
     }
@@ -61,14 +65,14 @@ class ServiceEventsTest extends TestCase
 
     public function testAfterDispatchListenerExceptionPropagates(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('after-dispatch boom');
         $service = $this->buildService();
         $service->dispatchPrepareAction();
         $service->getEventManager()->on('Service.afterDispatch', function (): void {
-            throw new \RuntimeException('after-dispatch boom');
+            throw new RuntimeException('after-dispatch boom');
         });
-        $service->dispatchProcessAction($this->request);
+        $service->dispatchProcessAction($this->testRequest);
     }
 
     public function testDispatchRecordNotFoundSets404(): void
@@ -77,17 +81,17 @@ class ServiceEventsTest extends TestCase
         $result = $service->dispatch();
         $this->assertInstanceOf(Result::class, $result);
         $this->assertSame(404, $result->getCode());
-        $this->assertInstanceOf(\Cake\Datasource\Exception\RecordNotFoundException::class, $result->getException());
+        $this->assertInstanceOf(RecordNotFoundException::class, $result->getException());
     }
 
     public function testDispatchValidationSets422(): void
     {
         $service = $this->buildService('posts', '/posts', [], 'POST');
-        $service->setRequest($this->request->withData('body', 'missing title'));
+        $service->setRequest($this->testRequest->withData('body', 'missing title'));
 
         $result = $service->dispatch();
         $this->assertInstanceOf(Result::class, $result);
         $this->assertSame(422, $result->getCode());
-        $this->assertInstanceOf(\CakeDC\Api\Exception\ValidationException::class, $result->getException());
+        $this->assertInstanceOf(ValidationException::class, $result->getException());
     }
 }

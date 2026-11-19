@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Api\Service\Action\Auth\SocialLoginAction as Action;
+use Override;
 
 /**
  * Class SocialLoginAction
@@ -27,10 +28,10 @@ class JwtSocialLoginAction extends Action
     /**
      * Execute action.
      *
-     * @return false|array
+     * @return array|false
      * @throws \Exception
      */
-    #[\Override]
+    #[Override]
     public function execute(): false|array
     {
         $user = parent::execute();

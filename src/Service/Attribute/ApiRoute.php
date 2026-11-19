@@ -27,7 +27,7 @@ readonly class ApiRoute
     /**
      * @param string $action Action name (route key).
      * @param string $path Route path, relative to the service resource (or `ApiScope` prefix). Supports `{placeholder}` params.
-     * @param string|array<string> $method HTTP method(s).
+     * @param array<string>|string $method HTTP method(s).
      * @param bool $mapCors Register an OPTIONS route for CORS preflight.
      * @param string|null $name Optional route name.
      * @param array<string, string> $patterns Regex patterns for route placeholders.

@@ -11,11 +11,18 @@ declare(strict_types=1);
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
 use Cake\Mailer\Mailer;
+use Cake\Mailer\TransportFactory;
+use Cake\Routing\Router;
+use Cake\TestSuite\Fixture\SchemaLoader;
 use Cake\Utility\Security;
+use CakeDC\Api\Test\App\Application;
+use CakeDC\Api\Test\App\Controller\AppController;
 
 $findRoot = function (): ?string {
     $root = dirname(__DIR__);
@@ -81,7 +88,7 @@ Configure::write('App', [
 
 // Cake\Core\Configure::write('App.namespace', 'CakeDC\Api\Test\App');
 // Cake\Core\Configure::write('App.encoding', 'UTF-8');
-Cake\Core\Configure::write('debug', true);
+Configure::write('debug', true);
 
 if (!file_exists(TMP . 'cache/models')) {
     mkdir(TMP . 'cache/models', 0777, true);
@@ -113,8 +120,8 @@ $cache = [
     ],
 ];
 
-Cake\Cache\Cache::setConfig($cache);
-Cake\Core\Configure::write('EmailTransport', [
+Cache::setConfig($cache);
+Configure::write('EmailTransport', [
     'default' => [
         'className' => 'Debug',
         'host' => 'localhost',
@@ -127,24 +134,24 @@ Cake\Core\Configure::write('EmailTransport', [
         'log' => true,
     ],
 ]);
-Cake\Core\Configure::write('Email', [
+Configure::write('Email', [
     'default' => [
         'transport' => 'default',
         'from' => 'test@localhost',
         'log' => true,
     ],
 ]);
-Cake\Core\Configure::write('Session', [
+Configure::write('Session', [
     'defaults' => 'php',
 ]);
 session_id('cli');
 date_default_timezone_set('UTC');
 
-Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
+Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 
 mb_internal_encoding(Configure::read('App.encoding'));
 Security::setSalt(Configure::read('Security.salt'));
-\Cake\Mailer\TransportFactory::setConfig(Configure::consume('EmailTransport'));
+TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Mailer::setConfig(Configure::consume('Email'));
 
 // Ensure default test connection is defined
@@ -152,23 +159,22 @@ if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
 
-Cake\Datasource\ConnectionManager::setConfig('test', [
+ConnectionManager::setConfig('test', [
     'url' => getenv('db_dsn'),
     'timezone' => 'UTC',
 ]);
 
 if (env('FIXTURE_SCHEMA_METADATA')) {
-    $loader = new \Cake\TestSuite\Fixture\SchemaLoader();
+    $loader = new SchemaLoader();
     $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
 }
 
-class_alias(\CakeDC\Api\Test\App\Controller\AppController::class, 'App\Controller\AppController');
+class_alias(AppController::class, 'App\Controller\AppController');
 
-$isCli = PHP_SAPI === 'cli';
-$conf = (array)Cake\Core\Configure::read('Error');
+$conf = (array)Configure::read('Error');
 (new ErrorTrap($conf))->register();
 (new ExceptionTrap($conf))->register();
-\Cake\Routing\Router::reload();
-$application = new \CakeDC\Api\Test\App\Application(CONFIG);
+Router::reload();
+$application = new Application(CONFIG);
 $application->bootstrap();
 $application->pluginBootstrap();

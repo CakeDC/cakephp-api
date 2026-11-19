@@ -48,19 +48,19 @@ class CachedApiRbacTest extends TestCase
     protected function buildRbac(array $permissions): array
     {
         ServiceRegistry::getServiceLocator()->clear();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles'],
         ], 'GET');
         $service = ServiceRegistry::getServiceLocator()->get('articles', [
             'version' => null,
             'service' => 'articles',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ]);
         $service->dispatchPrepareAction();
 
-        $this->request = $this->request->withAttribute('service', $service);
+        $this->testRequest = $this->testRequest->withAttribute('service', $service);
 
         $rbac = new CachedApiRbac([
             'api_permissions' => $permissions,
@@ -68,7 +68,7 @@ class CachedApiRbacTest extends TestCase
             'default_role' => 'user',
         ]);
 
-        return [$rbac, $this->request];
+        return [$rbac, $this->testRequest];
     }
 
     public function testBuildPermissionsMapRoleServiceKeys(): void
@@ -161,15 +161,15 @@ class CachedApiRbacTest extends TestCase
                 ['role' => 'user', 'service' => 'articles', 'action' => 'index'],
             ],
         ]);
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles'],
         ], 'GET');
-        $this->assertFalse($rbac->checkPermissions(['role' => 'user', 'id' => 1], $this->request));
+        $this->assertFalse($rbac->checkPermissions(['role' => 'user', 'id' => 1], $this->testRequest));
     }
 
     public function testCheckPermissionsUsesCachedMap(): void
     {
-        [$rbac, $request] = $this->buildRbac([
+        [, $request] = $this->buildRbac([
             ['role' => 'user', 'service' => 'articles', 'action' => 'index'],
         ]);
         // second instance reads the permissions map from the cache engine

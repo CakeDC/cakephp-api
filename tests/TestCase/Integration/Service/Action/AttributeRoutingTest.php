@@ -42,7 +42,7 @@ class AttributeRoutingTest extends IntegrationTestCase
             'paths' => ['tests/App/Service/*.php', 'tests/App/Service/**/*.php'],
             'cache' => false,
         ]);
-        $this->_tokenAccess();
+        $this->tokenAccess();
         $this->getDefaultUser(Settings::USER1);
     }
 

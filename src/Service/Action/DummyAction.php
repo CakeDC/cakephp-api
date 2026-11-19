@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action;
 
+use Override;
+
 /**
  * Class DummyAction
  *
@@ -25,7 +27,7 @@ class DummyAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         return true;

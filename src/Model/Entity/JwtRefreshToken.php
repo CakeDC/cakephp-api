@@ -37,7 +37,7 @@ class JwtRefreshToken extends Entity
      *
      * @var array<string, bool>
      */
-    protected array $_accessible = [
+    protected array $patchable = [
         '*' => true,
         'id' => false,
     ];
@@ -47,7 +47,7 @@ class JwtRefreshToken extends Entity
      *
      * @var array<string>
      */
-    protected array $_hidden = [
+    protected array $hidden = [
         'token',
     ];
 }

@@ -26,12 +26,12 @@ abstract class Extension implements EventListenerInterface
 {
     use InstanceConfigTrait;
 
-    protected array $_defaultConfig = [];
+    protected array $defaultConfig = [];
 
     /**
      * ExtensionRegistry instance.
      */
-    protected \CakeDC\Api\Service\Action\ExtensionRegistry $registry;
+    protected ExtensionRegistry $registry;
 
     /**
      * Extension constructor.

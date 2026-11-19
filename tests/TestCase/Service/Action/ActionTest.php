@@ -23,10 +23,6 @@ class ActionTest extends TestCase
 
     public $Service;
 
-    public $request;
-
-    public $response;
-
     /**
      * @var AddAction
      */
@@ -50,7 +46,7 @@ class ActionTest extends TestCase
     protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
-        unset($this->Service, $this->Action, $this->request);
+        unset($this->Service, $this->Action, $this->testRequest);
         parent::tearDown();
     }
 
@@ -61,7 +57,7 @@ class ActionTest extends TestCase
      */
     public function testActionCallOnProcess(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -73,12 +69,12 @@ class ActionTest extends TestCase
                 'tag_id' => 1,
             ],
         ], 'PUT');
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles/tag/1',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);

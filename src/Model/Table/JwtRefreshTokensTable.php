@@ -15,6 +15,7 @@ namespace CakeDC\Api\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Override;
 
 /**
  * JwtRefreshTokens Model
@@ -53,7 +54,7 @@ class JwtRefreshTokensTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    #[\Override]
+    #[Override]
     public function validationDefault(Validator $validator): Validator
     {
         $validator

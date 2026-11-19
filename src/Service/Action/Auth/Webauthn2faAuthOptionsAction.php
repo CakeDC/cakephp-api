@@ -16,6 +16,7 @@ namespace CakeDC\Api\Service\Action\Auth;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\AuthenticateAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use Webauthn\PublicKeyCredentialRequestOptions;
 
 /**
  * Class LoginAction
@@ -31,7 +32,7 @@ class Webauthn2faAuthOptionsAction extends Action
      *
      * @return \Webauthn\PublicKeyCredentialRequestOptions
      */
-    public function execute(): \Webauthn\PublicKeyCredentialRequestOptions
+    public function execute(): PublicKeyCredentialRequestOptions
     {
         $request = $this->getService()->getRequest();
         $adapter = new AuthenticateAdapter($request, $this->getUsersTable(), $this->getIdentity());

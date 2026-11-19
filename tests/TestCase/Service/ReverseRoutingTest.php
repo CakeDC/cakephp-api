@@ -158,14 +158,14 @@ class ReverseRoutingTest extends TestCase
 
     public function testIndexPathRootService(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles'],
         ], 'GET');
         $service = ServiceRegistry::getServiceLocator()->get('articles', [
             'version' => null,
             'service' => 'articles',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ]);
         $service->dispatchPrepareAction();

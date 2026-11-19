@@ -37,7 +37,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
     /**
      * The Action that this collection was initialized with.
      */
-    protected ?\CakeDC\Api\Service\Action\Action $action = null;
+    protected ?Action $action = null;
 
     /**
      * Constructor.
@@ -46,7 +46,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
      */
     public function __construct(?Action $action = null)
     {
-        if ($action instanceof \CakeDC\Api\Service\Action\Action) {
+        if ($action instanceof Action) {
             $this->action = $action;
         }
     }
@@ -57,7 +57,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
      * @param string $class The class to resolve.
      * @return string|null The resolved name or false for failure.
      */
-    protected function _resolveClassName($class): ?string
+    protected function resolveClassName(string $class): ?string
     {
         $result = App::className($class, 'Service/Action/Extension', 'Extension');
         if ($result || str_contains($class, '.')) {
@@ -75,7 +75,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
      * @return void
      * @throws \Exception
      */
-    protected function _throwMissingClassError(string $class, ?string $plugin): void
+    protected function throwMissingClassError(string $class, ?string $plugin): void
     {
         throw new MissingExtensionException([
             'class' => $class . 'Extension',
@@ -94,7 +94,7 @@ class ExtensionRegistry extends ObjectRegistry implements EventDispatcherInterfa
      * @param array $config The Configuration settings for construction
      * @return object
      */
-    protected function _create(object|string $class, string $alias, array $config): object
+    protected function create(object|string $class, string $alias, array $config): object
     {
         if (empty($config['action'])) {
             $config['action'] = $this->action;

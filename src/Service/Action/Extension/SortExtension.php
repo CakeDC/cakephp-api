@@ -26,7 +26,7 @@ class SortExtension extends Extension implements EventListenerInterface
     /**
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'sortField' => 'sort',
         'directionField' => 'direction',
     ];

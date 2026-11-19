@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\App\Service;
 
 use CakeDC\Api\Service\FallbackService;
-use CakeDC\Api\Test\App\DI\Service\TestService;
+use CakeDC\Api\Test\App\Service\Action\FeaturedAction;
+use Override;
 
 class ArticlesService extends FallbackService
 {
@@ -25,7 +26,7 @@ class ArticlesService extends FallbackService
         'featured' => ['method' => ['GET'], 'path' => 'featured'],
     ];
 
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -36,16 +37,11 @@ class ArticlesService extends FallbackService
             'path' => 'data',
         ]);
 
-        $this->mapAction('featured', \CakeDC\Api\Test\App\Service\Action\FeaturedAction::class, [
+        $this->mapAction('featured', FeaturedAction::class, [
             'method' => ['GET'],
             'path' => 'featured',
         ]);
 
         $this->setTable('Articles');
-
-        if ($this->container !== null) {
-            $testS = $this->container->get(TestService::class);
-            assert($testS instanceof TestService);
-        }
     }
 }

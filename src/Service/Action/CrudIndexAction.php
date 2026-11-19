@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action;
 
+use Cake\Datasource\ResultSetInterface;
+
 /**
  * Class CrudIndexAction
  *
@@ -27,7 +29,7 @@ class CrudIndexAction extends CrudAction
      *
      * @return \Cake\Datasource\ResultSetInterface
      */
-    public function execute(): \Cake\Datasource\ResultSetInterface
+    public function execute(): ResultSetInterface
     {
         return $this->getEntities();
     }

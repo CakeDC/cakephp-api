@@ -32,8 +32,8 @@ class PaginationExtensionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
+        $this->tokenAccess();
+        $this->loadDefaultExtensions('CakeDC/Api.Paginate');
         $this->getDefaultUser(Settings::USER1);
     }
 

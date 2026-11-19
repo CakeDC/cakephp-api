@@ -36,9 +36,9 @@ class CorsExtensionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions('CakeDC/Api.Cors');
-        $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
+        $this->tokenAccess();
+        $this->loadDefaultExtensions('CakeDC/Api.Cors');
+        $this->loadDefaultExtensions('CakeDC/Api.Paginate');
         $this->getDefaultUser(Settings::USER1);
     }
 
@@ -55,10 +55,10 @@ class CorsExtensionTest extends IntegrationTestCase
 
     public function testCorsHeaders(): void
     {
-        $this->_request['headers']['Origin'] = 'http://foobar.com';
+        $this->request['headers']['Origin'] = 'http://foobar.com';
         $this->sendRequest('/authors', 'GET', ['limit' => 4, 'sort' => 'id']);
         $result = $this->getJsonResponse();
-        $headers = $this->_response->getHeaders();
+        $headers = $this->response->getHeaders();
         $this->assertSuccess($result);
         $this->assertTrue($headers !== []);
         $this->assertEquals(['*'], $headers['Access-Control-Allow-Origin']);

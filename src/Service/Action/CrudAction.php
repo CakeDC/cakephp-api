@@ -21,8 +21,11 @@ use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
+use CakeDC\Api\Exception\ServiceException;
 use CakeDC\Api\Exception\ValidationException;
+use CakeDC\Api\Service\CrudService;
 use CakeDC\Api\Service\Utility\ReverseRouting;
+use Override;
 
 /**
  * Class CrudAction
@@ -31,13 +34,13 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 abstract class CrudAction extends Action
 {
-    protected ?\Cake\ORM\Table $table = null;
+    protected ?Table $table = null;
 
     /**
      * Object Identifier
      *
      * @var mixed     */
-    protected $id;
+    protected mixed $id;
 
     /**
      * Object Identifier name
@@ -45,20 +48,12 @@ abstract class CrudAction extends Action
     protected string $idName = 'id';
 
     /**
-     * Crud service.
-     *
-     * @psalm-suppress: NonInvariantDocblockPropertyType
-     * @var \CakeDC\Api\Service\CrudService
-     */
-    protected $service;
-
-    /**
      * Parent Object Identifier
      *
      * Used for nested services
      *
      * @var mixed     */
-    protected $parentId;
+    protected mixed $parentId;
 
     /**
      * Parent Object Identifier name
@@ -125,7 +120,7 @@ abstract class CrudAction extends Action
      * @param \Cake\ORM\Table $table A Table instance.
      * @return $this
      */
-    public function setTable(Table $table)
+    public function setTable(Table $table): static
     {
         $this->table = $table;
 
@@ -135,10 +130,15 @@ abstract class CrudAction extends Action
     /**
      * @return \CakeDC\Api\Service\CrudService
      */
-    #[\Override]
-    public function getService(): \CakeDC\Api\Service\CrudService
+    #[Override]
+    public function getService(): CrudService
     {
-        return $this->service;
+        $service = $this->service;
+        if (!$service instanceof CrudService) {
+            throw new ServiceException('Crud actions require a CrudService instance');
+        }
+
+        return $service;
     }
 
     /**
@@ -251,7 +251,7 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key.
      * @return \Cake\Datasource\EntityInterface|array
      */
-    protected function getEntity($primaryKey): \Cake\Datasource\EntityInterface|array
+    protected function getEntity(mixed $primaryKey): EntityInterface|array
     {
         $query = $this->getEntityQuery($primaryKey);
         if ($this->finder !== null) {
@@ -277,7 +277,7 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key.
      * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function getEntityQuery($primaryKey): \Cake\ORM\Query\SelectQuery
+    protected function getEntityQuery(mixed $primaryKey): SelectQuery
     {
         return $this->getTable()->find('all')->where($this->buildViewCondition($primaryKey));
     }
@@ -288,7 +288,7 @@ abstract class CrudAction extends Action
      * @param mixed $primaryKey Primary key
      * @return array
      */
-    protected function buildViewCondition($primaryKey): array
+    protected function buildViewCondition(mixed $primaryKey): array
     {
         $table = $this->getTable();
         $key = (array)$table->getPrimaryKey();
@@ -304,7 +304,7 @@ abstract class CrudAction extends Action
             $msg = sprintf(
                 'Record not found in table "%s" with primary key [%s]',
                 $table->getTable(),
-                implode(', ', $primaryKey)
+                implode(', ', $primaryKey),
             );
             throw new InvalidPrimaryKeyException($msg);
         }
@@ -358,11 +358,8 @@ abstract class CrudAction extends Action
             ];
             foreach ($field->getIterator() as $ruleName => $rule) {
                 /** @var \Cake\Validation\ValidationRule $rule */
-                $_rule = $rule->get('rule');
-                if (is_callable($_rule)) {
-                    continue;
-                }
-                $params = $rule->get('pass');
+                $ruleValue = $rule->name ?? $ruleName;
+                $params = $rule->pass;
                 if (is_callable($params)) {
                     $params = null;
                 }
@@ -374,11 +371,11 @@ abstract class CrudAction extends Action
                     }
                 }
                 $validators[$name]['rules'][$ruleName] = [
-                    'message' => $rule->get('message'),
-                    'on' => $rule->get('on'),
-                    'rule' => $_rule,
+                    'message' => $rule->message,
+                    'on' => $rule->on,
+                    'rule' => $ruleValue,
                     'params' => $params,
-                    'last' => $rule->get('last'),
+                    'last' => $rule->last,
                 ];
             }
         }

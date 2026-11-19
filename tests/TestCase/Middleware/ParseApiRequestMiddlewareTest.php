@@ -15,14 +15,17 @@ namespace CakeDC\Api\Test\TestCase\Middleware;
 
 use Cake\Core\Configure;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\Test\App\Service\v1\ArticlesService;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 
 /**
  * Unit tests for the API request parsing middleware.
@@ -73,7 +76,7 @@ class ParseApiRequestMiddlewareTest extends TestCase
                 return new Response();
             }
         };
-        $request = new \Cake\Http\ServerRequest(['url' => '/non-api/path']);
+        $request = new ServerRequest(['url' => '/non-api/path']);
         $response = $middleware->process($request, $handler);
         $this->assertInstanceOf(Response::class, $response);
     }
@@ -83,7 +86,7 @@ class ParseApiRequestMiddlewareTest extends TestCase
         $captured = null;
         $handler = $this->captureHandler($captured);
         $middleware = new ParseApiRequestMiddleware();
-        $request = new \Cake\Http\ServerRequest(['url' => '/api/articles']);
+        $request = new ServerRequest(['url' => '/api/articles']);
         $response = $middleware->process($request, $handler);
         $this->assertInstanceOf(Service::class, $captured);
         $this->assertSame('articles', $captured->getName());
@@ -96,7 +99,7 @@ class ParseApiRequestMiddlewareTest extends TestCase
         $captured = null;
         $handler = $this->captureHandler($captured);
         $middleware = new ParseApiRequestMiddleware();
-        $request = new \Cake\Http\ServerRequest(['url' => '/rest/articles']);
+        $request = new ServerRequest(['url' => '/rest/articles']);
         $response = $middleware->process($request, $handler);
         $this->assertInstanceOf(Service::class, $captured);
         $this->assertSame('HANDLER', (string)$response->getBody());
@@ -107,11 +110,11 @@ class ParseApiRequestMiddlewareTest extends TestCase
         $handler = new class implements RequestHandlerInterface {
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
-                throw new \RuntimeException('handler should not be called');
+                throw new RuntimeException('handler should not be called');
             }
         };
         $middleware = new ParseApiRequestMiddleware();
-        $request = new \Cake\Http\ServerRequest(['url' => '/api/nonexistent']);
+        $request = new ServerRequest(['url' => '/api/nonexistent']);
         $response = $middleware->process($request, $handler);
         $this->assertInstanceOf(Response::class, $response);
     }
@@ -124,11 +127,11 @@ class ParseApiRequestMiddlewareTest extends TestCase
         $handler = new class implements RequestHandlerInterface {
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
-                throw new \RuntimeException('handler should not be called');
+                throw new RuntimeException('handler should not be called');
             }
         };
         $middleware = new ParseApiRequestMiddleware();
-        $request = new \Cake\Http\ServerRequest([
+        $request = new ServerRequest([
             'url' => '/api/articles',
             'environment' => ['REQUEST_METHOD' => 'DELETE'],
         ]);
@@ -145,9 +148,9 @@ class ParseApiRequestMiddlewareTest extends TestCase
         $captured = null;
         $handler = $this->captureHandler($captured);
         $middleware = new ParseApiRequestMiddleware();
-        $request = new \Cake\Http\ServerRequest(['url' => '/api/v1/articles']);
+        $request = new ServerRequest(['url' => '/api/v1/articles']);
         $response = $middleware->process($request, $handler);
-        $this->assertInstanceOf(\CakeDC\Api\Test\App\Service\v1\ArticlesService::class, $captured);
+        $this->assertInstanceOf(ArticlesService::class, $captured);
         $this->assertSame('articles', $captured->getName());
         $this->assertSame('HANDLER', (string)$response->getBody());
     }

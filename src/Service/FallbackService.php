@@ -17,6 +17,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\RouteBuilder;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Routing\ApiRouter;
+use Override;
 
 /**
  * Class FallbackService
@@ -32,14 +33,14 @@ class FallbackService extends NestedCrudService
      *
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * Initialize method
      *
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -53,21 +54,21 @@ class FallbackService extends NestedCrudService
      *
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function loadRoutes(): void
     {
         $table = $this->fetchTable($this->table);
 
         $defaultOptions = $this->routerDefaultOptions();
         $builder = ApiRouter::createRouteBuilder('/', []);
-        $builder->scope('/', $defaultOptions, function (RouteBuilder $routes) use ($table, $defaultOptions): void {
+        $builder->scope('/', function (RouteBuilder $routes) use ($table, $defaultOptions): void {
             $routes->setExtensions($this->routeExtensions);
             $options = $defaultOptions;
             $options['map'] = array_merge($options['map'], [
                 'describe' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => ''],
                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
             ]);
-            $routes->resources($this->getName(), $options, function (RouteBuilder $routes) use ($table): void {
+            $routes->resources($this->getName(), function (RouteBuilder $routes) use ($table): void {
                 $routes->setExtensions($this->routeExtensions);
 
                 $keys = ['HasMany'/*, 'HasOne'*/];
@@ -91,10 +92,10 @@ class FallbackService extends NestedCrudService
                                 'describeId' => ['action' => 'describe', 'method' => 'OPTIONS', 'path' => '{id}'],
                             ],
                         ];
-                        $routes->resources($className, $options);
+                        $routes->resources($className, null, $options);
                     }
                 }
-            });
-        });
+            }, $options);
+        }, $defaultOptions);
     }
 }

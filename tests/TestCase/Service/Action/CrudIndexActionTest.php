@@ -25,7 +25,7 @@ class CrudIndexActionTest extends TestCase
 {
     use ConfigTrait;
 
-    public \CakeDC\Api\Service\Action\CrudIndexAction $Action;
+    public CrudIndexAction $Action;
 
     /**
      * setUp method

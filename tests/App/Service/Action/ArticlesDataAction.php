@@ -15,6 +15,7 @@ namespace CakeDC\Api\Test\App\Service\Action;
 
 use CakeDC\Api\Service\Action\CrudAction;
 use CakeDC\Api\Test\App\DI\Service\TestService;
+use Override;
 
 class ArticlesDataAction extends CrudAction
 {
@@ -26,7 +27,7 @@ class ArticlesDataAction extends CrudAction
         parent::__construct($config);
     }
 
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -38,7 +39,7 @@ class ArticlesDataAction extends CrudAction
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         return true;
@@ -49,7 +50,7 @@ class ArticlesDataAction extends CrudAction
         return $this->testService->data();
     }
 
-    public function getTestService(): \CakeDC\Api\Test\App\DI\Service\TestService
+    public function getTestService(): TestService
     {
         return $this->testService;
     }

@@ -16,6 +16,8 @@ namespace CakeDC\Api\Transformer;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\Date;
 use Cake\I18n\DateTime;
+use DateTime as NativeDateTime;
+use Exception;
 
 /**
  * Abstract Transformer
@@ -34,7 +36,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param mixed $default Default value if condition is false
      * @return mixed
      */
-    protected function when(bool $condition, $value, $default = null): mixed
+    protected function when(bool $condition, mixed $value, mixed $default = null): mixed
     {
         return $condition ? $value : $default;
     }
@@ -50,7 +52,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param mixed $default Default value if key doesn't exist
      * @return mixed
      */
-    protected function get($data, string $key, $default = null): mixed
+    protected function get(mixed $data, string $key, mixed $default = null): mixed
     {
         if (is_array($data)) {
             return $data[$key] ?? $default;
@@ -79,7 +81,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param mixed $date Date to format
      * @return string|null ISO 8601 formatted date string or null
      */
-    protected function timestamp($date): ?string
+    protected function timestamp(mixed $date): ?string
     {
         if (!$date) {
             return null;
@@ -89,14 +91,14 @@ abstract class AbstractTransformer implements TransformerInterface
             return $date->toIso8601String();
         }
 
-        if ($date instanceof \DateTime) {
+        if ($date instanceof NativeDateTime) {
             return $date->format('c');
         }
 
         if (is_string($date)) {
             try {
                 return (new DateTime($date))->toIso8601String();
-            } catch (\Exception) {
+            } catch (Exception) {
                 return null;
             }
         }
@@ -111,7 +113,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param string $transformerClass Transformer class name
      * @return array|null Transformed data or null if entity is empty
      */
-    protected function item($entity, string $transformerClass): ?array
+    protected function item(mixed $entity, string $transformerClass): ?array
     {
         if (!$entity) {
             return null;
@@ -129,7 +131,7 @@ abstract class AbstractTransformer implements TransformerInterface
      * @param string $transformerClass Transformer class name
      * @return array Transformed collection
      */
-    protected function collection($entities, string $transformerClass): array
+    protected function collection(iterable $entities, string $transformerClass): array
     {
         if (!$entities) {
             return [];

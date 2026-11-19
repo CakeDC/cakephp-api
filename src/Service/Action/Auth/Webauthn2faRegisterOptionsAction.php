@@ -17,6 +17,7 @@ use Cake\Http\Exception\BadRequestException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Webauthn\RegisterAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use Webauthn\PublicKeyCredentialCreationOptions;
 
 /**
  * Class LoginAction
@@ -32,7 +33,7 @@ class Webauthn2faRegisterOptionsAction extends Action
      *
      * @return \Webauthn\PublicKeyCredentialCreationOptions
      */
-    public function execute(): \Webauthn\PublicKeyCredentialCreationOptions
+    public function execute(): PublicKeyCredentialCreationOptions
     {
         $user = $this->getIdentity();
         $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);
@@ -41,7 +42,7 @@ class Webauthn2faRegisterOptionsAction extends Action
             return $adapter->getOptions();
         }
         throw new BadRequestException(
-            __d('cake_d_c/api', 'User already has configured webauthn2fa')
+            __d('cake_d_c/api', 'User already has configured webauthn2fa'),
         );
     }
 }

@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\RequestParser;
 
+use Cake\Http\ServerRequest;
+use RuntimeException;
+
 /**
  * Parse form based data representation.
  */
@@ -26,8 +29,8 @@ class FormParser extends BaseParser
     public function getParams(): array
     {
         $request = $this->service->getRequest();
-        if (!$request instanceof \Cake\Http\ServerRequest) {
-            throw new \RuntimeException('Request is not available in the parser.');
+        if (!$request instanceof ServerRequest) {
+            throw new RuntimeException('Request is not available in the parser.');
         }
         if ($request->is(['post', 'put'])) {
             return (array)$request->getData();

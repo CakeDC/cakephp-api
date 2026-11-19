@@ -15,6 +15,8 @@ namespace CakeDC\Api\Service;
 
 use Cake\Routing\RouteBuilder;
 use CakeDC\Api\Routing\ApiRouter;
+use CakeDC\Api\Service\Action\DescribeAction;
+use Override;
 
 class DescribeService extends Service
 {
@@ -22,13 +24,13 @@ class DescribeService extends Service
      * @var array
      */
     protected array $actionsClassMap = [
-        'describe' => \CakeDC\Api\Service\Action\DescribeAction::class,
+        'describe' => DescribeAction::class,
     ];
 
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     public function loadRoutes(): void
     {
         $builder = ApiRouter::createRouteBuilder('/', []);

@@ -14,13 +14,16 @@ declare(strict_types=1);
 namespace CakeDC\Api\Webauthn;
 
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use CakeDC\Api\Model\Entity\AuthStore;
+use CakeDC\Api\Model\Table\AuthStoreTable;
 use CakeDC\Api\Utility\RequestParser;
 use CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository;
+use CakeDC\Users\Model\Entity\User;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
 use Cose\Algorithm\Signature\ECDSA\ES256K;
@@ -34,10 +37,13 @@ use Cose\Algorithm\Signature\RSA\PS512;
 use Cose\Algorithm\Signature\RSA\RS256;
 use Cose\Algorithm\Signature\RSA\RS384;
 use Cose\Algorithm\Signature\RSA\RS512;
-use Webauthn\AttestationStatement\AttestationObjectLoader;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
+use Webauthn\Denormalizer\WebauthnSerializerFactory;
+use Webauthn\PublicKeyCredentialOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
 
@@ -45,11 +51,11 @@ class BaseAdapter
 {
     public const STORE_PREFIX = 'api.Webauthn2fa';
 
-    protected \Cake\Http\ServerRequest $request;
+    protected ServerRequest $request;
 
-    protected \CakeDC\Api\Webauthn\Repository\UserCredentialSourceRepository $repository;
+    protected UserCredentialSourceRepository $repository;
 
-    private \Cake\Datasource\EntityInterface $user;
+    private EntityInterface $user;
 
     /**
      * @var \Webauthn\PublicKeyCredentialRpEntity
@@ -59,7 +65,7 @@ class BaseAdapter
     /**
      * @var \CakeDC\Api\Model\Table\AuthStoreTable
      */
-    protected $store;
+    protected AuthStoreTable $store;
 
     /**
      * @var \Webauthn\AttestationStatement\AttestationStatementSupportManager|null
@@ -78,16 +84,16 @@ class BaseAdapter
      * @param \Cake\ORM\Table|null $usersTable The users table.
      * @param \Cake\Datasource\EntityInterface|\CakeDC\Users\Model\Entity\User $userData The user data.
      */
-    public function __construct(ServerRequest $request, ?Table $usersTable, $userData)
+    public function __construct(ServerRequest $request, ?Table $usersTable, EntityInterface|User $userData)
     {
         $this->request = $request;
         /** @var \CakeDC\Api\Model\Table\AuthStoreTable $store */
         $store = TableRegistry::getTableLocator()->get('CakeDC/Api.AuthStore');
         $this->store = $store;
         $this->readStore();
-        $this->rpEntity = new PublicKeyCredentialRpEntity(
-            Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.appName'), // The application name
-            Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.id')
+        $this->rpEntity = PublicKeyCredentialRpEntity::create(
+            (string)Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.appName'),
+            (string)Configure::read('Api.Webauthn2fa.' . $this->getDomain() . '.id'),
         );
         /**
          * @var \Cake\ORM\Entity $userSession
@@ -97,7 +103,7 @@ class BaseAdapter
         $this->repository = new UserCredentialSourceRepository(
             $request,
             $this->user,
-            $usersTable
+            $usersTable,
         );
     }
 
@@ -113,7 +119,7 @@ class BaseAdapter
         return new PublicKeyCredentialUserEntity(
             $user->webauthn_username ?? $user->username,
             (string)$user->id,
-            (string)$user->first_name
+            (string)$user->first_name,
         );
     }
 
@@ -135,7 +141,7 @@ class BaseAdapter
     public function hasCredential(): bool
     {
         return (bool)$this->repository->findAllForUserEntity(
-            $this->getUserEntity()
+            $this->getUserEntity(),
         );
     }
 
@@ -144,7 +150,7 @@ class BaseAdapter
      *
      * @return \CakeDC\Api\Model\Entity\AuthStore
      */
-    public function readStore(): \CakeDC\Api\Model\Entity\AuthStore
+    public function readStore(): AuthStore
     {
         /** @var \CakeDC\Api\Model\Entity\AuthStore|null $entity */
         $entity = $this->store->find()->where(['id' => $this->getStoreKey()])->first();
@@ -165,7 +171,7 @@ class BaseAdapter
      * @param array $data The data to save.
      * @return \CakeDC\Api\Model\Entity\AuthStore|false
      */
-    public function saveStore($data): \CakeDC\Api\Model\Entity\AuthStore|false
+    public function saveStore(array $data): AuthStore|false
     {
         $entity = $this->readStore();
         $entity->store = $data;
@@ -207,10 +213,10 @@ class BaseAdapter
      *
      * @param \CakeDC\Api\Model\Entity\AuthStore $entity The entity to patch.
      * @param string $name The name of the data.
-     * @param string|array $options The options to patch.
+     * @param array|string $options The options to patch.
      * @return \CakeDC\Api\Model\Entity\AuthStore
      */
-    public function patchStore($entity, $name, $options): \CakeDC\Api\Model\Entity\AuthStore
+    public function patchStore(AuthStore $entity, string $name, string|array $options): AuthStore
     {
         $entity->store['api']['Webauthn2fa'][$this->getDomain()][$name] = $options;
 
@@ -224,7 +230,7 @@ class BaseAdapter
      * @param string $name The name of the data to get.
      * @return mixed|null
      */
-    public function getStore(AuthStore $entity, $name): mixed
+    public function getStore(AuthStore $entity, string $name): mixed
     {
         $path = self::STORE_PREFIX . '.' . $this->getDomain() . '.' . $name;
 
@@ -237,7 +243,7 @@ class BaseAdapter
      * @param bool $replace Whether to replace the domain.
      * @return string
      */
-    public function getDomain($replace = true): string
+    public function getDomain(bool $replace = true): string
     {
         return RequestParser::getDomain($this->request, $replace);
     }
@@ -247,7 +253,7 @@ class BaseAdapter
      * @return void
      */
     public function setAttestationStatementSupportManager(
-        AttestationStatementSupportManager $attestationStatementSupportManager
+        AttestationStatementSupportManager $attestationStatementSupportManager,
     ): void {
         $this->attestationStatementSupportManager = $attestationStatementSupportManager;
     }
@@ -257,7 +263,7 @@ class BaseAdapter
      */
     protected function getAttestationStatementSupportManager(): AttestationStatementSupportManager
     {
-        if (!$this->attestationStatementSupportManager instanceof \Webauthn\AttestationStatement\AttestationStatementSupportManager) {
+        if (!$this->attestationStatementSupportManager instanceof AttestationStatementSupportManager) {
             $this->attestationStatementSupportManager = new AttestationStatementSupportManager();
             $this->attestationStatementSupportManager
                 ->add(new NoneAttestationStatementSupport());
@@ -267,17 +273,47 @@ class BaseAdapter
     }
 
     /**
+     * @return \Symfony\Component\Serializer\SerializerInterface
+     */
+    protected function createSerializer(): SerializerInterface
+    {
+        $factory = new WebauthnSerializerFactory(
+            $this->getAttestationStatementSupportManager(),
+        );
+
+        return $factory->create();
+    }
+
+    /**
+     * @param \Webauthn\PublicKeyCredentialOptions $options Options to serialize.
+     * @return string
+     */
+    public function serializeOptions(PublicKeyCredentialOptions $options): string
+    {
+        return $this->createSerializer()->serialize($options, 'json');
+    }
+
+    /**
      * @return \CakeDC\Api\Webauthn\PublicKeyCredentialLoader
      */
     protected function createPublicKeyCredentialLoader(): PublicKeyCredentialLoader
     {
-        $attestationObjectLoader = new AttestationObjectLoader(
-            $this->getAttestationStatementSupportManager()
-        );
-
         return new PublicKeyCredentialLoader(
-            $attestationObjectLoader
+            $this->createSerializer(),
         );
+    }
+
+    /**
+     * @return \Webauthn\CeremonyStep\CeremonyStepManagerFactory
+     */
+    protected function createCeremonyStepManagerFactory(): CeremonyStepManagerFactory
+    {
+        $factory = new CeremonyStepManagerFactory();
+        $factory->setAlgorithmManager($this->getAlgorithmManager());
+        $factory->setAttestationStatementSupportManager($this->getAttestationStatementSupportManager());
+        $factory->setExtensionOutputCheckerHandler($this->createExtensionOutputCheckerHandler());
+
+        return $factory;
     }
 
     /**
@@ -293,7 +329,7 @@ class BaseAdapter
      */
     protected function getAlgorithmManager(): Manager
     {
-        if (!$this->algorithmManager instanceof \Cose\Algorithm\Manager) {
+        if (!$this->algorithmManager instanceof Manager) {
             $this->algorithmManager = Manager::create()->add(
                 ES256::create(),
                 ES256K::create(),
@@ -305,8 +341,8 @@ class BaseAdapter
                 PS256::create(),
                 PS384::create(),
                 PS512::create(),
-                Ed256::create(),
-                Ed512::create(),
+                Ed256::create(true),
+                Ed512::create(true),
             );
         }
 

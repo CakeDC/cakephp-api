@@ -47,7 +47,7 @@ class JwtRefreshActionTest extends IntegrationTestCase
     {
         parent::setUp();
         TableRegistry::getTableLocator()->clear();
-        $this->_authAccess();
+        $this->authAccess();
         Configure::write('App.fullBaseUrl', 'http://example.com');
     }
 

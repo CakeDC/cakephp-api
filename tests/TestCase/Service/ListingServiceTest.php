@@ -27,10 +27,6 @@ class ListingServiceTest extends TestCase
 {
     use ConfigTrait;
 
-    public $request;
-
-    public $response;
-
     /**
      * setUp method
      *
@@ -59,17 +55,17 @@ class ListingServiceTest extends TestCase
      */
     public function testActionProcess(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'listing',
             ],
         ]);
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/listing',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);

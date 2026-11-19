@@ -14,10 +14,11 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\App\Service\Action\Author;
 
 use CakeDC\Api\Service\Action\CrudAction;
+use Override;
 
 class IndexAction extends CrudAction
 {
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -29,7 +30,7 @@ class IndexAction extends CrudAction
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         return true;

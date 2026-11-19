@@ -14,6 +14,13 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service;
 
 use Cake\Utility\Inflector;
+use CakeDC\Api\Service\Action\CrudAddAction;
+use CakeDC\Api\Service\Action\CrudDeleteAction;
+use CakeDC\Api\Service\Action\CrudDescribeAction;
+use CakeDC\Api\Service\Action\CrudEditAction;
+use CakeDC\Api\Service\Action\CrudIndexAction;
+use CakeDC\Api\Service\Action\CrudViewAction;
+use Override;
 
 /**
  * Class CrudService
@@ -28,12 +35,12 @@ abstract class CrudService extends Service
      * @var array
      */
     protected array $actionsClassMap = [
-        'describe' => \CakeDC\Api\Service\Action\CrudDescribeAction::class,
-        'index' => \CakeDC\Api\Service\Action\CrudIndexAction::class,
-        'view' => \CakeDC\Api\Service\Action\CrudViewAction::class,
-        'add' => \CakeDC\Api\Service\Action\CrudAddAction::class,
-        'edit' => \CakeDC\Api\Service\Action\CrudEditAction::class,
-        'delete' => \CakeDC\Api\Service\Action\CrudDeleteAction::class,
+        'describe' => CrudDescribeAction::class,
+        'index' => CrudIndexAction::class,
+        'view' => CrudViewAction::class,
+        'add' => CrudAddAction::class,
+        'edit' => CrudEditAction::class,
+        'delete' => CrudDeleteAction::class,
     ];
 
     /**
@@ -41,7 +48,7 @@ abstract class CrudService extends Service
      *
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * Id param name.
@@ -79,7 +86,7 @@ abstract class CrudService extends Service
      * @param string $table A Table name.
      * @return $this
      */
-    public function setTable(string $table)
+    public function setTable(string $table): static
     {
         $this->table = $table;
 
@@ -92,7 +99,7 @@ abstract class CrudService extends Service
      * @param array $route Activated route.
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function actionOptions(array $route): array
     {
         $id = null;

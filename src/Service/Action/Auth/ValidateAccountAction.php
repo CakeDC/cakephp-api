@@ -22,6 +22,7 @@ use CakeDC\Users\Exception\TokenExpiredException;
 use CakeDC\Users\Exception\UserAlreadyActiveException;
 use CakeDC\Users\Exception\UserNotFoundException;
 use Exception;
+use Override;
 
 /**
  * Class ValidateAccountAction
@@ -38,7 +39,7 @@ class ValidateAccountAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -50,7 +51,7 @@ class ValidateAccountAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -97,7 +98,7 @@ class ValidateAccountAction extends Action
      *
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

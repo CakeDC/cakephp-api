@@ -24,14 +24,14 @@ class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuth
     /**
      * @var string
      */
-    protected $enabledKey = 'Api.OneTimePasswordAuthenticator.login';
+    protected string $enabledKey = 'Api.OneTimePasswordAuthenticator.login';
 
     /**
      * DefaultTwoFactorAuthenticationChecker constructor.
      *
      * @param string $enableKey configuration key to check if enabled
      */
-    public function __construct($enableKey = null)
+    public function __construct(?string $enableKey = null)
     {
         if ($enableKey !== null) {
             $this->enabledKey = $enableKey;

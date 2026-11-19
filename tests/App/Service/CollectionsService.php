@@ -16,6 +16,7 @@ namespace CakeDC\Api\Test\App\Service;
 use CakeDC\Api\Service\Action\Collection\AddEditAction;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
 use CakeDC\Api\Service\FallbackService;
+use Override;
 
 /**
  * Single-word collection service: exercises the bulk AddEdit/Delete
@@ -28,7 +29,7 @@ class CollectionsService extends FallbackService
      *
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -55,7 +56,7 @@ class CollectionsService extends FallbackService
      *
      * @return string
      */
-    #[\Override]
+    #[Override]
     public function getTable(): string
     {
         return 'Articles';

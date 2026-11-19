@@ -20,12 +20,14 @@ use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Rbac\Permissions\AbstractProvider;
+use CakeDC\Api\Rbac\Permissions\ApiConfigProvider;
 use CakeDC\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\RbacInterface;
 use CakeDC\Auth\Rbac\Rules\Rule;
 use CakeDC\Auth\Rbac\Rules\RuleRegistry;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
+use RuntimeException;
 
 /**
  * Class Rbac, determine if a request matches any of the given rbac rules
@@ -40,7 +42,7 @@ class ApiRbac implements RbacInterface
     /**
      * @var array default configuration
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         // autoload permissions based on a configuration
         'autoload_config' => 'api_permissions',
         // role field in the Users table
@@ -48,7 +50,7 @@ class ApiRbac implements RbacInterface
         // default role, used in new users registered and also as role matcher when no role is available
         'default_role' => 'user',
         // Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
-        'permissions_provider_class' => \CakeDC\Api\Rbac\Permissions\ApiConfigProvider::class,
+        'permissions_provider_class' => ApiConfigProvider::class,
         // Used to set permissions array from configuration, ignoring the permissionsProvider
         'permissions' => null,
         // 'log' will match the value of 'debug' if not set on configuration
@@ -59,7 +61,7 @@ class ApiRbac implements RbacInterface
     /**
      * A list of rules
      *
-     * @var array[] rules array
+     * @var array<array>  rules array
      */
     protected ?array $permissions = null;
 
@@ -70,9 +72,7 @@ class ApiRbac implements RbacInterface
      */
     public function __construct(array $config = [])
     {
-        if (!isset($config['log'])) {
-            $config['log'] = Configure::read('debug');
-        }
+        $config['log'] ??= Configure::read('debug');
         $this->setConfig($config);
         $permissions = $this->getConfig('api_permissions');
         if ($permissions !== null) {
@@ -81,7 +81,7 @@ class ApiRbac implements RbacInterface
             $permissionsProviderClass = $this->getConfig('permissions_provider_class');
             if (!is_subclass_of($permissionsProviderClass, AbstractProvider::class)) {
                 $message = sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass);
-                throw new \RuntimeException($message);
+                throw new RuntimeException($message);
             }
             $permissionsProvider = new $permissionsProviderClass([
                 'autoload_config' => $this->getConfig('autoload_config'),
@@ -111,7 +111,7 @@ class ApiRbac implements RbacInterface
      * Match against permissions, return if matched
      * Permissions are processed based on the 'permissions' config values
      *
-     * @param array|\ArrayAccess $user current user array
+     * @param \ArrayAccess|array $user current user array
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
@@ -127,7 +127,7 @@ class ApiRbac implements RbacInterface
 
         foreach ($this->permissions as $permission) {
             $matchResult = $this->matchPermission($permission, $user, $role, $request);
-            if ($matchResult instanceof \CakeDC\Auth\Rbac\PermissionMatchResult) {
+            if ($matchResult instanceof PermissionMatchResult) {
                 if ($this->getConfig('log')) {
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
                 }
@@ -143,13 +143,13 @@ class ApiRbac implements RbacInterface
      * Match the rule for current permission
      *
      * @param array<string, mixed> $permission The permission configuration
-     * @param array|\ArrayAccess $user Current user data
+     * @param \ArrayAccess|array $user Current user data
      * @param string $role Effective user's role
      * @param \Psr\Http\Message\ServerRequestInterface $request Current request
-     * @return null|\CakeDC\Auth\Rbac\PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
+     * @return \CakeDC\Auth\Rbac\PermissionMatchResult|null Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function matchPermission(array $permission, array|\ArrayAccess $user, string $role, ServerRequestInterface $request): ?\CakeDC\Auth\Rbac\PermissionMatchResult
+    protected function matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
     {
         $issetService = isset($permission['service']) || isset($permission['*service']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
@@ -214,7 +214,7 @@ class ApiRbac implements RbacInterface
                     'For %s --> Rule matched %s with result = %s',
                     json_encode($reserved, JSON_THROW_ON_ERROR),
                     json_encode($permission, JSON_THROW_ON_ERROR),
-                    $return
+                    $return,
                 );
 
                 return new PermissionMatchResult($return, $reason);
@@ -230,12 +230,12 @@ class ApiRbac implements RbacInterface
     /**
      * Check if rule matched or '*' present in rule matching anything
      *
-     * @param string|array|null $possibleValues Values that are accepted (from permission config)
-     * @param string|mixed|null $value Value to check with. We'll check the 'dasherized' value too
+     * @param array|string|int|null $possibleValues Values that are accepted (from permission config)
+     * @param mixed|string|null $value Value to check with. We'll check the 'dasherized' value too
      * @param bool $allowEmpty If true and $value is null, the rule will pass
      * @return bool
      */
-    protected function matchOrAsterisk($possibleValues, $value, $allowEmpty = false): bool
+    protected function matchOrAsterisk(string|array|int|null $possibleValues, mixed $value, bool $allowEmpty = false): bool
     {
         $possibleArray = (array)$possibleValues;
 
@@ -269,7 +269,7 @@ class ApiRbac implements RbacInterface
      * @param string $needle The beginning to check
      * @return bool
      */
-    protected function startsWith($haystack, $needle): bool
+    protected function startsWith(string $haystack, string $needle): bool
     {
         return str_starts_with($haystack, $needle);
     }

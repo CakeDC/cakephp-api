@@ -20,7 +20,7 @@ class ServiceRegistry
     /**
      * LocatorInterface implementation instance.
      */
-    protected static ?\CakeDC\Api\Service\Locator\LocatorInterface $locator = null;
+    protected static ?LocatorInterface $locator = null;
 
     /**
      * Default LocatorInterface implementation class.
@@ -32,9 +32,9 @@ class ServiceRegistry
      *
      * @return \CakeDC\Api\Service\Locator\LocatorInterface
      */
-    public static function getServiceLocator(): \CakeDC\Api\Service\Locator\LocatorInterface
+    public static function getServiceLocator(): LocatorInterface
     {
-        if (!static::$locator instanceof \CakeDC\Api\Service\Locator\LocatorInterface) {
+        if (!static::$locator instanceof LocatorInterface) {
             static::$locator = new static::$defaultLocatorClass();
         }
 

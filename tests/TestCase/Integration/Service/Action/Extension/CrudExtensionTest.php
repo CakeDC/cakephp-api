@@ -31,8 +31,8 @@ class CrudExtensionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions([]);
+        $this->tokenAccess();
+        $this->loadDefaultExtensions([]);
         $this->getDefaultUser(Settings::USER1);
     }
 

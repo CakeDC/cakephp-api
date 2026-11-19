@@ -16,6 +16,8 @@ namespace CakeDC\Api\Test\TestCase\Transformer;
 use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use CakeDC\Api\TestSuite\TestCase;
+use DateTime as NativeDateTime;
+use stdClass;
 
 /**
  * Unit tests for the transformer helper methods.
@@ -50,7 +52,7 @@ class AbstractTransformerTest extends TestCase
 
     public function testGetFromObjectProperty(): void
     {
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->title = 'Hello';
         $this->assertSame('Hello', $this->transformer->exposedGet($obj, 'title'));
     }
@@ -90,7 +92,7 @@ class AbstractTransformerTest extends TestCase
 
     public function testTimestampPhpDateTime(): void
     {
-        $date = new \DateTime('2024-02-20 08:30:00');
+        $date = new NativeDateTime('2024-02-20 08:30:00');
         $result = $this->transformer->exposedTimestamp($date);
         $this->assertIsString($result);
         $this->assertStringStartsWith('2024-02-20T08:30:00', $result);

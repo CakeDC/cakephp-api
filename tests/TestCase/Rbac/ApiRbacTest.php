@@ -37,19 +37,19 @@ class ApiRbacTest extends TestCase
     protected function buildRequest(?array $permissions, string $method = 'GET', array $user = ['role' => 'user', 'id' => 1]): array
     {
         ServiceRegistry::getServiceLocator()->clear();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles'],
         ], $method);
         $service = ServiceRegistry::getServiceLocator()->get('articles', [
             'version' => null,
             'service' => 'articles',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ]);
         $service->dispatchPrepareAction();
 
-        $this->request = $this->request->withAttribute('service', $service);
+        $this->testRequest = $this->testRequest->withAttribute('service', $service);
 
         $rbac = new ApiRbac([
             'api_permissions' => $permissions,
@@ -57,7 +57,7 @@ class ApiRbacTest extends TestCase
             'default_role' => 'user',
         ]);
 
-        return [$rbac, $this->request, $user];
+        return [$rbac, $this->testRequest, $user];
     }
 
     public function testMissingServiceOrActionIsDenied(): void
@@ -201,26 +201,26 @@ class ApiRbacTest extends TestCase
     public function testRouteBreakingCharsCamelize(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles', 'action' => 'my_action'],
         ], 'GET');
         $service = ServiceRegistry::getServiceLocator()->get('articles', [
             'version' => null,
             'service' => 'articles',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ]);
         $service->dispatchPrepareAction();
         $service->getAction()->setName('my_action');
-        $this->request = $this->request->withAttribute('service', $service);
+        $this->testRequest = $this->testRequest->withAttribute('service', $service);
 
         $rbac = new ApiRbac([
             'api_permissions' => [
                 ['role' => 'user', 'service' => 'articles', 'action' => 'MyAction'],
             ],
         ]);
-        $this->assertTrue($rbac->checkPermissions(['role' => 'user', 'id' => 1], $this->request));
+        $this->assertTrue($rbac->checkPermissions(['role' => 'user', 'id' => 1], $this->testRequest));
     }
 
     public function testDefaultRoleFallback(): void

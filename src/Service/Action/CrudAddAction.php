@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action;
 
+use Cake\Datasource\EntityInterface;
 use CakeDC\Api\Exception\ValidationException;
+use Override;
 
 /**
  * Class CrudAddAction
@@ -27,7 +29,7 @@ class CrudAddAction extends CrudAction
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = $this->getTable()->getValidator();
@@ -44,7 +46,7 @@ class CrudAddAction extends CrudAction
      *
      * @return \Cake\Datasource\EntityInterface
      */
-    public function execute(): \Cake\Datasource\EntityInterface
+    public function execute(): EntityInterface
     {
         $entity = $this->newEntity();
         $entity = $this->patchEntity($entity, $this->getData());

@@ -13,17 +13,19 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Exception;
 
+use Throwable;
+
 /**
  * Used to return validation errors.
  */
 class ValidationException extends ServiceException
 {
-    protected int $_defaultCode = 422;
+    protected int $defaultCode = 422;
 
     /**
      * Validation errors
      */
-    protected array $_validationErrors = [];
+    protected array $validationErrors = [];
 
     /**
      * Construct method, for fast instantiation
@@ -36,13 +38,13 @@ class ValidationException extends ServiceException
     public function __construct(
         array|string $message = 'Validation errors',
         ?int $code = 0,
-        ?\Throwable $previous = null,
-        array $validationErrors = []
+        ?Throwable $previous = null,
+        array $validationErrors = [],
     ) {
         if ($code === 0) {
-            $code = $this->_defaultCode;
+            $code = $this->defaultCode;
         }
-        $this->_validationErrors = $validationErrors;
+        $this->validationErrors = $validationErrors;
         parent::__construct($message, $code, $previous);
     }
 
@@ -54,7 +56,7 @@ class ValidationException extends ServiceException
      */
     public function setValidationErrors(array $validationErrors = []): void
     {
-        $this->_validationErrors = $validationErrors;
+        $this->validationErrors = $validationErrors;
     }
 
     /**
@@ -64,6 +66,6 @@ class ValidationException extends ServiceException
      */
     public function getValidationErrors(): array
     {
-        return $this->_validationErrors;
+        return $this->validationErrors;
     }
 }

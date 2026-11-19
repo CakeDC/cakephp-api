@@ -33,8 +33,8 @@ class CorsPreflightTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions('CakeDC/Api.Cors');
+        $this->tokenAccess();
+        $this->loadDefaultExtensions('CakeDC/Api.Cors');
         $this->getDefaultUser(Settings::USER1);
     }
 
@@ -46,10 +46,10 @@ class CorsPreflightTest extends IntegrationTestCase
 
     public function testPreflightOptions(): void
     {
-        $this->_request['headers']['Origin'] = 'http://foobar.com';
-        $this->_request['headers']['Access-Control-Request-Method'] = 'POST';
+        $this->request['headers']['Origin'] = 'http://foobar.com';
+        $this->request['headers']['Access-Control-Request-Method'] = 'POST';
         $this->sendRequest('/posts', 'OPTIONS', []);
-        $headers = $this->_response->getHeaders();
+        $headers = $this->response->getHeaders();
         $this->assertEquals(['*'], $headers['Access-Control-Allow-Origin']);
         $this->assertEquals(['true'], $headers['Access-Control-Allow-Credentials']);
     }

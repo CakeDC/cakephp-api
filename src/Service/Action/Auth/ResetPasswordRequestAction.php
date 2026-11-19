@@ -22,6 +22,7 @@ use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 use CakeDC\Users\Exception\UserNotActiveException;
 use CakeDC\Users\Exception\UserNotFoundException;
 use Exception;
+use Override;
 
 /**
  * Class ResetPasswordAction
@@ -38,7 +39,7 @@ class ResetPasswordRequestAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -50,7 +51,7 @@ class ResetPasswordRequestAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -110,7 +111,7 @@ class ResetPasswordRequestAction extends Action
      *
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

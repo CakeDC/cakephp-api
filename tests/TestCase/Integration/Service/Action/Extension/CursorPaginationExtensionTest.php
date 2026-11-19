@@ -33,8 +33,8 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions('CakeDC/Api.CursorPaginate');
+        $this->tokenAccess();
+        $this->loadDefaultExtensions('CakeDC/Api.CursorPaginate');
         $this->getDefaultUser(Settings::USER1);
     }
 
@@ -62,7 +62,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
 
     public function testListWithConfigCount(): void
     {
-        $this->_loadDefaultExtensions([
+        $this->loadDefaultExtensions([
             'CakeDC/Api.CursorPaginate' => [
                 'defaultCount' => 5,
             ],
@@ -111,7 +111,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
 
     public function testListWithMaxIdWithNewDataAdded(): void
     {
-        $this->_addData(10);
+        $this->addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'max_id' => 11]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
@@ -124,7 +124,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
 
     public function testListWithCountAsGetParamWithNewDataAdded(): void
     {
-        $this->_addData(10);
+        $this->addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
@@ -149,7 +149,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
 
     public function testListWithSinceIdWithNewDataAdded(): void
     {
-        $this->_addData(10);
+        $this->addData(10);
         $this->sendRequest('/articles', 'GET', ['count' => 5, 'since_id' => 15]);
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
@@ -160,7 +160,7 @@ class CursorPaginationExtensionTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/api/articles?max_id=16', Hash::get($result, 'pagination.links.next'));
     }
 
-    protected function _addData($count): void
+    protected function addData($count): void
     {
         $Article = TableRegistry::getTableLocator()->get('Articles');
         $Article->createRecords($count, 1);

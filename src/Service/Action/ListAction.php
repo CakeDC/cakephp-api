@@ -15,6 +15,7 @@ namespace CakeDC\Api\Service\Action;
 
 // use Shim\Filesystem\Folder;
 use Cake\Utility\Inflector;
+use Override;
 
 /**
  * Class ListAction
@@ -29,7 +30,7 @@ class ListAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);

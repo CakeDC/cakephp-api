@@ -26,7 +26,7 @@ use Attribute;
 readonly class ApiActions
 {
     /**
-     * @param string|array<string> $actions Action class names.
+     * @param array<string>|string $actions Action class names.
      */
     public function __construct(
         public string|array $actions,

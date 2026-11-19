@@ -15,6 +15,8 @@ namespace CakeDC\Api\Service\Action\Collection;
 
 use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
+use InvalidArgumentException;
+use Override;
 
 /**
  * Class DeleteAction, uses POST and an array of entity ids to delete
@@ -26,7 +28,7 @@ class DeleteAction extends CollectionAction
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $data = $this->getData();
@@ -75,7 +77,7 @@ class DeleteAction extends CollectionAction
         } else {
             $accessibleFields = [$keys => true];
         }
-        $entities = $this->newEntities(['accessibleFields' => $accessibleFields]);
+        $entities = $this->newEntities(['patchableFields' => $accessibleFields]);
 
         return $this->deleteMany($entities);
     }
@@ -92,14 +94,26 @@ class DeleteAction extends CollectionAction
         $deleted = [];
         $this->getTable()->getConnection()->transactional(function () use ($entities, &$deleted): true {
             $errors = [];
+            $primaryKey = (array)$this->getTable()->getPrimaryKey();
             foreach ($entities as $index => $entity) {
                 /** @var \Cake\ORM\Entity $entity */
                 $entity->setNew(false);
+                $missingKey = null;
+                foreach ($primaryKey as $key) {
+                    if (empty($entity->get($key))) {
+                        $missingKey = $key;
+                        break;
+                    }
+                }
+                if ($missingKey !== null) {
+                    $errors[$index] = [$missingKey => ['_empty' => 'Missing id']];
+                    continue;
+                }
                 try {
                     $this->getTable()->deleteOrFail($entity, ['atomic' => false]);
-                } catch (\InvalidArgumentException $ex) {
+                } catch (InvalidArgumentException $ex) {
                     $errors[$index] = [
-                        $entity->id => $ex->getMessage(),
+                        $entity->id ?? '' => $ex->getMessage(),
                     ];
                 }
                 $deleted[] = $entity->get($this->getTable()->getPrimaryKey());

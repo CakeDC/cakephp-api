@@ -20,6 +20,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
+use Override;
 
 /**
  * Class RefreshAction
@@ -31,11 +32,11 @@ class JwtRefreshAction extends Action
     use JwtTokenTrait;
 
     /**
-     * @var array<array-key, mixed>|null $user
+     * @var \Cake\Datasource\EntityInterface|array<array-key, mixed>|null $user
      */
-    protected $user;
+    protected EntityInterface|array|null $user = null;
 
-    protected $payload;
+    protected mixed $payload = null;
 
     /**
      * Initialize an action instance
@@ -43,7 +44,7 @@ class JwtRefreshAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -54,7 +55,7 @@ class JwtRefreshAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $authHeader = $this->getService()->getRequest()->getHeader('Authorization');
@@ -90,7 +91,7 @@ class JwtRefreshAction extends Action
         $entity = $table->find()
             ->where([
                 'model' => $model,
-                'foreign_key' => $this->user['id'],
+                'foreign_key' => $this->user['id'] ?? null,
             ])->first();
 
         $authHeader = str_ireplace($options['tokenPrefix'] . ' ', '', $authHeader);
@@ -106,7 +107,7 @@ class JwtRefreshAction extends Action
     /**
      * Execute action.
      *
-     * @return false|array
+     * @return array|false
      */
     public function execute(): false|array
     {

@@ -24,16 +24,12 @@ class CrudAddActionTest extends TestCase
 {
     use ConfigTrait;
 
-    public $request;
-
-    public $response;
-
     /**
      * @var \CakeDC\Api\Service\Service|mixed
      */
     public $Service;
 
-    public ?\CakeDC\Api\Service\Action\CrudAddAction $Action = null;
+    public ?CrudAddAction $Action = null;
 
     /**
      * setUp method
@@ -53,7 +49,7 @@ class CrudAddActionTest extends TestCase
     protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
-        unset($this->Action, $this->request);
+        unset($this->Action, $this->testRequest);
         parent::tearDown();
     }
 
@@ -64,7 +60,7 @@ class CrudAddActionTest extends TestCase
      */
     public function testExecuteSuccess(): void
     {
-        $this->_initializeAction([
+        $this->initializeAction([
             'title' => 'New message',
         ]);
 
@@ -81,7 +77,7 @@ class CrudAddActionTest extends TestCase
     public function testExecuteValidationError(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction([
+        $this->initializeAction([
             'title' => '',
         ]);
 
@@ -89,9 +85,9 @@ class CrudAddActionTest extends TestCase
         $this->assertTrue($result instanceof EntityInterface);
     }
 
-    protected function _initializeAction($post = []): void
+    protected function initializeAction($post = []): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [],
@@ -100,12 +96,12 @@ class CrudAddActionTest extends TestCase
         ], 'POST');
         $options = [
             'version' => null,
-            'service' => $this->request->getParam('service'),
-            'request' => $this->request,
-            'response' => $this->response,
+            'service' => $this->testRequest->getParam('service'),
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ];
-        $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($this->testRequest->getParam('service'), $options);
 
         $this->Action = new CrudAddAction([
             'service' => $this->Service,

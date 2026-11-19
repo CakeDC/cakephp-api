@@ -49,12 +49,12 @@ class ServiceLocator implements LocatorInterface
      * Stores a list of options to be used when instantiating an object
      * with a matching alias.
      *
-     * @param string|array $alias Name of the alias or array to completely overwrite current config.
+     * @param array|string $alias Name of the alias or array to completely overwrite current config.
      * @param array|null $options list of options for the alias
      * @return \CakeDC\Api\Service\Locator\LocatorInterface
      * @throws \RuntimeException When you attempt to configure an existing table instance.
      */
-    public function setConfig($alias, ?array $options = null): LocatorInterface
+    public function setConfig(string|array $alias, ?array $options = null): LocatorInterface
     {
         if (!is_string($alias)) {
             $this->config = $alias;
@@ -65,7 +65,7 @@ class ServiceLocator implements LocatorInterface
         if (isset($this->instances[$alias])) {
             throw new RuntimeException(sprintf(
                 'You cannot configure "%s", service has already been constructed.',
-                $alias
+                $alias,
             ));
         }
 
@@ -130,7 +130,7 @@ class ServiceLocator implements LocatorInterface
             if ($options !== [] && !$this->compareOptions($alias, $options)) {
                 throw new RuntimeException(sprintf(
                     'You cannot configure "%s", it already exists in the registry.',
-                    $alias
+                    $alias,
                 ));
             }
 
@@ -152,9 +152,7 @@ class ServiceLocator implements LocatorInterface
         $className = $this->getClassName($alias, $options);
         $lookupPlugins = Configure::read('Api.serviceLookupPlugins');
         $lookupMode = Configure::read('Api.lookupMode', 'underscore');
-        if ($lookupPlugins === null) {
-            $lookupPlugins = ['CakeDC/Api'];
-        }
+        $lookupPlugins ??= ['CakeDC/Api'];
         if (!$className && !str_contains($options['className'], '.')) {
             foreach ($lookupPlugins as $candidate) {
                 if ($lookupMode === 'dasherize') {
@@ -229,7 +227,7 @@ class ServiceLocator implements LocatorInterface
      * @param array $options The alias to check for.
      * @return \CakeDC\Api\Service\Service
      */
-    protected function create(array $options): \CakeDC\Api\Service\Service
+    protected function create(array $options): Service
     {
         return new $options['className']($options);
     }
@@ -281,7 +279,7 @@ class ServiceLocator implements LocatorInterface
         unset(
             $this->instances[$alias],
             $this->config[$alias],
-            $this->fallbacked[$alias]
+            $this->fallbacked[$alias],
         );
     }
 

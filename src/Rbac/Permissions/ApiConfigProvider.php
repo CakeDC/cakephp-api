@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Rbac\Permissions;
 
 use Cake\Core\Configure;
+use Exception;
 use Psr\Log\LogLevel;
 
 /**
@@ -26,7 +27,7 @@ class ApiConfigProvider extends AbstractProvider
     /**
      * @var array default configuration
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'autoload_config' => 'api_permissions',
     ];
 
@@ -59,7 +60,7 @@ class ApiConfigProvider extends AbstractProvider
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('CakeDC/Auth.api_permissions');
-        } catch (\Exception) {
+        } catch (Exception) {
             $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
             $this->log($msg, LogLevel::WARNING);
         }

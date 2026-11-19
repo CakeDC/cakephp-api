@@ -15,6 +15,7 @@ namespace CakeDC\Api\Service\Action\Traits;
 
 use Cake\Core\Configure;
 use CakeDC\Api\Utility\RequestParser;
+use ReCaptcha\ReCaptcha;
 
 /**
  * Covers registration features and email token validation
@@ -29,7 +30,7 @@ trait ReCaptchaTrait
      * @param string $recaptchaResponse response
      * @return bool
      */
-    public function validateReCaptcha($recaptchaResponse = null): bool
+    public function validateReCaptcha(?string $recaptchaResponse = null): bool
     {
         $domain = RequestParser::getDomain($this->getService()->getRequest());
         $reCaptcha = Configure::read('Api.reCaptcha.' . $domain);
@@ -38,9 +39,7 @@ trait ReCaptchaTrait
         }
 
         $recaptcha = $this->getReCaptchaInstance();
-        if ($recaptchaResponse === null) {
-            $recaptchaResponse = $this->getService()->getRequest()->getData('g-recaptcha-response');
-        }
+        $recaptchaResponse ??= $this->getService()->getRequest()->getData('g-recaptcha-response');
         $resp = $recaptcha->verify($recaptchaResponse, $this->getService()->getRequest()->clientIp());
 
         return $resp->isSuccess();
@@ -51,12 +50,12 @@ trait ReCaptchaTrait
      *
      * @return \ReCaptcha\ReCaptcha|null
      */
-    protected function getReCaptchaInstance(): ?\ReCaptcha\ReCaptcha
+    protected function getReCaptchaInstance(): ?ReCaptcha
     {
         $domain = RequestParser::getDomain($this->getService()->getRequest());
         $reCaptchaSecret = Configure::read('Api.reCaptcha.' . $domain . '.secret');
         if (!empty($reCaptchaSecret)) {
-            return new \ReCaptcha\ReCaptcha($reCaptchaSecret);
+            return new ReCaptcha($reCaptchaSecret);
         }
 
         return null;

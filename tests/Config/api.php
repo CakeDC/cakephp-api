@@ -20,6 +20,9 @@ use Cake\Utility\Hash;
 use CakeDC\Api\ApiInitializer;
 use CakeDC\Api\Middleware\ParseApiRequestMiddleware;
 use CakeDC\Api\Middleware\ProcessApiRequestMiddleware;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultOneTimePasswordAuthenticationChecker;
+use CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultWebauthn2fAuthenticationChecker;
+use CakeDC\Api\Service\FallbackService;
 
 Configure::write('Api', []);
 $config = Configure::read('Test.Api.Config');
@@ -29,7 +32,7 @@ if (empty($config)) {
         'Api' => [
             'renderer' => 'CakeDC/Api.JSend',
             'parser' => 'CakeDC/Api.Form',
-            'ServiceFallback' => \CakeDC\Api\Service\FallbackService::class,
+            'ServiceFallback' => FallbackService::class,
 
             '2fa' => [
                 'enabled' => false,
@@ -37,10 +40,10 @@ if (empty($config)) {
 
             'OneTimePasswordAuthenticator' => [
                 'login' => false,
-                'checker' => \CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultOneTimePasswordAuthenticationChecker::class,
+                'checker' => DefaultOneTimePasswordAuthenticationChecker::class,
             ],
             'Webauthn2fa' => [
-                'checker' => \CakeDC\Api\Service\Auth\TwoFactorAuthentication\DefaultWebauthn2fAuthenticationChecker::class,
+                'checker' => DefaultWebauthn2fAuthenticationChecker::class,
                 'localhost' => [
                     'enabled' => false,
                     'appName' => 'apilocal',

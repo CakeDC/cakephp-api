@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\App\Service;
 
+use Cake\Container\Container;
 use Cake\Core\Configure;
-use Cake\Core\Container;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Exception\MissingRouteException;
 use CakeDC\Api\Service\ConfigReader;
@@ -22,6 +22,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\App\DI\Service\TestService;
+use CakeDC\Api\Test\App\Service\Action\ArticlesTagAction;
+use CakeDC\Api\Test\App\Service\Action\Author\IndexAction;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
 
@@ -34,12 +36,8 @@ class ServiceTest extends TestCase
      */
     public $Service;
 
-    public $request;
-
-    public $response;
-
     /**
-     * @var \Cake\Core\Container
+     * @var \Cake\Container\Container
      */
     protected $container;
 
@@ -71,11 +69,11 @@ class ServiceTest extends TestCase
      */
     public function testConstructWithoutAdapter(): void
     {
-        $this->_initializeRequest();
+        $this->initializeRequest();
         $this->Service = new FallbackService([
             'service' => 'authors',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors',
         ]);
         $this->assertInstanceOf(FallbackService::class, $this->Service);
@@ -88,11 +86,11 @@ class ServiceTest extends TestCase
      */
     public function testConstructWithRendererAsParameter(): void
     {
-        $this->_initializeRequest();
+        $this->initializeRequest();
         $this->Service = new FallbackService([
             'service' => 'authors',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors',
             'rendererClass' => 'CakeDC/Api.Raw',
         ]);
@@ -107,17 +105,17 @@ class ServiceTest extends TestCase
     public function testActionNotFound(): void
     {
         $this->expectException(MissingRouteException::class);
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'authors',
             ],
         ], 'DELETE');
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
@@ -135,17 +133,17 @@ class ServiceTest extends TestCase
      */
     public function testActionInitialize(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'authors',
             ],
         ]);
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
@@ -165,7 +163,7 @@ class ServiceTest extends TestCase
      */
     public function testNestedActionInitialize(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [
@@ -174,12 +172,12 @@ class ServiceTest extends TestCase
                 ],
             ],
         ]);
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors/1/articles',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
@@ -200,7 +198,7 @@ class ServiceTest extends TestCase
      */
     public function testInitializeActionStoredAsExistsClass(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -212,19 +210,19 @@ class ServiceTest extends TestCase
                 ],
             ],
         ], 'PUT');
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles/tag/1',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
         $this->assertTrue($Service instanceof Service);
         $this->assertTextEquals('/articles/tag/1', $Service->getBaseUrl());
         $action = $Service->buildAction();
-        $this->assertEquals(\CakeDC\Api\Test\App\Service\Action\ArticlesTagAction::class, $action::class);
+        $this->assertEquals(ArticlesTagAction::class, $action::class);
     }
 
     /**
@@ -234,27 +232,27 @@ class ServiceTest extends TestCase
      */
     public function testInitializeActionByServiceConfigMap(): void
     {
-        $actionClass = \CakeDC\Api\Test\App\Service\Action\Author\IndexAction::class;
-        $this->_addSettingByPath('Service.authors.options', [
+        $actionClass = IndexAction::class;
+        $this->addSettingByPath('Service.authors.options', [
             'classMap' => [
                 'index' => $actionClass,
             ],
         ]);
         $config = require CONFIG . 'api.php';
         Configure::write($config);
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [],
             ],
         ], 'GET');
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $version = null;
         $options = [
             'version' => $version,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors',
         ];
         $options += (new ConfigReader())->serviceOptions($service, $version);
@@ -273,7 +271,7 @@ class ServiceTest extends TestCase
      */
     public function testActionInitializeContainer(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articles',
             ],
@@ -281,17 +279,17 @@ class ServiceTest extends TestCase
         $testService = new TestService();
 
         $this->container->add(stdClass::class, json_decode('{"key":"value"}'));
-        $this->container->add(ServerRequest::class, $this->request);
+        $this->container->add(ServerRequest::class, $this->testRequest);
         $this->container->add(TestService::class, $testService);
 
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles/data',
-            'className' => \CakeDC\Api\Test\App\Service\ArticlesService::class,
+            'className' => ArticlesService::class,
             'container' => $this->container,
         ];
 

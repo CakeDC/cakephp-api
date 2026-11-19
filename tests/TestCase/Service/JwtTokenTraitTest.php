@@ -20,6 +20,7 @@ use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Token\Plain;
 
 /**
  * Unit tests for the JWT token generation trait.
@@ -51,11 +52,11 @@ class JwtTokenTraitTest extends TestCase
         parent::tearDown();
     }
 
-    protected function decode(string $token): \Lcobucci\JWT\Token\Plain
+    protected function decode(string $token): Plain
     {
         $config = Configuration::forSymmetricSigner(
             new Sha512(),
-            InMemory::plainText('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+            InMemory::plainText('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),
         );
 
         return $config->parser()->parse($token);

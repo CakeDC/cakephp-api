@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Middleware;
 
-use Cake\Core\ContainerInterface;
+use Cake\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -14,12 +14,12 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ContainerInjectorMiddleware implements MiddlewareInterface
 {
-    protected \Cake\Core\ContainerInterface $container;
+    protected ContainerInterface $container;
 
     /**
      * Constructor
      *
-     * @param \Cake\Core\ContainerInterface $container The container to build controllers with.
+     * @param \Cake\Container\ContainerInterface $container The container to build controllers with.
      */
     public function __construct(ContainerInterface $container)
     {

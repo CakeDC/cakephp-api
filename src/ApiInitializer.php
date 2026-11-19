@@ -39,23 +39,21 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
         $service->loadAuthenticator('Authentication.Session', [
             'sessionKey' => 'Auth',
             'identifier' => [
-                'Authentication.Password' => [
-                    'resolver' => [
-                        'className' => 'Authentication.Orm',
-                        'userModel' => 'CakeDC/Users.Users',
-                        'finder' => 'active',
-                    ],
+                'className' => 'Authentication.Password',
+                'resolver' => [
+                    'className' => 'Authentication.Orm',
+                    'userModel' => 'CakeDC/Users.Users',
+                    'finder' => 'active',
                 ],
             ],
         ]);
         $service->loadAuthenticator('CakeDC/Auth.Form', [
             'identifier' => [
-                'Authentication.Password' => [
-                    'resolver' => [
-                        'className' => 'Authentication.Orm',
-                        'userModel' => 'CakeDC/Users.Users',
-                        'finder' => 'active',
-                    ],
+                'className' => 'Authentication.Password',
+                'resolver' => [
+                    'className' => 'Authentication.Orm',
+                    'userModel' => 'CakeDC/Users.Users',
+                    'finder' => 'active',
                 ],
             ],
         ]);
@@ -63,10 +61,9 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
         $service->loadAuthenticator('Authentication.Token', [
             'queryParam' => 'token',
             'identifier' => [
-                'Authentication.Token' => [
-                    'dataField' => 'token',
-                    'tokenField' => 'api_token',
-                ],
+                'className' => 'Authentication.Token',
+                'dataField' => 'token',
+                'tokenField' => 'api_token',
             ],
         ]);
 
@@ -78,7 +75,7 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
             'returnPayload' => false,
             'secretKey' => Configure::read('Api.Jwt.AccessToken.secret'),
             'identifier' => [
-                'Authentication.JwtSubject' => [],
+                'className' => 'Authentication.JwtSubject',
             ],
         ]);
 
@@ -100,7 +97,7 @@ class ApiInitializer implements AuthorizationServiceProviderInterface
                 new RbacPolicy([
                     'adapter' => $rbac,
                 ]),
-            ])
+            ]),
         );
 
         $orm = new OrmResolver();

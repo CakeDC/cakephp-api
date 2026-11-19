@@ -32,6 +32,7 @@ use CakeDC\Api\Service\Action\Auth\Webauthn2faAuthAction;
 use CakeDC\Api\Service\Action\Auth\Webauthn2faAuthOptionsAction;
 use CakeDC\Api\Service\Action\Auth\Webauthn2faRegisterAction;
 use CakeDC\Api\Service\Action\Auth\Webauthn2faRegisterOptionsAction;
+use Override;
 
 /**
  * Class AuthService
@@ -43,7 +44,7 @@ class AuthService extends Service
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();
@@ -81,7 +82,7 @@ class AuthService extends Service
      * @param array $route Action route.
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function actionOptions(array $route): array
     {
         $options = [];

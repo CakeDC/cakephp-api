@@ -14,5 +14,5 @@ declare(strict_types=1);
 use Cake\Core\Configure;
 use Cake\Utility\Security;
 
-Cake\Core\Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
+Configure::write('Security.salt', 'bc8b5b70eb0e18bac40204dc3a5b9fbc8b5b70eb0e18bac40204dc3a5b9f');
 Security::setSalt(Configure::read('Security.salt'));

@@ -25,6 +25,7 @@ use CakeDC\Users\Exception\UserAlreadyActiveException;
 use CakeDC\Users\Exception\UserNotActiveException;
 use CakeDC\Users\Exception\UserNotFoundException;
 use Exception;
+use Override;
 
 /**
  * Class SocialLoginAction
@@ -41,7 +42,7 @@ class SocialLoginAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -53,7 +54,7 @@ class SocialLoginAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -100,7 +101,7 @@ class SocialLoginAction extends Action
             throw new Exception($ex->getMessage(), 504, $ex);
         } catch (MissingEmailException $ex) {
             throw new Exception($ex->getMessage(), 505, $ex);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             throw new Exception($ex->getMessage(), 500, $ex);
         }
     }
@@ -110,7 +111,7 @@ class SocialLoginAction extends Action
      *
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

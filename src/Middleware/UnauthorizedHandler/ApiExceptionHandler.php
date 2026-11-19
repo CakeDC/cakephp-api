@@ -31,7 +31,7 @@ class ApiExceptionHandler implements HandlerInterface
     {
         $service = $request->getAttribute('service');
         if ($service !== null) {
-            $result = $service->triggerBeforeDispatch(true);
+            $service->triggerBeforeDispatch(true);
             if ($exception instanceof ForbiddenException) {
                 $service->getResult()->setCode(403);
                 $service->getResult()->setException(new Exception(__('Forbidden authorization request'), 403));

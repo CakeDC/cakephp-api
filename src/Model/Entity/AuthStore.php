@@ -24,7 +24,7 @@ class AuthStore extends Entity
      *
      * @var array<string, bool>
      */
-    protected array $_accessible = [
+    protected array $patchable = [
         'id' => true,
         'store' => true,
         'created' => true,

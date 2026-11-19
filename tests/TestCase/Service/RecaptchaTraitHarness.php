@@ -20,9 +20,9 @@ class RecaptchaTraitHarness
 {
     use ReCaptchaTrait;
 
-    private ?object $recaptchaInstance = null;
+    private ?object $recaptchaInstance;
 
-    private ?Service $service = null;
+    private ?Service $service;
 
     public function __construct(?Service $service = null, ?object $recaptchaInstance = null)
     {

@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Rbac;
 
+use ArrayAccess;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 
@@ -29,7 +32,7 @@ class CachedApiRbac extends ApiRbac
     /**
      * A map of rules
      *
-     * @var array[] rules array
+     * @var array<array>  rules array
      */
     protected array $permissionsMap = [];
 
@@ -85,12 +88,12 @@ class CachedApiRbac extends ApiRbac
     /**
      * Match against permissions using cached map
      *
-     * @param array|\ArrayAccess $user current user array
+     * @param \ArrayAccess|array $user current user array
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    #[\Override]
-    public function checkPermissions(array|\ArrayAccess $user, ServerRequestInterface $request): bool
+    #[Override]
+    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): bool
     {
         $roleField = $this->getConfig('role_field');
         $defaultRole = $this->getConfig('default_role');
@@ -115,7 +118,7 @@ class CachedApiRbac extends ApiRbac
                 $permissions = $this->permissionsMap[$checkRole][$key];
                 foreach ($permissions as $permission) {
                     $matchResult = $this->matchPermission($permission, $user, $role, $request);
-                    if ($matchResult instanceof \CakeDC\Auth\Rbac\PermissionMatchResult) {
+                    if ($matchResult instanceof PermissionMatchResult) {
                         if ($this->getConfig('log')) {
                             $this->log($matchResult->getReason(), LogLevel::DEBUG);
                         }

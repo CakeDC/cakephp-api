@@ -22,10 +22,6 @@ class ServiceRegistryTest extends TestCase
 {
     use ConfigTrait;
 
-    public $request;
-
-    public $response;
-
     /**
      * setUp method
      *
@@ -54,17 +50,17 @@ class ServiceRegistryTest extends TestCase
      */
     public function testLoad(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'authors',
             ],
         ]);
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);
@@ -79,7 +75,7 @@ class ServiceRegistryTest extends TestCase
      */
     public function testLoadNested(): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'authors',
                 'pass' => [
@@ -92,8 +88,8 @@ class ServiceRegistryTest extends TestCase
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/authors/1/articles',
         ];
         $Service = ServiceRegistry::getServiceLocator()->get($service, $options);

@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Api\Service;
 
+use ArrayAccess;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -80,7 +81,7 @@ class ConfigReader
      * @param string $prefix Path prefix.
      * @return \ArrayAccess|array
      */
-    protected function checkServiceOptions(string $prefix): \ArrayAccess|array
+    protected function checkServiceOptions(string $prefix): ArrayAccess|array
     {
         $data = Configure::read('Api.Service');
         if (is_array($data) && Hash::check($data, $prefix)) {

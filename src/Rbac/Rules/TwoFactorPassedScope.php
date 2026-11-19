@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Api\Rbac\Rules;
 
+use ArrayAccess;
 use Authentication\Authenticator\JwtAuthenticator;
 use Cake\Routing\Router;
 use CakeDC\Auth\Rbac\Rules\AbstractRule;
@@ -22,13 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class TwoFactorPassedScope extends AbstractRule
 {
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
     ];
 
     /**
      * @inheritDoc
      */
-    public function allowed(array|\ArrayAccess $user, string $role, ServerRequestInterface $request): bool
+    public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
         $authentication = $request->getAttribute('authentication');
         if ($authentication === null) {

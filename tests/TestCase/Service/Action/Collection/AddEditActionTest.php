@@ -30,11 +30,7 @@ class AddEditActionTest extends TestCase
      */
     public $Service;
 
-    public $request;
-
-    public $response;
-
-    public ?\CakeDC\Api\Service\Action\Collection\AddEditAction $Action = null;
+    public ?AddEditAction $Action = null;
 
     /**
      * setUp method
@@ -54,7 +50,7 @@ class AddEditActionTest extends TestCase
     protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
-        unset($this->Service, $this->Action, $this->request);
+        unset($this->Service, $this->Action, $this->testRequest);
         parent::tearDown();
     }
 
@@ -65,7 +61,7 @@ class AddEditActionTest extends TestCase
     {
         $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
-        $this->_initializeAction([
+        $this->initializeAction([
             ['title' => 'Article1'],
             ['title' => 'Article2'],
         ]);
@@ -81,8 +77,8 @@ class AddEditActionTest extends TestCase
     public function testValidationPostNotArray(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction(
-            ['title' => 'Article1']
+        $this->initializeAction(
+            ['title' => 'Article1'],
         );
         $this->Action->execute();
     }
@@ -93,7 +89,7 @@ class AddEditActionTest extends TestCase
     public function testValidationPostEmpty(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction();
+        $this->initializeAction();
         $this->Action->execute();
     }
 
@@ -103,7 +99,7 @@ class AddEditActionTest extends TestCase
     public function testValidationPostString(): void
     {
         $this->expectException(ValidationException::class);
-        $this->_initializeAction(['something' => 'value']);
+        $this->initializeAction(['something' => 'value']);
         $this->Action->execute();
     }
 
@@ -116,7 +112,7 @@ class AddEditActionTest extends TestCase
         $this->expectExceptionMessage('Validation on Articles failed');
         $ArticlesTable = TableRegistry::getTableLocator()->get('Articles');
         $initialCount = $ArticlesTable->find()->count();
-        $this->_initializeAction([
+        $this->initializeAction([
             ['title' => 'Article1'],
             ['title' => ''],
         ]);
@@ -131,7 +127,7 @@ class AddEditActionTest extends TestCase
      */
     public function testValidatesEntity(): void
     {
-        $this->_initializeAction([
+        $this->initializeAction([
             ['title' => 'Article1'],
             ['title' => 'Article2'],
         ]);
@@ -144,7 +140,7 @@ class AddEditActionTest extends TestCase
      */
     public function testValidatesEntityNotValid(): void
     {
-        $this->_initializeAction([
+        $this->initializeAction([
             ['title' => 'Article1'],
             ['title' => ''],
         ]);
@@ -173,7 +169,7 @@ class AddEditActionTest extends TestCase
             ['title' => 'Article2'],
         ];
 
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articlesCollection',
             ],
@@ -182,11 +178,11 @@ class AddEditActionTest extends TestCase
         $options = [
             'version' => null,
             'service' => null,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles-collection/collection/add',
         ];
-        $Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
+        $Service = ServiceRegistry::getServiceLocator()->get($this->testRequest->getParam('service'), $options);
         $this->assertTrue($Service instanceof FallbackService);
         $this->assertEquals('articles_collection', $Service->getName());
 
@@ -200,9 +196,9 @@ class AddEditActionTest extends TestCase
         $this->assertEquals(2, $finalCount - $initialCount, 'We should have added 3 new articles');
     }
 
-    protected function _initializeAction($post = []): void
+    protected function initializeAction($post = []): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articlesCollection',
             ],
@@ -211,11 +207,11 @@ class AddEditActionTest extends TestCase
         $options = [
             'version' => null,
             'service' => null,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles-collection/collection/add',
         ];
-        $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($this->testRequest->getParam('service'), $options);
 
         $this->Action = new AddEditAction([
             'service' => $this->Service,

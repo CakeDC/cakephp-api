@@ -14,10 +14,9 @@ declare(strict_types=1);
 namespace CakeDC\Api\Command;
 
 use Cake\Command\Command;
-use Cake\Console\Arguments;
-use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use CakeDC\Api\Service\ServiceRegistry;
+use Override;
 
 /**
  * Provides interactive CLI tools for CakeDC Api routing.
@@ -27,7 +26,7 @@ class ServiceRoutesCommand extends Command
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     public static function defaultName(): string
     {
         return 'service routes';
@@ -39,7 +38,7 @@ class ServiceRoutesCommand extends Command
      * @param \Cake\Console\ConsoleOptionParser $parser The option parser to update
      * @return \Cake\Console\ConsoleOptionParser
      */
-    #[\Override]
+    #[Override]
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser = parent::buildOptionParser($parser);
@@ -55,24 +54,19 @@ class ServiceRoutesCommand extends Command
     /**
      * Display all routes in an application
      *
-     * @param \Cake\Console\Arguments $args The command arguments.
-     * @param \Cake\Console\ConsoleIo $io The console io
      * @return int|null The exit code or null for success
      */
-    public function execute(Arguments $args, ConsoleIo $io): ?int
+    public function execute(): ?int
     {
-        $serviceName = $args->getArgument('service');
+        $serviceName = $this->args->getArgument('service');
         $header = ['Route name', 'Method(s)', 'URI template', 'Service', 'Action', 'Plugin'];
-        if ($args->getOption('verbose')) {
+        if ($this->args->getOption('verbose')) {
             $header[] = 'Defaults';
         }
-
         $service = ServiceRegistry::getServiceLocator()->get($serviceName);
-
         $availableRoutes = $service->routes();
         $output = [];
         $duplicateRoutesCounter = [];
-
         foreach ($availableRoutes as $route) {
             $methods = isset($route->defaults['_method']) ? (array)$route->defaults['_method'] : [''];
 
@@ -85,7 +79,7 @@ class ServiceRoutesCommand extends Command
                 $route->defaults['plugin'] ?? '',
             ];
 
-            if ($args->getOption('verbose')) {
+            if ($this->args->getOption('verbose')) {
                 ksort($route->defaults);
                 $item[] = json_encode($route->defaults);
             }
@@ -93,25 +87,18 @@ class ServiceRoutesCommand extends Command
             $output[] = $item;
 
             foreach ($methods as $method) {
-                if (!isset($duplicateRoutesCounter[$route->template][$method])) {
-                    $duplicateRoutesCounter[$route->template][$method] = 0;
-                }
+                $duplicateRoutesCounter[$route->template][$method] ??= 0;
 
                 $duplicateRoutesCounter[$route->template][$method]++;
             }
         }
-
-        if ($args->getOption('sort')) {
+        if ($this->args->getOption('sort')) {
             usort($output, fn(array $a, array $b): int => strcasecmp($a[0], $b[0]));
         }
-
         array_unshift($output, $header);
-
-        $io->helper('table')->output($output);
-        $io->out();
-
+        $this->io->helper('table')->output($output);
+        $this->io->out();
         $duplicateRoutes = [];
-
         foreach ($availableRoutes as $route) {
             $methods = isset($route->defaults['_method']) ? (array)$route->defaults['_method'] : [''];
 
@@ -135,12 +122,11 @@ class ServiceRoutesCommand extends Command
                 }
             }
         }
-
         if ($duplicateRoutes !== []) {
             array_unshift($duplicateRoutes, $header);
-            $io->warning('The following possible route collisions were detected.');
-            $io->helper('table')->output($duplicateRoutes);
-            $io->out();
+            $this->io->warning('The following possible route collisions were detected.');
+            $this->io->helper('table')->output($duplicateRoutes);
+            $this->io->out();
         }
 
         return static::CODE_SUCCESS;

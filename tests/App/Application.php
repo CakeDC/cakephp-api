@@ -17,16 +17,18 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\App;
 
+use Cake\Container\ContainerInterface;
 use Cake\Core\Configure;
-use Cake\Core\ContainerInterface;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\RouteBuilder;
 use CakeDC\Api\Middleware\ContainerInjectorMiddleware;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\App\DI\Service\TestService;
+use Override;
 
 /**
  * Application setup class.
@@ -36,7 +38,7 @@ use CakeDC\Api\Test\App\DI\Service\TestService;
  */
 class Application extends BaseApplication
 {
-    #[\Override]
+    #[Override]
     public function bootstrap(): void
     {
         parent::bootstrap();
@@ -50,7 +52,7 @@ class Application extends BaseApplication
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function pluginBootstrap(): void
     {
         parent::pluginBootstrap();
@@ -86,8 +88,8 @@ class Application extends BaseApplication
     /**
      * @inheritDoc
      */
-    #[\Override]
-    public function routes(\Cake\Routing\RouteBuilder $routes): void
+    #[Override]
+    public function routes(RouteBuilder $routes): void
     {
         $middlewares = Configure::read('Api.Middleware');
         foreach ($middlewares as $alias => $middleware) {

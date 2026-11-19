@@ -33,6 +33,7 @@ use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Service;
 
 /**
  * Class Auth
@@ -80,22 +81,20 @@ class Auth
      *
      * These are merged with user-provided config when the component is used.
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'storage' => 'Memory',
         'identityAttribute' => 'identity',
     ];
 
-    protected $registry;
-
     /**
      * @var \CakeDC\Api\Service\Service
      */
-    protected $service;
+    protected Service $service;
 
     /**
      * @var \CakeDC\Api\Service\Action\Action
      */
-    protected $action;
+    protected Action $action;
 
     /**
      * Constructor
@@ -162,11 +161,14 @@ class Auth
      * $this->Auth->allow('view');
      * $this->Auth->allow(['edit', 'add']);
      *
-     * @param string|array $actions Controller action name or array of actions
+     * @param array|string|null $actions Controller action name or array of actions
      * @return void
      */
-    public function allow($actions): void
+    public function allow(string|array|null $actions = null): void
     {
+        if ($actions === null) {
+            return;
+        }
         $this->allowedActions = array_merge($this->allowedActions, (array)$actions);
     }
 
@@ -185,10 +187,10 @@ class Auth
      * ```
      * to remove all items from the allowed list
      *
-     * @param string|array|null $actions Controller action name or array of actions
+     * @param array|string|null $actions Controller action name or array of actions
      * @return void
      */
-    public function deny($actions = null): void
+    public function deny(string|array|null $actions = null): void
     {
         if ($actions === null) {
             $this->allowedActions = [];

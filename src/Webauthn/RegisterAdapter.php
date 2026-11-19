@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace CakeDC\Api\Webauthn;
 
 use Cake\Http\Exception\BadRequestException;
-use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
+use Webauthn\AuthenticationExtensions\AuthenticationExtensions;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorSelectionCriteria;
+use Webauthn\CredentialRecord;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
-use Webauthn\PublicKeyCredentialSource;
 
 class RegisterAdapter extends BaseAdapter
 {
@@ -37,15 +37,14 @@ class RegisterAdapter extends BaseAdapter
             $this->rpEntity,
             $userEntity,
             $challenge,
-            $this->getPubKeyCredParams()
+            $this->getPubKeyCredParams(),
+            new AuthenticatorSelectionCriteria(),
+            PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
+            extensions: AuthenticationExtensions::create(),
         );
-        $options = $options
-            ->setAuthenticatorSelection(new AuthenticatorSelectionCriteria())
-            ->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE)
-            ->setExtensions(new AuthenticationExtensionsClientInputs());
 
         $storeEntity = $this->readStore();
-        $storeEntity = $this->patchStore($storeEntity, 'registerOptions', base64_encode(serialize($options)));
+        $storeEntity = $this->patchStore($storeEntity, 'registerOptions', base64_encode($this->serializeOptions($options)));
 
         $this->store->save($storeEntity);
 
@@ -61,7 +60,7 @@ class RegisterAdapter extends BaseAdapter
         foreach ($this->getAlgorithmManager()->all() as $algorithm) {
             $list[] = PublicKeyCredentialParameters::create(
                 PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
-                $algorithm::identifier()
+                $algorithm::identifier(),
             );
         }
 
@@ -71,35 +70,33 @@ class RegisterAdapter extends BaseAdapter
     /**
      * Verify the registration response
      *
-     * @return \Webauthn\PublicKeyCredentialSource
+     * @return \Webauthn\CredentialRecord
      */
-    public function verifyResponse(): PublicKeyCredentialSource
+    public function verifyResponse(): CredentialRecord
     {
         $storeEntity = $this->readStore();
         $options = $this->getStore($storeEntity, 'registerOptions');
         if ($options) {
-            $options = unserialize(base64_decode($options));
+            $options = $this->createSerializer()->deserialize(
+                base64_decode($options),
+                PublicKeyCredentialCreationOptions::class,
+                'json',
+            );
         }
 
-        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager();
         $publicKeyCredentialLoader = $this->createPublicKeyCredentialLoader();
 
         $publicKeyCredential = $publicKeyCredentialLoader->loadArray((array)$this->request->getData());
-        $authenticatorAttestationResponse = $publicKeyCredential->getResponse();
+        $authenticatorAttestationResponse = $publicKeyCredential->response;
         if ($authenticatorAttestationResponse instanceof AuthenticatorAttestationResponse) {
-            $extensionOutputCheckerHandler = $this->createExtensionOutputCheckerHandler();
-
-            $authenticatorAttestationResponseValidator = new AuthenticatorAttestationResponseValidator(
-                $attestationStatementSupportManager,
-                $this->repository,
-                null, //Token binding is deprecated
-                $extensionOutputCheckerHandler
+            $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
+                $this->createCeremonyStepManagerFactory()->creationCeremony(),
             );
 
             $credential = $authenticatorAttestationResponseValidator->check(
                 $authenticatorAttestationResponse,
                 $options,
-                $this->request
+                (string)$this->request->host(),
             );
             $this->repository->saveCredentialSource($credential);
 

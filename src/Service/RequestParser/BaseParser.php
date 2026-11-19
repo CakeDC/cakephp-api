@@ -23,7 +23,7 @@ abstract class BaseParser
     /**
      * Reference to the Service.
      */
-    protected ?\CakeDC\Api\Service\Service $service = null;
+    protected ?Service $service = null;
 
     /**
      * Constructor

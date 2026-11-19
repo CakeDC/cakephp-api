@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
@@ -27,9 +28,7 @@ class RawRendererTest extends TestCase
 
     public $Action;
 
-    public $request;
-
-    public ?\CakeDC\Api\Service\FallbackService $Service = null;
+    public ?FallbackService $Service = null;
 
     /**
      * setUp method
@@ -40,7 +39,7 @@ class RawRendererTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeRequest();
+        $this->initializeRequest();
     }
 
     /**
@@ -61,12 +60,12 @@ class RawRendererTest extends TestCase
      */
     public function testRendererInitializeByClassName(): void
     {
-        $response = $this->createStub(\Cake\Http\Response::class);
+        $response = $this->createStub(Response::class);
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Raw',
         ];
@@ -83,14 +82,14 @@ class RawRendererTest extends TestCase
     public function testRendererSuccess(): void
     {
         $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
+            ->getMockBuilder(Response::class)
             ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Raw',
         ];
@@ -127,14 +126,14 @@ class RawRendererTest extends TestCase
     public function testRendererError(): void
     {
         $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
+            ->getMockBuilder(Response::class)
             ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Raw',
         ];

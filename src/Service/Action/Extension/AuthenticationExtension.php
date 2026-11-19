@@ -44,7 +44,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      *
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'logoutRedirect' => false,
         'requireIdentity' => true,
         'identityAttribute' => 'identity',
@@ -126,7 +126,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      * @param array $actions The action list.
      * @return $this
      */
-    public function allowUnauthenticated(array $actions)
+    public function allowUnauthenticated(array $actions): static
     {
         $this->unauthenticatedActions = $actions;
 
@@ -139,7 +139,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      * @param array $actions The action or actions to append.
      * @return $this
      */
-    public function addUnauthenticatedActions(array $actions)
+    public function addUnauthenticatedActions(array $actions): static
     {
         $this->unauthenticatedActions = array_merge($this->unauthenticatedActions, $actions);
         $this->unauthenticatedActions = array_values(array_unique($this->unauthenticatedActions));
@@ -190,7 +190,7 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
     {
         $identity = $this->getIdentity();
 
-        if (!$identity instanceof \Authentication\IdentityInterface) {
+        if (!$identity instanceof IdentityInterface) {
             throw new RuntimeException('The identity has not been found.');
         }
 
@@ -211,14 +211,14 @@ class AuthenticationExtension extends Extension implements EventListenerInterfac
      * @param \ArrayAccess $identity Identity data to persist.
      * @return $this
      */
-    public function setIdentity(ArrayAccess $identity)
+    public function setIdentity(ArrayAccess $identity): static
     {
         $this->getAction()->getService()->getRequest();
 
         $result = $this->getAuthenticationService()->persistIdentity(
             $this->getAction()->getService()->getRequest(),
             $this->getAction()->getService()->getResponse(),
-            $identity
+            $identity,
         );
 
         /** @var \Cake\Http\ServerRequest $request */

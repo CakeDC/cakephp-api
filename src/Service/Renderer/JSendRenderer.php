@@ -18,6 +18,7 @@ use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Result;
 use Exception;
+use Override;
 use stdClass;
 
 /**
@@ -58,7 +59,7 @@ class JSendRenderer extends BaseRenderer
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function accept(): bool
     {
         $request = $this->service->getRequest();
@@ -108,7 +109,7 @@ class JSendRenderer extends BaseRenderer
         $data = $exception instanceof ValidationException ? $exception->getValidationErrors() : null;
         $message = $this->buildMessage($exception);
         $trace = $this->stackTrace($exception);
-        $response = $response->withStringBody($this->_error($message, $exception->getCode(), $data, $trace))
+        $response = $response->withStringBody($this->formatError($message, $exception->getCode(), $data, $trace))
             ->withStatus($this->errorCode)
             ->withType('application/json');
         $this->service->setResponse($response);
@@ -165,7 +166,7 @@ class JSendRenderer extends BaseRenderer
      * @param array $trace The exception trace
      * @return string
      */
-    protected function _error(string $message = 'Unknown error', $code = 0, ?array $data = null, ?array $trace = null): string
+    protected function formatError(string $message = 'Unknown error', $code = 0, ?array $data = null, ?array $trace = null): string
     {
 // phpcs:enable
         $response = $this->service->getResponse();

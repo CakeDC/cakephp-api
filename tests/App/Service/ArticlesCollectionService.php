@@ -16,10 +16,11 @@ namespace CakeDC\Api\Test\App\Service;
 use CakeDC\Api\Service\Action\Collection\AddEditAction;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
 use CakeDC\Api\Service\FallbackService;
+use Override;
 
 class ArticlesCollectionService extends FallbackService
 {
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();

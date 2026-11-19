@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\App\Service\Action;
 
 use CakeDC\Api\Service\Action\Action;
+use Override;
 
 class ArticlesUntagAction extends Action
 {
@@ -22,7 +23,7 @@ class ArticlesUntagAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         return true;

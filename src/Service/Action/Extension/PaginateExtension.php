@@ -24,7 +24,7 @@ use CakeDC\Api\Service\Action\Action;
  */
 class PaginateExtension extends Extension implements EventListenerInterface
 {
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'defaultLimit' => 20,
         'limitField' => 'limit',
         'pageField' => 'page',

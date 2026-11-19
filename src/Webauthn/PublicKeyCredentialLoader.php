@@ -13,14 +13,22 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Webauthn;
 
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\PublicKeyCredential;
 
-class PublicKeyCredentialLoader extends \Webauthn\PublicKeyCredentialLoader
+class PublicKeyCredentialLoader
 {
     /**
-     * @inheritDoc
+     * @param \Symfony\Component\Serializer\SerializerInterface $serializer Serializer with webauthn denormalizers.
      */
-    #[\Override]
+    public function __construct(private SerializerInterface $serializer)
+    {
+    }
+
+    /**
+     * @param array $json Client response data.
+     * @return \Webauthn\PublicKeyCredential
+     */
     public function loadArray(array $json): PublicKeyCredential
     {
         if (isset($json['response']['clientDataJSON']) && is_string($json['response']['clientDataJSON'])) {
@@ -33,6 +41,10 @@ class PublicKeyCredentialLoader extends \Webauthn\PublicKeyCredentialLoader
                 Base64Utility::complyEncodedNoPadding($json['response']['authenticatorData']);
         }
 
-        return parent::loadArray($json);
+        return $this->serializer->deserialize(
+            (string)json_encode($json),
+            PublicKeyCredential::class,
+            'json',
+        );
     }
 }

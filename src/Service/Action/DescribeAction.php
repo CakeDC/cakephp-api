@@ -17,6 +17,7 @@ use Cake\Validation\Validator;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\CrudService;
 use CakeDC\Api\Service\ServiceRegistry;
+use Override;
 
 /**
  * Class DescribeAction
@@ -30,7 +31,7 @@ class DescribeAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -65,7 +66,7 @@ class DescribeAction extends Action
                 'map' => [],
                 '_matchedRoute' => '/' . $serviceName,
             ];
-            $action = $service->buildActionClass(\CakeDC\Api\Service\Action\CrudDescribeAction::class, $route);
+            $action = $service->buildActionClass(CrudDescribeAction::class, $route);
             $service->setRequest($this->getService()->getRequest());
             $service->setResponse($this->getService()->getResponse());
 

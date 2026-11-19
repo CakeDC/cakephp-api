@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Auth\TwoFactorAuthentication;
 
 use Cake\Core\Configure;
+use InvalidArgumentException;
 
 /**
  * Factory for two authentication checker
@@ -37,6 +38,6 @@ class OneTimePasswordAuthenticationCheckerFactory
         }
         $message = "Invalid config for 'OneTimePasswordAuthenticator.checker', " .
          sprintf("'%s' does not implement '%s'", $className, $required);
-        throw new \InvalidArgumentException($message);
+        throw new InvalidArgumentException($message);
     }
 }

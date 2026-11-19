@@ -18,6 +18,7 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use CakeDC\Api\Rbac\Rules\TwoFactorScope;
 use CakeDC\Api\TestSuite\TestCase;
+use stdClass;
 
 /**
  * Unit tests for the 2FA RBAC scope rule (JWT aud claim == /2fa).
@@ -44,7 +45,7 @@ class TwoFactorScopeTest extends TestCase
 
     protected function buildJwtAuthenticator(string $aud): JwtAuthenticator
     {
-        $payload = new \stdClass();
+        $payload = new stdClass();
         $payload->aud = $aud;
 
         $authenticator = new class () extends JwtAuthenticator {
@@ -78,7 +79,7 @@ class TwoFactorScopeTest extends TestCase
     public function testNonJwtProviderDenies(): void
     {
         $scope = new TwoFactorScope();
-        $this->assertFalse($scope->allowed(['id' => 1], 'user', $this->buildRequest(new \stdClass())));
+        $this->assertFalse($scope->allowed(['id' => 1], 'user', $this->buildRequest(new stdClass())));
     }
 
     public function testAudMatchAllows(): void

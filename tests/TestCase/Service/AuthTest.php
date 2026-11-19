@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\TestCase\Service;
 
+use CakeDC\Api\Service\Action\Action;
 use CakeDC\Api\Service\Auth\Auth;
+use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
@@ -37,14 +39,14 @@ class AuthTest extends TestCase
     protected function buildAuth(string $actionName = 'index'): Auth
     {
         ServiceRegistry::getServiceLocator()->clear();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles'],
         ], 'GET');
         $service = ServiceRegistry::getServiceLocator()->get('articles', [
             'version' => null,
             'service' => 'articles',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ]);
         $service->dispatchPrepareAction();
@@ -52,8 +54,8 @@ class AuthTest extends TestCase
         $action = $service->getAction()->setName($actionName);
 
         return new Auth([
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'service' => $service,
             'action' => $action,
         ]);
@@ -122,8 +124,8 @@ class AuthTest extends TestCase
     public function testRequestResponseSetters(): void
     {
         $auth = $this->buildAuth();
-        $this->assertSame($this->request, $auth->getRequest());
-        $this->assertSame($this->response, $auth->getResponse());
+        $this->assertSame($this->testRequest, $auth->getRequest());
+        $this->assertSame($this->testResponse, $auth->getResponse());
         $auth->setRequest(null);
         $auth->setResponse(null);
         $this->assertNull($auth->getRequest());
@@ -141,7 +143,7 @@ class AuthTest extends TestCase
     public function testServiceActionProperties(): void
     {
         $auth = $this->buildAuth();
-        $this->assertInstanceOf(\CakeDC\Api\Service\Service::class, $auth->service);
-        $this->assertInstanceOf(\CakeDC\Api\Service\Action\Action::class, $auth->action);
+        $this->assertInstanceOf(Service::class, $auth->service);
+        $this->assertInstanceOf(Action::class, $auth->action);
     }
 }

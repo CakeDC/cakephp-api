@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Exception;
 
-class MissingExtensionException extends \Cake\Core\Exception\CakeException
+use Cake\Core\Exception\CakeException;
+
+class MissingExtensionException extends CakeException
 {
-    protected string $_messageTemplate = 'Extension class %s could not be found.';
+    protected string $messageTemplate = 'Extension class %s could not be found.';
 }

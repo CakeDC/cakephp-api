@@ -35,14 +35,14 @@ class ApiRouterTest extends TestCase
     protected function parseUrl(string $url, string $method = 'GET'): array
     {
         ApiRouter::reload();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => 'articles'],
         ], $method);
         $service = ServiceRegistry::getServiceLocator()->get('articles', [
             'version' => null,
             'service' => 'articles',
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles',
         ]);
         $service->loadRoutes();

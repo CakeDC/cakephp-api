@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use Exception;
 
 /**
  * Class LoginAction
@@ -42,7 +43,7 @@ class OtpVerifyCheckAction extends OtpVerifyAction
         }
 
         if (!$codeVerified) {
-            throw new \Exception(__d('cake_d_c/api', 'Verification code is invalid. Try again'));
+            throw new Exception(__d('cake_d_c/api', 'Verification code is invalid. Try again'));
         }
 
         unset($user['secret']);

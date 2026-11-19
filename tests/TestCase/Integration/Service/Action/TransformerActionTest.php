@@ -35,7 +35,7 @@ class TransformerActionTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
+        $this->tokenAccess();
         $this->getDefaultUser(Settings::USER1);
     }
 

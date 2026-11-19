@@ -35,7 +35,7 @@ class LoginActionTest extends IntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->_authAccess();
+        $this->authAccess();
         Configure::write('App.fullBaseUrl', 'http://example.com');
     }
 

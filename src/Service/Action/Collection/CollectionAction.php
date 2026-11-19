@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Collection;
 
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Utility\Hash;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAction;
@@ -57,18 +58,18 @@ abstract class CollectionAction extends CrudAction
     /**
      * Save many entities
      *
-     * @param \Cake\Datasource\EntityInterface[]  $entities entities
-     * @return \Cake\Datasource\EntityInterface[]|\Cake\Datasource\ResultSetInterface|array of entities saved
+     * @param array<\Cake\Datasource\EntityInterface> $entities entities
+     * @return \Cake\Datasource\ResultSetInterface|array<\Cake\Datasource\EntityInterface>|array of entities saved
      * @throws \Exception
      */
-    protected function saveMany(iterable $entities)
+    protected function saveMany(iterable $entities): ResultSetInterface|array
     {
         if ($this->getTable()->saveMany($entities)) {
             return $entities;
         }
         $errors = collection($entities)->reduce(
             fn($errors, EntityInterface $entity): array => array_merge($errors, $entity->getErrors()),
-            []
+            [],
         );
         $message = __('Validation on {0} failed', $this->getTable()->getAlias());
         throw new ValidationException($message, 0, null, $errors);
@@ -78,7 +79,7 @@ abstract class CollectionAction extends CrudAction
      * Create entities from the posted data
      *
      * @param array $patchOptions options to use in patch
-     * @return \Cake\Datasource\EntityInterface[] entities
+     * @return array<\Cake\Datasource\EntityInterface> entities
      */
     protected function newEntities(array $patchOptions = []): array
     {
@@ -101,7 +102,7 @@ abstract class CollectionAction extends CrudAction
      * @throws \CakeDC\Api\Exception\ValidationException
      * @return void
      */
-    protected function validateDataIsArray($data): void
+    protected function validateDataIsArray(mixed $data): void
     {
         if (!is_array($data) || Hash::dimensions($data) < 2) {
             throw new ValidationException(__('Validation failed, POST data is not an array of items'), 0);

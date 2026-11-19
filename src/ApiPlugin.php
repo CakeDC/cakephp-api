@@ -14,10 +14,14 @@ declare(strict_types=1);
 namespace CakeDC\Api;
 
 use Cake\Console\CommandCollection;
+use Cake\Container\ContainerInterface;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
-use Cake\Core\ContainerInterface;
+use Cake\Routing\RouteBuilder;
 use CakeDC\Api\Command\ServiceRoutesCommand;
+use Closure;
+use Override;
+use Psr\Http\Server\MiddlewareInterface;
 
 /**
  * Api plugin
@@ -29,8 +33,8 @@ class ApiPlugin extends BasePlugin
     /**
      * @inheritDoc
      */
-    #[\Override]
-    public function routes(\Cake\Routing\RouteBuilder $routes): void
+    #[Override]
+    public function routes(RouteBuilder $routes): void
     {
         $middlewares = Configure::read('Api.Middleware', []);
         foreach ($middlewares as $alias => $middleware) {
@@ -66,7 +70,7 @@ class ApiPlugin extends BasePlugin
      * @param string $class Middleware class instance.
      * @return void
      */
-    protected function registerMiddleware($routes, string $alias, \Psr\Http\Server\MiddlewareInterface|\Closure|string $class): void
+    protected function registerMiddleware(RouteBuilder $routes, string $alias, MiddlewareInterface|Closure|string $class): void
     {
         $routes->registerMiddleware($alias, $class);
         $this->middlewares[$alias] = $class;
@@ -75,7 +79,7 @@ class ApiPlugin extends BasePlugin
     /**
      * Register container services for this plugin.
      *
-     * @param \Cake\Core\ContainerInterface $container The container to add services to.
+     * @param \Cake\Container\ContainerInterface $container The container to add services to.
      * @return void
      */
     public function services(ContainerInterface $container): void
@@ -91,7 +95,7 @@ class ApiPlugin extends BasePlugin
      * @param \Cake\Console\CommandCollection $commands The command collection to update
      * @return \Cake\Console\CommandCollection
      */
-    #[\Override]
+    #[Override]
     public function console(CommandCollection $commands): CommandCollection
     {
         return $commands->add('service routes', ServiceRoutesCommand::class);

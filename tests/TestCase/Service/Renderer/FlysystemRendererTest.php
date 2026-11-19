@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\TestCase\Service\Renderer;
 
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use CakeDC\Api\Exception\UnauthenticatedException;
 use CakeDC\Api\Service\Action\Result;
 use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Renderer\FlysystemRenderer;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
+use Exception;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Vfs\VfsAdapter;
 use VirtualFileSystem\FileSystem as Vfs;
@@ -30,9 +32,7 @@ class FlysystemRendererTest extends TestCase
 
     public $Action;
 
-    public $request;
-
-    public ?\CakeDC\Api\Service\FallbackService $Service = null;
+    public ?FallbackService $Service = null;
 
     /**
      * setUp method
@@ -43,7 +43,7 @@ class FlysystemRendererTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeRequest();
+        $this->initializeRequest();
     }
 
     /**
@@ -64,12 +64,12 @@ class FlysystemRendererTest extends TestCase
      */
     public function testRendererInitializeByClassName(): void
     {
-        $response = $this->createStub(\Cake\Http\Response::class);
+        $response = $this->createStub(Response::class);
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
@@ -88,12 +88,12 @@ class FlysystemRendererTest extends TestCase
         Configure::write('debug', false);
         Configure::write('Api.Flysystem.expire', '+1 day');
 
-        $response = new \Cake\Http\Response();
+        $response = new Response();
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
@@ -117,7 +117,7 @@ class FlysystemRendererTest extends TestCase
         $headers = $this->Service->getResponse()->getHeaders();
         $this->assertEquals(
             ['file'],
-            $headers['Content-Type']
+            $headers['Content-Type'],
         );
         $this->assertArrayHasKey('Cache-Control', $headers);
         $this->assertArrayHasKey('Date', $headers);
@@ -134,14 +134,14 @@ class FlysystemRendererTest extends TestCase
     {
         Configure::write('debug', false);
         $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
+            ->getMockBuilder(Response::class)
             ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
@@ -172,7 +172,7 @@ class FlysystemRendererTest extends TestCase
         $headers = $this->Service->getResponse()->getHeaders();
         $this->assertEquals(
             ['text/html; charset=UTF-8'],
-            $headers['Content-Type']
+            $headers['Content-Type'],
         );
         $this->assertEmpty((string)$this->Service->getResponse()->getBody());
     }
@@ -185,14 +185,14 @@ class FlysystemRendererTest extends TestCase
     public function testRendererError(): void
     {
         $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
+            ->getMockBuilder(Response::class)
             ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
@@ -222,21 +222,21 @@ class FlysystemRendererTest extends TestCase
     public function testRendererErrorEmptyExceptionCode(): void
     {
         $response = $this
-            ->getMockBuilder(\Cake\Http\Response::class)
+            ->getMockBuilder(Response::class)
             ->onlyMethods(['withStatus', 'withType', 'withStringBody'])
             ->getMock();
 
-        $this->_initializeRequest([], 'GET', ['response' => $response]);
+        $this->initializeRequest([], 'GET', ['response' => $response]);
         $serviceOptions = [
             'version' => null,
-            'request' => $this->request,
+            'request' => $this->testRequest,
             'response' => $response,
             'rendererClass' => 'CakeDC/Api.Flysystem',
         ];
         $this->Service = new FallbackService($serviceOptions);
 
         Configure::write('debug', false);
-        $error = new \Exception();
+        $error = new Exception();
         $renderer = $this->Service->getRenderer();
 
         $response->expects($this->once())

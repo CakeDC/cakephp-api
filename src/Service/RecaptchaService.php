@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service;
 
 use CakeDC\Api\Service\Action\Recaptcha\ValidateAction;
+use Override;
 
 /**
  * Class RecaptchaService
@@ -25,7 +26,7 @@ class RecaptchaService extends Service
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();

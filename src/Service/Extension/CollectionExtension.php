@@ -17,10 +17,11 @@ use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use CakeDC\Api\Service\Action\Collection\AddEditAction;
 use CakeDC\Api\Service\Action\Collection\DeleteAction;
+use CakeDC\Api\Service\Service;
 
 class CollectionExtension extends Extension implements EventListenerInterface
 {
-    protected \CakeDC\Api\Service\Service $service;
+    protected Service $service;
 
     /**
      * Returns a list of events this object is implementing. When the class is registered

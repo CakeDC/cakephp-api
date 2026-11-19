@@ -13,13 +13,16 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Exception;
 
+use Cake\Core\Exception\CakeException;
+use Throwable;
+
 /**
  * Class MethodNotAllowedException
  * Used to configure an exception for a service error.
  *
  * @package CakeDC\Api\Exception
  */
-class MethodNotAllowedException extends \Cake\Core\Exception\CakeException
+class MethodNotAllowedException extends CakeException
 {
     /**
      * MethodNotAllowedException constructor.
@@ -28,7 +31,7 @@ class MethodNotAllowedException extends \Cake\Core\Exception\CakeException
      * @param int $code The code of the error
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct(array|string|null $message = null, ?int $code = 405, ?\Throwable $previous = null)
+    public function __construct(array|string|null $message = null, ?int $code = 405, ?Throwable $previous = null)
     {
         if (empty($message)) {
             $message = 'Method not allowed';

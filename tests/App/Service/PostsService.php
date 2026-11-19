@@ -15,6 +15,7 @@ namespace CakeDC\Api\Test\App\Service;
 
 use CakeDC\Api\Service\Action\CrudIndexAction;
 use CakeDC\Api\Service\FallbackService;
+use Override;
 
 /**
  * Posts service exercising custom route path aliases on top of the
@@ -27,7 +28,7 @@ class PostsService extends FallbackService
      *
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(): void
     {
         parent::initialize();

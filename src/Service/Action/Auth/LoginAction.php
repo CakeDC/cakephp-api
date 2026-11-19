@@ -22,6 +22,7 @@ use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\LoginTrait;
 use CakeDC\Users\Exception\UserNotFoundException;
+use Override;
 
 /**
  * Class LoginAction
@@ -43,7 +44,7 @@ class LoginAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         if (isset($config['identifiedField'])) {
@@ -61,7 +62,7 @@ class LoginAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -132,7 +133,7 @@ class LoginAction extends Action
      *
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

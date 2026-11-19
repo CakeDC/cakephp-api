@@ -42,10 +42,10 @@ class PostsExtensionsTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions('CakeDC/Api.Paginate');
-        $this->_loadDefaultExtensions('CakeDC/Api.Sort');
-        $this->_loadDefaultExtensions('CakeDC/Api.Filter');
+        $this->tokenAccess();
+        $this->loadDefaultExtensions('CakeDC/Api.Paginate');
+        $this->loadDefaultExtensions('CakeDC/Api.Sort');
+        $this->loadDefaultExtensions('CakeDC/Api.Filter');
         $this->getDefaultUser(Settings::USER1);
     }
 

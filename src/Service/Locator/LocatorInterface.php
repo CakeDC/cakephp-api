@@ -33,14 +33,14 @@ interface LocatorInterface
      * Stores a list of options to be used when instantiating an object
      * with a matching alias.
      *
-     * @param string|array $alias Name of the alias or array to completely
+     * @param array|string $alias Name of the alias or array to completely
      *   overwrite current config.
      * @param array|null $options list of options for the alias
      * @return $this
      * @throws \RuntimeException When you attempt to configure an existing
      *   table instance.
      */
-    public function setConfig($alias, ?array $options = null): self;
+    public function setConfig(string|array $alias, ?array $options = null): self;
 
     /**
      * Get a service instance from the registry.

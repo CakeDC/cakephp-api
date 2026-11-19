@@ -15,6 +15,7 @@ namespace CakeDC\Api\Service;
 
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use Override;
 
 /**
  * Class NestedCrudService
@@ -44,7 +45,7 @@ abstract class NestedCrudService extends CrudService
      * @param array $route Action route,
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function actionOptions(array $route): array
     {
         $parent = $this->getParentService();

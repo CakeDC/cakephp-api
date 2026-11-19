@@ -44,7 +44,7 @@ class Webauthn2faRegisterAction extends Action
         }
 
         throw new BadRequestException(
-            __d('cake_d_c/api', 'User already has configured webauthn2fa')
+            __d('cake_d_c/api', 'User already has configured webauthn2fa'),
         );
     }
 }

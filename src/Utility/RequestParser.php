@@ -27,7 +27,7 @@ class RequestParser
      * @param bool $replace Whether to replace the domain.
      * @return string
      */
-    public static function getDomain(ServerRequest $request, $replace = true): string
+    public static function getDomain(ServerRequest $request, bool $replace = true): string
     {
         $domain = null;
         if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {

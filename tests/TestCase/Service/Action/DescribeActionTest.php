@@ -27,16 +27,12 @@ class DescribeActionTest extends TestCase
 {
     use ConfigTrait;
 
-    public $request;
-
-    public $response;
-
     /**
      * @var \CakeDC\Api\Service\Service|mixed
      */
     public $Service;
 
-    public ?\CakeDC\Api\Service\Action\DescribeAction $Action = null;
+    public ?DescribeAction $Action = null;
 
     /**
      * setUp method
@@ -47,7 +43,7 @@ class DescribeActionTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'describe',
                 'pass' => [],
@@ -56,12 +52,12 @@ class DescribeActionTest extends TestCase
                 'service' => 'articles',
             ],
         ]);
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/describe',
         ];
         $this->Service = ServiceRegistry::getServiceLocator()->get($service, $options);

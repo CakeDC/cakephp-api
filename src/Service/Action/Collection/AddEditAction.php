@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Collection;
 
+use Override;
+
 /**
  * Class AddEditAction, uses POST and an array of entity data to either add or edit
  * Pass a not null primary key for edit, null for adding a new row
@@ -35,7 +37,7 @@ class AddEditAction extends CollectionAction
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         return $this->validateMany();
@@ -57,7 +59,7 @@ class AddEditAction extends CollectionAction
         } else {
             $accessibleFields = [$keys => true];
         }
-        $entities = $this->newEntities(['accessibleFields' => $accessibleFields]);
+        $entities = $this->newEntities(['patchableFields' => $accessibleFields]);
 
         return $this->saveMany($entities);
     }

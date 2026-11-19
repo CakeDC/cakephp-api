@@ -29,6 +29,7 @@ use CakeDC\Api\Service\Auth\Auth;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Transformer\TransformerInterface;
 use Exception;
+use InvalidArgumentException;
 use ReflectionMethod;
 
 /**
@@ -57,19 +58,19 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * An Auth instance.
      */
-    public ?\CakeDC\Api\Service\Auth\Auth $Auth = null;
+    public ?Auth $Auth = null;
 
     /**
      * Default Action options.
      */
-    protected array $_defaultConfig = [];
+    protected array $defaultConfig = [];
 
     /**
      * A Service reference.
      *
      * @var \CakeDC\Api\Service\Service
      */
-    protected $service;
+    protected Service $service;
 
     /**
      * Activated route.
@@ -79,7 +80,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * Extension registry.
      */
-    protected ?\CakeDC\Api\Service\Action\ExtensionRegistry $_extensions = null;
+    protected ?ExtensionRegistry $extensionRegistry = null;
 
     /**
      * Action name.
@@ -111,10 +112,10 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         if (!empty($config['eventManager'])) {
             $eventManager = $config['eventManager'];
         }
-        $this->_eventManager = $eventManager ?: new EventManager();
+        $this->eventManager = $eventManager ?: new EventManager();
         $this->setConfig($config);
         $this->initialize($config);
-        $this->_eventManager->on($this);
+        $this->eventManager->on($this);
         $this->setExtensions($extensionRegistry);
         $this->loadExtensions();
     }
@@ -179,7 +180,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
     /**
      * @return \CakeDC\Api\Service\Service
      */
-    public function getService(): \CakeDC\Api\Service\Service
+    public function getService(): Service
     {
         return $this->service;
     }
@@ -321,7 +322,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @param mixed $default The default data.
      * @return mixed The value being read.
      */
-    public function getData($name = null, $default = null): mixed
+    public function getData(?string $name = null, mixed $default = null): mixed
     {
         $data = $this->getService()->getParser()->getParams();
         if ($name === null) {
@@ -337,7 +338,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function getExtensions(): ?ExtensionRegistry
     {
-        return $this->_extensions;
+        return $this->extensionRegistry;
     }
 
     /**
@@ -363,10 +364,10 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      */
     public function setExtensions(?ExtensionRegistry $extensions = null): self
     {
-        if (!$extensions instanceof \CakeDC\Api\Service\Action\ExtensionRegistry && !$this->_extensions instanceof \CakeDC\Api\Service\Action\ExtensionRegistry) {
-            $this->_extensions = new ExtensionRegistry($this);
+        if (!$extensions instanceof ExtensionRegistry && !$this->extensionRegistry instanceof ExtensionRegistry) {
+            $this->extensionRegistry = new ExtensionRegistry($this);
         } else {
-            $this->_extensions = $extensions;
+            $this->extensionRegistry = $extensions;
         }
 
         return $this;
@@ -384,7 +385,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
             return;
         }
         $registry = $this->getExtensions();
-        $this->_mergeVars(['extensions'], ['associative' => ['extensions']]);
+        $this->mergeVars(['extensions'], ['associative' => ['extensions']]);
         foreach ($this->extensions as $key => $value) {
             if (is_string($key) && $value === false) {
                 unset($this->extensions[$key]);
@@ -394,7 +395,7 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
         $extensions = $registry->normalizeArray($this->extensions);
         foreach ($extensions as $name => $properties) {
             $instance = $registry->load($properties['className'], $properties);
-            $this->_eventManager->on($instance);
+            $this->eventManager->on($instance);
             if ($instance->attachable()) {
                 [, $prop] = pluginSplit($name);
                 $this->{$prop} = $instance;
@@ -451,14 +452,14 @@ abstract class Action implements EventListenerInterface, EventDispatcherInterfac
      * @return array Transformed data
      * @throws \InvalidArgumentException If transformer class doesn't exist or doesn't implement TransformerInterface
      */
-    protected function transform($data, string $transformerClass): array
+    protected function transform(mixed $data, string $transformerClass): array
     {
         if (!class_exists($transformerClass)) {
-            throw new \InvalidArgumentException(sprintf('Transformer class %s does not exist', $transformerClass));
+            throw new InvalidArgumentException(sprintf('Transformer class %s does not exist', $transformerClass));
         }
 
         if (!is_subclass_of($transformerClass, TransformerInterface::class)) {
-            throw new \InvalidArgumentException(sprintf('Transformer class %s must implement ', $transformerClass) . TransformerInterface::class);
+            throw new InvalidArgumentException(sprintf('Transformer class %s must implement ', $transformerClass) . TransformerInterface::class);
         }
 
         $transformer = new $transformerClass();

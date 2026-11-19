@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Test\TestCase\Integration\Service\Action;
 
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\Test\Settings;
 use CakeDC\Api\TestSuite\IntegrationTestCase;
@@ -40,8 +41,8 @@ class PostsCrudTest extends IntegrationTestCase
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://example.com');
-        $this->_tokenAccess();
-        $this->_loadDefaultExtensions([]);
+        $this->tokenAccess();
+        $this->loadDefaultExtensions([]);
         $this->getDefaultUser(Settings::USER1);
     }
 
@@ -62,7 +63,7 @@ class PostsCrudTest extends IntegrationTestCase
         $result = $this->getJsonResponse();
         $this->assertSuccess($result);
         $this->assertCount(4, $result['data']);
-        $this->assertSame([1, 2, 3, 4], \Cake\Utility\Hash::extract($result['data'], '{n}.id'));
+        $this->assertSame([1, 2, 3, 4], Hash::extract($result['data'], '{n}.id'));
     }
 
     public function testView(): void

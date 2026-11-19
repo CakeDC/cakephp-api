@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Extension\Auth;
 
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use CakeDC\Api\Service\Action\Extension\Extension;
@@ -70,10 +71,10 @@ class UserFormattingExtension extends Extension implements EventListenerInterfac
     }
 
     /**
-     * @param array|\Cake\Datasource\EntityInterface|null $user User data
+     * @param \Cake\Datasource\EntityInterface|array|null $user User data
      * @return array|null
      */
-    protected function userCleanup($user): ?array
+    protected function userCleanup(array|EntityInterface|null $user): ?array
     {
         if ($user === null) {
             return null;

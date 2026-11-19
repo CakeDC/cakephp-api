@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+use Authorization\Exception\ForbiddenException;
+use Authorization\Exception\MissingIdentityException;
+use CakeDC\Users\Loader\AuthorizationServiceLoader;
+
 /**
  * Copyright 2016 - 2019, Cake Development Corporation (http://cakedc.com)
  *
@@ -106,13 +110,13 @@ $config = [
         ],
         'Authorization' => [
             'enable' => true,
-            'serviceLoader' => \CakeDC\Users\Loader\AuthorizationServiceLoader::class,
+            'serviceLoader' => AuthorizationServiceLoader::class,
         ],
         'AuthorizationMiddleware' => [
             'unauthorizedHandler' => [
                 'exceptions' => [
-                    'MissingIdentityException' => \Authorization\Exception\MissingIdentityException::class,
-                    'ForbiddenException' => \Authorization\Exception\ForbiddenException::class,
+                    'MissingIdentityException' => MissingIdentityException::class,
+                    'ForbiddenException' => ForbiddenException::class,
                 ],
                 'className' => 'Authorization.CakeRedirect',
                 'url' => [

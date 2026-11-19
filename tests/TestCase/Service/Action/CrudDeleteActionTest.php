@@ -15,6 +15,7 @@ namespace CakeDC\Api\Test\TestCase\Service\Action;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 use CakeDC\Api\Service\Action\CrudDeleteAction;
+use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
@@ -23,13 +24,9 @@ class CrudDeleteActionTest extends TestCase
 {
     use ConfigTrait;
 
-    public $request;
+    public ?CrudDeleteAction $Action = null;
 
-    public $response;
-
-    public ?\CakeDC\Api\Service\Action\CrudDeleteAction $Action = null;
-
-    protected ?\CakeDC\Api\Service\Service $Service = null;
+    protected ?Service $Service = null;
 
     /**
      * setUp method
@@ -49,7 +46,7 @@ class CrudDeleteActionTest extends TestCase
     protected function tearDown(): void
     {
         ServiceRegistry::getServiceLocator()->clear();
-        unset($this->Service, $this->Action, $this->request);
+        unset($this->Service, $this->Action, $this->testRequest);
         parent::tearDown();
     }
 
@@ -60,7 +57,7 @@ class CrudDeleteActionTest extends TestCase
      */
     public function testExecuteSuccess(): void
     {
-        $this->_initializeAction(1, [
+        $this->initializeAction(1, [
             'title' => 'New message',
         ]);
 
@@ -82,15 +79,15 @@ class CrudDeleteActionTest extends TestCase
     public function testExecuteNotFound(): void
     {
         $this->expectException(RecordNotFoundException::class);
-        $this->_initializeAction(999, [
+        $this->initializeAction(999, [
             'title' => 'New message',
         ]);
         $this->Action->execute();
     }
 
-    protected function _initializeAction($id, $post = []): void
+    protected function initializeAction($id, $post = []): void
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'articles',
                 'pass' => [
@@ -101,12 +98,12 @@ class CrudDeleteActionTest extends TestCase
         ], 'DELETE');
         $options = [
             'version' => null,
-            'service' => $this->request->getParam('service'),
-            'request' => $this->request,
-            'response' => $this->response,
+            'service' => $this->testRequest->getParam('service'),
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/articles/' . $id,
         ];
-        $this->Service = ServiceRegistry::getServiceLocator()->get($this->request->getParam('service'), $options);
+        $this->Service = ServiceRegistry::getServiceLocator()->get($this->testRequest->getParam('service'), $options);
 
         $this->Action = new CrudDeleteAction([
             'service' => $this->Service,

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -39,7 +40,7 @@ trait JwtTokenTrait
      * @param string|null $type The type of token being generated.
      * @return array
      */
-    public function generateTokenResponse(array $user, $type): array
+    public function generateTokenResponse(array $user, ?string $type): array
     {
         $timestamp = new DateTimeImmutable('-1 second');
         unset($user['additional_data'], $user['secret'], $user['secret_verified']);
@@ -58,10 +59,10 @@ trait JwtTokenTrait
      * Generates refresh token response.
      *
      * @param array $user User info.
-     * @param array $payload Additional payload data.
+     * @param object|array|null $payload Additional payload data.
      * @return array
      */
-    public function generateRefreshTokenResponse(array $user, $payload): array
+    public function generateRefreshTokenResponse(array $user, array|object|null $payload): array
     {
         $timestamp = new DateTimeImmutable();
 
@@ -78,10 +79,10 @@ trait JwtTokenTrait
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param \DateTimeImmutable $timestamp Timestamp.
      * @param string|null $type The type of token being generated.
-     * @param array|null $payload Additional payload data.
-     * @return false|string
+     * @param object|array|null $payload Additional payload data.
+     * @return string|false
      */
-    public function generateAccessToken($user, \DateTimeImmutable $timestamp, $type, $payload = null): false|string
+    public function generateAccessToken(EntityInterface|array $user, DateTimeImmutable $timestamp, ?string $type, array|object|null $payload = null): false|string
     {
         if (empty($user)) {
             return false;
@@ -111,10 +112,10 @@ trait JwtTokenTrait
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param string|null $type The type of token being generated.
-     * @param array|null $payload Additional payload data.
+     * @param object|array|null $payload Additional payload data.
      * @return string
      */
-    public function getAudience($user, $type, $payload): string
+    public function getAudience(EntityInterface|array $user, ?string $type, array|object|null $payload): string
     {
         if ($type === null && is_array($payload) && isset($payload['aud'])) {
             return $payload['aud'];
@@ -132,7 +133,7 @@ trait JwtTokenTrait
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @return bool
      */
-    protected function is2FAEnabled($user): bool
+    protected function is2FAEnabled(EntityInterface|array $user): bool
     {
         if ($this->isEnabledWebauthn2faAuthentication($user)) {
             return true;
@@ -147,7 +148,7 @@ trait JwtTokenTrait
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @return bool
      */
-    public function isEnabledWebauthn2faAuthentication($user): bool
+    public function isEnabledWebauthn2faAuthentication(EntityInterface|array $user): bool
     {
         $enabledTwoFactorVerify = Configure::read('Api.2fa.enabled');
         $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
@@ -161,7 +162,7 @@ trait JwtTokenTrait
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @return bool
      */
-    public function isEnabledOneTimePasswordAuthentication($user): bool
+    public function isEnabledOneTimePasswordAuthentication(EntityInterface|array $user): bool
     {
         $enabledTwoFactorVerify = Configure::read('Api.2fa.enabled');
         $otpChecker = $this->getOneTimePasswordAuthenticationChecker();
@@ -195,10 +196,10 @@ trait JwtTokenTrait
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param \DateTimeImmutable $timestamp Timestamp.
      * @param string|null $type The type of token being generated.
-     * @param array|null $payload Additional payload data.
-     * @return false|string
+     * @param object|array|null $payload Additional payload data.
+     * @return string|false
      */
-    public function generateRefreshToken($user, \DateTimeImmutable $timestamp, $type, $payload = null): false|string
+    public function generateRefreshToken(EntityInterface|array $user, DateTimeImmutable $timestamp, ?string $type, array|object|null $payload = null): false|string
     {
         if (empty($user)) {
             return false;

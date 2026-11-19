@@ -24,6 +24,7 @@ use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Handler;
+use Override;
 
 /**
  * Class FlysystemRenderer to render file using Flysystem library
@@ -38,7 +39,7 @@ class FlysystemRenderer extends FileRenderer
      * @param \CakeDC\Api\Service\Action\Result $result The result object returned by the Service.
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function response(?Result $result = null): bool
     {
         $data = $result->getData();
@@ -46,12 +47,12 @@ class FlysystemRenderer extends FileRenderer
             /** @var \League\Flysystem\File $file */
             $file = $this->getFile(
                 Hash::get($data, 'filesystem'),
-                Hash::get($data, 'path')
+                Hash::get($data, 'path'),
             );
             $name = Hash::get($data, 'name');
 
             $this->service->setResponse(
-                $this->deliverAsset($this->service->getResponse(), $file, $name)
+                $this->deliverAsset($this->service->getResponse(), $file, $name),
             );
         } catch (FileNotFoundException) {
             $response = $this->service->getResponse()
@@ -109,7 +110,7 @@ class FlysystemRenderer extends FileRenderer
      * @param \Exception $exception thrown at service or action
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function error(Exception $exception): void
     {
         $code = $exception->getCode();

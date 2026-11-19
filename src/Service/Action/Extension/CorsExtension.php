@@ -61,7 +61,7 @@ class CorsExtension extends Extension implements EventListenerInterface
                  ])
                  ->allowCredentials()
                  ->maxAge($this->getConfig('maxAge') ?: 300)
-                 ->build()
+                 ->build(),
         );
     }
 }

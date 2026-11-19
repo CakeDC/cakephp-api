@@ -18,6 +18,8 @@ use CakeDC\Api\Service\FallbackService;
 use CakeDC\Api\Service\Locator\ServiceLocator;
 use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
+use CakeDC\Api\Test\App\Service\ArticlesService;
+use CakeDC\Api\Test\App\Service\v1\ArticlesService as VersionedArticlesService;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
 use RuntimeException;
@@ -32,7 +34,7 @@ class ServiceLocatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Configure::write('Api.ServiceFallback', \CakeDC\Api\Service\FallbackService::class);
+        Configure::write('Api.ServiceFallback', FallbackService::class);
         Configure::write('Api.useVersioning', false);
         Configure::write('Api.versionPrefix', 'v');
         Configure::delete('Api.defaultVersion');
@@ -50,16 +52,16 @@ class ServiceLocatorTest extends TestCase
 
     protected function buildOptions(string $service = 'articles', string $baseUrl = '/articles', ?string $version = null): array
     {
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => $service],
         ], 'GET');
-        $serviceName = $this->request->getParam('service');
+        $serviceName = $this->testRequest->getParam('service');
 
         return [
             'version' => $version,
             'service' => $serviceName,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => $baseUrl,
         ];
     }
@@ -68,7 +70,7 @@ class ServiceLocatorTest extends TestCase
     {
         $locator = new ServiceLocator();
         $service = $locator->get('articles', $this->buildOptions());
-        $this->assertInstanceOf(\CakeDC\Api\Test\App\Service\ArticlesService::class, $service);
+        $this->assertInstanceOf(ArticlesService::class, $service);
     }
 
     public function testVersioningResolvesVersionedService(): void
@@ -76,7 +78,7 @@ class ServiceLocatorTest extends TestCase
         Configure::write('Api.useVersioning', true);
         $locator = new ServiceLocator();
         $service = $locator->get('articles', $this->buildOptions(version: 'v1'));
-        $this->assertInstanceOf(\CakeDC\Api\Test\App\Service\v1\ArticlesService::class, $service);
+        $this->assertInstanceOf(VersionedArticlesService::class, $service);
         $this->assertSame('articles', $service->getName());
     }
 
@@ -86,7 +88,7 @@ class ServiceLocatorTest extends TestCase
         Configure::write('Api.defaultVersion', '1');
         $locator = new ServiceLocator();
         $service = $locator->get('articles', $this->buildOptions());
-        $this->assertInstanceOf(\CakeDC\Api\Test\App\Service\v1\ArticlesService::class, $service);
+        $this->assertInstanceOf(VersionedArticlesService::class, $service);
     }
 
     public function testVersioningUnresolvedVersionFallsBack(): void
@@ -95,7 +97,7 @@ class ServiceLocatorTest extends TestCase
         Configure::write('Api.useVersioning', true);
         $locator = new ServiceLocator();
         $service = $locator->get('articles', $this->buildOptions(version: 'ver1'));
-        $this->assertInstanceOf(\CakeDC\Api\Service\FallbackService::class, $service);
+        $this->assertInstanceOf(FallbackService::class, $service);
     }
 
     public function testGetResolvesExistingService(): void
@@ -144,8 +146,8 @@ class ServiceLocatorTest extends TestCase
     public function testSetConfigAliasOptions(): void
     {
         $locator = new ServiceLocator();
-        $locator->setConfig('custom', ['className' => \CakeDC\Api\Test\App\Service\ArticlesService::class]);
-        $this->assertSame(['className' => \CakeDC\Api\Test\App\Service\ArticlesService::class], $locator->getConfig('custom'));
+        $locator->setConfig('custom', ['className' => ArticlesService::class]);
+        $this->assertSame(['className' => ArticlesService::class], $locator->getConfig('custom'));
     }
 
     public function testSetConfigArrayOverwrites(): void

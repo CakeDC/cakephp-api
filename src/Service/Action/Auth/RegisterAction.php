@@ -21,6 +21,7 @@ use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 use CakeDC\Users\Controller\Traits\RegisterTrait;
 use CakeDC\Users\Plugin;
+use Override;
 
 /**
  * Class RegisterAction
@@ -38,7 +39,7 @@ class RegisterAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -50,7 +51,7 @@ class RegisterAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         /** @var \CakeDC\Users\Model\Behavior\RegisterBehavior $registerBehavior */
@@ -137,7 +138,7 @@ class RegisterAction extends Action
      *
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

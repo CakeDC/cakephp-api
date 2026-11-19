@@ -35,7 +35,7 @@ class ApiRouter extends Router
      *
      * @var string
      */
-    protected static string $_defaultRouteClass = Route::class;
+    protected static string $defaultRouteClass = Route::class;
 
     /**
      * Contains the base string that will be applied to all generated URLs
@@ -43,70 +43,70 @@ class ApiRouter extends Router
      *
      * @var string
      */
-    protected static ?string $_fullBaseUrl;
+    protected static ?string $fullBaseUrl;
 
     /**
      * Regular expression for action names
      *
      * @var string
      */
-    public const ACTION = 'index|show|add|create|edit|update|remove|del|delete|view|item';
+    public const string ACTION = 'index|show|add|create|edit|update|remove|del|delete|view|item';
 
     /**
      * Regular expression for years
      *
      * @var string
      */
-    public const YEAR = '[12][0-9]{3}';
+    public const string YEAR = '[12][0-9]{3}';
 
     /**
      * Regular expression for months
      *
      * @var string
      */
-    public const MONTH = '0[1-9]|1[012]';
+    public const string MONTH = '0[1-9]|1[012]';
 
     /**
      * Regular expression for days
      *
      * @var string
      */
-    public const DAY = '0[1-9]|[12][0-9]|3[01]';
+    public const string DAY = '0[1-9]|[12][0-9]|3[01]';
 
     /**
      * Regular expression for auto increment IDs
      *
      * @var string
      */
-    public const ID = '[0-9]+';
+    public const string ID = '[0-9]+';
 
     /**
      * Regular expression for UUIDs
      *
      * @var string
      */
-    public const UUID = '[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}';
+    public const string UUID = '[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}';
 
     /**
      * The route collection routes would be added to.
      *
      * @var \Cake\Routing\RouteCollection
      */
-    protected static RouteCollection $_collection;
+    protected static RouteCollection $collection;
 
     /**
      * A hash of request context data.
      *
      * @var array<string, mixed>
      */
-    protected static array $_requestContext = [];
+    protected static array $requestContext = [];
 
     /**
      * Named expressions
      *
      * @var array<string, string>
      */
-    protected static array $_namedExpressions = [
+    protected static array $namedExpressions = [
         'Action' => Router::ACTION,
         'Year' => Router::YEAR,
         'Month' => Router::MONTH,
@@ -119,7 +119,7 @@ class ApiRouter extends Router
      * Maintains the request object stack for the current request.
      * This will contain more than one request object when requestAction is used.
      */
-    protected static ?ServerRequest $_request = null;
+    protected static ?ServerRequest $request = null;
 
     /**
      * Initial state is populated the first time reload() is called which is at the bottom
@@ -128,7 +128,7 @@ class ApiRouter extends Router
      *
      * @var array
      */
-    protected static array $_initialState = [];
+    protected static array $initialState = [];
 
     /**
      * The stack of URL filters to apply against routing URLs before passing the
@@ -136,12 +136,12 @@ class ApiRouter extends Router
      *
      * @var array<\Closure>
      */
-    protected static array $_urlFilters = [];
+    protected static array $urlFilters = [];
 
     /**
      * Default extensions defined with Router::extensions()
      *
      * @var array<string>
      */
-    protected static array $_defaultExtensions = [];
+    protected static array $defaultExtensions = [];
 }

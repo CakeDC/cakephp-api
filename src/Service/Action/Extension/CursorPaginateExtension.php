@@ -28,7 +28,7 @@ use CakeDC\Api\Service\Utility\ReverseRouting;
  */
 class CursorPaginateExtension extends Extension implements EventListenerInterface
 {
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'cursorField' => 'id',
         'countField' => 'count',
         'defaultCount' => 20,
@@ -36,7 +36,7 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         'sinceIdField' => 'since_id',
     ];
 
-    protected \CakeDC\Api\Service\Utility\ReverseRouting $reverseRouter;
+    protected ReverseRouting $reverseRouter;
 
     /**
      * CursorPaginateExtension constructor.
@@ -176,13 +176,9 @@ class CursorPaginateExtension extends Extension implements EventListenerInterfac
         $sinceId = $this->sinceId($action);
         $maxId = $this->maxId($action);
 
-        if ($newSinceId === null) {
-            $newSinceId = $sinceId;
-        }
+        $newSinceId ??= $sinceId;
 
-        if ($newMaxId === null) {
-            $newMaxId = $maxId;
-        }
+        $newMaxId ??= $maxId;
 
         $indexRoute = $action->getRoute();
         $version = $action->getService()->getVersion();

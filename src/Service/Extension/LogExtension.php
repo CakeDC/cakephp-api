@@ -16,15 +16,17 @@ namespace CakeDC\Api\Service\Extension;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\LogTrait;
+use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Service;
 use Psr\Log\LogLevel;
 
 class LogExtension extends Extension implements EventListenerInterface
 {
     use LogTrait;
 
-    protected \CakeDC\Api\Service\Service $service;
+    protected Service $service;
 
-    protected \CakeDC\Api\Service\Action\Action $action;
+    protected Action $action;
 
     protected ?float $timer = null;
 

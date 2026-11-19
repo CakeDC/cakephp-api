@@ -16,6 +16,7 @@ namespace CakeDC\Api\Service\Action\Auth;
 use Cake\Core\Configure;
 use CakeDC\Api\Service\Action\Action;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use Override;
 use RobThree\Auth\TwoFactorAuth;
 
 /**
@@ -30,7 +31,7 @@ abstract class OtpVerifyAction extends Action
     /**
      * @var \RobThree\Auth\TwoFactorAuth $tfa
      */
-    public ?\RobThree\Auth\TwoFactorAuth $tfa = null;
+    public ?TwoFactorAuth $tfa = null;
 
     /**
      * initialize
@@ -38,7 +39,7 @@ abstract class OtpVerifyAction extends Action
      * @param array $config Configuration.
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         $this->tfa = new TwoFactorAuth(
@@ -47,7 +48,7 @@ abstract class OtpVerifyAction extends Action
             Configure::read('OneTimePasswordAuthenticator.period'),
             Configure::read('OneTimePasswordAuthenticator.algorithm'),
             Configure::read('OneTimePasswordAuthenticator.qrcodeprovider'),
-            Configure::read('OneTimePasswordAuthenticator.rngprovider')
+            Configure::read('OneTimePasswordAuthenticator.rngprovider'),
         );
     }
 
@@ -69,7 +70,7 @@ abstract class OtpVerifyAction extends Action
      * @param string $code from verification form
      * @return bool
      */
-    public function verifyCode($secret, $code): bool
+    public function verifyCode(string $secret, string $code): bool
     {
         return $this->tfa->verifyCode($secret, $code);
     }
@@ -81,7 +82,7 @@ abstract class OtpVerifyAction extends Action
      * @param string $secret secret
      * @return string base64 string containing QR code for shared secret
      */
-    public function getQRCodeImageAsDataUri($issuer, $secret): string
+    public function getQRCodeImageAsDataUri(string $issuer, string $secret): string
     {
         return $this->tfa->getQRCodeImageAsDataUri($issuer, $secret);
     }

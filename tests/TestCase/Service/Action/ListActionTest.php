@@ -27,16 +27,12 @@ class ListActionTest extends TestCase
 {
     use ConfigTrait;
 
-    public $request;
-
-    public $response;
-
     /**
      * @var \CakeDC\Api\Service\Service|mixed
      */
     public $Service;
 
-    public ?\CakeDC\Api\Service\Action\ListAction $Action = null;
+    public ?ListAction $Action = null;
 
     /**
      * setUp method
@@ -47,18 +43,18 @@ class ListActionTest extends TestCase
     {
         parent::setUp();
 
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => [
                 'service' => 'listing',
                 'pass' => [],
             ],
         ]);
-        $service = $this->request->getParam('service');
+        $service = $this->testRequest->getParam('service');
         $options = [
             'version' => null,
             'service' => $service,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => '/listing',
         ];
         $this->Service = ServiceRegistry::getServiceLocator()->get($service, $options);

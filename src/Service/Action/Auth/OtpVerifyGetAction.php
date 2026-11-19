@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
+use Exception;
 
 /**
  * Class LoginAction
@@ -37,7 +38,7 @@ class OtpVerifyGetAction extends OtpVerifyAction
         if (!$secretVerified) {
             $secret = $this->onVerifyGetSecret($user);
             if (empty($secret)) {
-                throw new \Exception('Secret generation issue, please try again');
+                throw new Exception('Secret generation issue, please try again');
             }
             $secretDataUri = $this->getQRCodeImageAsDataUri($user['email'], $secret);
 
@@ -70,10 +71,10 @@ class OtpVerifyGetAction extends OtpVerifyAction
                 ->set(['secret' => $secret])
                 ->where(['id' => $user['id']]);
             $query->execute();
-        } catch (\Exception) {
+        } catch (Exception) {
             $message = __d('cake_d_c/api', 'Could not verify, please try again');
 
-            throw new \Exception($message);
+            throw new Exception($message);
         }
 
         return $secret;

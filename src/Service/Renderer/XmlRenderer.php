@@ -21,6 +21,7 @@ use Cake\I18n\DateTime;
 use Cake\Utility\Xml;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\Result;
+use DateTime as NativeDateTime;
 use Exception;
 
 /**
@@ -77,7 +78,7 @@ class XmlRenderer extends BaseRenderer
      * @param mixed $content The content to process.
      * @return array
      */
-    protected function format($content = null): array
+    protected function format(mixed $content = null): array
     {
         if (is_array($content) || $content instanceof Collection || $content instanceof ResultSetInterface) {
             $data = $this->array($content);
@@ -105,9 +106,9 @@ class XmlRenderer extends BaseRenderer
             $data = $data->toArray();
         }
         foreach ($data as $name => $value) {
-            if ($value instanceof \DateTime) {
+            if ($value instanceof NativeDateTime) {
                 $property = [];
-                $property['@'] = $value->format(\DateTime::ISO8601);
+                $property['@'] = $value->format(NativeDateTime::ISO8601);
             } elseif ($value instanceof DateTime) {
                 $property = [];
                 $property['@'] = $value->toIso8601String();
@@ -131,10 +132,10 @@ class XmlRenderer extends BaseRenderer
     /**
      * Formats an array as an XML node.
      *
-     * @param array|\Cake\Collection\Collection $data The array to process.
+     * @param \Cake\Collection\Collection|array $data The array to process.
      * @return array
      */
-    protected function array($data): array
+    protected function array(array|Collection $data): array
     {
         $xml = [];
         $items = [];
@@ -163,7 +164,7 @@ class XmlRenderer extends BaseRenderer
     /**
      * Encoded object as xml.
      *
-     * @param array|object $data Encoded data.
+     * @param object|array $data Encoded data.
      * @return string
      */
     protected function encode(object|array $data): string

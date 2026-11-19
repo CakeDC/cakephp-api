@@ -14,9 +14,11 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Utility;
 
 use Cake\Core\Configure;
+use Cake\Routing\Route\Route;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use CakeDC\Api\Service\Action\Action;
+use CakeDC\Api\Service\Service;
 
 /**
  * Class ReverseRouting
@@ -34,7 +36,7 @@ class ReverseRouting
      * @param string|null $version Version prefix.
      * @return array
      */
-    public function link(string $name, ?string $path, $method, ?string $version): array
+    public function link(string $name, ?string $path, mixed $method, ?string $version): array
     {
         if (is_array($method)) {
             $method = array_shift($method);
@@ -66,10 +68,10 @@ class ReverseRouting
         $indexRoute = $action->getRoute();
         $parent = $action->getService()->getParentService();
         $path = null;
-        if ($parent instanceof \CakeDC\Api\Service\Service) {
+        if ($parent instanceof Service) {
             $parentRoutes = $parent->routes();
             $currentRoute = $this->findRoute($indexRoute, $parentRoutes);
-            if ($currentRoute instanceof \Cake\Routing\Route\Route) {
+            if ($currentRoute instanceof Route) {
                 if (is_callable($beforeReverse)) {
                     $indexRoute = $beforeReverse($indexRoute);
                 }
@@ -122,7 +124,7 @@ class ReverseRouting
      * @param array $routes List of all routes.
      * @return \Cake\Routing\Route\Route|null
      */
-    public function findRoute(array $route, array $routes): ?\Cake\Routing\Route\Route
+    public function findRoute(array $route, array $routes): ?Route
     {
         foreach ($routes as $item) {
             if ($this->compareDefaults($item->defaults, $route)) {

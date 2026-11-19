@@ -23,6 +23,7 @@ use CakeDC\Users\Exception\UserAlreadyActiveException;
 use CakeDC\Users\Exception\UserNotFoundException;
 use CakeDC\Users\Exception\WrongPasswordException;
 use Exception;
+use Override;
 
 /**
  * Class ResetPasswordAction
@@ -39,7 +40,7 @@ class ResetPasswordAction extends Action
      * @param array $config Configuration options passed to the constructor
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -51,7 +52,7 @@ class ResetPasswordAction extends Action
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();
@@ -71,9 +72,8 @@ class ResetPasswordAction extends Action
                     'rule' => ['compareWith', 'password_confirm'],
                     'message' => __d(
                         'cake_d_c/users',
-                        'Your password does not match your confirm password. Please try again'
+                        'Your password does not match your confirm password. Please try again',
                     ),
-                    'allowEmpty' => false,
                 ]]);
 
         $errors = $validator->validate($this->getData());
@@ -117,7 +117,7 @@ class ResetPasswordAction extends Action
      * @return string
      * @throws \Exception
      */
-    protected function changePassword($userId): string
+    protected function changePassword(string $userId): string
     {
         /** @var \CakeDC\Users\Model\Entity\User $user */
         $user = $this->getUsersTable()->newEntity([], ['validate' => false]);
@@ -146,7 +146,7 @@ class ResetPasswordAction extends Action
      *
      * @return array
      */
-    #[\Override]
+    #[Override]
     protected function authConfig(): array
     {
         return Hash::merge(parent::authConfig(), [

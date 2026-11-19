@@ -13,12 +13,13 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test\TestCase\Rbac;
 
+use ArrayAccess;
 use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AlwaysFalseRule implements Rule
 {
-    public function allowed(array|\ArrayAccess $user, string $role, ServerRequestInterface $request): bool
+    public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
         return false;
     }

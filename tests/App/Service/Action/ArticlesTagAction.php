@@ -17,10 +17,11 @@ use Cake\Http\Exception\NotImplementedException;
 use Cake\Validation\Validator;
 use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Action\CrudAction;
+use Override;
 
 class ArticlesTagAction extends CrudAction
 {
-    #[\Override]
+    #[Override]
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -32,7 +33,7 @@ class ArticlesTagAction extends CrudAction
      *
      * @return bool
      */
-    #[\Override]
+    #[Override]
     public function validates(): bool
     {
         $validator = new Validator();

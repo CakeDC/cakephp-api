@@ -15,6 +15,7 @@ namespace CakeDC\Api\Test\TestCase\Service;
 
 use Cake\Routing\Exception\MissingRouteException;
 use Cake\Routing\Route\Route;
+use CakeDC\Api\Service\Service;
 use CakeDC\Api\Service\ServiceRegistry;
 use CakeDC\Api\Test\ConfigTrait;
 use CakeDC\Api\TestSuite\TestCase;
@@ -32,18 +33,18 @@ class ServiceRoutingTest extends TestCase
         parent::tearDown();
     }
 
-    protected function buildService(string $serviceName = 'articles', string $baseUrl = '/articles', array $params = []): \CakeDC\Api\Service\Service
+    protected function buildService(string $serviceName = 'articles', string $baseUrl = '/articles', array $params = []): Service
     {
         ServiceRegistry::getServiceLocator()->clear();
-        $this->_initializeRequest([
+        $this->initializeRequest([
             'params' => ['service' => $serviceName] + $params,
         ], 'GET');
 
         return ServiceRegistry::getServiceLocator()->get($serviceName, [
             'version' => null,
             'service' => $serviceName,
-            'request' => $this->request,
-            'response' => $this->response,
+            'request' => $this->testRequest,
+            'response' => $this->testResponse,
             'baseUrl' => $baseUrl,
         ]);
     }

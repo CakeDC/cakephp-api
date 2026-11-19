@@ -17,6 +17,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use Cake\View\Exception\MissingTemplateException;
 use CakeDC\Api\Service\ServiceRegistry;
@@ -26,9 +27,11 @@ use CakeDC\Api\Service\ServiceRegistry;
  *
  * @package CakeDC\Api\TestSuite
  */
-class IntegrationTestCase extends \Cake\TestSuite\TestCase
+class IntegrationTestCase extends TestCase
 {
-    use IntegrationTestTrait;
+    use IntegrationTestTrait {
+        sendRequest as protected cakeSendRequest;
+    }
 
     /**
      * @var array<array-key, string> Fixtures.
@@ -94,9 +97,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     protected function userToken(?string $userId = null): mixed
     {
-        if ($userId === null) {
-            $userId = $this->getDefaultUser();
-        }
+        $userId ??= $this->getDefaultUser();
         $Users = TableRegistry::getTableLocator()->get('CakeDC/Users.Users');
         if ($userId) {
             $user = $Users->find()
@@ -124,9 +125,9 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
     public function sendRequest(
         string $url,
         string $method,
-        $data = [],
+        mixed $data = [],
         ?string $userId = null,
-        array $headers = []
+        array $headers = [],
     ): void {
         ServiceRegistry::getServiceLocator()->clear();
         $userToken = $this->userToken($userId);
@@ -154,9 +155,9 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
         try {
             ServiceRegistry::getServiceLocator()->clear();
             TableRegistry::getTableLocator()->clear();
-            $this->_sendRequest($url, $method, $data);
+            $this->cakeSendRequest($url, $method, $data);
         } catch (MissingTemplateException $missingTemplateException) {
-            $message = sprintf('Possibly related to %s', $this->_exception->getMessage());
+            $message = sprintf('Possibly related to %s', $this->exception->getMessage());
             throw new MissingTemplateException($message, [], 500, $missingTemplateException);
         }
     }
@@ -182,11 +183,11 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param array|null $result Response.
      * @return void
      */
-    public function assertSuccess($result): void
+    public function assertSuccess(?array $result): void
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals('success', $result['status']);
-        $this->assertEquals(200, $this->_response->getStatusCode());
+        $this->assertEquals(200, $this->response->getStatusCode());
     }
 
     /**
@@ -194,9 +195,9 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     public function getJsonResponse(): mixed
     {
-        $this->_response->getBody();
+        $this->response->getBody();
 
-        return json_decode((string)$this->_response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode((string)$this->response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -206,11 +207,11 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      * @param int $code Result code.
      * @return void
      */
-    public function assertError($result, ?int $code = null): void
+    public function assertError(mixed $result, ?int $code = null): void
     {
         $this->assertTrue(is_array($result));
         $this->assertEquals('error', $result['status']);
-        $this->assertEquals(200, $this->_response->getStatusCode());
+        $this->assertEquals(200, $this->response->getStatusCode());
         if (!empty($code)) {
             $this->assertEquals($code, $result['code']);
         }
@@ -225,9 +226,7 @@ class IntegrationTestCase extends \Cake\TestSuite\TestCase
      */
     public function assertStatus(int $code, ?string $message = null): void
     {
-        if ($message === null) {
-            $message = sprintf('Status code %d does not match', $code);
-        }
+        $message ??= sprintf('Status code %d does not match', $code);
         $this->assertResponseCode($code, $message);
     }
 

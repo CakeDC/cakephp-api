@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Test;
 
+use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -25,16 +26,16 @@ use Cake\Utility\Hash;
  */
 trait ConfigTrait
 {
-    public $request;
+    public ?ServerRequest $testRequest = null;
 
-    public $response;
+    public ?Response $testResponse = null;
 
     public $Controller;
 
     /**
      * Configure public auth access
      */
-    protected function _publicAccess(): void
+    protected function publicAccess(): void
     {
         $config = Configure::read('Test.Api');
         $config['Auth'] = [
@@ -59,7 +60,7 @@ trait ConfigTrait
     /**
      * Configure token auth access
      */
-    protected function _authAccess(): void
+    protected function authAccess(): void
     {
         $config = (array)Configure::read('Test.Api');
         $auth = [
@@ -83,7 +84,7 @@ trait ConfigTrait
     /**
      * Configure token auth access
      */
-    protected function _tokenAccess(): void
+    protected function tokenAccess(): void
     {
         $config = (array)Configure::read('Test.Api');
         $config['Auth'] = [
@@ -118,7 +119,7 @@ trait ConfigTrait
      * @param mixed $options An options.
      * @return void
      */
-    protected function _addSettingByPath(string $path, $options): void
+    protected function addSettingByPath(string $path, $options): void
     {
         $config = (array)Configure::read('Test.Api');
         $config = Hash::insert($config, $path, $options);
@@ -131,7 +132,7 @@ trait ConfigTrait
      * @param array|string $extension
      * @param bool $overwrite Owerwrite flag.
      */
-    protected function _loadDefaultExtensions($extension, $overwrite = false): void
+    protected function loadDefaultExtensions($extension, $overwrite = false): void
     {
         $config = (array)Configure::read('Test.Api');
         $path = 'Service.default.Action.default.Extension';
@@ -148,7 +149,7 @@ trait ConfigTrait
      * @param array $options Options.
      * @return void
      */
-    protected function _initializeRequest(array $requestOptions = [], $method = 'GET', array $options = []): void
+    protected function initializeRequest(array $requestOptions = [], $method = 'GET', array $options = []): void
     {
         $_SERVER['REQUEST_METHOD'] = $method;
         if (empty($requestOptions['params'])) {
@@ -161,11 +162,11 @@ trait ConfigTrait
             $requestOptions['params']['pass'] = [];
         }
         $requestOptions['environment']['REQUEST_METHOD'] = $method;
-        $this->request = new ServerRequest($requestOptions);
+        $this->testRequest = new ServerRequest($requestOptions);
 
-        $this->response = empty($options['response']) ? new Response() : $options['response'];
-        $this->Controller = $this->createStub(\Cake\Controller\Controller::class);
-        $this->Controller->setRequest($this->request);
-        $this->Controller->setResponse($this->response);
+        $this->testResponse = empty($options['response']) ? new Response() : $options['response'];
+        $this->Controller = $this->createStub(Controller::class);
+        $this->Controller->setRequest($this->testRequest);
+        $this->Controller->setResponse($this->testResponse);
     }
 }

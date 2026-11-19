@@ -27,30 +27,32 @@
         "source": "https://github.com/CakeDC/cakephp-api"
     },
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.5",
         "ext-json": "*",
-        "cakephp/cakephp": "^5.1",
-        "cakedc/users": "^16.0",
-        "crustum/cakephp-attribute-resolver": "^1.0",
+        "cakephp/cakephp": "6.x-dev",
+        "cakedc/users": "dev-18.next-cake6",
         "lcobucci/clock": "^2.2.0,<2.3.0",
         "lcobucci/jwt": "^5.5.0",
         "firebase/php-jwt": "^6.3 || ^7.0"
     },
     "require-dev": {
         "boundwize/structarmed": "^0.14",
-        "cakedc/cakephp-phpstan": "^4.3",
-        "cakephp/cakephp-codesniffer": "^4.5",
+        "cakedc/cakephp-phpstan": "5.next-cake6-dev",
+        "cakephp/cakephp-codesniffer": "6.x-dev",
+        "cakephp/authentication": "5.x-dev",
+        "cakephp/authorization": "4.x-dev",
         "cweagans/composer-patches": "^1.7",
         "endroid/qr-code": "^4",
         "google/recaptcha": "@stable",
+        "jasonmccreary/double": "^1.0",
         "laminas/laminas-diactoros": "^3.0",
         "league/flysystem-vfs": "^1.0",
         "phpunit/phpunit": "^11.5 || ^12.5",
-        "phpstan/phpstan": "^2.2.2,<2.2.6",
+        "phpstan/phpstan": "^2.3",
         "rector/rector": "^2.5",
         "robthree/twofactorauth": "^1.6",
         "vlucas/phpdotenv": "^3.3",
-        "web-auth/webauthn-lib": "^4.4"
+        "web-auth/webauthn-lib": "^5.3"
     },
     "autoload": {
         "psr-4": {
@@ -65,6 +67,7 @@
         }
     },
     "prefer-stable": true,
+    "minimum-stability": "dev",
     "extra": {
         "patches": {
             "endroid/qr-code": {

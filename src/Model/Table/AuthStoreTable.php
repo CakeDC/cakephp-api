@@ -6,6 +6,7 @@ namespace CakeDC\Api\Model\Table;
 use Cake\Database\Schema\TableSchemaInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Override;
 
 /**
  * AuthStore Model
@@ -50,7 +51,7 @@ class AuthStoreTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    #[\Override]
+    #[Override]
     public function validationDefault(Validator $validator): Validator
     {
         $validator
@@ -65,7 +66,7 @@ class AuthStoreTable extends Table
      *
      * @return \Cake\Database\Schema\TableSchemaInterface
      */
-    #[\Override]
+    #[Override]
     public function getSchema(): TableSchemaInterface
     {
         $schema = parent::getSchema();

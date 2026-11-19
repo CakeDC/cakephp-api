@@ -15,6 +15,7 @@ namespace CakeDC\Api\Test\App\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Override;
 
 class ArticlesTable extends Table
 {
@@ -40,7 +41,7 @@ class ArticlesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    #[\Override]
+    #[Override]
     public function validationDefault(Validator $validator): Validator
     {
         $validator
@@ -56,12 +57,10 @@ class ArticlesTable extends Table
 
     public function createRecords($count, $authorId, $templates = null): void
     {
-        if ($templates === null) {
-            $templates = [
-                'title' => 'Article N%s',
-                'body' => 'Article N%s Body',
-            ];
-        }
+        $templates ??= [
+            'title' => 'Article N%s',
+            'body' => 'Article N%s Body',
+        ];
         foreach (range(1, $count) as $itemId) {
             $article = $this->newEntity([]);
             $article['title'] = __($templates['title'], $itemId);
