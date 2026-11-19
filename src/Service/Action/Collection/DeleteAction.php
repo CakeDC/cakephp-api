@@ -99,7 +99,7 @@ class DeleteAction extends CollectionAction
                     $this->getTable()->deleteOrFail($entity, ['atomic' => false]);
                 } catch (\InvalidArgumentException $ex) {
                     $errors[$index] = [
-                        $entity->id => $ex->getMessage(),
+                        $entity->id ?? '' => $ex->getMessage(),
                     ];
                 }
                 $deleted[] = $entity->get($this->getTable()->getPrimaryKey());

@@ -29,8 +29,8 @@
     "require": {
         "php": ">=8.3",
         "ext-json": "*",
-        "cakephp/cakephp": "^5.1",
-        "cakedc/users": "^16.0",
+        "cakephp/cakephp": "^5.4",
+        "cakedc/users": "^17.0",
         "crustum/cakephp-attribute-resolver": "^1.0",
         "lcobucci/clock": "^2.2.0,<2.3.0",
         "lcobucci/jwt": "^5.5.0",

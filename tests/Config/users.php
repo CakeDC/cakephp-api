@@ -39,12 +39,22 @@ $config = [
             ],
             'Form' => [
                 'className' => 'CakeDC/Auth.Form',
-                'urlChecker' => 'Authentication.CakeRouter',
                 'loginUrl' => [
                     'plugin' => 'CakeDC/Users',
                     'controller' => 'Users',
                     'action' => 'login',
                     'prefix' => false,
+                ],
+                'identifier' => [
+                    'className' => 'Authentication.Password',
+                    'fields' => [
+                        'username' => ['username', 'email'],
+                        'password' => 'password',
+                    ],
+                    'resolver' => [
+                        'className' => 'Authentication.Orm',
+                        'finder' => 'active',
+                    ],
                 ],
             ],
             'Token' => [
@@ -53,6 +63,14 @@ $config = [
                 'header' => null,
                 'queryParam' => 'api_key',
                 'tokenPrefix' => null,
+                'identifier' => [
+                    'className' => 'Authentication.Token',
+                    'tokenField' => 'api_token',
+                    'resolver' => [
+                        'className' => 'Authentication.Orm',
+                        'finder' => 'active',
+                    ],
+                ],
             ],
             'Cookie' => [
                 'className' => 'CakeDC/Auth.Cookie',
@@ -62,7 +80,6 @@ $config = [
                     'expires' => '1 month',
                     'httpOnly' => true,
                 ],
-                'urlChecker' => 'Authentication.CakeRouter',
                 'loginUrl' => [
                     'plugin' => 'CakeDC/Users',
                     'controller' => 'Users',
@@ -73,34 +90,17 @@ $config = [
             'Social' => [
                 'className' => 'CakeDC/Users.Social',
                 'skipTwoFactorVerify' => true,
+                'identifier' => [
+                    'className' => 'CakeDC/Users.Social',
+                    'authFinder' => 'active',
+                ],
             ],
             'SocialPendingEmail' => [
                 'className' => 'CakeDC/Users.SocialPendingEmail',
                 'skipTwoFactorVerify' => true,
-            ],
-        ],
-        'Identifiers' => [
-            'Password' => [
-                'className' => 'Authentication.Password',
-                'fields' => [
-                    'username' => ['username', 'email'],
-                    'password' => 'password',
-                ],
-                'resolver' => [
-                    'className' => 'Authentication.Orm',
-                    'finder' => 'active',
-                ],
-            ],
-            'Social' => [
-                'className' => 'CakeDC/Users.Social',
-                'authFinder' => 'active',
-            ],
-            'Token' => [
-                'className' => 'Authentication.Token',
-                'tokenField' => 'api_token',
-                'resolver' => [
-                    'className' => 'Authentication.Orm',
-                    'finder' => 'active',
+                'identifier' => [
+                    'className' => 'CakeDC/Users.Social',
+                    'authFinder' => 'active',
                 ],
             ],
         ],
