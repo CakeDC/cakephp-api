@@ -35,6 +35,7 @@ class OtpVerifyGetAction extends OtpVerifyAction
         $secretVerified = $user['secret_verified'] ?? null;
         // showing QR-code until shared secret is verified
         if (!$secretVerified) {
+            $this->_refuseEnrollmentIf($this->_hasWebauthnCredential($user));
             $secret = $this->onVerifyGetSecret($user);
             if (empty($secret)) {
                 throw new \Exception('Secret generation issue, please try again');

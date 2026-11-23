@@ -74,6 +74,39 @@ class UserCredentialSourceRepository implements PublicKeyCredentialSourceReposit
     }
 
     /**
+     * Whether the user has a credential under any domain, not only the current one.
+     *
+     * @return bool
+     */
+    public function hasCredentialOnAnyDomain(): bool
+    {
+        return static::userHasCredentialOnAnyDomain($this->user);
+    }
+
+    /**
+     * Whether a user record has a credential under any domain.
+     *
+     * Needs no WebAuthn settings, so it also works for a domain that has none.
+     *
+     * @param \Cake\Datasource\EntityInterface|array $user User record.
+     * @return bool
+     */
+    public static function userHasCredentialOnAnyDomain(EntityInterface|array $user): bool
+    {
+        $apiData = Hash::get($user, 'additional_data.api', []);
+        if (!is_array($apiData)) {
+            return false;
+        }
+        foreach ($apiData as $domainData) {
+            if (is_array($domainData) && !empty($domainData['webauthn_credentials'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param \Webauthn\PublicKeyCredentialSource $publicKeyCredentialSource Public key credential source
      * @return void
      */

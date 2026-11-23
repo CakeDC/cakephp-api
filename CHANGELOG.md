@@ -4,6 +4,13 @@ Changelog
 Releases for CakePHP 5.0
 -------------
 
+* 10.1.2
+    * reCaptcha: validation is turned off only by the new `Api.reCaptcha.disabled` setting, set to the boolean `true`. `Api.reCaptcha.<domain>.disabled` is ignored and logs a warning. Without a configured secret for the domain, validation now fails instead of raising an error, and a warning is logged.
+    * Upgrade note: if you disabled reCaptcha for a domain, for example in a development config, set `Api.reCaptcha.disabled` to the boolean `true` there instead; a string such as `'true'` from an environment variable leaves validation on. This setting turns validation off for every domain, so use it only in development and test configs. A production app that skipped reCaptcha for one domain, for example for a mobile or internal client, has to configure a secret for that domain and send real tokens; until then every validation from that domain fails. Do not configure reCaptcha test keys for any domain in production: they accept every response.
+    * `RequestParser::getDomain()` reads the `Referer` header from the request instead of `$_SERVER`, and no longer raises a PHP warning for a `Referer` header without a host.
+    * Two-factor authentication: a second factor can no longer be enrolled while another one is registered. A user with a verified OTP secret cannot register a WebAuthn key, a user with a WebAuthn key cannot set up OTP, and WebAuthn keys stored under any domain count, so no further key can be registered under another domain. `two_factor_auth` now reports the WebAuthn keys of every domain and a verified OTP secret.
+    * Upgrade note: a user who has one second factor and wants the other one needs the first one removed first. With WebAuthn configured for several domains, a user who has registered a key under one domain can no longer register another key, or OTP, under a different domain. In production configs, configure `Api.Webauthn2fa` only for the domains you serve, and set the default `Api.Webauthn2fa.localhost` entry to `null`.
+
 * 10.1.1
     * Security: refreshing a JWT issued before the second factor was completed returned tokens that no longer required 2FA; refresh now preserves the token audience.
     * Upgrade note: if 2FA is enabled, invalidate existing refresh tokens after upgrading, by emptying the `jwt_refresh_tokens` table or rotating `Api.Jwt.RefreshToken.secret`. Until you do, tokens that were already escalated before the upgrade keep their privileged audience: the access tokens stay valid for the rest of their lifetime, and their refresh tokens keep minting privileged ones. Rotating `Api.Jwt.AccessToken.secret` also ends current access tokens.
