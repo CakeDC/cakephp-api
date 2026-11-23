@@ -66,3 +66,39 @@ This allow to configure shared behavior for all actions or for specific subset o
 
 See it in auth.md
 
+## reCaptcha configuration
+
+`ReCaptchaTrait::validateReCaptcha()`, used by the `validate` action of `RecaptchaService`, reads its settings from `Api.reCaptcha`:
+
+```php
+'Api' => [
+    'reCaptcha' => [
+        // turns validation off for every domain; set it only in development and test configs
+        'disabled' => false,
+        // the secret for each domain, with the dots of the domain replaced by `$`
+        'app$example$com' => [
+            'secret' => 'your-secret-key',
+        ],
+    ],
+],
+```
+
+The domain is the host of the request's `Referer` header, or, without a `Referer`, the domain of the request without its subdomain (`api.example.com` gives `example$com`). Validation fails, and a warning is logged, when that domain has no secret. `Api.reCaptcha.<domain>.disabled` is ignored. Do not configure reCaptcha test keys for any domain in production: they accept every response.
+
+## Two-factor authentication
+
+A password login of a user with two-factor authentication enabled gives a token for the second step only. With that token the user verifies a registered factor (OTP or WebAuthn), or enrolls one when none is registered yet. Once a factor is registered, the other one cannot be enrolled with that token: a user with a verified OTP secret cannot register a WebAuthn key, and a user with a WebAuthn key, under any domain, cannot set up OTP or register another key.
+
+WebAuthn keys are stored per domain, chosen like the reCaptcha domain above, and each domain needs an `Api.Webauthn2fa.<domain>` entry with `appName` and `id`. In production configs, configure only the domains you serve, and set the default `localhost` entry to `null`:
+
+```php
+'Api' => [
+    'Webauthn2fa' => [
+        'localhost' => null,
+        'app$example$com' => [
+            'appName' => 'Example',
+            'id' => 'app.example.com',
+        ],
+    ],
+],
+```

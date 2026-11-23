@@ -119,7 +119,8 @@ class CachedApiRbacTest extends TestCase
             ],
         ]);
         $map = $rbac->buildPermissionsMap();
-        $this->assertArrayHasKey('_', $map['user']);
+        // ApiRbac refuses a rule without a service for every request, so every request has to find it
+        $this->assertArrayHasKey(0, $map['*']['_']);
     }
 
     public function testCheckPermissionsMatchingRoleAllows(): void
@@ -203,7 +204,7 @@ class CachedApiRbacTest extends TestCase
         $map = $rbac->buildPermissionsMap();
         $this->assertArrayHasKey('user', $map);
 
-        $cached = Cache::read('api_permissions_map', '_cakedc_api_auth_');
+        $cached = Cache::read(CachedApiRbac::cacheKey($permissions), '_cakedc_api_auth_');
         $this->assertSame($map, $cached);
 
         Cache::drop('_cakedc_api_auth_');

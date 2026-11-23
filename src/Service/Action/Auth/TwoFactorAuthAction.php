@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace CakeDC\Api\Service\Action\Auth;
 
 use CakeDC\Api\Service\Action\Action;
-use CakeDC\Api\Webauthn\RegisterAdapter;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
@@ -26,6 +25,7 @@ class TwoFactorAuthAction extends Action
 {
     use CustomUsersTableTrait;
     use JwtTokenTrait;
+    use SecondFactorTrait;
 
     /**
      * Execute action.
@@ -35,11 +35,10 @@ class TwoFactorAuthAction extends Action
     public function execute(): array
     {
         $user = $this->getIdentity();
-        $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);
-        $hasWebauthn = $adapter->hasCredential();
+        // keys of every domain count, and a verified secret counts as OTP
+        $hasWebauthn = $this->hasWebauthnCredential($user);
+        $hasOtp = $this->hasVerifiedOtp($user);
         $user = $user->toArray();
-
-        $hasOtp = $user['secret'] && $user['secret_verified'];
 
         return [
             'hasRegistered2fa' => $hasWebauthn && $hasOtp,

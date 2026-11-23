@@ -52,3 +52,5 @@ Defined schema allow user to use Authorization plugin both for request authoriza
 Rbac for authorize middlware setup performed by copy file cakephp-api/config/api_permissions.php.default to 
 config/api_permissions.php and defining needed permissions.
 By default it is allowed everything for unauthorized users.
+
+A rule applies when all its keys other than `allowed` and `bypassAuth` match; those two then give the result. They are checked after the other keys, wherever they appear in the rule, so a rule always applies only to the roles, services, actions and methods it names. Only `'bypassAuth' => true` allows a request without authentication; with any other value the rule still applies and its `allowed` value decides the result.

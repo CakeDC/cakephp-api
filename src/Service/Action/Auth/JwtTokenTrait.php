@@ -17,6 +17,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use CakeDC\Api\Exception\ValidationException;
 use CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerFactory;
 use CakeDC\Api\Service\Auth\TwoFactorAuthentication\OneTimePasswordAuthenticationCheckerInterface;
 use CakeDC\Api\Service\Auth\TwoFactorAuthentication\Webauthn2fAuthenticationCheckerFactory;
@@ -36,7 +37,9 @@ trait JwtTokenTrait
      * Generates token response.
      *
      * @param array $user User info.
-     * @param string|null $type The type of token being generated.
+     * @param string|null $type The type of token: `login` or `2fa`. Null means a refresh, which this
+     *   method cannot issue because it takes no refresh token payload.
+     * @throws \CakeDC\Api\Exception\ValidationException When `$type` is null.
      * @return array
      */
     public function generateTokenResponse(array $user, $type): array
@@ -58,7 +61,8 @@ trait JwtTokenTrait
      * Generates refresh token response.
      *
      * @param array $user User info.
-     * @param array $payload Additional payload data.
+     * @param object|array|null $payload Payload of the refresh token; it must carry a non-empty string `aud`.
+     * @throws \CakeDC\Api\Exception\ValidationException When a refresh payload has no non-empty string audience.
      * @return array
      */
     public function generateRefreshTokenResponse(array $user, $payload): array
@@ -77,8 +81,10 @@ trait JwtTokenTrait
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param \DateTimeImmutable $timestamp Timestamp.
-     * @param string|null $type The type of token being generated.
-     * @param array|null $payload Additional payload data.
+     * @param string|null $type The type of token: `login` or `2fa` issues new tokens, null means a
+     *   refresh and requires a payload with a non-empty string `aud`.
+     * @param object|array|null $payload Additional payload data.
+     * @throws \CakeDC\Api\Exception\ValidationException When a refresh payload has no non-empty string audience.
      * @return false|string
      */
     public function generateAccessToken($user, \DateTimeImmutable $timestamp, $type, $payload = null): false|string
@@ -111,13 +117,25 @@ trait JwtTokenTrait
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param string|null $type The type of token being generated.
-     * @param array|null $payload Additional payload data.
+     * @param object|array|null $payload Additional payload data.
      * @return string
+     * @throws \CakeDC\Api\Exception\ValidationException When a refresh payload has no non-empty string audience.
      */
     public function getAudience($user, $type, $payload): string
     {
-        if ($type === null && is_array($payload) && isset($payload['aud'])) {
-            return $payload['aud'];
+        // the JWT authenticator returns the decoded payload as an object
+        if (is_object($payload)) {
+            $payload = (array)$payload;
+        }
+        if ($type === null) {
+            // A refresh keeps the audience of the refresh token. A missing, empty or non-string
+            // audience is refused: the default audience below would drop a pending second factor.
+            $audience = is_array($payload) ? $payload['aud'] ?? null : null;
+            if (!is_string($audience) || $audience === '') {
+                throw new ValidationException('Invalid token provided', 401);
+            }
+
+            return $audience;
         }
         if ($type == 'login' && $this->is2FAEnabled($user)) {
             return Router::url('/2fa', true);
@@ -194,8 +212,10 @@ trait JwtTokenTrait
      *
      * @param \Cake\Datasource\EntityInterface|array $user User info.
      * @param \DateTimeImmutable $timestamp Timestamp.
-     * @param string|null $type The type of token being generated.
-     * @param array|null $payload Additional payload data.
+     * @param string|null $type The type of token: `login` or `2fa` issues new tokens, null means a
+     *   refresh and requires a payload with a non-empty string `aud`.
+     * @param object|array|null $payload Additional payload data.
+     * @throws \CakeDC\Api\Exception\ValidationException When a refresh payload has no non-empty string audience.
      * @return false|string
      */
     public function generateRefreshToken($user, \DateTimeImmutable $timestamp, $type, $payload = null): false|string

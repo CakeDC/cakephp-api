@@ -77,9 +77,17 @@ class RecaptchaTraitTest extends TestCase
 
     public function testDisabledReturnsTrue(): void
     {
-        Configure::write($this->domainKey, ['disabled' => true]);
+        Configure::write('Api.reCaptcha.disabled', true);
         $harness = $this->buildHarness();
         $this->assertTrue($harness->exposedValidateReCaptcha('any-token'));
+    }
+
+    public function testDisabledForTheDomainStillVerifies(): void
+    {
+        // the domain can come from the client's Referer, so its settings cannot turn the check off
+        Configure::write($this->domainKey, ['disabled' => true, 'secret' => 'secret']);
+        $harness = $this->buildHarness($this->buildVerifyStub(false));
+        $this->assertFalse($harness->exposedValidateReCaptcha('token'));
     }
 
     public function testVerifySuccessWithExplicitResponse(): void

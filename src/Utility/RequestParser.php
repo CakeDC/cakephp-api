@@ -30,10 +30,11 @@ class RequestParser
     public static function getDomain(ServerRequest $request, $replace = true): string
     {
         $domain = null;
-        if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
-            $domain = parse_url($_SERVER['HTTP_REFERER']);
+        $referer = $request->getHeaderLine('Referer');
+        if ($referer !== '') {
+            $domain = parse_url($referer);
         }
-        $host = $domain !== null && $domain['host'] ? $domain['host'] : $request->domain();
+        $host = is_array($domain) && !empty($domain['host']) ? $domain['host'] : $request->domain();
 
         if ($replace) {
             return str_replace('.', '$', $host);

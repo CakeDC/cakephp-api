@@ -36,6 +36,10 @@ class OtpVerifyCheckAction extends OtpVerifyAction
         $verificationCode = $this->getData('code');
         $user = $this->getIdentity();
         $entity = $this->getUsersTable()->get($user['id']);
+        // verifying a new secret enrolls OTP; an already verified secret is the normal second step
+        if (!$entity->get('secret_verified')) {
+            $this->refuseEnrollmentIf($this->hasWebauthnCredential($user));
+        }
 
         if (!empty($entity->secret)) {
             $codeVerified = $this->verifyCode($entity->secret, $verificationCode);
