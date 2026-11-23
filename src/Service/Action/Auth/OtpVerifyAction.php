@@ -26,6 +26,7 @@ use RobThree\Auth\TwoFactorAuth;
 abstract class OtpVerifyAction extends Action
 {
     use CustomUsersTableTrait;
+    use SecondFactorTrait;
 
     /**
      * @var \RobThree\Auth\TwoFactorAuth $tfa

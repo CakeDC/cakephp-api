@@ -68,6 +68,8 @@ class LoginActionTest extends IntegrationTestCase
         $data = Hash::get($result, 'data');
         unset($data['activation_date']);
         unset($data['tos_date']);
+        // two-factor columns of the test schema
+        unset($data['secret'], $data['secret_verified'], $data['additional_data']);
         $this->assertEquals($expected, $data);
     }
 

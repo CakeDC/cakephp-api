@@ -82,6 +82,8 @@ class RegisterActionTest extends IntegrationTestCase
         ];
         $data = $result['data'];
         unset($data['id'], $data['tos_date']);
+        // two-factor columns of the test schema
+        unset($data['secret'], $data['secret_verified'], $data['additional_data']);
         $this->assertEquals($expected, $data);
     }
 
