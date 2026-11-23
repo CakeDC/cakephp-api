@@ -26,6 +26,7 @@ use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 class Webauthn2faRegisterOptionsAction extends Action
 {
     use CustomUsersTableTrait;
+    use SecondFactorTrait;
 
     /**
      * Execute action.
@@ -35,9 +36,11 @@ class Webauthn2faRegisterOptionsAction extends Action
     public function execute(): \Webauthn\PublicKeyCredentialCreationOptions
     {
         $user = $this->getIdentity();
+        $this->refuseEnrollmentIf($this->hasVerifiedOtp($user));
         $adapter = new RegisterAdapter($this->getService()->getRequest(), $this->getUsersTable(), $user);
 
-        if (!$adapter->hasCredential()) {
+        // a key registered under another domain counts too: the domain can come from the Referer
+        if (!$adapter->hasCredentialOnAnyDomain()) {
             return $adapter->getOptions();
         }
         throw new BadRequestException(

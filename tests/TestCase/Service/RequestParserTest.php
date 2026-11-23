@@ -22,12 +22,6 @@ use CakeDC\Api\Utility\RequestParser;
  */
 class RequestParserTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset($_SERVER['HTTP_REFERER']);
-        parent::tearDown();
-    }
-
     public function testGetDomainFromRequestHost(): void
     {
         $request = new ServerRequest([
@@ -57,11 +51,33 @@ class RequestParserTest extends TestCase
 
     public function testGetDomainPrefersReferer(): void
     {
-        $_SERVER['HTTP_REFERER'] = 'https://referer.example.org/path';
         $request = new ServerRequest([
             'url' => '/articles',
-            'environment' => ['HTTP_HOST' => 'example.com'],
+            'environment' => ['HTTP_HOST' => 'example.com', 'HTTP_REFERER' => 'https://referer.example.org/path'],
         ]);
         $this->assertSame('referer$example$org', RequestParser::getDomain($request));
+    }
+
+    public function testRefererWithoutAHostUsesTheRequestHost(): void
+    {
+        $warnings = [];
+        set_error_handler(function (int $level, string $message) use (&$warnings): bool {
+            $warnings[] = $message;
+
+            return true;
+        });
+        try {
+            foreach (['foo', 'http:///x'] as $referer) {
+                $request = new ServerRequest([
+                    'url' => '/articles',
+                    'environment' => ['HTTP_HOST' => 'api.example.com', 'HTTP_REFERER' => $referer],
+                ]);
+                $this->assertSame('example$com', RequestParser::getDomain($request), $referer);
+            }
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $warnings);
     }
 }

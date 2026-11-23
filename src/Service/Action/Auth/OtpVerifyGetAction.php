@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Api\Service\Action\Auth;
 
+use Cake\Datasource\EntityInterface;
 use CakeDC\Users\Controller\Traits\CustomUsersTableTrait;
 
 /**
@@ -35,7 +36,10 @@ class OtpVerifyGetAction extends OtpVerifyAction
         $secretVerified = $user['secret_verified'] ?? null;
         // showing QR-code until shared secret is verified
         if (!$secretVerified) {
-            $secret = $this->onVerifyGetSecret($user);
+            $this->refuseEnrollmentIf($this->hasWebauthnCredential($user));
+            // onVerifyGetSecret() takes an array, and the identity is an entity that hides `secret`
+            $userData = $user instanceof EntityInterface ? ['secret' => $user->get('secret')] + $user->toArray() : (array)$user;
+            $secret = $this->onVerifyGetSecret($userData);
             if (empty($secret)) {
                 throw new \Exception('Secret generation issue, please try again');
             }
